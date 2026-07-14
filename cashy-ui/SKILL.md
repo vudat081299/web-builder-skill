@@ -62,10 +62,11 @@ status earns colour.
 
 ## Current scope
 
-**v1 ships:** capsules/badges/tags and tables (basic, transactions, striped/compact,
-bordered, sticky, debt/receivables with meaningful colour). Coming next: buttons, stat/KPI
-cards, forms, navigation, modals, toasts, charts. When asked for one of those, build it in
-the same system and add it to the library rather than doing a one-off.
+**Shipped:** buttons, capsules/badges/tags, stat/KPI cards, tables (basic, transactions,
+striped/compact, bordered, sticky, debt/receivables with meaningful colour), and form
+controls (text/number inputs, currency input-group, select, textarea, checkbox/radio,
+switch). **Coming next:** navigation, modals/dialogs, toasts, charts. When asked for one of
+those, build it in the same system and add it to the library rather than doing a one-off.
 
 ## Working with the user
 

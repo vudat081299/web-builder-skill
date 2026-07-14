@@ -132,7 +132,7 @@
       <div class="doc-brand__mark">C</div>
       <div>
         <div class="doc-brand__name">Cashy UI</div>
-        <div class="doc-brand__ver">v0.1 · tables</div>
+        <div class="doc-brand__ver">v0.2 · 5 nhóm</div>
       </div>
     </div>
     <nav class="doc-nav">
@@ -140,12 +140,15 @@
       <a href="#overview">Triết lý màu</a>
       <a href="#tokens">Design tokens</a>
       <span class="doc-nav__label">Components</span>
+      <a href="#buttons">Buttons</a>
       <a href="#capsules">Capsules / Badges</a>
+      <a href="#stats">Stat / KPI cards</a>
       <a href="#table-default">Table — cơ bản</a>
       <a href="#table-tx">Table — giao dịch</a>
       <a href="#table-variants">Table — biến thể</a>
       <a href="#table-sticky">Table — sticky</a>
       <a href="#table-debt">Table — công nợ</a>
+      <a href="#forms">Form inputs</a>
     </nav>
   </aside>
 
@@ -192,6 +195,59 @@
         <h3>Design tokens</h3>
         <p class="doc-sec__desc">Tất cả màu đến từ CSS variables. Đổi token → đổi toàn hệ. Đây là các token hay dùng nhất (xem đủ trong <code>cashy-ui.css</code>).</p>
         <div class="swatches" id="swatches"></div>
+      </section>
+
+      <!-- ===================== BUTTONS ===================== -->
+      <section class="doc-sec" id="buttons">
+        <h3>Buttons</h3>
+        <p class="doc-sec__desc">Nút chính là <strong>trung tính</strong> (đen ở light, trắng ở dark) — theo gu trắng-đen-xám, hành động chính không dùng màu thương hiệu. Màu chỉ dành cho hành động có ý nghĩa: xoá (đỏ), xác nhận đã trả (xanh).</p>
+
+        <div class="doc-block">
+          <h4>Kiểu (fill)</h4>
+          <div class="demo demo--plain">
+            <div class="demo__stage">
+              <div class="cap-grid">
+                <button class="cash-btn">Primary</button>
+                <button class="cash-btn cash-btn--secondary">Secondary</button>
+                <button class="cash-btn cash-btn--outline">Outline</button>
+                <button class="cash-btn cash-btn--ghost">Ghost</button>
+                <button class="cash-btn cash-btn--danger">Xoá</button>
+                <button class="cash-btn cash-btn--success">Xác nhận đã trả</button>
+              </div>
+            </div>
+            <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;button class="cash-btn"&gt;Primary&lt;/button&gt;
+&lt;button class="cash-btn cash-btn--secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="cash-btn cash-btn--outline"&gt;Outline&lt;/button&gt;
+&lt;button class="cash-btn cash-btn--ghost"&gt;Ghost&lt;/button&gt;
+&lt;button class="cash-btn cash-btn--danger"&gt;Xoá&lt;/button&gt;</code></pre></div>
+          </div>
+        </div>
+
+        <div class="doc-block">
+          <h4>Kích thước, icon, trạng thái</h4>
+          <div class="demo demo--plain">
+            <div class="demo__stage">
+              <div class="cap-row"><span class="cap-row__label">Size</span>
+                <button class="cash-btn cash-btn--sm">Small</button>
+                <button class="cash-btn">Medium</button>
+                <button class="cash-btn cash-btn--lg">Large</button>
+              </div>
+              <div class="cap-row"><span class="cap-row__label">Icon</span>
+                <button class="cash-btn"><span aria-hidden="true">＋</span> Thêm giao dịch</button>
+                <button class="cash-btn cash-btn--secondary cash-btn--icon" aria-label="Sửa">✎</button>
+                <button class="cash-btn cash-btn--ghost cash-btn--icon" aria-label="Xoá">🗑</button>
+              </div>
+              <div class="cap-row"><span class="cap-row__label">State</span>
+                <button class="cash-btn is-loading"><span class="cash-spinner"></span> Đang lưu…</button>
+                <button class="cash-btn cash-btn--secondary" disabled>Disabled</button>
+              </div>
+            </div>
+            <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;button class="cash-btn cash-btn--sm"&gt;Small&lt;/button&gt;
+&lt;button class="cash-btn cash-btn--icon" aria-label="Sửa"&gt;✎&lt;/button&gt;
+&lt;button class="cash-btn is-loading"&gt;&lt;span class="cash-spinner"&gt;&lt;/span&gt; Đang lưu…&lt;/button&gt;
+&lt;button class="cash-btn cash-btn--secondary" disabled&gt;Disabled&lt;/button&gt;</code></pre></div>
+          </div>
+        </div>
       </section>
 
       <!-- ===================== CAPSULES ===================== -->
@@ -245,6 +301,62 @@
 &lt;!-- solid (tầng 2) --&gt;
 &lt;span class="cash-cap cash-cap--danger cash-cap--solid"&gt;Quá hạn&lt;/span&gt;</code></pre></div>
           </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAT / KPI CARDS ===================== -->
+      <section class="doc-sec" id="stats">
+        <h3>Stat / KPI cards</h3>
+        <p class="doc-sec__desc">Lõi của dashboard tài chính. Thẻ trung tính; màu duy nhất là <em>delta</em> (tăng = xanh, giảm = đỏ) vì hướng thay đổi mới mang ý nghĩa. Xếp nhiều thẻ trong <code>.cash-stat-grid</code>.</p>
+        <div class="demo">
+          <div class="demo__stage">
+            <div class="cash-stat-grid">
+              <div class="cash-stat">
+                <div class="cash-stat__top">
+                  <span class="cash-stat__label">Tổng số dư</span>
+                  <span class="cash-stat__icon" aria-hidden="true">◈</span>
+                </div>
+                <div class="cash-stat__value">47.590.000&nbsp;₫</div>
+                <div class="cash-stat__foot"><span class="cash-stat__delta cash-stat__delta--up">↑ 12,4%</span> so với tháng trước</div>
+              </div>
+              <div class="cash-stat">
+                <div class="cash-stat__top">
+                  <span class="cash-stat__label">Thu nhập tháng 7</span>
+                  <span class="cash-stat__icon" aria-hidden="true">↓</span>
+                </div>
+                <div class="cash-stat__value">29.200.000&nbsp;₫</div>
+                <div class="cash-stat__foot"><span class="cash-stat__delta cash-stat__delta--up">↑ 8,1%</span> so với TB 6 tháng</div>
+              </div>
+              <div class="cash-stat">
+                <div class="cash-stat__top">
+                  <span class="cash-stat__label">Chi tiêu tháng 7</span>
+                  <span class="cash-stat__icon" aria-hidden="true">↑</span>
+                </div>
+                <div class="cash-stat__value">11.840.000&nbsp;₫</div>
+                <div class="cash-stat__foot"><span class="cash-stat__delta cash-stat__delta--down">↓ 3,2%</span> so với tháng trước</div>
+              </div>
+              <div class="cash-stat">
+                <div class="cash-stat__top">
+                  <span class="cash-stat__label">Nợ phải thu</span>
+                  <span class="cash-stat__icon" aria-hidden="true">●</span>
+                </div>
+                <div class="cash-stat__value">6.800.000&nbsp;₫</div>
+                <div class="cash-stat__foot"><span class="cash-cap cash-cap--danger cash-cap--sm">2 quá hạn</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;div class="cash-stat-grid"&gt;
+  &lt;div class="cash-stat"&gt;
+    &lt;div class="cash-stat__top"&gt;
+      &lt;span class="cash-stat__label"&gt;Tổng số dư&lt;/span&gt;
+      &lt;span class="cash-stat__icon"&gt;◈&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="cash-stat__value"&gt;47.590.000 ₫&lt;/div&gt;
+    &lt;div class="cash-stat__foot"&gt;
+      &lt;span class="cash-stat__delta cash-stat__delta--up"&gt;↑ 12,4%&lt;/span&gt; so với tháng trước
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
         </div>
       </section>
 
@@ -498,6 +610,77 @@
   &lt;td&gt;&lt;span class="cash-cap cash-cap--danger cash-cap--solid"&gt;Quá hạn 43 ngày&lt;/span&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class="cash-row--success"&gt; … &lt;span class="cash-cap cash-cap--success"&gt;Đã trả&lt;/span&gt; … &lt;/tr&gt;</code></pre></div>
+        </div>
+      </section>
+
+      <!-- ===================== FORMS ===================== -->
+      <section class="doc-sec" id="forms">
+        <h3>Form inputs</h3>
+        <p class="doc-sec__desc">Điều khiển trung tính; màu duy nhất là trạng thái lỗi (đỏ). <code>.cash-field</code> gói label + control + help/error. Có input-group cho tiền tệ (₫), select, textarea, checkbox/radio, và switch.</p>
+        <div class="demo">
+          <div class="demo__stage">
+            <div class="cash-card" style="max-width: 560px; padding: 22px; box-shadow: var(--cash-shadow-md);">
+              <div style="display:grid; gap:16px;">
+                <div class="cash-field">
+                  <label class="cash-label">Tên giao dịch</label>
+                  <input class="cash-input" placeholder="VD: Ăn trưa với khách hàng" />
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                  <div class="cash-field">
+                    <label class="cash-label">Số tiền</label>
+                    <div class="cash-input-group">
+                      <input class="cash-input" value="1.280.000" inputmode="numeric" />
+                      <span class="cash-input-group__addon">₫</span>
+                    </div>
+                  </div>
+                  <div class="cash-field">
+                    <label class="cash-label">Danh mục</label>
+                    <select class="cash-select">
+                      <option>Ăn uống</option><option>Di chuyển</option>
+                      <option>Nhà ở</option><option>Giải trí</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="cash-field">
+                  <label class="cash-label">Ghi chú <span class="cash-label__opt">(tùy chọn)</span></label>
+                  <textarea class="cash-textarea" placeholder="Thêm mô tả…"></textarea>
+                  <span class="cash-help">Tối đa 200 ký tự.</span>
+                </div>
+                <div class="cash-field">
+                  <label class="cash-label">Email nhắc nợ</label>
+                  <input class="cash-input cash-input--invalid" value="sai-email" />
+                  <span class="cash-error">Email không hợp lệ.</span>
+                </div>
+                <div style="display:flex; gap:22px; align-items:center; flex-wrap:wrap;">
+                  <label class="cash-check"><input type="checkbox" checked /> Định kỳ</label>
+                  <label class="cash-radio"><input type="radio" name="tt" checked /> Chi</label>
+                  <label class="cash-radio"><input type="radio" name="tt" /> Thu</label>
+                  <label class="cash-switch"><input type="checkbox" checked /><span class="cash-switch__track"></span> Đã thanh toán</label>
+                </div>
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                  <button class="cash-btn cash-btn--ghost">Huỷ</button>
+                  <button class="cash-btn">Lưu giao dịch</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;div class="cash-field"&gt;
+  &lt;label class="cash-label"&gt;Số tiền&lt;/label&gt;
+  &lt;div class="cash-input-group"&gt;
+    &lt;input class="cash-input" value="1.280.000" inputmode="numeric" /&gt;
+    &lt;span class="cash-input-group__addon"&gt;₫&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="cash-field"&gt;
+  &lt;label class="cash-label"&gt;Email nhắc nợ&lt;/label&gt;
+  &lt;input class="cash-input cash-input--invalid" value="sai-email" /&gt;
+  &lt;span class="cash-error"&gt;Email không hợp lệ.&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;label class="cash-switch"&gt;
+  &lt;input type="checkbox" checked /&gt;&lt;span class="cash-switch__track"&gt;&lt;/span&gt; Đã thanh toán
+&lt;/label&gt;</code></pre></div>
         </div>
       </section>
 

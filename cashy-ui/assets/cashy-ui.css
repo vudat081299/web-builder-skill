@@ -46,6 +46,9 @@
   --cash-shadow-sm: 0 1px 2px rgba(16, 17, 18, .05), 0 1px 3px rgba(16, 17, 18, .04);
   --cash-shadow-md: 0 2px 4px rgba(16, 17, 18, .05), 0 6px 16px rgba(16, 17, 18, .08);
 
+  /* Focus ring — neutral, used by buttons and inputs. */
+  --cash-ring: rgba(24, 24, 27, .30);
+
   /* Semantic colours — tier 2 (solid) and tier 3 (soft = alpha tint). */
   --cash-success:        #16a34a;
   --cash-success-fg:     #ffffff;
@@ -96,6 +99,7 @@
   /* On dark, shadows barely read — borders do the separating, shadows deepen. */
   --cash-shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
   --cash-shadow-md: 0 4px 12px rgba(0, 0, 0, .45), 0 2px 4px rgba(0, 0, 0, .4);
+  --cash-ring: rgba(255, 255, 255, .28);
 
   /* Slightly brighter fills + stronger tints so colour survives a dark canvas. */
   --cash-success:      #22c55e;
@@ -327,3 +331,174 @@
 .cash-cell-sub    { display: block; font-size: 12px; color: var(--cash-fg-muted); margin-top: 2px; }
 .cash-stack       { display: flex; flex-direction: column; }
 .cash-inline      { display: inline-flex; align-items: center; gap: 8px; }
+
+/* -----------------------------------------------------------------------------
+   4. BUTTONS
+   -----------------------------------------------------------------------------
+   Default is the neutral "primary" — near-black in light, near-white in dark
+   (white-black-grey first: the primary action isn't a brand colour).
+   FILL:  (default solid neutral) · --secondary · --outline · --ghost
+   TONE:  --danger · --success   (only for meaningful actions: delete, confirm pay)
+   SIZE:  (default) · --sm · --lg     SHAPE: --icon (square) · --block (full width)
+   STATE: :disabled / .is-disabled · .is-loading (add a <span class="cash-spinner">)
+   -------------------------------------------------------------------------- */
+.cash-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--cash-font); font-size: 14px; font-weight: 600; line-height: 1;
+  padding: 9px 16px; border-radius: var(--cash-radius-sm);
+  border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+  text-decoration: none; user-select: none;
+  transition: background-color .13s ease, border-color .13s ease, color .13s ease,
+              box-shadow .13s ease, transform .04s ease;
+  /* default: neutral solid */
+  background: var(--cash-gray-900); color: var(--cash-white);
+}
+.cash-btn:hover  { background: var(--cash-gray-800); }
+.cash-btn:active { transform: translateY(.5px); }
+.cash-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--cash-ring); }
+.dark .cash-btn        { background: var(--cash-gray-100); color: var(--cash-gray-900); }
+.dark .cash-btn:hover  { background: var(--cash-white); }
+
+.cash-btn--secondary {
+  background: var(--cash-surface); color: var(--cash-fg);
+  border-color: var(--cash-border-strong); box-shadow: var(--cash-shadow-sm);
+}
+.cash-btn--secondary:hover { background: var(--cash-surface-2); border-color: var(--cash-gray-400); }
+.dark .cash-btn--secondary { background: var(--cash-surface-2); }
+.dark .cash-btn--secondary:hover { background: var(--cash-surface-hover); }
+
+.cash-btn--outline { background: transparent; color: var(--cash-fg); border-color: var(--cash-border-strong); }
+.cash-btn--outline:hover { background: var(--cash-surface-2); }
+.dark .cash-btn--outline:hover { background: var(--cash-surface-hover); }
+
+.cash-btn--ghost { background: transparent; color: var(--cash-fg-muted); }
+.cash-btn--ghost:hover { background: var(--cash-surface-2); color: var(--cash-fg); }
+.dark .cash-btn--ghost:hover { background: var(--cash-surface-hover); }
+
+.cash-btn--danger  { background: var(--cash-danger);  color: var(--cash-danger-fg);  }
+.cash-btn--success { background: var(--cash-success); color: var(--cash-success-fg); }
+.cash-btn--danger:hover, .cash-btn--success:hover { filter: brightness(.94); }
+
+.cash-btn--sm { padding: 6px 12px;  font-size: 13px; border-radius: 6px; }
+.cash-btn--lg { padding: 12px 20px; font-size: 15px; border-radius: var(--cash-radius); }
+.cash-btn--icon { padding: 9px; }
+.cash-btn--icon.cash-btn--sm { padding: 6px; }
+.cash-btn--icon.cash-btn--lg { padding: 12px; }
+.cash-btn--block { width: 100%; }
+
+.cash-btn:disabled, .cash-btn.is-disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+.cash-btn.is-loading { pointer-events: none; }
+
+/* Reusable spinner — inherits the current text colour, so it works on any button. */
+.cash-spinner {
+  display: inline-block; width: 1em; height: 1em; flex: none;
+  border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%;
+  animation: cash-spin .6s linear infinite; vertical-align: -.15em;
+}
+@keyframes cash-spin { to { transform: rotate(360deg); } }
+
+/* -----------------------------------------------------------------------------
+   5. STAT / KPI CARDS
+   -----------------------------------------------------------------------------
+   Neutral card; the only colour is the delta (up = success, down = danger) —
+   because a change direction is meaningful. Lay several out in .cash-stat-grid.
+   -------------------------------------------------------------------------- */
+.cash-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+.cash-stat {
+  background: var(--cash-surface); border: 1px solid var(--cash-border);
+  border-radius: var(--cash-radius-lg); box-shadow: var(--cash-shadow-sm);
+  padding: 18px; font-family: var(--cash-font);
+}
+.cash-stat__top   { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cash-stat__label { font-size: 13px; font-weight: 550; color: var(--cash-fg-muted); }
+.cash-stat__icon  {
+  margin-left: auto; width: 34px; height: 34px; border-radius: 9px; flex: none;
+  display: grid; place-items: center; font-size: 16px;
+  background: var(--cash-surface-2); color: var(--cash-fg-muted); border: 1px solid var(--cash-border);
+}
+.cash-stat__value {
+  font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1;
+  color: var(--cash-fg); font-variant-numeric: tabular-nums;
+}
+.cash-stat__foot  { display: flex; align-items: center; gap: 8px; margin-top: 10px;
+  font-size: 13px; color: var(--cash-fg-muted); }
+.cash-stat__delta { display: inline-flex; align-items: center; gap: 3px; font-weight: 650;
+  font-variant-numeric: tabular-nums; }
+.cash-stat__delta--up   { color: var(--cash-success-text); }
+.cash-stat__delta--down { color: var(--cash-danger-text); }
+
+/* -----------------------------------------------------------------------------
+   6. FORM CONTROLS
+   -----------------------------------------------------------------------------
+   .cash-field wraps label + control + help/error. Controls are neutral; the only
+   colour is the invalid/error state (red) — meaningful.
+   -------------------------------------------------------------------------- */
+.cash-field { display: flex; flex-direction: column; gap: 6px; font-family: var(--cash-font); }
+.cash-label { font-size: 13px; font-weight: 600; color: var(--cash-fg); }
+.cash-label__opt { font-weight: 500; color: var(--cash-fg-subtle); }
+
+.cash-input, .cash-select, .cash-textarea {
+  width: 100%; font-family: inherit; font-size: 14px; color: var(--cash-fg);
+  background: var(--cash-surface); border: 1px solid var(--cash-border-strong);
+  border-radius: var(--cash-radius-sm); padding: 9px 12px; line-height: 1.4;
+  transition: border-color .13s ease, box-shadow .13s ease;
+}
+.cash-input::placeholder, .cash-textarea::placeholder { color: var(--cash-fg-subtle); }
+.cash-input:focus, .cash-select:focus, .cash-textarea:focus {
+  outline: none; border-color: var(--cash-gray-500); box-shadow: 0 0 0 3px var(--cash-ring);
+}
+.dark .cash-input:focus, .dark .cash-select:focus, .dark .cash-textarea:focus { border-color: var(--cash-gray-400); }
+.cash-input:disabled, .cash-select:disabled, .cash-textarea:disabled {
+  background: var(--cash-surface-2); color: var(--cash-fg-muted); cursor: not-allowed;
+}
+.cash-textarea { resize: vertical; min-height: 82px; }
+.cash-select { appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--cash-fg-muted) 50%),
+                    linear-gradient(135deg, var(--cash-fg-muted) 50%, transparent 50%);
+  background-position: right 15px center, right 10px center;
+  background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 34px;
+}
+
+.cash-input--invalid, .cash-select--invalid, .cash-textarea--invalid { border-color: var(--cash-danger); }
+.cash-input--invalid:focus, .cash-select--invalid:focus, .cash-textarea--invalid:focus {
+  border-color: var(--cash-danger); box-shadow: 0 0 0 3px var(--cash-danger-soft);
+}
+
+/* Input group — prefix/suffix addons (e.g. ₫, %, .00). */
+.cash-input-group { display: flex; align-items: stretch; }
+.cash-input-group > .cash-input, .cash-input-group > .cash-input-group__addon { border-radius: 0; }
+.cash-input-group > *:not(:last-child) { border-right-width: 0; }
+.cash-input-group > *:first-child { border-top-left-radius: var(--cash-radius-sm); border-bottom-left-radius: var(--cash-radius-sm); }
+.cash-input-group > *:last-child  { border-top-right-radius: var(--cash-radius-sm); border-bottom-right-radius: var(--cash-radius-sm); }
+.cash-input-group__addon {
+  display: inline-flex; align-items: center; padding: 0 12px; font-size: 14px; white-space: nowrap;
+  color: var(--cash-fg-muted); background: var(--cash-surface-2); border: 1px solid var(--cash-border-strong);
+}
+
+/* Checkbox & radio — neutral accent, native for accessibility. */
+.cash-check, .cash-radio { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; color: var(--cash-fg); cursor: pointer; }
+.cash-check input, .cash-radio input { width: 17px; height: 17px; margin: 0; cursor: pointer; accent-color: var(--cash-gray-900); }
+.dark .cash-check input, .dark .cash-radio input { accent-color: var(--cash-gray-100); }
+
+/* Switch / toggle. */
+.cash-switch { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--cash-fg); cursor: pointer; }
+.cash-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.cash-switch__track {
+  position: relative; flex: none; width: 40px; height: 23px; border-radius: 999px;
+  background: var(--cash-gray-300); transition: background-color .16s ease;
+}
+.cash-switch__track::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 19px; height: 19px; border-radius: 50%;
+  background: #fff; box-shadow: var(--cash-shadow-sm); transition: transform .16s ease;
+}
+.cash-switch input:checked + .cash-switch__track { background: var(--cash-gray-900); }
+.cash-switch input:checked + .cash-switch__track::after { transform: translateX(17px); }
+.cash-switch input:focus-visible + .cash-switch__track { box-shadow: 0 0 0 3px var(--cash-ring); }
+.dark .cash-switch__track { background: var(--cash-gray-600); }
+.dark .cash-switch__track::after { background: var(--cash-gray-100); }
+.dark .cash-switch input:checked + .cash-switch__track { background: var(--cash-gray-100); }
+.dark .cash-switch input:checked + .cash-switch__track::after { background: var(--cash-gray-900); }
+
+/* Help & error text under a field. */
+.cash-help  { font-size: 12.5px; color: var(--cash-fg-muted); }
+.cash-error { font-size: 12.5px; font-weight: 500; color: var(--cash-danger-text); }
