@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cashy UI — Component Library</title>
+  <link rel="stylesheet" href="cashy-ui.css" />
+  <style>
+    /* ---- Docs chrome (reuses the same tokens so it follows light/dark) ---- */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: var(--cash-font);
+      background: var(--cash-canvas);
+      color: var(--cash-fg);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+
+    .doc-shell { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .doc-side {
+      position: sticky; top: 0; align-self: flex-start;
+      width: 236px; height: 100vh; flex: none;
+      border-right: 1px solid var(--cash-border);
+      background: var(--cash-surface);
+      padding: 20px 14px; overflow-y: auto;
+    }
+    .doc-brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 18px; }
+    .doc-brand__mark {
+      width: 30px; height: 30px; border-radius: 8px; flex: none;
+      background: var(--cash-gray-900); color: var(--cash-white);
+      display: grid; place-items: center; font-weight: 700; font-size: 15px;
+    }
+    .dark .doc-brand__mark { background: var(--cash-gray-100); color: var(--cash-gray-900); }
+    .doc-brand__name { font-weight: 650; font-size: 15px; }
+    .doc-brand__ver  { font-size: 11px; color: var(--cash-fg-muted); }
+    .doc-nav { display: flex; flex-direction: column; gap: 1px; }
+    .doc-nav__label { font-size: 11px; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--cash-fg-subtle); font-weight: 600; padding: 14px 8px 6px; }
+    .doc-nav a {
+      text-decoration: none; font-size: 13.5px; color: var(--cash-fg-muted);
+      padding: 7px 10px; border-radius: 7px;
+    }
+    .doc-nav a:hover { background: var(--cash-surface-hover); color: var(--cash-fg); }
+
+    /* Main column */
+    .doc-main { flex: 1 1 auto; min-width: 0; }
+    .doc-topbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 32px;
+      background: color-mix(in srgb, var(--cash-canvas) 82%, transparent);
+      backdrop-filter: saturate(1.1) blur(8px);
+      border-bottom: 1px solid var(--cash-border);
+    }
+    .doc-topbar h1 { font-size: 15px; margin: 0; font-weight: 600; }
+    .doc-topbar .spacer { margin-left: auto; }
+    .theme-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: inherit; font-size: 13px; font-weight: 550; cursor: pointer;
+      padding: 7px 13px; border-radius: var(--cash-radius-pill);
+      border: 1px solid var(--cash-border); background: var(--cash-surface);
+      color: var(--cash-fg); box-shadow: var(--cash-shadow-sm);
+    }
+    .theme-btn:hover { border-color: var(--cash-border-strong); }
+
+    .doc-content { max-width: 980px; margin: 0 auto; padding: 40px 32px 120px; }
+    .doc-hero h2 { font-size: 30px; margin: 0 0 8px; letter-spacing: -.02em; font-weight: 700; }
+    .doc-hero p  { font-size: 15px; color: var(--cash-fg-muted); margin: 0; max-width: 60ch; }
+
+    section.doc-sec { margin-top: 56px; scroll-margin-top: 76px; }
+    .doc-sec > h3 { font-size: 20px; margin: 0 0 6px; letter-spacing: -.01em; }
+    .doc-sec > .doc-sec__desc { color: var(--cash-fg-muted); margin: 0 0 22px; font-size: 14px; max-width: 68ch; }
+    .doc-block { margin-top: 30px; }
+    .doc-block > h4 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
+    .doc-block > .doc-block__desc { font-size: 13px; color: var(--cash-fg-muted); margin: 0 0 14px; }
+
+    /* Demo surface + code */
+    .demo {
+      border: 1px solid var(--cash-border); border-radius: var(--cash-radius-lg);
+      background: var(--cash-surface); overflow: hidden;
+    }
+    .demo__stage { padding: 26px; background:
+      radial-gradient(var(--cash-border) .8px, transparent .8px); background-size: 15px 15px;
+      background-color: var(--cash-canvas); }
+    .demo--plain .demo__stage { background: var(--cash-surface); }
+    .demo__code { border-top: 1px solid var(--cash-border); position: relative; }
+    .demo__code pre {
+      margin: 0; padding: 16px 18px; overflow-x: auto;
+      font: 12.5px/1.6 "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      color: var(--cash-fg-muted); background: var(--cash-surface-2);
+    }
+    .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      font: 11px/1 var(--cash-font); font-weight: 600; cursor: pointer;
+      padding: 6px 10px; border-radius: 6px;
+      border: 1px solid var(--cash-border); background: var(--cash-surface); color: var(--cash-fg-muted);
+    }
+    .copy-btn:hover { color: var(--cash-fg); border-color: var(--cash-border-strong); }
+
+    .cap-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .cap-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+    .cap-row:last-child { margin-bottom: 0; }
+    .cap-row__label { width: 92px; flex: none; font-size: 12px; color: var(--cash-fg-subtle); font-weight: 600; }
+
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 12px; }
+    .swatch { border: 1px solid var(--cash-border); border-radius: var(--cash-radius); overflow: hidden; background: var(--cash-surface); }
+    .swatch__chip { height: 52px; }
+    .swatch__meta { padding: 8px 10px; }
+    .swatch__name { font-size: 12px; font-weight: 600; }
+    .swatch__val  { font-size: 11px; color: var(--cash-fg-muted); font-family: "SF Mono", ui-monospace, monospace; }
+
+    .tier { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+    .tier__item { flex: 1 1 220px; border: 1px solid var(--cash-border); border-radius: var(--cash-radius);
+      padding: 16px; background: var(--cash-surface); }
+    .tier__n { font-size: 11px; font-weight: 700; color: var(--cash-fg-subtle); letter-spacing: .04em; }
+    .tier__t { font-weight: 600; margin: 4px 0 6px; }
+    .tier__d { font-size: 13px; color: var(--cash-fg-muted); margin: 0; }
+
+    @media (max-width: 860px) { .doc-side { display: none; } .doc-content { padding: 28px 18px 90px; } .doc-topbar { padding: 12px 18px; } }
+  </style>
+</head>
+<body>
+<div class="doc-shell">
+
+  <!-- ============================ SIDEBAR ============================ -->
+  <aside class="doc-side">
+    <div class="doc-brand">
+      <div class="doc-brand__mark">C</div>
+      <div>
+        <div class="doc-brand__name">Cashy UI</div>
+        <div class="doc-brand__ver">v0.1 · tables</div>
+      </div>
+    </div>
+    <nav class="doc-nav">
+      <span class="doc-nav__label">Nền tảng</span>
+      <a href="#overview">Triết lý màu</a>
+      <a href="#tokens">Design tokens</a>
+      <span class="doc-nav__label">Components</span>
+      <a href="#capsules">Capsules / Badges</a>
+      <a href="#table-default">Table — cơ bản</a>
+      <a href="#table-tx">Table — giao dịch</a>
+      <a href="#table-variants">Table — biến thể</a>
+      <a href="#table-sticky">Table — sticky</a>
+      <a href="#table-debt">Table — công nợ</a>
+    </nav>
+  </aside>
+
+  <!-- ============================= MAIN ============================= -->
+  <div class="doc-main">
+    <header class="doc-topbar">
+      <h1>Cashy UI</h1>
+      <span class="cash-cap cash-cap--outline cash-cap--sm">Personal Finance</span>
+      <div class="spacer"></div>
+      <button class="theme-btn" onclick="toggleTheme()"><span id="themeIcon">◐</span> <span id="themeLabel">Theme</span></button>
+    </header>
+
+    <div class="doc-content">
+      <div class="doc-hero">
+        <h2>Bộ component cho web quản lý tài chính</h2>
+        <p>Một hệ thiết kế tối giản, ưu tiên trắng–đen–xám, dùng lại được. Mở file này để xem “ngôn ngữ hình ảnh” đã duyệt; khi build cashy, ghép từ catalog thay vì thiết kế lại từ đầu.</p>
+      </div>
+
+      <!-- ===================== OVERVIEW / PHILOSOPHY ===================== -->
+      <section class="doc-sec" id="overview">
+        <h3>Triết lý màu — 3 tầng ưu tiên</h3>
+        <p class="doc-sec__desc">Mặc định mọi thứ là trắng–đen–xám. Màu chỉ xuất hiện khi nó <em>mang ý nghĩa</em> (đã trả, quá hạn, cảnh báo). Đây là quy tắc xuyên suốt mọi component.</p>
+        <div class="tier">
+          <div class="tier__item">
+            <div class="tier__n">TẦNG 1 · MẶC ĐỊNH</div>
+            <div class="tier__t">Trắng · Đen · Xám</div>
+            <p class="tier__d">Nền, chữ, viền, phần lớn capsule. Capsule trắng đổ bóng xám, chữ đen/xám đậm. Nền tối thì đảo lại.</p>
+          </div>
+          <div class="tier__item">
+            <div class="tier__n">TẦNG 2 · CÓ Ý NGHĨA</div>
+            <div class="tier__t">Màu tươi, đặc</div>
+            <p class="tier__d">Dùng khi cần phân biệt trạng thái quan trọng: xanh = đã trả, đỏ = quá hạn/nợ xấu, vàng = sắp đến hạn.</p>
+          </div>
+          <div class="tier__item">
+            <div class="tier__n">TẦNG 3 · NHẤN NHẸ</div>
+            <div class="tier__t">Màu + độ trong (opacity)</div>
+            <p class="tier__d">Nền màu mờ + chữ cùng tông. Ưu tiên thấp nhất — dùng cho capsule/hàng cần gợi ý trạng thái mà không “hét”.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== TOKENS ===================== -->
+      <section class="doc-sec" id="tokens">
+        <h3>Design tokens</h3>
+        <p class="doc-sec__desc">Tất cả màu đến từ CSS variables. Đổi token → đổi toàn hệ. Đây là các token hay dùng nhất (xem đủ trong <code>cashy-ui.css</code>).</p>
+        <div class="swatches" id="swatches"></div>
+      </section>
+
+      <!-- ===================== CAPSULES ===================== -->
+      <section class="doc-sec" id="capsules">
+        <h3>Capsules / Badges / Tags</h3>
+        <p class="doc-sec__desc">Hai trục kết hợp tự do: <strong>FILL</strong> (soft · solid · outline · elevated) và <strong>TONE</strong> (neutral · success · danger · warning · info). Mặc định là soft-xám (tầng 1).</p>
+
+        <div class="doc-block">
+          <h4>Neutral — trắng/đen/xám (tầng 1, dùng nhiều nhất)</h4>
+          <div class="demo demo--plain">
+            <div class="demo__stage">
+              <div class="cap-grid">
+                <span class="cash-cap">Mặc định</span>
+                <span class="cash-cap cash-cap--elevated">Elevated · bóng xám</span>
+                <span class="cash-cap cash-cap--outline">Outline</span>
+                <span class="cash-cap cash-cap--solid">Solid</span>
+                <span class="cash-cap"><span class="cash-cap__dot"></span> Có chấm</span>
+              </div>
+            </div>
+            <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;span class="cash-cap"&gt;Mặc định&lt;/span&gt;
+&lt;span class="cash-cap cash-cap--elevated"&gt;Elevated · bóng xám&lt;/span&gt;
+&lt;span class="cash-cap cash-cap--outline"&gt;Outline&lt;/span&gt;
+&lt;span class="cash-cap cash-cap--solid"&gt;Solid&lt;/span&gt;</code></pre></div>
+          </div>
+        </div>
+
+        <div class="doc-block">
+          <h4>Semantic — soft (tầng 3) và solid (tầng 2)</h4>
+          <p class="doc-block__desc">Thêm tone; mặc định ra bản soft mờ. Thêm <code>--solid</code> để thành bản đặc, nhấn mạnh.</p>
+          <div class="demo demo--plain">
+            <div class="demo__stage">
+              <div class="cap-row"><span class="cap-row__label">Soft</span>
+                <span class="cash-cap cash-cap--success"><span class="cash-cap__dot"></span> Đã trả</span>
+                <span class="cash-cap cash-cap--warning"><span class="cash-cap__dot"></span> Sắp đến hạn</span>
+                <span class="cash-cap cash-cap--danger"><span class="cash-cap__dot"></span> Quá hạn</span>
+                <span class="cash-cap cash-cap--info"><span class="cash-cap__dot"></span> Đang xử lý</span>
+              </div>
+              <div class="cap-row"><span class="cap-row__label">Solid</span>
+                <span class="cash-cap cash-cap--success cash-cap--solid">Đã trả</span>
+                <span class="cash-cap cash-cap--warning cash-cap--solid">Sắp đến hạn</span>
+                <span class="cash-cap cash-cap--danger cash-cap--solid">Quá hạn</span>
+                <span class="cash-cap cash-cap--info cash-cap--solid">Đang xử lý</span>
+              </div>
+              <div class="cap-row"><span class="cap-row__label">Outline</span>
+                <span class="cash-cap cash-cap--success cash-cap--outline">Đã trả</span>
+                <span class="cash-cap cash-cap--danger cash-cap--outline">Quá hạn</span>
+              </div>
+            </div>
+            <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;!-- soft (tầng 3) --&gt;
+&lt;span class="cash-cap cash-cap--success"&gt;&lt;span class="cash-cap__dot"&gt;&lt;/span&gt; Đã trả&lt;/span&gt;
+&lt;!-- solid (tầng 2) --&gt;
+&lt;span class="cash-cap cash-cap--danger cash-cap--solid"&gt;Quá hạn&lt;/span&gt;</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== TABLE — DEFAULT ===================== -->
+      <section class="doc-sec" id="table-default">
+        <h3>Table — cơ bản</h3>
+        <p class="doc-sec__desc">Bảng sạch, viền hairline, hover nhẹ. Bọc trong <code>.cash-card</code> để có nền + bo góc + đổ bóng mềm.</p>
+        <div class="demo">
+          <div class="demo__stage">
+            <div class="cash-card">
+              <div class="cash-table-scroll">
+                <table class="cash-table">
+                  <thead><tr><th>Tài khoản</th><th>Loại</th><th class="cash-num">Số dư</th></tr></thead>
+                  <tbody>
+                    <tr><td class="cash-cell-strong">Vietcombank</td><td><span class="cash-cap">Ngân hàng</span></td><td class="cash-num cash-num--strong">42.850.000&nbsp;₫</td></tr>
+                    <tr><td class="cash-cell-strong">Ví Momo</td><td><span class="cash-cap">Ví điện tử</span></td><td class="cash-num cash-num--strong">1.240.000&nbsp;₫</td></tr>
+                    <tr><td class="cash-cell-strong">Tiền mặt</td><td><span class="cash-cap">Tiền mặt</span></td><td class="cash-num cash-num--strong">3.500.000&nbsp;₫</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;div class="cash-card"&gt;
+  &lt;div class="cash-table-scroll"&gt;
+    &lt;table class="cash-table"&gt;
+      &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Tài khoản&lt;/th&gt;&lt;th&gt;Loại&lt;/th&gt;&lt;th class="cash-num"&gt;Số dư&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td class="cash-cell-strong"&gt;Vietcombank&lt;/td&gt;
+          &lt;td&gt;&lt;span class="cash-cap"&gt;Ngân hàng&lt;/span&gt;&lt;/td&gt;
+          &lt;td class="cash-num cash-num--strong"&gt;42.850.000 ₫&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+        </div>
+      </section>
+
+      <!-- ===================== TABLE — TRANSACTIONS (HERO) ===================== -->
+      <section class="doc-sec" id="table-tx">
+        <h3>Table — giao dịch <span class="cash-cap cash-cap--solid cash-cap--sm">Hero</span></h3>
+        <p class="doc-sec__desc">Bảng chủ lực: tiêu đề + hành động, capsule phân loại ở cột, số căn phải dạng tabular, thu (xanh) / chi (trung tính), trạng thái bằng capsule, và dòng tổng ở footer.</p>
+        <div class="demo">
+          <div class="demo__stage">
+            <div class="cash-card">
+              <div class="cash-table-head">
+                <div>
+                  <h4 class="cash-table-head__title">Giao dịch gần đây</h4>
+                  <p class="cash-table-head__sub">Tháng 7, 2026 · 5 giao dịch</p>
+                </div>
+                <div class="cash-table-head__actions">
+                  <span class="cash-cap cash-cap--outline">Tháng này</span>
+                  <span class="cash-cap cash-cap--elevated">Xuất CSV</span>
+                </div>
+              </div>
+              <div class="cash-table-scroll">
+                <table class="cash-table">
+                  <thead>
+                    <tr>
+                      <th>Ngày</th><th>Nội dung</th><th>Danh mục</th><th>Phương thức</th>
+                      <th class="cash-num">Số tiền</th><th>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="cash-cell-muted">14/07</td>
+                      <td><span class="cash-cell-strong">Lương tháng 7</span><span class="cash-cell-sub">Công ty ABC</span></td>
+                      <td><span class="cash-cap cash-cap--success">Thu nhập</span></td>
+                      <td><span class="cash-cap"><span class="cash-cap__dot"></span> Chuyển khoản</span></td>
+                      <td class="cash-num cash-num--pos">+25.000.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--success"><span class="cash-cap__dot"></span> Đã nhận</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cash-cell-muted">13/07</td>
+                      <td><span class="cash-cell-strong">Siêu thị WinMart</span><span class="cash-cell-sub">Đi chợ tuần</span></td>
+                      <td><span class="cash-cap">Ăn uống</span></td>
+                      <td><span class="cash-cap"><span class="cash-cap__dot"></span> Thẻ</span></td>
+                      <td class="cash-num cash-num--strong">−1.280.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--success"><span class="cash-cap__dot"></span> Hoàn tất</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cash-cell-muted">12/07</td>
+                      <td><span class="cash-cell-strong">Tiền nhà</span><span class="cash-cell-sub">Kỳ tháng 7</span></td>
+                      <td><span class="cash-cap">Nhà ở</span></td>
+                      <td><span class="cash-cap"><span class="cash-cap__dot"></span> Chuyển khoản</span></td>
+                      <td class="cash-num cash-num--strong">−6.500.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--warning"><span class="cash-cap__dot"></span> Chờ xác nhận</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cash-cell-muted">11/07</td>
+                      <td><span class="cash-cell-strong">Netflix</span><span class="cash-cell-sub">Gói Premium</span></td>
+                      <td><span class="cash-cap">Giải trí</span></td>
+                      <td><span class="cash-cap"><span class="cash-cap__dot"></span> Thẻ</span></td>
+                      <td class="cash-num cash-num--strong">−260.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--danger"><span class="cash-cap__dot"></span> Thất bại</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cash-cell-muted">10/07</td>
+                      <td><span class="cash-cell-strong">Freelance</span><span class="cash-cell-sub">Dự án thiết kế</span></td>
+                      <td><span class="cash-cap cash-cap--success">Thu nhập</span></td>
+                      <td><span class="cash-cap"><span class="cash-cap__dot"></span> Ví điện tử</span></td>
+                      <td class="cash-num cash-num--pos">+4.200.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--success"><span class="cash-cap__dot"></span> Đã nhận</span></td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr><td colspan="4">Ròng trong kỳ</td><td class="cash-num cash-num--pos">+21.360.000&nbsp;₫</td><td></td></tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;tr&gt;
+  &lt;td class="cash-cell-muted"&gt;14/07&lt;/td&gt;
+  &lt;td&gt;
+    &lt;span class="cash-cell-strong"&gt;Lương tháng 7&lt;/span&gt;
+    &lt;span class="cash-cell-sub"&gt;Công ty ABC&lt;/span&gt;
+  &lt;/td&gt;
+  &lt;td&gt;&lt;span class="cash-cap cash-cap--success"&gt;Thu nhập&lt;/span&gt;&lt;/td&gt;
+  &lt;td&gt;&lt;span class="cash-cap"&gt;&lt;span class="cash-cap__dot"&gt;&lt;/span&gt; Chuyển khoản&lt;/span&gt;&lt;/td&gt;
+  &lt;td class="cash-num cash-num--pos"&gt;+25.000.000 ₫&lt;/td&gt;
+  &lt;td&gt;&lt;span class="cash-cap cash-cap--success"&gt;&lt;span class="cash-cap__dot"&gt;&lt;/span&gt; Đã nhận&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;!-- footer tổng --&gt;
+&lt;tfoot&gt;&lt;tr&gt;&lt;td colspan="4"&gt;Ròng trong kỳ&lt;/td&gt;
+  &lt;td class="cash-num cash-num--pos"&gt;+21.360.000 ₫&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;</code></pre></div>
+        </div>
+      </section>
+
+      <!-- ===================== TABLE — VARIANTS ===================== -->
+      <section class="doc-sec" id="table-variants">
+        <h3>Table — biến thể</h3>
+        <p class="doc-sec__desc">Cùng một bảng, thêm modifier: <code>--striped</code>, <code>--compact</code>, <code>--bordered</code>. Đặt kết hợp thoải mái.</p>
+
+        <div class="doc-block">
+          <h4>Striped + Compact</h4>
+          <div class="demo demo--plain">
+            <div class="demo__stage">
+              <div class="cash-card">
+                <div class="cash-table-scroll">
+                  <table class="cash-table cash-table--striped cash-table--compact">
+                    <thead><tr><th>Danh mục</th><th class="cash-num">Ngân sách</th><th class="cash-num">Đã chi</th><th class="cash-num">Còn lại</th></tr></thead>
+                    <tbody>
+                      <tr><td>Ăn uống</td><td class="cash-num">5.000.000</td><td class="cash-num">3.280.000</td><td class="cash-num cash-num--pos">1.720.000</td></tr>
+                      <tr><td>Di chuyển</td><td class="cash-num">1.500.000</td><td class="cash-num">1.650.000</td><td class="cash-num cash-num--neg">−150.000</td></tr>
+                      <tr><td>Giải trí</td><td class="cash-num">1.000.000</td><td class="cash-num">260.000</td><td class="cash-num cash-num--pos">740.000</td></tr>
+                      <tr><td>Nhà ở</td><td class="cash-num">6.500.000</td><td class="cash-num">6.500.000</td><td class="cash-num">0</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;table class="cash-table cash-table--striped cash-table--compact"&gt; … &lt;/table&gt;</code></pre></div>
+          </div>
+        </div>
+
+        <div class="doc-block">
+          <h4>Bordered</h4>
+          <div class="demo demo--plain">
+            <div class="demo__stage">
+              <div class="cash-card">
+                <div class="cash-table-scroll">
+                  <table class="cash-table cash-table--bordered cash-table--compact">
+                    <thead><tr><th>Mã</th><th>Hạng mục</th><th class="cash-num">Giá trị</th></tr></thead>
+                    <tbody>
+                      <tr><td class="cash-cell-muted">#001</td><td>Cổ phiếu</td><td class="cash-num">120.000.000</td></tr>
+                      <tr><td class="cash-cell-muted">#002</td><td>Vàng</td><td class="cash-num">45.000.000</td></tr>
+                      <tr><td class="cash-cell-muted">#003</td><td>Tiền gửi</td><td class="cash-num">80.000.000</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;table class="cash-table cash-table--bordered cash-table--compact"&gt; … &lt;/table&gt;</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== TABLE — STICKY ===================== -->
+      <section class="doc-sec" id="table-sticky">
+        <h3>Table — sticky header (cuộn)</h3>
+        <p class="doc-sec__desc">Thêm <code>--sticky</code> và giới hạn chiều cao của <code>.cash-table-scroll</code>. Header dính khi cuộn — hợp danh sách dài.</p>
+        <div class="demo demo--plain">
+          <div class="demo__stage">
+            <div class="cash-card">
+              <div class="cash-table-scroll" style="max-height: 240px;">
+                <table class="cash-table cash-table--sticky cash-table--compact">
+                  <thead><tr><th>Ngày</th><th>Nội dung</th><th class="cash-num">Số tiền</th></tr></thead>
+                  <tbody id="stickyBody"><!-- filled by JS --></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;div class="cash-table-scroll" style="max-height: 240px;"&gt;
+  &lt;table class="cash-table cash-table--sticky"&gt; … &lt;/table&gt;
+&lt;/div&gt;</code></pre></div>
+        </div>
+      </section>
+
+      <!-- ===================== TABLE — DEBT ===================== -->
+      <section class="doc-sec" id="table-debt">
+        <h3>Table — công nợ (dùng màu có chủ đích)</h3>
+        <p class="doc-sec__desc">Ví dụ khi màu <em>đáng</em> dùng: hàng quá hạn/nợ xấu có nền đỏ rất nhạt + vạch trái đỏ; sắp đến hạn màu vàng; đã trả màu xanh. Phần còn lại vẫn trung tính.</p>
+        <div class="demo">
+          <div class="demo__stage">
+            <div class="cash-card">
+              <div class="cash-table-head">
+                <div>
+                  <h4 class="cash-table-head__title">Khoản phải thu</h4>
+                  <p class="cash-table-head__sub">Theo dõi nợ &amp; hạn thanh toán</p>
+                </div>
+                <div class="cash-table-head__actions">
+                  <span class="cash-cap cash-cap--danger">2 quá hạn</span>
+                </div>
+              </div>
+              <div class="cash-table-scroll">
+                <table class="cash-table">
+                  <thead><tr><th>Người vay</th><th>Hạn trả</th><th class="cash-num">Số tiền</th><th>Trạng thái</th></tr></thead>
+                  <tbody>
+                    <tr class="cash-row--danger">
+                      <td class="cash-cell-strong">Nguyễn Văn A</td><td class="cash-cell-muted">01/06/2026</td>
+                      <td class="cash-num cash-num--strong">5.000.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--danger cash-cap--solid">Quá hạn 43 ngày</span></td>
+                    </tr>
+                    <tr class="cash-row--danger">
+                      <td class="cash-cell-strong">Trần Thị B</td><td class="cash-cell-muted">20/06/2026</td>
+                      <td class="cash-num cash-num--strong">1.800.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--danger">Nợ xấu</span></td>
+                    </tr>
+                    <tr class="cash-row--warning">
+                      <td class="cash-cell-strong">Lê Văn C</td><td class="cash-cell-muted">18/07/2026</td>
+                      <td class="cash-num cash-num--strong">2.500.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--warning"><span class="cash-cap__dot"></span> Còn 4 ngày</span></td>
+                    </tr>
+                    <tr class="cash-row--success">
+                      <td class="cash-cell-strong">Phạm Thị D</td><td class="cash-cell-muted">05/07/2026</td>
+                      <td class="cash-num">3.200.000&nbsp;₫</td>
+                      <td><span class="cash-cap cash-cap--success"><span class="cash-cap__dot"></span> Đã trả</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="demo__code"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>&lt;!-- vạch trái + nền nhạt theo trạng thái --&gt;
+&lt;tr class="cash-row--danger"&gt;
+  &lt;td class="cash-cell-strong"&gt;Nguyễn Văn A&lt;/td&gt;
+  &lt;td class="cash-cell-muted"&gt;01/06/2026&lt;/td&gt;
+  &lt;td class="cash-num cash-num--strong"&gt;5.000.000 ₫&lt;/td&gt;
+  &lt;td&gt;&lt;span class="cash-cap cash-cap--danger cash-cap--solid"&gt;Quá hạn 43 ngày&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class="cash-row--success"&gt; … &lt;span class="cash-cap cash-cap--success"&gt;Đã trả&lt;/span&gt; … &lt;/tr&gt;</code></pre></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ---------------- Theme toggle (matches next-themes .dark class) -------- */
+  const root = document.documentElement;
+  function applyThemeLabel() {
+    const dark = root.classList.contains('dark');
+    document.getElementById('themeIcon').textContent = dark ? '☾' : '☀';
+    document.getElementById('themeLabel').textContent = dark ? 'Dark' : 'Light';
+  }
+  (function initTheme() {
+    const saved = localStorage.getItem('cashy-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark' || (!saved && prefersDark)) root.classList.add('dark');
+    applyThemeLabel();
+  })();
+  function toggleTheme() {
+    root.classList.toggle('dark');
+    localStorage.setItem('cashy-theme', root.classList.contains('dark') ? 'dark' : 'light');
+    applyThemeLabel();
+  }
+
+  /* ---------------- Copy code buttons ------------------------------------ */
+  function copyCode(btn) {
+    const code = btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const t = btn.textContent; btn.textContent = 'Đã copy ✓';
+      setTimeout(() => (btn.textContent = t), 1200);
+    });
+  }
+
+  /* ---------------- Token swatches --------------------------------------- */
+  const tokens = [
+    ['--cash-surface', 'surface'], ['--cash-canvas', 'canvas'],
+    ['--cash-fg', 'fg'], ['--cash-fg-muted', 'fg-muted'],
+    ['--cash-border', 'border'], ['--cash-gray-900', 'gray-900'],
+    ['--cash-gray-500', 'gray-500'], ['--cash-gray-200', 'gray-200'],
+    ['--cash-success', 'success'], ['--cash-danger', 'danger'],
+    ['--cash-warning', 'warning'], ['--cash-info', 'info'],
+  ];
+  const sw = document.getElementById('swatches');
+  const cs = getComputedStyle(root);
+  tokens.forEach(([v, name]) => {
+    const val = cs.getPropertyValue(v).trim();
+    const el = document.createElement('div');
+    el.className = 'swatch';
+    el.innerHTML = `<div class="swatch__chip" style="background:var(${v}); border-bottom:1px solid var(--cash-border)"></div>
+      <div class="swatch__meta"><div class="swatch__name">${name}</div><div class="swatch__val">${val}</div></div>`;
+    sw.appendChild(el);
+  });
+
+  /* ---------------- Fill sticky-table demo with rows --------------------- */
+  const merchants = ['Grab', 'Highlands', 'Shopee', 'VinMart', 'Circle K', 'Baemin', 'Tiki', 'Lazada', 'GoJek', 'Batman'];
+  const body = document.getElementById('stickyBody');
+  for (let i = 0; i < 12; i++) {
+    const day = String(14 - (i % 14)).padStart(2, '0');
+    const amt = (Math.floor(50 + i * 37) % 900 + 50) * 1000;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="cash-cell-muted">${day}/07</td>
+      <td class="cash-cell-strong">${merchants[i % merchants.length]}</td>
+      <td class="cash-num cash-num--strong">−${amt.toLocaleString('vi-VN')} ₫</td>`;
+    body.appendChild(tr);
+  }
+</script>
+</body>
+</html>

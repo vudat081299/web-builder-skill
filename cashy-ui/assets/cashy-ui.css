@@ -1,0 +1,329 @@
+/* =============================================================================
+   Cashy UI — component library for personal finance web apps
+   -----------------------------------------------------------------------------
+   • Self-contained: link this one file, no build step required.
+   • Themed entirely through CSS custom properties (design tokens).
+   • Light is the default; add class="dark" on <html> (or any ancestor) for dark.
+     This matches cashy's next-themes, which toggles the `.dark` class.
+   • Colour philosophy (see references/design-principles.md):
+       1. white / black / grey  → the default for almost everything
+       2. bright solid colour   → only when it carries meaning (paid, overdue…)
+       3. bright colour + alpha  → soft tints, the lowest-priority accent
+   • Prefix `cash-` avoids collisions with Bootstrap/Tailwind/shadcn classes.
+   ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Neutral scale — the backbone. Near-black instead of pure #000 reads softer. */
+  --cash-white:      #ffffff;
+  --cash-gray-50:    #f7f7f8;
+  --cash-gray-100:   #f1f1f3;
+  --cash-gray-150:   #ececee;
+  --cash-gray-200:   #e4e4e7;
+  --cash-gray-300:   #d4d4d8;
+  --cash-gray-400:   #a1a1aa;
+  --cash-gray-500:   #71717a;
+  --cash-gray-600:   #52525b;
+  --cash-gray-700:   #3f3f46;
+  --cash-gray-800:   #27272a;
+  --cash-gray-900:   #18181b;
+  --cash-gray-950:   #0b0b0d;
+
+  /* Semantic surfaces / text — reference these, not the raw scale above. */
+  --cash-canvas:       var(--cash-gray-50);   /* app background            */
+  --cash-surface:      var(--cash-white);     /* cards, tables             */
+  --cash-surface-2:    var(--cash-gray-50);   /* header rows, striped rows */
+  --cash-surface-hover:var(--cash-gray-100);  /* row hover                 */
+  --cash-fg:           var(--cash-gray-900);  /* primary text              */
+  --cash-fg-muted:     var(--cash-gray-500);  /* secondary text            */
+  --cash-fg-subtle:    var(--cash-gray-400);  /* tertiary / placeholder    */
+  --cash-border:       var(--cash-gray-200);  /* hairline borders          */
+  --cash-border-strong:var(--cash-gray-300);
+
+  /* Elevation — soft grey shadows in light mode. */
+  --cash-shadow-sm: 0 1px 2px rgba(16, 17, 18, .05), 0 1px 3px rgba(16, 17, 18, .04);
+  --cash-shadow-md: 0 2px 4px rgba(16, 17, 18, .05), 0 6px 16px rgba(16, 17, 18, .08);
+
+  /* Semantic colours — tier 2 (solid) and tier 3 (soft = alpha tint). */
+  --cash-success:        #16a34a;
+  --cash-success-fg:     #ffffff;
+  --cash-success-soft:   rgba(22, 163, 74, .12);
+  --cash-success-text:   #15803d;
+
+  --cash-danger:         #dc2626;
+  --cash-danger-fg:      #ffffff;
+  --cash-danger-soft:    rgba(220, 38, 38, .11);
+  --cash-danger-text:    #b91c1c;
+
+  --cash-warning:        #d97706;
+  --cash-warning-fg:     #ffffff;
+  --cash-warning-soft:   rgba(217, 119, 6, .14);
+  --cash-warning-text:   #b45309;
+
+  --cash-info:           #2563eb;
+  --cash-info-fg:        #ffffff;
+  --cash-info-soft:      rgba(37, 99, 235, .11);
+  --cash-info-text:      #1d4ed8;
+
+  /* Very subtle row tints for meaningful table states. */
+  --cash-row-danger:  rgba(220, 38, 38, .045);
+  --cash-row-warning: rgba(217, 119, 6, .055);
+  --cash-row-success: rgba(22, 163, 74, .05);
+
+  /* Shape & rhythm. */
+  --cash-radius-sm:  6px;
+  --cash-radius:     10px;
+  --cash-radius-lg:  14px;
+  --cash-radius-pill: 999px;
+
+  --cash-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+               Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
+.dark {
+  --cash-canvas:       var(--cash-gray-950);
+  --cash-surface:      #131316;
+  --cash-surface-2:    #1a1a1e;
+  --cash-surface-hover:#212127;
+  --cash-fg:           var(--cash-gray-50);
+  --cash-fg-muted:     var(--cash-gray-400);
+  --cash-fg-subtle:    var(--cash-gray-500);
+  --cash-border:       #26262b;
+  --cash-border-strong:#34343a;
+
+  /* On dark, shadows barely read — borders do the separating, shadows deepen. */
+  --cash-shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  --cash-shadow-md: 0 4px 12px rgba(0, 0, 0, .45), 0 2px 4px rgba(0, 0, 0, .4);
+
+  /* Slightly brighter fills + stronger tints so colour survives a dark canvas. */
+  --cash-success:      #22c55e;
+  --cash-success-soft: rgba(34, 197, 94, .16);
+  --cash-success-text: #4ade80;
+
+  --cash-danger:       #ef4444;
+  --cash-danger-soft:  rgba(239, 68, 68, .16);
+  --cash-danger-text:  #f87171;
+
+  --cash-warning:      #f59e0b;
+  --cash-warning-soft: rgba(245, 158, 11, .17);
+  --cash-warning-text: #fbbf24;
+
+  --cash-info:         #3b82f6;
+  --cash-info-soft:    rgba(59, 130, 246, .17);
+  --cash-info-text:    #60a5fa;
+
+  --cash-row-danger:  rgba(239, 68, 68, .09);
+  --cash-row-warning: rgba(245, 158, 11, .09);
+  --cash-row-success: rgba(34, 197, 94, .09);
+}
+
+/* -----------------------------------------------------------------------------
+   2. CAPSULES  (badges / tags / status pills)
+   -----------------------------------------------------------------------------
+   Compose two independent axes:
+     • FILL   → default (soft grey) · --solid · --outline · --elevated
+     • TONE   → default (neutral)   · --success · --danger · --warning · --info
+   e.g.  .cash-cap                       neutral soft grey   (tier 1, default)
+         .cash-cap.cash-cap--elevated    white + grey shadow (tier 1, emphasis)
+         .cash-cap.cash-cap--success     soft green          (tier 3)
+         .cash-cap.cash-cap--success.cash-cap--solid  solid green (tier 2)
+   -------------------------------------------------------------------------- */
+.cash-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  font-family: var(--cash-font);
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.4;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  border-radius: var(--cash-radius-pill);
+  border: 1px solid transparent;
+  /* Tier 1 default: soft grey. */
+  background: var(--cash-gray-100);
+  color: var(--cash-gray-700);
+}
+.dark .cash-cap { background: var(--cash-gray-800); color: var(--cash-gray-200); }
+
+/* Optional leading status dot. */
+.cash-cap__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: .85;
+  flex: none;
+}
+
+/* --- FILL: outline --------------------------------------------------------- */
+.cash-cap--outline {
+  background: transparent;
+  border-color: var(--cash-border-strong);
+  color: var(--cash-fg-muted);
+}
+
+/* --- FILL: elevated (white capsule, grey shadow — the signature neutral) ---- */
+.cash-cap--elevated {
+  background: var(--cash-surface);
+  color: var(--cash-fg);
+  border-color: var(--cash-border);
+  box-shadow: var(--cash-shadow-sm);
+}
+
+/* --- FILL: solid neutral (near-black / near-white in dark) ------------------ */
+.cash-cap--solid {
+  background: var(--cash-gray-900);
+  color: var(--cash-white);
+  border-color: transparent;
+}
+.dark .cash-cap--solid { background: var(--cash-gray-100); color: var(--cash-gray-900); }
+
+/* --- TONE: soft (tier 3) — the default fill when a tone is set -------------- */
+.cash-cap--success { background: var(--cash-success-soft); color: var(--cash-success-text); }
+.cash-cap--danger  { background: var(--cash-danger-soft);  color: var(--cash-danger-text);  }
+.cash-cap--warning { background: var(--cash-warning-soft); color: var(--cash-warning-text); }
+.cash-cap--info    { background: var(--cash-info-soft);    color: var(--cash-info-text);    }
+
+/* --- TONE + solid (tier 2) — bright, high-emphasis ------------------------- */
+.cash-cap--success.cash-cap--solid { background: var(--cash-success); color: var(--cash-success-fg); }
+.cash-cap--danger.cash-cap--solid  { background: var(--cash-danger);  color: var(--cash-danger-fg);  }
+.cash-cap--warning.cash-cap--solid { background: var(--cash-warning); color: var(--cash-warning-fg); }
+.cash-cap--info.cash-cap--solid    { background: var(--cash-info);    color: var(--cash-info-fg);    }
+
+/* --- TONE + outline -------------------------------------------------------- */
+.cash-cap--success.cash-cap--outline { background: transparent; border-color: var(--cash-success); color: var(--cash-success-text); }
+.cash-cap--danger.cash-cap--outline  { background: transparent; border-color: var(--cash-danger);  color: var(--cash-danger-text);  }
+.cash-cap--warning.cash-cap--outline { background: transparent; border-color: var(--cash-warning); color: var(--cash-warning-text); }
+.cash-cap--info.cash-cap--outline    { background: transparent; border-color: var(--cash-info);    color: var(--cash-info-text);    }
+
+/* Size modifiers. */
+.cash-cap--sm { padding: 1px 8px;  font-size: 11px; gap: 5px; }
+.cash-cap--lg { padding: 5px 13px; font-size: 13px; }
+
+/* -----------------------------------------------------------------------------
+   3. TABLES
+   -----------------------------------------------------------------------------
+   Structure:
+     .cash-card            optional wrapper giving surface + border + radius
+       .cash-table-head    optional title / subtitle / actions bar
+       .cash-table-scroll  makes the table body scroll (needed for sticky head)
+         table.cash-table
+       .cash-table-foot    optional footer (pagination, summary)
+   Modifiers on .cash-table:  --striped · --bordered · --compact · --hover(default)
+   -------------------------------------------------------------------------- */
+.cash-card {
+  background: var(--cash-surface);
+  border: 1px solid var(--cash-border);
+  border-radius: var(--cash-radius-lg);
+  box-shadow: var(--cash-shadow-sm);
+  overflow: hidden;
+  font-family: var(--cash-font);
+}
+
+.cash-table-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--cash-border);
+}
+.cash-table-head__title { font-size: 15px; font-weight: 650; color: var(--cash-fg); margin: 0; }
+.cash-table-head__sub   { font-size: 13px; color: var(--cash-fg-muted); margin: 2px 0 0; }
+.cash-table-head__actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+.cash-table-scroll { width: 100%; overflow: auto; }
+
+.cash-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--cash-font);
+  font-size: 14px;
+  color: var(--cash-fg);
+  background: var(--cash-surface);
+}
+
+/* Header cells — quiet, uppercase-ish label styling. */
+.cash-table thead th {
+  position: relative;
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--cash-fg-muted);
+  background: var(--cash-surface-2);
+  border-bottom: 1px solid var(--cash-border);
+  white-space: nowrap;
+}
+
+/* Body cells. */
+.cash-table tbody td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--cash-border);
+  vertical-align: middle;
+}
+.cash-table tbody tr:last-child td { border-bottom: none; }
+
+/* Hover is on by default; add nothing to get it. */
+.cash-table tbody tr { transition: background-color .12s ease; }
+.cash-table:not(.cash-table--no-hover) tbody tr:hover { background: var(--cash-surface-hover); }
+
+/* Footer / totals row. */
+.cash-table tfoot td {
+  padding: 13px 16px;
+  font-weight: 650;
+  color: var(--cash-fg);
+  background: var(--cash-surface-2);
+  border-top: 2px solid var(--cash-border-strong);
+}
+
+/* --- MODIFIER: striped ----------------------------------------------------- */
+.cash-table--striped tbody tr:nth-child(even) { background: var(--cash-surface-2); }
+.cash-table--striped tbody tr:nth-child(even):hover { background: var(--cash-surface-hover); }
+
+/* --- MODIFIER: bordered (vertical grid lines) ------------------------------ */
+.cash-table--bordered th,
+.cash-table--bordered td { border-right: 1px solid var(--cash-border); }
+.cash-table--bordered th:last-child,
+.cash-table--bordered td:last-child { border-right: none; }
+
+/* --- MODIFIER: compact / dense --------------------------------------------- */
+.cash-table--compact thead th { padding: 8px 12px; }
+.cash-table--compact tbody td,
+.cash-table--compact tfoot td { padding: 8px 12px; }
+
+/* --- MODIFIER: sticky header (needs a height-bounded .cash-table-scroll) ---- */
+.cash-table--sticky thead th { position: sticky; top: 0; z-index: 2; }
+
+/* Numeric cells — right-aligned with tabular figures so digits line up. */
+.cash-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+}
+.cash-num--pos { color: var(--cash-success-text); font-weight: 600; }
+.cash-num--neg { color: var(--cash-danger-text);  font-weight: 600; }
+/* Muted-strong: emphasise an amount without colour (white-black-grey first). */
+.cash-num--strong { color: var(--cash-fg); font-weight: 650; }
+
+/* Meaningful full-row states — kept very subtle, plus a left accent bar. */
+.cash-row--danger  > td:first-child { box-shadow: inset 3px 0 0 var(--cash-danger); }
+.cash-row--warning > td:first-child { box-shadow: inset 3px 0 0 var(--cash-warning); }
+.cash-row--success > td:first-child { box-shadow: inset 3px 0 0 var(--cash-success); }
+.cash-table tbody tr.cash-row--danger  { background: var(--cash-row-danger); }
+.cash-table tbody tr.cash-row--warning { background: var(--cash-row-warning); }
+.cash-table tbody tr.cash-row--success { background: var(--cash-row-success); }
+
+/* Small helpers used inside cells. */
+.cash-cell-strong { font-weight: 600; color: var(--cash-fg); }
+.cash-cell-muted  { color: var(--cash-fg-muted); }
+.cash-cell-sub    { display: block; font-size: 12px; color: var(--cash-fg-muted); margin-top: 2px; }
+.cash-stack       { display: flex; flex-direction: column; }
+.cash-inline      { display: inline-flex; align-items: center; gap: 8px; }
