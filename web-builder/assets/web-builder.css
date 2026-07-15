@@ -1475,7 +1475,7 @@
    Small, composable layout primitives so a page is assembled, not hand-styled:
      .wb-grid --auto|--2|--3|--4|--equal   (2-D grids; --auto fills by min width)
      .wb-cluster (1-D row, wraps) — main axis: --start/end/center/between/around/evenly;
-                 cross axis (vertical): --top/bottom/baseline (default center); + --tight/loose/nowrap/stretch
+                 cross axis (vertical): --top/middle/bottom/baseline (middle = default); + --tight/loose/nowrap/stretch
      .wb-grow (child eats slack) · .wb-self--top/center/bottom/stretch/baseline (per-item align)
    -------------------------------------------------------------------------- */
 .wb-grid { display: grid; gap: 14px; }
@@ -1497,8 +1497,10 @@
 .wb-cluster--between { justify-content: space-between; }
 .wb-cluster--around  { justify-content: space-around; }
 .wb-cluster--evenly  { justify-content: space-evenly; }
-/* cross axis (align) — vertical alignment when items differ in height (default: center) */
+/* cross axis (align) — vertical alignment when items differ in height (default: center).
+   NB: --center is horizontal (justify, above); --middle is vertical (align). */
 .wb-cluster--top      { align-items: flex-start; }
+.wb-cluster--middle   { align-items: center; }      /* explicit vertical centre (this is the default) */
 .wb-cluster--bottom   { align-items: flex-end; }
 .wb-cluster--baseline { align-items: baseline; }
 .wb-cluster--nowrap  { flex-wrap: nowrap; }

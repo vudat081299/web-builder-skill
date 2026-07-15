@@ -10,7 +10,7 @@
   <h3>Cluster — hàng ngang, tự xuống dòng (wrap)</h3>
   <p class="doc-sec__desc"><b>Trục ngang</b> (justify — dồn theo hàng): mặc định trái · <code>--end</code> (phải) ·
   <code>--center</code> · <code>--between</code> · <code>--around</code> · <code>--evenly</code> · <code>--stretch</code> (các item bằng nhau, phủ kín hàng).
-  <b>Trục dọc</b> (align — khi item cao thấp khác nhau): mặc định giữa · <code>--top</code> · <code>--bottom</code> · <code>--baseline</code>.
+  <b>Trục dọc</b> (align — khi item cao thấp khác nhau): <code>--top</code> · <code>--middle</code> (giữa · mặc định) · <code>--bottom</code> · <code>--baseline</code>.
   Khoảng cách: <code>--tight</code> / <code>--loose</code>; <code>--nowrap</code> để không xuống dòng.</p>
 
   <div class="doc-block">
@@ -67,6 +67,10 @@
             <span class="lay-box" style="padding-block:24px">cao</span><span class="lay-box">vừa</span><span class="lay-box" style="padding-block:6px">thấp</span>
             <span class="wb-cell-muted" style="font-size:12px">← --top</span>
           </div>
+          <div class="wb-cluster wb-cluster--middle">
+            <span class="lay-box" style="padding-block:24px">cao</span><span class="lay-box">vừa</span><span class="lay-box" style="padding-block:6px">thấp</span>
+            <span class="wb-cell-muted" style="font-size:12px">← --middle (giữa · mặc định)</span>
+          </div>
           <div class="wb-cluster wb-cluster--bottom">
             <span class="lay-box" style="padding-block:24px">cao</span><span class="lay-box">vừa</span><span class="lay-box" style="padding-block:6px">thấp</span>
             <span class="wb-cell-muted" style="font-size:12px">← --bottom</span>
@@ -78,6 +82,7 @@
         </div>
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-cluster wb-cluster--top"&gt; … &lt;/div&gt;       &lt;!-- căn trên --&gt;
+&lt;div class="wb-cluster wb-cluster--middle"&gt; … &lt;/div&gt;    &lt;!-- giữa (mặc định) --&gt;
 &lt;div class="wb-cluster wb-cluster--bottom"&gt; … &lt;/div&gt;    &lt;!-- căn dưới --&gt;
 &lt;div class="wb-cluster wb-cluster--baseline"&gt; … &lt;/div&gt;  &lt;!-- thẳng chân chữ --&gt;</code></pre></div>
     </div>

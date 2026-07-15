@@ -940,7 +940,8 @@ Composable layout utilities (no colour/meaning — just placement; swap for Tail
 prefer):
 - `.wb-cluster` — a row that **wraps**. Main axis (justify): `--start` / `--end` / `--center` /
   `--between` / `--around` / `--evenly` / `--stretch` (equal-**width** items fill the row). Cross axis
-  (align, when items differ in height): `--top` / `--bottom` / `--baseline` (default centred). Gap
+  (align, when items differ in height): `--top` / `--middle` (vertical centre = default) / `--bottom` /
+  `--baseline` — note `--center` is horizontal (justify), `--middle` is vertical (align). Gap
   `--tight` / `--loose`; `--nowrap` to stop wrapping.
 - `.wb-grid` — 2-D grid: `--auto` (auto-fill by `--wb-grid-min`), `--2/--3/--4` (fixed cols, → 1
   col on mobile), `--equal` (equal columns in one row). Cells are **equal-height** — use this for a row

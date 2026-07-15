@@ -38,7 +38,7 @@ Tailwind note below).
 | Forms (controls, select, checks, range, input-group, validation) | ✅ full | + colour input, file dropzone, **switch locked** state — beyond Bootstrap |
 | Floating labels | ❌ not used | we use a top `wb-label` (clearer for dense forms; a deliberate call, not a gap) |
 | Layout (12-col grid, breakpoints, gutters) | 🟡 by design | flex-first utilities instead — **with full flex alignment** (justify / align / self / grow); no 12-col scaffold. See below & design-principles §17 |
-| Flex/align utilities (justify-content, align-items, align-self, flex-fill) | ✅ | on `.wb-cluster` / `.wb-stack` (`--start/end/center/between/around/evenly`, `--top/bottom/baseline`) + `.wb-grow` / `.wb-self--*` |
+| Flex/align utilities (justify-content, align-items, align-self, flex-fill) | ✅ | on `.wb-cluster` / `.wb-stack` (`--start/end/center/between/around/evenly`, `--top/middle/bottom/baseline`) + `.wb-grow` / `.wb-self--*` |
 
 **Only in Web Builder (flagship finance extras, no Bootstrap equivalent):** tags (`#` category chips), stat/KPI cards,
 charts (line/bars/combo/donut/sparkline + budget), category **tree** (drag reorder/reparent), **sortable**
@@ -61,7 +61,7 @@ Web Builder keeps layout as a **small flex-first utility set** — `.wb-cluster`
 (column), `.wb-grid` (`--auto/-2/-3/-4/--equal`), `.wb-container`, `.wb-ratio` — each collapsing
 sensibly on mobile, no breakpoint bookkeeping. The set carries **full flex alignment** so a row/column is
 never hand-styled: cluster justifies (`--start/end/center/between/around/evenly`) and aligns
-(`--top/bottom/baseline`), stack aligns (`--start/center/end`), plus `.wb-grow` and `.wb-self--*` for
+(`--top/middle/bottom/baseline`), stack aligns (`--start/center/end`), plus `.wb-grow` and `.wb-self--*` for
 per-item control. What we skip is only the 12-column scaffold, not alignment. Reasoning (full version in `design-principles.md §17`):
 a 12-col foundation is a lot of vocabulary (five breakpoints × twelve columns × gutters) for what real
 pages actually need — "wrap these chips / stack this form / reflow these cards" — which the five utilities
