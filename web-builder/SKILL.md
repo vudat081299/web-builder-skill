@@ -76,12 +76,14 @@ source of truth**, kept in sync per-component, so it never drifts here):
   `--wb-font`), border & radius, and a live **Config** playground that edits tokens and exports a `.md`.
 - **Hành động** — buttons (incl. button-group, social-login with brand logos), dropdown / menu.
 - **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea, checkbox/radio, switch
-  (incl. a **locked** state), range, file + dropzone, colour; validation via the `.is-invalid` state.
+  (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone, colour; validation via the `.is-invalid` state.
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
-  list group, stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**
+  **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
+  stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**
   (hoá đơn — a torn-paper slip).
-- **Phản hồi** — alert, toast, modal/dialog, drawer/offcanvas, progress, skeleton, empty state, tooltip.
-- **Điều hướng** — navbar, nav / menu, sidenav (app rail), tabs, breadcrumb, pagination, accordion, divider.
+- **Phản hồi** — alert, toast, modal/dialog, drawer/offcanvas, progress (+ indeterminate/loading),
+  skeleton, empty state, tooltip.
+- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**), nav / menu, sidenav (app rail), tabs, breadcrumb, pagination, accordion, divider.
 - **Biểu đồ** — line/area, income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin
   donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps.
 - **Cấu trúc** — drag-and-drop **tree** (reorder + reparent), flat **sortable** list/grid/rows, and the

@@ -38,6 +38,7 @@ const NAV = [
     { id: "card",     label: "Card" },
     { id: "receipt",  label: "Hoá đơn (receipt)" },
     { id: "tables",   label: "Tables" },
+    { id: "filterbar",label: "Filter bar" },
     { id: "list",     label: "List group" },
     { id: "stats",    label: "Stat / KPI cards" },
     { id: "capsules", label: "Capsules / Badges" },
@@ -131,6 +132,43 @@ function initPage(root) {
   root.querySelectorAll("[data-tree]").forEach(initTree);
   root.querySelectorAll("[data-sortable]").forEach(initSortable);
   root.querySelectorAll("[data-sortable-rows]").forEach(initSortableTable);
+  root.querySelectorAll("[data-range-filter]").forEach(initRangeFilter);
+}
+
+/* ---- Range filter — dual slider ⇄ min/max inputs ⇄ plain-language summary -----
+   Docs-only wiring; in an app use Radix Slider + controlled state. Two stacked
+   <input type=range> (data-h="min"/"max") can't cross; the fill + text + number
+   boxes all stay in sync. Number boxes never get rewritten while focused. -------- */
+function initRangeFilter(rf) {
+  const dual = rf.querySelector(".wb-range-dual");
+  if (!dual) return;
+  const sMin = dual.querySelector('.wb-range-dual__input[data-h="min"]');
+  const sMax = dual.querySelector('.wb-range-dual__input[data-h="max"]');
+  const nMin = rf.querySelector("[data-range-min]");
+  const nMax = rf.querySelector("[data-range-max]");
+  const out  = rf.querySelector(".wb-range-filter__summary");
+  const lo = +sMin.min, hi = +sMax.max;
+  const pct = (v) => ((v - lo) / (hi - lo)) * 100;
+  const fmt = (v) => (+v).toLocaleString("vi-VN");
+  function render() {
+    const a = +sMin.value, b = +sMax.value;
+    dual.style.setProperty("--a", pct(a));
+    dual.style.setProperty("--b", pct(b));
+    if (nMin && document.activeElement !== nMin) nMin.value = a;
+    if (nMax && document.activeElement !== nMax) nMax.value = b;
+    if (out) {
+      out.textContent =
+        a <= lo && b >= hi ? "Mọi số tiền" :
+        a <= lo ? "Dưới " + fmt(b) + " ₫" :
+        b >= hi ? "Trên " + fmt(a) + " ₫" :
+        fmt(a) + " – " + fmt(b) + " ₫";
+    }
+  }
+  sMin.addEventListener("input", () => { if (+sMin.value > +sMax.value) sMin.value = sMax.value; render(); });
+  sMax.addEventListener("input", () => { if (+sMax.value < +sMin.value) sMax.value = sMin.value; render(); });
+  if (nMin) nMin.addEventListener("input", () => { sMin.value = Math.max(lo, Math.min(+nMin.value || lo, +sMax.value)); render(); });
+  if (nMax) nMax.addEventListener("input", () => { sMax.value = Math.min(hi, Math.max(+nMax.value || hi, +sMin.value)); render(); });
+  render();
 }
 
 /* ---- Sortable: flat drag-to-reorder for a list OR grid, with a dashed slot -
@@ -745,6 +783,10 @@ renderNav();
 applyThemeLabel();
 initConfig();
 document.getElementById("themeBtn").addEventListener("click", toggleTheme);
+/* Any .wb-theme-toggle inside a demo (e.g. the navbar's) flips the same theme. */
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".wb-theme-toggle")) toggleTheme();
+});
 const cfgBtn = document.getElementById("configBtn");
 if (cfgBtn) cfgBtn.addEventListener("click", () =>
   document.getElementById("configDrawer").classList.toggle("is-open"));

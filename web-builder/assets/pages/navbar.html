@@ -8,7 +8,8 @@
 <section class="doc-sec">
   <div class="doc-block">
     <h4>App bar cơ bản</h4>
-    <p class="doc-block__desc">Thương hiệu bên trái · <code>.wb-nav</code> ở giữa · <code>__spacer</code> đẩy <code>__actions</code> về phải.</p>
+    <p class="doc-block__desc">Thương hiệu bên trái · <code>.wb-nav</code> ở giữa · <code>__spacer</code> đẩy <code>__actions</code> về phải.
+    Trong <code>__actions</code> có nút <b>đổi giao diện sáng/tối</b> (<code>.wb-theme-toggle</code>) — icon tự đổi theo chế độ (thử bấm nó).</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-navbar">
@@ -23,6 +24,10 @@
           <div class="wb-navbar__actions">
             <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Tìm kiếm"><span class="wb-ico">search</span></button>
             <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+            <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+              <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+              <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+            </button>
             <span class="wb-avatar wb-avatar--sm">DV</span>
           </div>
         </div>
@@ -36,6 +41,11 @@
   &lt;span class="wb-navbar__spacer"&gt;&lt;/span&gt;
   &lt;div class="wb-navbar__actions"&gt;
     &lt;button class="wb-btn wb-btn--ghost wb-btn--icon"&gt;&lt;span class="wb-ico"&gt;search&lt;/span&gt;&lt;/button&gt;
+    &lt;!-- đổi giao diện: icon tự đổi theo .dark ở &lt;html&gt;, app chỉ bật/tắt .dark --&gt;
+    &lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Sáng/Tối"&gt;
+      &lt;span class="wb-ico wb-theme-toggle__to-dark"&gt;dark_mode&lt;/span&gt;
+      &lt;span class="wb-ico wb-theme-toggle__to-light"&gt;light_mode&lt;/span&gt;
+    &lt;/button&gt;
     &lt;span class="wb-avatar wb-avatar--sm"&gt;DV&lt;/span&gt;
   &lt;/div&gt;
 &lt;/div&gt;
@@ -82,6 +92,7 @@
 
   <div class="doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
-    <div>Trong app, gắn <code>.is-active</code> theo route hiện tại (React Router <code>NavLink</code>…). Menu <b>mở/đóng</b> (dropdown) hay panel dùng Radix — xem <a href="#/dropdown">Dropdown</a> / <a href="#/tabs">Tabs</a>.</div>
+    <div>Trong app, gắn <code>.is-active</code> theo route hiện tại (React Router <code>NavLink</code>…). Menu <b>mở/đóng</b> (dropdown) hay panel dùng Radix — xem <a href="#/dropdown">Dropdown</a> / <a href="#/tabs">Tabs</a>.
+    Nút <b>sáng/tối</b> chỉ cần bật/tắt class <code>.dark</code> ở <code>&lt;html&gt;</code> (next-themes / một dòng JS) — icon tự đổi; xem <a href="#/config">Config</a>.</div>
   </div>
 </section>

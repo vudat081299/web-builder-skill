@@ -45,4 +45,24 @@
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-progress"&gt;&lt;div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></div>
     </div>
   </div>
+
+  <div class="doc-block">
+    <h4>Loading — tiến độ vô định <span class="wb-cap wb-cap--sm wb-cap--outline">animation</span></h4>
+    <p class="doc-block__desc">Khi chưa biết % (đang tải / đồng bộ): một vệt chạy dọc track theo vòng lặp —
+    hiệu ứng <b>loading</b>, không phải thanh lấp đầy. Không cần thẻ <code>__bar</code>. Đổi màu vệt bằng
+    <code>--wb-progress-c</code>; tôn trọng <code>prefers-reduced-motion</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:16px;max-width:420px">
+          <div class="wb-progress wb-progress--loading"></div>
+          <div class="wb-progress wb-progress--loading wb-progress--lg" style="--wb-progress-c:var(--wb-info)"></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-progress wb-progress--loading"&gt;&lt;/div&gt;
+
+&lt;!-- lớn hơn + đổi màu vệt --&gt;
+&lt;div class="wb-progress wb-progress--loading wb-progress--lg"
+     style="--wb-progress-c:var(--wb-info)"&gt;&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
 </section>

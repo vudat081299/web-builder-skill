@@ -23,6 +23,25 @@
   </div>
 
   <div class="doc-block">
+    <h4>I/O — ký hiệu nguồn ở nền track</h4>
+    <p class="doc-block__desc">Thêm <code>--io</code>: <b>nền track</b> hiện <b>vạch “I”</b> (bật) và <b>vòng “O”</b> (tắt) như công tắc nguồn —
+    vẽ bằng <b>hình khối CSS</b>, không phải ký tự nên không lệ thuộc font. Thumb che bên đang không dùng, chỉ chừa ký hiệu đang bật.
+    Không đổi markup, chỉ thêm một class.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <label class="wb-switch wb-switch--io"><input type="checkbox" checked /><span class="wb-switch__track"></span> Bật thông báo</label>
+          <label class="wb-switch wb-switch--io"><input type="checkbox" /><span class="wb-switch__track"></span> Chế độ tối giản</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-switch wb-switch--io"&gt;
+  &lt;input type="checkbox" checked /&gt;
+  &lt;span class="wb-switch__track"&gt;&lt;/span&gt; Bật thông báo
+&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
     <h4>Vô hiệu (disabled)</h4>
     <p class="doc-block__desc">Không tương tác được: track về tông xám “trơ” (không phải màu bật/tắt), con trỏ <code>not-allowed</code>.
     Dùng khi lựa chọn <b>tạm thời không dùng đến</b> trong ngữ cảnh này. Giữ thuộc tính <code>disabled</code> trên input.</p>

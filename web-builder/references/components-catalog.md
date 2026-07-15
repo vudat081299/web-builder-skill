@@ -8,7 +8,7 @@ see SKILL.md).
 Scope so far: foundations (**colour**, **tokens**, **typography**, **fonts**, **border & radius**,
 **Config/tweak** playground); **Buttons** (+ button-group), **Dropdown**; **inputs** — one primitive per
 page: **Text input**, **Select**, **Textarea**, **Checkbox/Radio**, **Switch**, **Range/Slider**,
-**File/Upload**, **Colour**; **Card**, **Tables**, **List group**, **Stat/KPI**, **Capsules**, **Tags**,
+**File/Upload**, **Colour**; **Card**, **Tables**, **Filter bar**, **List group**, **Stat/KPI**, **Capsules**, **Tags**,
 **Avatar**; **Alert**, **Toast**, **Modal**, **Drawer/Offcanvas**, **Progress**, **Skeleton**,
 **Empty state**, **Tooltip**; **Tabs** (underline / pill / boxed), **Breadcrumb**, **Pagination**,
 **Accordion**, **Divider**; **Charts** (line/area, bars, **combo bar+line**, **horizontal ranked bars**,
@@ -41,6 +41,8 @@ for the look (see `integration.md`).
 | A long scrollable list, header must stay visible | Table — `--sticky` | [Tables](#tables) |
 | Debts / receivables / anything with overdue-vs-paid | Table + row-state + colour | [Tables](#tables) |
 | A totals / summary line under a table | `<tfoot>` row | [Tables](#tables) |
+| A toolbar to search + filter a table/list (tag, status, amount range) | **Filter bar** | [Filter bar](#filter-bar) |
+| Filter by amount range (≥ / ≤ / between), a `#tag`, or a status | **Filter bar** tokens | [Filter bar](#filter-bar) |
 | A data-entry form (add/edit transaction, settings) | **Form controls** | [Forms](#form-controls) |
 | A money input, a category picker, a yes/no setting | input-group / select / switch | [Forms](#form-controls) |
 | A slider for a budget cap / threshold | **Range** | [Range](#range--slider) |
@@ -60,6 +62,7 @@ for the look (see `integration.md`).
 | The left navigation rail of an app shell | **Sidebar** (`.wb-sidenav`) | [Sidebar](#sidebar-side-nav) |
 | A segmented filter of joined buttons (Ngày/Tuần/Tháng) | **Button group** | [Button group](#button-group) |
 | Budget usage / completion ratio | **Progress** | [Progress](#progress) |
+| A loading bar with no known % (loading / syncing) | **Progress** `--loading` | [Progress](#progress) |
 | A loading placeholder before data arrives | **Skeleton** | [Skeleton](#skeleton) |
 | A "no data yet" / empty list screen | **Empty state** | [Empty](#empty-state) |
 | A short hint on hover / focus | **Tooltip** | [Tooltip](#tooltip) |
@@ -319,6 +322,44 @@ overdue debts, bad debt, over-budget, etc.
 
 ---
 
+## Filter bar
+
+A toolbar for narrowing a table / list — a search box + a multi-select field dropdown + removable
+**tokens** (tag, status, amount range, date). Built from `input`, `menu`, `cap`, `tag`; this section
+adds only `.wb-filterbar`, the `.wb-filter-token` chip, and the dashed `.wb-filter-add` trigger.
+Behaviour (open / apply / remove) is the app's — the classes are the visuals. Colour ladder: the bar
+and tokens stay grey chrome; a token borrows a **soft** status tone (`--success` / `--danger` / …)
+only when it *is* a status filter.
+
+```html
+<div class="wb-filterbar">
+  <div class="wb-input-group wb-filterbar__search">
+    <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+    <input class="wb-input" type="search" placeholder="Tìm giao dịch…" />
+  </div>
+
+  <span class="wb-filter-token wb-filter-token--success">
+    <span class="wb-filter-token__key">Trạng thái</span>
+    <span class="wb-filter-token__val">Đã trả</span>
+    <button class="wb-filter-token__x" aria-label="Bỏ lọc"></button>
+  </span>
+  <span class="wb-filter-token">
+    <span class="wb-filter-token__key">Số tiền</span>
+    <span class="wb-filter-token__val">≥ 1.000.000 ₫</span>
+    <button class="wb-filter-token__x" aria-label="Bỏ lọc"></button>
+  </span>
+
+  <button class="wb-filter-add"><span class="wb-ico wb-ico--sm">add</span> Thêm bộ lọc</button>
+  <span class="wb-filterbar__count">24 giao dịch</span>
+</div>
+```
+
+Per-field editor = a padded menu (`.wb-menu.wb-filter-pop`): **amount** uses a `.wb-range-filter` — a
+dual-handle slider (`.wb-range-dual`) + min/max inputs + a plain-language summary, all synced; **tag** & **status** use multi-select checkbox rows
+(`.wb-check.wb-menu__item`) that show the value with a real `tag` / `cap`.
+
+---
+
 ## List group
 
 `.wb-list` — a bordered, hairline-divided list (accounts/wallets, settings, a picker). Lighter than
@@ -375,6 +416,10 @@ GROUP:    .wb-input-group with .wb-input-group__addon for PREFIX or SUFFIX (₫,
 <label class="wb-switch">
   <input type="checkbox" checked /><span class="wb-switch__track"></span> Đã thanh toán
 </label>
+<!-- I/O = power-rocker hint drawn in the track background as CSS shapes (bar=on / ring=off), no font dep -->
+<label class="wb-switch wb-switch--io">
+  <input type="checkbox" checked /><span class="wb-switch__track"></span> Bật thông báo
+</label>
 <!-- DISABLED = inert: dim neutral track (never the on/off colour) + not-allowed -->
 <label class="wb-switch">
   <input type="checkbox" checked disabled /><span class="wb-switch__track"></span> Nhận email tuần
@@ -402,12 +447,21 @@ and the corner follows the radius tokens, so both track Config (incl. the **shar
 
 `.wb-range` — themed track + `--wb-fg` thumb (native `accent-color` can't theme per mode). `--sm`
 for a thinner bar; `disabled` mutes. For a FILLED track set an inline gradient from the current value.
-App: Radix **Slider** for keyboard + range (two thumbs); keep the class.
+**Dual-handle** `.wb-range-dual` picks a MIN + MAX band (two stacked inputs `data-h="min"/"max"` + a
+`--a`/`--b` fill) — pair with min/max boxes + a summary as `.wb-range-filter` (the amount/price filter;
+see [Filter bar](#filter-bar)). App: Radix **Slider** for keyboard robustness; keep the classes.
 
 ```html
 <input class="wb-range" type="range" min="0" max="10000000" value="3500000" />
 <input class="wb-range" type="range" value="65"
   style="background:linear-gradient(to right,var(--wb-fg) 65%,var(--wb-border-strong) 65%)" />
+
+<!-- dual-handle (min–max band); JS keeps --a/--b + boxes + summary in sync -->
+<div class="wb-range-dual" style="--a:20;--b:70">
+  <div class="wb-range-dual__track"></div><div class="wb-range-dual__fill"></div>
+  <input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" value="2000000" />
+  <input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" value="7000000" />
+</div>
 ```
 
 ## Colour input
@@ -566,7 +620,8 @@ overlay (the shared modal JS works: `data-modal-open` / `-close`, click scrim to
 (pushes the rest right), `__actions`. `--sticky` pins it. `.wb-nav` is the standalone **menu** primitive —
 `.wb-nav__link` (+ `.is-active` / `.is-disabled`, optional `.wb-ico`); `--vertical` stacks it, `--underline`
 gives a page-tab look. Active is a plain highlight (no left bar). Wire `.is-active` to the router; mobile
-menu toggling is the app's job.
+menu toggling is the app's job. A **`.wb-theme-toggle`** icon button (two glyphs: `dark_mode` moon +
+`light_mode` sun) swaps automatically with root `.dark` — the app only flips `.dark` (next-themes / one line of JS).
 
 ```html
 <div class="wb-navbar">
@@ -576,7 +631,13 @@ menu toggling is the app's job.
     <a class="wb-nav__link">Giao dịch</a>
   </nav>
   <span class="wb-navbar__spacer"></span>
-  <div class="wb-navbar__actions"><span class="wb-avatar wb-avatar--sm">DV</span></div>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Sáng/Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+    <span class="wb-avatar wb-avatar--sm">DV</span>
+  </div>
 </div>
 ```
 App: keep the classes; drive `.is-active` from React Router (`NavLink`).
@@ -668,6 +729,15 @@ for the last (current) crumb.
 
 ```html
 <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
+```
+
+**Indeterminate / loading** — no known %; a lit segment travels the track on a loop (loading /
+syncing, not a measured fill). Add `--loading` to the track, no `__bar` child; recolour the
+segment with `--wb-progress-c`. Respects `prefers-reduced-motion`.
+
+```html
+<div class="wb-progress wb-progress--loading"></div>
+<div class="wb-progress wb-progress--loading wb-progress--lg" style="--wb-progress-c:var(--wb-info)"></div>
 ```
 
 ## Accordion

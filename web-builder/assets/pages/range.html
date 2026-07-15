@@ -35,6 +35,44 @@
   </div>
 
   <div class="doc-block">
+    <h4>Hai đầu — chọn khoảng (min–max) <span class="wb-cap wb-cap--sm wb-cap--outline">mới</span></h4>
+    <p class="doc-block__desc">Hai thumb trên một track, phần giữa được tô — chuẩn UX lọc khoảng số tiền/giá.
+    Ghép <b>thanh trượt + 2 ô min/max + một câu tóm tắt</b>, tất cả đồng bộ (kéo thumb ↔ gõ số ↔ chữ đổi theo).
+    Thử kéo hai đầu hoặc gõ số.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-range-filter" data-range-filter style="max-width:360px">
+          <div class="wb-range-filter__summary">…</div>
+          <div class="wb-range-dual" style="--a:20;--b:70">
+            <div class="wb-range-dual__track"></div>
+            <div class="wb-range-dual__fill"></div>
+            <input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" step="500000" value="2000000" aria-label="Tối thiểu" />
+            <input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" step="500000" value="7000000" aria-label="Tối đa" />
+          </div>
+          <div class="wb-cluster wb-cluster--nowrap wb-cluster--stretch wb-cluster--tight">
+            <div class="wb-input-group"><span class="wb-input-group__addon">₫</span><input class="wb-input" data-range-min inputmode="numeric" value="2000000" aria-label="Tối thiểu" /></div>
+            <div class="wb-input-group"><span class="wb-input-group__addon">₫</span><input class="wb-input" data-range-max inputmode="numeric" value="7000000" aria-label="Tối đa" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-range-filter" data-range-filter&gt;
+  &lt;div class="wb-range-filter__summary"&gt;…&lt;/div&gt;
+  &lt;div class="wb-range-dual" style="--a:20;--b:70"&gt;
+    &lt;div class="wb-range-dual__track"&gt;&lt;/div&gt;&lt;div class="wb-range-dual__fill"&gt;&lt;/div&gt;
+    &lt;input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" value="2000000" /&gt;
+    &lt;input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" value="7000000" /&gt;
+  &lt;/div&gt;
+  &lt;div class="wb-cluster wb-cluster--nowrap wb-cluster--stretch wb-cluster--tight"&gt;
+    &lt;div class="wb-input-group"&gt;&lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;&lt;input class="wb-input" data-range-min value="2000000" /&gt;&lt;/div&gt;
+    &lt;div class="wb-input-group"&gt;&lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;&lt;input class="wb-input" data-range-max value="7000000" /&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- app.js đồng bộ: 2 slider ⇄ 2 ô ⇄ câu tóm tắt (data-range-filter) --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
     <h4>Nhỏ · vô hiệu</h4>
     <div class="demo">
       <div class="demo__stage">
@@ -50,7 +88,7 @@
 
   <div class="doc-note">
     <span>💡</span>
-    <div>Trong app dùng Radix <b>Slider</b> để có điều khiển bàn phím + nhiều thumb (chọn khoảng giá), giữ class
-    <code>wb-range</code> cho phần nhìn. Cần nhập tiền chính xác thì ghép slider với một ô số bên cạnh.</div>
+    <div>Bản <b>hai đầu</b> (<code>wb-range-dual</code>) ở trên đã đủ cho lọc khoảng; trong app có thể thay lõi bằng
+    Radix <b>Slider</b> cho chắc tay về bàn phím/độ chính xác, vẫn giữ class <code>wb-range</code> / <code>wb-range-dual</code> cho phần nhìn.</div>
   </div>
 </section>
