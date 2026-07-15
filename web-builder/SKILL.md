@@ -87,7 +87,9 @@ source of truth**, kept in sync per-component, so it never drifts here):
 - **Biểu đồ** — line/area, income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin
   donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps.
 - **Cấu trúc** — drag-and-drop **tree** (reorder + reparent), flat **sortable** list/grid/rows, and the
-  grid/layout utilities (`.wb-cluster`, `.wb-grid`, `.wb-stack`, `.wb-container`, `.wb-ratio`).
+  grid/layout utilities (`.wb-cluster`, `.wb-grid`, `.wb-stack`, `.wb-container`, `.wb-ratio`) with full
+  row/column **alignment** (justify + cross-axis align + `.wb-self--*` per-item + `.wb-grow`) — so a row/column
+  is a class, never an inline `align-items`.
 
 Three standing decisions shape the set:
 
@@ -101,7 +103,8 @@ Three standing decisions shape the set:
    Layout stays a small flex/grid utility set — **not** a 12-column foundation — as a *minimalism* choice:
    the five utilities (cluster / stack / grid / container / ratio) cover real page layout without the
    vocabulary weight of a breakpoint grid, and they are **self-sufficient** (no Tailwind required — see
-   `design-principles.md` §17).
+   `design-principles.md` §17). That small set still carries **full flex alignment** (justify + cross-axis
+   align + `.wb-self--*` + `.wb-grow`); only the 12-col scaffold is skipped, never alignment.
 
 **House conventions to keep:** icons come from an **icon font** — Material Symbols, `@import`ed in
 `web-builder.css`; use `<span class="wb-ico">name</span>` (weight ~600 so they're crisp), **never
