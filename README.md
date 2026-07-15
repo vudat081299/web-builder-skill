@@ -55,7 +55,7 @@ Deep-link to a page with the hash: `#/tables`, `#/receipt`, `#/charts`. The docs
 
 ## Adding a primitive component (and keeping everything in sync)
 
-A component is **one change across five places** — if they drift, the skill starts lying to the next AI.
+A component is **one change across six places** — if they drift, the skill starts lying to the next AI.
 
 1. **CSS** — add a numbered section to `web-builder/assets/web-builder.css`: `.wb-<name>` (+ `__element`,
    `--modifier`). Build from **tokens**, never raw hex/px (hairline = `var(--wb-bw)`, pill =
@@ -68,7 +68,10 @@ A component is **one change across five places** — if they drift, the skill st
    Groups are by user intent: *Nền tảng · Hành động · Nhập liệu · Hiển thị dữ liệu · Phản hồi · Điều hướng
    · Biểu đồ · Cấu trúc*.
 4. **Catalog** — add a section + a "Quick decision guide" row to `web-builder/references/components-catalog.md`.
-5. **If relevant** — a new convention → `design-principles.md`; needs an app behaviour engine (Radix,
+5. **Skill** — update `web-builder/SKILL.md`, the AI's first read: add the component to the right per-intent
+   scope group (*Nền tảng · … · Cấu trúc*), or note a new capability on a family already listed. Miss it and
+   the next AI trusts SKILL.md's scope and assumes the part isn't there.
+6. **If relevant** — a new convention → `design-principles.md`; needs an app behaviour engine (Radix,
    dnd-kit, sonner…) → a row in `integration.md`; a Bootstrap-coverage note → `bootstrap-comparison.md`.
 
 Then verify route ↔ page parity (they must match, no orphans):

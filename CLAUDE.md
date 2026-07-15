@@ -27,7 +27,11 @@ something genuinely new, fold it back into the library + docs (the sync steps be
 3. `web-builder/assets/app.js` — a `{ id, label }` in the `NAV` array (the single source of truth for the
    sidebar + router).
 4. `web-builder/references/components-catalog.md` — a section + a decision-guide row.
-5. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
+5. `web-builder/SKILL.md` — the AI's **first read**: add the new part to the right per-intent scope group
+   (*Nền tảng · Hành động · … · Cấu trúc*), or note a new capability on a family already listed. If SKILL.md
+   doesn't list it, the next AI trusts its scope and assumes the part doesn't exist — exactly the miss that
+   put this line here.
+6. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
    engine), `bootstrap-comparison.md` (coverage note).
 
 If these drift, the skill misleads the next AI. Verify: number of `NAV` routes == number of `pages/*.html`.
