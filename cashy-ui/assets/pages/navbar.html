@@ -1,0 +1,87 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Điều hướng</p>
+  <h2>Navbar &amp; Menu</h2>
+  <p>Thanh điều hướng trên cùng của <b>app shell</b> (<code>.cash-navbar</code>) và tập liên kết điều hướng (<code>.cash-nav</code> — "menu").
+  Đây là <b>giao diện</b> thuần; hành vi (menu mobile, active theo route) do app xử lý (React Router…). Active = highlight phẳng, không có thanh dẫn bên trái.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>App bar cơ bản</h4>
+    <p class="doc-block__desc">Thương hiệu bên trái · <code>.cash-nav</code> ở giữa · <code>__spacer</code> đẩy <code>__actions</code> về phải.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="cash-navbar">
+          <a class="cash-navbar__brand" href="#/navbar"><span class="cash-navbar__mark">C</span> Cashy</a>
+          <nav class="cash-nav">
+            <a class="cash-nav__link is-active" href="#/navbar">Tổng quan</a>
+            <a class="cash-nav__link" href="#/navbar">Giao dịch</a>
+            <a class="cash-nav__link" href="#/navbar">Ngân sách</a>
+            <a class="cash-nav__link" href="#/navbar">Báo cáo</a>
+          </nav>
+          <span class="cash-navbar__spacer"></span>
+          <div class="cash-navbar__actions">
+            <button class="cash-btn cash-btn--ghost cash-btn--icon" aria-label="Tìm kiếm"><span class="cash-ico">search</span></button>
+            <button class="cash-btn cash-btn--ghost cash-btn--icon" aria-label="Thông báo"><span class="cash-ico">notifications</span></button>
+            <span class="cash-avatar cash-avatar--sm">DV</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="cash-navbar"&gt;
+  &lt;a class="cash-navbar__brand"&gt;&lt;span class="cash-navbar__mark"&gt;C&lt;/span&gt; Cashy&lt;/a&gt;
+  &lt;nav class="cash-nav"&gt;
+    &lt;a class="cash-nav__link is-active"&gt;Tổng quan&lt;/a&gt;
+    &lt;a class="cash-nav__link"&gt;Giao dịch&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;span class="cash-navbar__spacer"&gt;&lt;/span&gt;
+  &lt;div class="cash-navbar__actions"&gt;
+    &lt;button class="cash-btn cash-btn--ghost cash-btn--icon"&gt;&lt;span class="cash-ico"&gt;search&lt;/span&gt;&lt;/button&gt;
+    &lt;span class="cash-avatar cash-avatar--sm"&gt;DV&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- ghim trên đầu: thêm --sticky --&gt;
+&lt;div class="cash-navbar cash-navbar--sticky"&gt; … &lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Menu (.cash-nav) — ngang · gạch chân · dọc</h4>
+    <p class="doc-block__desc">Mặc định là highlight nền · <code>--underline</code> cho kiểu tab-trang (khác §Tabs vốn đổi panel) · <code>--vertical</code> xếp dọc (đặt trong sidebar, popover…).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cash-stack" style="--cash-stack-gap:20px">
+          <nav class="cash-nav">
+            <a class="cash-nav__link is-active" href="#/navbar"><span class="cash-ico">dashboard</span> Tổng quan</a>
+            <a class="cash-nav__link" href="#/navbar"><span class="cash-ico">receipt_long</span> Giao dịch</a>
+            <a class="cash-nav__link" href="#/navbar"><span class="cash-ico">savings</span> Ngân sách</a>
+            <a class="cash-nav__link is-disabled" href="#/navbar">Sắp có</a>
+          </nav>
+
+          <nav class="cash-nav cash-nav--underline">
+            <a class="cash-nav__link is-active" href="#/navbar">Tháng này</a>
+            <a class="cash-nav__link" href="#/navbar">Quý</a>
+            <a class="cash-nav__link" href="#/navbar">Năm</a>
+            <a class="cash-nav__link" href="#/navbar">Tuỳ chỉnh</a>
+          </nav>
+
+          <nav class="cash-nav cash-nav--vertical" style="max-width:220px">
+            <a class="cash-nav__link is-active" href="#/navbar"><span class="cash-ico">account_balance_wallet</span> Ví tiền mặt</a>
+            <a class="cash-nav__link" href="#/navbar"><span class="cash-ico">credit_card</span> Vietcombank</a>
+            <a class="cash-nav__link" href="#/navbar"><span class="cash-ico">account_balance</span> Techcombank</a>
+          </nav>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;nav class="cash-nav"&gt; … &lt;/nav&gt;                 &lt;!-- ngang, highlight nền --&gt;
+&lt;nav class="cash-nav cash-nav--underline"&gt; … &lt;/nav&gt;  &lt;!-- gạch chân (tab-trang) --&gt;
+&lt;nav class="cash-nav cash-nav--vertical"&gt; … &lt;/nav&gt;   &lt;!-- dọc --&gt;
+
+&lt;a class="cash-nav__link is-active"&gt;&lt;span class="cash-ico"&gt;dashboard&lt;/span&gt; Tổng quan&lt;/a&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span class="cash-ico" style="color:var(--cash-info-text)">info</span>
+    <div>Trong app, gắn <code>.is-active</code> theo route hiện tại (React Router <code>NavLink</code>…). Menu <b>mở/đóng</b> (dropdown) hay panel dùng Radix — xem <a href="#/dropdown">Dropdown</a> / <a href="#/tabs">Tabs</a>.</div>
+  </div>
+</section>

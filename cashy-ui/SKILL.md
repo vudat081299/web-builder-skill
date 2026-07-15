@@ -53,6 +53,7 @@ almost certainly a token or class for it.
 | `references/components-catalog.md` | "Building X → use Y, here's the snippet" lookup | **Start here** for any build task |
 | `references/design-principles.md` | The colour ladder, neutral shadow rule, number/typography/font rules | Building something new or making an aesthetic call |
 | `references/cashy-integration.md` | How the CSS + tokens + React wrappers plug into cashy's React/Vite/Tailwind/shadcn/next-themes | Wiring the library into the actual cashy repo |
+| `references/bootstrap-comparison.md` | Coverage vs Bootstrap 5.3 (what we have / skip / do differently), the popup set, the layout-foundation decision, and BOC structure | Deciding whether to add a component, or "do we have X?" |
 
 ## The colour ladder (summary — full version in design-principles.md)
 
@@ -81,8 +82,11 @@ red on focus); data display — **card**
 (incl. `--dashed`), **tables** (basic, transactions, striped/compact, bordered, sticky,
 debt/receivables), **list group** (settings/accounts), **stat/KPI cards**, **capsules/badges** (incl. `--tinted`
 category hue), **tags** (leading `#`, shapes pill/rect/notch, optional per-category colour, removable),
-**avatar**; feedback — **alert**, **toast**, **modal/dialog**, **drawer/offcanvas**, **progress**, **skeleton**,
-**empty state**, **tooltip**; navigation — **tabs** (underline / pill / **boxed**), **breadcrumb**,
+**avatar**, **receipt** (hoá đơn — a torn-paper slip with a zig-zag mask edge, `--bottom` / `--flat`);
+feedback — **alert**, **toast**, **modal/dialog**, **drawer/offcanvas**, **progress**, **skeleton**,
+**empty state**, **tooltip**; navigation — **navbar** (top app bar), **nav / menu** (`.cash-nav` link set,
+underline / vertical), **sidebar** (`.cash-sidenav` app rail — a shippable sibling of the docs sidebar),
+**tabs** (underline / pill / **boxed**), **breadcrumb**,
 **pagination**, **accordion**, **divider**; **charts** (line/area with hover tooltip, income-vs-expense
 bars (bright green/red — `--cash-chart-income/-expense`), **combo bar+line**, **horizontal ranked bars**
 (reusing `.cash-progress`), category donut + **thin rounded** donut & **progress ring** (`.cash-arc--round`),
@@ -91,10 +95,16 @@ intensity ramps, axis/legend — SVG/CSS, map to Recharts); structure — a drag
 arbitrary depth, variants: lines / right-chevron / flat-static / colour+amount / checkbox / emoji /
 hover-or-always row actions), a flat **sortable** list / grid / **table rows** (dashed drop placeholder),
 and **Grid/Layout** utilities (`.cash-cluster`, `.cash-grid`, `.cash-stack`, `.cash-container`, `.cash-ratio`).
-Docs are one page per group under `assets/pages/`. Interactive components render with a tiny vanilla toggle in
+Docs are one page per group under `assets/pages/`. The docs site is **dogfooded** — every page is built
+from the library's own `cash-*` primitives (cluster / grid / stack / nav / sidenav / card…); `docs.css` holds
+only chrome the library has no equivalent for (sidebar tree, code block, config drawer, specimens).
+Interactive components render with a tiny vanilla toggle in
 the docs and map onto Radix/shadcn + sonner + dnd-kit in the app (see `cashy-integration.md`). Primitive
-coverage is benchmarked against **Bootstrap's** component set, re-cut minimalist (white-black-grey first);
-heavy/branded pieces like carousel/navbar are intentionally skipped.
+coverage is benchmarked against **Bootstrap's** component set, re-cut minimalist (white-black-grey first) —
+including a minimal **navbar / nav / sidenav** for app shells; only heavy or branded pieces (carousel,
+scrollspy) are intentionally skipped. Layout stays a small set of flex/grid utilities rather than a
+Bootstrap-style 12-column foundation, because in the app Tailwind already owns responsive columns/breakpoints
+(see `design-principles.md`).
 
 **House conventions to keep:** icons come from an **icon font** — Material Symbols, `@import`ed in
 `cashy-ui.css`; use `<span class="cash-ico">name</span>` (weight ~600 so they're crisp), **never

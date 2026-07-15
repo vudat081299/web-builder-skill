@@ -218,4 +218,35 @@ The docs site is built **from the primitives it documents.** Demo markup should 
 `.cash-cluster` / `.cash-grid` / `.cash-container` for layout rather than one-off
 `style="display:flex…"`, and reuse real components (a "chart" that's really `.cash-progress` rows, a
 row header that's `.cash-cluster--between`). If a demo needs a layout the utilities can't express,
-that's a signal the utility set has a gap — add the utility, don't hand-roll inline styles.
+that's a signal the utility set has a gap — add the utility, don't hand-roll inline styles. `docs.css`
+holds **only** chrome the library has no primitive for (sidebar tree, code block, config drawer, specimens);
+everything else on a page is `cash-*`.
+
+## 17. Layout stays a small utility set — not a grid "foundation"
+
+Bootstrap makes **layout the foundation**: a 12-column responsive grid (`.container` → `.row` → `.col-*`),
+five breakpoints (sm–xxl), and gutter utilities you scaffold most pages on. Cashy UI deliberately does
+**not** copy that, for three reasons:
+
+1. **The app already has one.** In cashy, Tailwind owns responsive columns and breakpoints (`grid`,
+   `grid-cols-*`, `md:`…). A second 12-column system would collide and double the vocabulary — the
+   opposite of minimalist.
+2. **Finance dashboards don't need 12 columns.** They need: chips/buttons that wrap (`.cash-cluster`),
+   a form/section that stacks (`.cash-stack`), an equal card grid that reflows (`.cash-grid--auto/-2/-3`),
+   a centred page column (`.cash-container`), and a fixed media ratio (`.cash-ratio`). That's the whole
+   job — five one-purpose utilities, each collapsing sensibly on mobile, no breakpoint bookkeeping.
+3. **Less to learn, less to misuse.** A 12-col grid invites nesting rows-in-cols and off-by-one column
+   maths; flexbox-first utilities keep a page readable.
+
+So the answer to "should layout go into the foundation like Bootstrap?" is **no**: keep the flex/grid
+utilities as the layout layer, and if the app needs true responsive columns, reach for Tailwind there.
+Add a utility only when a real screen can't be expressed (see §16) — not to mirror Bootstrap.
+
+## 18. Minimalism discipline: tokens over magic numbers
+
+The visual ethos (white-black-grey first, colour only for meaning, one soft shadow scale) is the easy
+half. The harder half is **systematic**: prefer a token to a raw value so one knob moves the whole system.
+Hairlines are `var(--cash-bw)`, pills are `var(--cash-radius-pill)`, radii / shadows / colours all come
+from `--cash-*`. If you're typing a hex, a `999px`, or a bare `1px solid`, check for the token first. The
+one sanctioned piece of pure **decoration** is the tag `--notch` (a luggage-tag notch + punch-hole) — it's
+opt-in, never a default; everything else earns its pixels by carrying meaning or structure.

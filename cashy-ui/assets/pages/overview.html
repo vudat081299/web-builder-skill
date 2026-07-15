@@ -7,7 +7,7 @@
 <section class="doc-sec">
   <h3>Có gì trong hộp</h3>
   <p class="doc-sec__desc">Các primitive cơ bản mà hầu như web nào cũng cần — thống nhất một ngôn ngữ hình ảnh.</p>
-  <div class="card-grid">
+  <div class="cash-grid cash-grid--auto" style="--cash-grid-min:210px;margin-top:8px">
     <div class="nav-card">
       <p class="nav-card__t">Nền tảng</p>
       <p class="nav-card__d"><a href="#/color">Triết lý màu</a> · <a href="#/tokens">Tokens</a> · <a href="#/typography">Typography</a> · <a href="#/fonts">Fonts</a> · <a href="#/border">Border</a> · <a href="#/config">Config / Tweak</a></p>
@@ -22,7 +22,7 @@
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Hiển thị dữ liệu</p>
-      <p class="nav-card__d"><a href="#/card">Card</a> · <a href="#/tables">Tables</a> · <a href="#/stats">Stat/KPI</a> · <a href="#/capsules">Capsules</a> · <a href="#/tags">Tags</a> · <a href="#/avatar">Avatar</a></p>
+      <p class="nav-card__d"><a href="#/card">Card</a> · <a href="#/receipt">Hoá đơn</a> · <a href="#/tables">Tables</a> · <a href="#/stats">Stat/KPI</a> · <a href="#/capsules">Capsules</a> · <a href="#/tags">Tags</a> · <a href="#/avatar">Avatar</a></p>
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Phản hồi</p>
@@ -30,7 +30,7 @@
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Điều hướng</p>
-      <p class="nav-card__d"><a href="#/tabs">Tabs</a> · <a href="#/breadcrumb">Breadcrumb</a> · <a href="#/pagination">Pagination</a> · <a href="#/accordion">Accordion</a> · <a href="#/divider">Divider</a></p>
+      <p class="nav-card__d"><a href="#/navbar">Navbar &amp; menu</a> · <a href="#/sidenav">Sidebar</a> · <a href="#/tabs">Tabs</a> · <a href="#/breadcrumb">Breadcrumb</a> · <a href="#/pagination">Pagination</a> · <a href="#/accordion">Accordion</a> · <a href="#/divider">Divider</a></p>
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Biểu đồ</p>
@@ -71,6 +71,11 @@
       <div class="tier__n">ĐỢT 4 · XONG</div>
       <div class="tier__t">Icon-font, Config, charts &amp; layout</div>
       <p class="tier__d">Icon chuyển sang <b>icon-font</b> (Material Symbols — đậm &amp; sắc, bỏ vẽ tay); trang <b>Config</b> tinh chỉnh token sống + xuất .md; charts làm lại (tooltip hover, cột đẹp hơn, donut hài hoà, thang xám/xanh); input tách file + prefix + <code>.is-invalid</code>; bảng kéo sắp xếp hàng; tiện ích Grid/Layout; border về 1px + shadow đồng bộ.</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">ĐỢT 5 · XONG</div>
+      <div class="tier__t">Hoá đơn, điều hướng &amp; rà soát tối giản</div>
+      <p class="tier__d">Thêm <b>Hoá đơn</b> (thẻ giấy cạnh xé), bộ primitive <b>điều hướng</b> (navbar · nav/menu · sidebar) ghép thành app shell; rà toàn bộ trang docs để dùng lại chính utility của thư viện (dogfood), siết token (hairline &amp; pill về đúng biến), và đối chiếu phạm vi với Bootstrap.</p>
     </div>
   </div>
 </section>

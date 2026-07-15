@@ -142,7 +142,8 @@ Keep the `cash-*` classes for the look and wire behaviour to:
 | `.cash-ico` (icons — Material Symbols font) | keep the font, **or** set `--cash-icon-font` to your own set / render `lucide-react` (see Icons note) |
 | `.cash-grid` / `.cash-cluster` / `.cash-stack` / `.cash-container` / `.cash-ratio` (layout) | use as-is, or swap for Tailwind `flex`/`grid`/`aspect-*` utilities |
 | charts (`cash-chart*`, `cash-bars`, combo, donut, `cash-spark`) | **Recharts**, fed the `--cash-chart-*` tokens (combo bar+line → `ComposedChart`); for a grey/one-hue chart put `.cash-chart-scheme--mono`/`--blue` + `.cash-chart-ramp--N` (N = series count) on the wrapper so Recharts reads an evenly-spread ramp; keep `cash-chart__tip` for the tooltip look. **Horizontal ranked bars** need no lib — they're just `.cash-progress` rows |
-| card, alert, stat, table, **list group**, **button group**, capsule, tag, avatar, progress, breadcrumb, pagination, skeleton, empty, divider, buttons, inputs (incl. **colour**), tabs | no JS engine — plain markup + classes |
+| `cash-navbar` / `cash-nav` / `cash-sidenav` (app-shell navigation) | plain markup + classes; drive `.is-active` from your **router** (React Router `NavLink`), and wire the mobile menu/collapse toggle in app JS |
+| card, alert, stat, table, **list group**, **button group**, capsule, tag, avatar, **receipt** (hoá đơn), progress, breadcrumb, pagination, skeleton, empty, divider, buttons, inputs (incl. **colour**), tabs | no JS engine — plain markup + classes |
 
 Rule of thumb: if it opens/closes, traps focus, or needs keyboard nav → **Radix owns
 behaviour, Cashy UI owns pixels**. Static/display components are just classes. The docs site

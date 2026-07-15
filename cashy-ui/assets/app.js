@@ -36,6 +36,7 @@ const NAV = [
   ]},
   { group: "Hiển thị dữ liệu", items: [
     { id: "card",     label: "Card" },
+    { id: "receipt",  label: "Hoá đơn (receipt)" },
     { id: "tables",   label: "Tables" },
     { id: "list",     label: "List group" },
     { id: "stats",    label: "Stat / KPI cards" },
@@ -54,6 +55,8 @@ const NAV = [
     { id: "tooltip",  label: "Tooltip" },
   ]},
   { group: "Điều hướng", items: [
+    { id: "navbar",     label: "Navbar & menu" },
+    { id: "sidenav",    label: "Sidebar (side-nav)" },
     { id: "tabs",       label: "Tabs" },
     { id: "breadcrumb", label: "Breadcrumb" },
     { id: "pagination", label: "Pagination" },

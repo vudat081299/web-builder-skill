@@ -236,7 +236,7 @@
   letter-spacing: .01em;
   white-space: nowrap;
   border-radius: var(--cash-radius-pill);
-  border: 1px solid transparent;
+  border: var(--cash-bw) solid transparent;
   /* Tier 1 default: soft grey. */
   background: var(--cash-gray-100);
   color: var(--cash-gray-700);
@@ -248,7 +248,7 @@
 .cash-cap__dot {
   width: 6px;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--cash-radius-pill);
   background: currentColor;
   opacity: .85;
   flex: none;
@@ -333,7 +333,7 @@
   padding: 2px 10px;
   font-family: var(--cash-font); font-size: 12px; font-weight: 550;
   line-height: 1.5; letter-spacing: .01em; white-space: nowrap;
-  border-radius: var(--cash-radius-pill); border: 1px solid transparent;
+  border-radius: var(--cash-radius-pill); border: var(--cash-bw) solid transparent;
   background: var(--cash-gray-100); color: var(--cash-gray-700);
 }
 .cash-tag::before { content: "#"; font-weight: 650; opacity: .5; }
@@ -531,7 +531,7 @@
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   font-family: var(--cash-font); font-size: 14px; font-weight: 600; line-height: 1;
   padding: 9px 16px; border-radius: var(--cash-btn-radius);
-  border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+  border: var(--cash-bw) solid transparent; cursor: pointer; white-space: nowrap;
   text-decoration: none; user-select: none;
   transition: background-color .13s ease, border-color .13s ease, color .13s ease,
               box-shadow .13s ease, transform .04s ease;
@@ -684,7 +684,7 @@
 .cash-switch { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--cash-fg); cursor: pointer; }
 .cash-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
 .cash-switch__track {
-  position: relative; flex: none; width: 40px; height: 23px; border-radius: 999px;
+  position: relative; flex: none; width: 40px; height: 23px; border-radius: var(--cash-radius-pill);
   background: var(--cash-gray-300); transition: background-color .16s ease;
 }
 .cash-switch__track::after {
@@ -994,9 +994,9 @@
 /* -----------------------------------------------------------------------------
    17. PROGRESS  (bar — also used for budget "đã chi / ngân sách")
    -------------------------------------------------------------------------- */
-.cash-progress { height: 8px; border-radius: 999px; overflow: hidden; background: var(--cash-gray-200); }
+.cash-progress { height: 8px; border-radius: var(--cash-radius-pill); overflow: hidden; background: var(--cash-gray-200); }
 .dark .cash-progress { background: var(--cash-gray-700); }
-.cash-progress__bar { height: 100%; border-radius: 999px; background: var(--cash-gray-900); transition: width .3s ease; }
+.cash-progress__bar { height: 100%; border-radius: var(--cash-radius-pill); background: var(--cash-gray-900); transition: width .3s ease; }
 /* :where() so the dark neutral bar doesn't out-rank the --success/--warning/--danger tones. */
 .dark :where(.cash-progress__bar) { background: var(--cash-gray-100); }
 .cash-progress__bar--success { background: var(--cash-success); }
@@ -1420,7 +1420,7 @@
 .cash-scroll-y::-webkit-scrollbar-thumb,
 .cash-table-scroll::-webkit-scrollbar-thumb,
 .cash-menu::-webkit-scrollbar-thumb {
-  background: var(--cash-border-strong); border-radius: 999px;
+  background: var(--cash-border-strong); border-radius: var(--cash-radius-pill);
   border: 3px solid transparent; background-clip: padding-box;
 }
 .cash-scroll-y::-webkit-scrollbar-thumb:hover,
@@ -1439,7 +1439,7 @@
    -------------------------------------------------------------------------- */
 .cash-range {
   -webkit-appearance: none; appearance: none; width: 100%; height: 4px; padding: 0; margin: 8px 0;
-  border-radius: 999px; background: var(--cash-border-strong); cursor: pointer;
+  border-radius: var(--cash-radius-pill); background: var(--cash-border-strong); cursor: pointer;
 }
 .cash-range::-webkit-slider-thumb {
   -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
@@ -1615,3 +1615,165 @@
 .cash-arc--round { stroke-linecap: round; }
 .cash-ring__track { fill: none; stroke: var(--cash-surface-2); }
 .dark .cash-ring__track { stroke: var(--cash-surface-hover); }
+
+/* -----------------------------------------------------------------------------
+   36. RECEIPT  (hoá đơn — a torn-paper slip for one transaction / bill)
+   -----------------------------------------------------------------------------
+   The shape a thermal receipt has when torn off the roll: a narrow paper slip
+   with a ragged (zig-zag) top & bottom edge. Two elements, so the soft shadow
+   can trace the torn silhouette instead of a flat rectangle:
+     .cash-receipt           wrapper — casts the drop-shadow (follows the teeth)
+       .cash-receipt__paper  the paper — surface fill + the torn MASK + content
+   The tear is a mask (not a bitmap) so it works on any background and in dark.
+   Teeth tune via --cash-receipt-tw / --cash-receipt-th.
+   Modifiers: --flat (no shadow) · --bottom (tear only the bottom, clean top).
+   -------------------------------------------------------------------------- */
+.cash-receipt {
+  --cash-receipt-tw: 13px;   /* tooth width  (one zig)           */
+  --cash-receipt-th: 6px;    /* tooth height (how deep it bites) */
+  display: block; width: fit-content; max-width: 100%;
+  font-family: var(--cash-font);
+  filter: drop-shadow(0 2px 4px rgba(16, 17, 18, .10));
+}
+/* On dark a black shadow vanishes — lift with a faint light edge + soft ambient. */
+.dark .cash-receipt {
+  filter: drop-shadow(0 0 .5px rgba(255, 255, 255, .10)) drop-shadow(0 4px 10px rgba(0, 0, 0, .5));
+}
+.cash-receipt--flat { filter: none; }
+
+.cash-receipt__paper {
+  width: 300px; max-width: 100%;
+  background: var(--cash-surface);
+  color: var(--cash-fg);
+  padding: calc(20px + var(--cash-receipt-th)) 22px;   /* extra block padding = room past the teeth */
+  /* Torn top + bottom: a solid middle band + a row of triangular teeth at each edge. */
+  --cash-receipt-mask:
+    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--cash-receipt-th)) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000 25%, #000 0 75%, #0000 0) 0 100% / var(--cash-receipt-tw) 100% repeat-x,
+    conic-gradient(from 135deg at top,    #0000 25%, #000 0 75%, #0000 0) 0 0    / var(--cash-receipt-tw) 100% repeat-x;
+  -webkit-mask: var(--cash-receipt-mask);
+          mask: var(--cash-receipt-mask);
+}
+/* Tear only the bottom (keep a clean header edge). */
+.cash-receipt--bottom .cash-receipt__paper {
+  padding-block: 20px calc(20px + var(--cash-receipt-th));
+  --cash-receipt-mask:
+    linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--cash-receipt-th)) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000 25%, #000 0 75%, #0000 0) 0 100% / var(--cash-receipt-tw) var(--cash-receipt-th) repeat-x;
+}
+
+/* Header — merchant + meta (date / id), centred like a printed slip. */
+.cash-receipt__head { text-align: center; margin-bottom: 12px; }
+.cash-receipt__merchant { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.cash-receipt__meta { font-size: 12px; color: var(--cash-fg-muted); margin-top: 2px; }
+
+/* Line items — description left, amount right (tabular so columns align). */
+.cash-receipt__body { display: flex; flex-direction: column; gap: 7px; }
+.cash-receipt__line { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-size: 13px; }
+.cash-receipt__line > span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cash-receipt__line--muted { color: var(--cash-fg-muted); font-size: 12px; }
+
+/* Perforation — the dashed tear-off rule between items and the total. */
+.cash-receipt__rule { border-top: var(--cash-bw) dashed var(--cash-border-strong); margin: 12px 0; }
+
+/* Total — the emphasised bottom line. */
+.cash-receipt__total { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 700; }
+.cash-receipt__total > span:last-child { font-variant-numeric: tabular-nums; font-size: 16px; }
+
+/* A centred muted footer note (thank-you / code). */
+.cash-receipt__note { text-align: center; font-size: 11.5px; color: var(--cash-fg-subtle); margin-top: 12px; }
+
+/* -----------------------------------------------------------------------------
+   37. NAVBAR  (the top app bar — brand · inline nav · actions)
+   -----------------------------------------------------------------------------
+   A horizontal bar for the top of an app shell. Compose the middle links from
+   the NAV primitive (§38): <nav class="cash-nav"> inside .cash-navbar__nav.
+   --sticky pins it; behaviour (mobile menu toggle) is the app's job.
+   -------------------------------------------------------------------------- */
+.cash-navbar {
+  display: flex; align-items: center; gap: 16px;
+  height: 56px; padding: 0 18px;
+  background: var(--cash-surface);
+  border-bottom: var(--cash-bw) solid var(--cash-border);
+  font-family: var(--cash-font);
+}
+.cash-navbar--sticky { position: sticky; top: 0; z-index: 30; }
+.cash-navbar__brand {
+  display: inline-flex; align-items: center; gap: 9px; flex: none;
+  font-size: 15px; font-weight: 700; letter-spacing: -.01em;
+  color: var(--cash-fg); text-decoration: none;
+}
+.cash-navbar__mark {
+  width: 26px; height: 26px; border-radius: var(--cash-radius-sm); flex: none;
+  display: grid; place-items: center; font-size: 13px; font-weight: 700;
+  background: var(--cash-gray-900); color: var(--cash-white);
+}
+.dark .cash-navbar__mark { background: var(--cash-gray-100); color: var(--cash-gray-900); }
+.cash-navbar__spacer { margin-left: auto; }
+.cash-navbar__actions { display: flex; align-items: center; gap: 8px; flex: none; }
+
+/* -----------------------------------------------------------------------------
+   38. NAV  (a set of navigation links — the menu primitive)
+   -----------------------------------------------------------------------------
+   Horizontal by default; --vertical stacks it; --underline gives a page-tab look
+   (distinct from §12 TABS, which switch panels). Active = a plain highlight, in
+   keeping with the kit's "no leading bar" selection style.
+   -------------------------------------------------------------------------- */
+.cash-nav {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 2px;
+  margin: 0; padding: 0; list-style: none; font-family: var(--cash-font);
+}
+.cash-nav--vertical { flex-direction: column; align-items: stretch; gap: 1px; }
+.cash-nav__link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border-radius: var(--cash-radius-sm);
+  font-size: 14px; font-weight: 550; white-space: nowrap;
+  color: var(--cash-fg-muted); text-decoration: none; cursor: pointer;
+  transition: color .13s ease, background .13s ease;
+}
+.cash-nav__link:hover      { color: var(--cash-fg); background: var(--cash-surface-hover); }
+.cash-nav__link.is-active  { color: var(--cash-fg); background: var(--cash-surface-hover); }
+.cash-nav__link.is-disabled { color: var(--cash-fg-subtle); pointer-events: none; }
+.cash-nav__link .cash-ico  { font-size: 19px; color: inherit; flex: none; }
+/* Underline (page tabs) — the highlight becomes a bottom rule instead of a fill. */
+.cash-nav--underline { gap: 6px; border-bottom: var(--cash-bw) solid var(--cash-border); }
+.cash-nav--underline .cash-nav__link {
+  border-radius: 0; padding: 9px 4px; margin-bottom: calc(-1 * var(--cash-bw));
+  border-bottom: 2px solid transparent;
+}
+.cash-nav--underline .cash-nav__link:hover     { background: none; color: var(--cash-fg); }
+.cash-nav--underline .cash-nav__link.is-active  { background: none; color: var(--cash-fg); border-bottom-color: var(--cash-fg); }
+
+/* -----------------------------------------------------------------------------
+   39. SIDENAV  (the vertical app rail — a shippable sibling of the docs sidebar)
+   -----------------------------------------------------------------------------
+   A left navigation column for an app shell: sections + icon links + count
+   badges. Icons are .cash-ico; active is a plain highlight (matches §38 / the
+   docs tree). Give it a height + let it scroll with §27 .cash-scroll if long.
+   -------------------------------------------------------------------------- */
+.cash-sidenav {
+  display: flex; flex-direction: column; gap: 1px;
+  width: 240px; padding: 12px 10px;
+  background: var(--cash-surface);
+  border-right: var(--cash-bw) solid var(--cash-border);
+  font-family: var(--cash-font);
+}
+.cash-sidenav__section {
+  font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--cash-fg-subtle); padding: 12px 10px 4px;
+}
+.cash-sidenav__section:first-child { padding-top: 2px; }
+.cash-sidenav__link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--cash-radius-sm);
+  font-size: 14px; font-weight: 550; color: var(--cash-fg-muted);
+  text-decoration: none; cursor: pointer;
+  transition: color .13s ease, background .13s ease;
+}
+.cash-sidenav__link:hover     { color: var(--cash-fg); background: var(--cash-surface-hover); }
+.cash-sidenav__link.is-active { color: var(--cash-fg); background: var(--cash-surface-hover); font-weight: 650; }
+.cash-sidenav__link .cash-ico { font-size: 20px; color: inherit; flex: none; }
+.cash-sidenav__badge {
+  margin-left: auto; font-size: 11px; font-variant-numeric: tabular-nums;
+  color: var(--cash-fg-subtle);
+}

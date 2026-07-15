@@ -5,6 +5,11 @@
    code blocks, the dual light/dark preview, and the typography/font specimens.
    It reuses cashy-ui tokens so the docs follow the same light/dark theme.
    The shipped library is cashy-ui.css; this file never ships to the app.
+
+   Dogfood rule: wherever the library ships a primitive (cluster / grid / stack /
+   buttons / cards / nav / sidenav…), the pages use it DIRECTLY. This file only
+   holds chrome the library has no equivalent for — the sidebar tree, code block,
+   dual preview, config drawer, and the token / type / font specimens.
    ========================================================================== */
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -180,7 +185,6 @@ a { color: inherit; }
   border: var(--cash-bw) solid var(--cash-border); background: var(--cash-surface); color: var(--cash-fg-muted); }
 .copy-btn:hover { color: var(--cash-fg); border-color: var(--cash-border-strong); }
 
-.cap-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .cap-row  { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
 .cap-row:last-child { margin-bottom: 0; }
 .cap-row__label { width: 96px; flex: none; font-size: 12px; color: var(--cash-fg-subtle); font-weight: 600; }
@@ -204,7 +208,6 @@ a { color: inherit; }
    -------------------------------------------------------------------------- */
 .doc-hero h2 { font-size: 31px; margin: 0 0 10px; letter-spacing: -.02em; font-weight: 700; }
 .doc-hero p  { font-size: 15px; color: var(--cash-fg-muted); margin: 0; max-width: 62ch; }
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-top: 8px; }
 .nav-card { display: block; text-decoration: none; border: var(--cash-bw) solid var(--cash-border);
   border-radius: var(--cash-radius-lg); background: var(--cash-surface); padding: 18px;
   box-shadow: var(--cash-shadow-sm); transition: border-color .13s ease, transform .06s ease; }
@@ -215,7 +218,6 @@ a { color: inherit; }
 /* -----------------------------------------------------------------------------
    Tokens (swatches) + colour tiers
    -------------------------------------------------------------------------- */
-.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 12px; }
 .swatch { border: var(--cash-bw) solid var(--cash-border); border-radius: var(--cash-radius); overflow: hidden; background: var(--cash-surface); }
 .swatch__chip { height: 52px; }
 .swatch__meta { padding: 8px 10px; }
@@ -239,7 +241,6 @@ a { color: inherit; }
 .type-row__meta { width: 150px; flex: none; font-size: 12px; color: var(--cash-fg-muted);
   font-family: "SF Mono", ui-monospace, monospace; }
 .type-row__sample { color: var(--cash-fg); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.weight-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 .weight-cell { border: var(--cash-bw) solid var(--cash-border); border-radius: var(--cash-radius);
   padding: 14px 16px; background: var(--cash-surface); }
 .weight-cell__n { font-size: 12px; color: var(--cash-fg-muted); margin-bottom: 4px; }

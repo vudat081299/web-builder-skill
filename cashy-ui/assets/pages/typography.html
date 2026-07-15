@@ -47,7 +47,7 @@
 <section class="doc-sec">
   <h3>Độ đậm — phân cấp bằng weight, không đổi cỡ</h3>
   <p class="doc-sec__desc">Mạnh = <code>--cash-fg</code> @ 600–650, phụ = <code>--cash-fg-muted</code>, mờ = <code>--cash-fg-subtle</code>.</p>
-  <div class="weight-grid">
+  <div class="cash-grid cash-grid--auto" style="--cash-grid-min:150px;gap:12px">
     <div class="weight-cell"><div class="weight-cell__n">400 · Regular</div><div class="weight-cell__s" style="font-weight:400">Số dư khả dụng</div></div>
     <div class="weight-cell"><div class="weight-cell__n">500 · Medium</div><div class="weight-cell__s" style="font-weight:500">Số dư khả dụng</div></div>
     <div class="weight-cell"><div class="weight-cell__n">600 · Semibold</div><div class="weight-cell__s" style="font-weight:600">Số dư khả dụng</div></div>
@@ -60,7 +60,7 @@
   <p class="doc-sec__desc">Căn phải, dùng chữ số tabular (<code>tabular-nums</code>) để các cột thẳng hàng.</p>
   <div class="demo demo--plain">
     <div class="demo__stage">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:520px">
+      <div class="cash-grid cash-grid--2" style="gap:24px;max-width:520px">
         <div>
           <div class="cash-cell-muted" style="font-size:12px;margin-bottom:8px">✗ Chữ số thường (lệch cột)</div>
           <div style="font-feature-settings:'tnum' 0;font-variant-numeric:normal;text-align:right;line-height:1.7">

@@ -48,12 +48,16 @@ cashy app, drive them with Radix/shadcn and keep the `cash-*` classes for the lo
 | Pick a category / label colour | **Colour input** | [Colour](#colour-input) |
 | A settings / accounts list (one item per row) | **List group** | [List group](#list-group) |
 | A content container / section with header + body | **Card** | [Card](#card) |
+| Show one transaction / bill as a torn-paper slip | **Receipt** (hoá đơn) | [Receipt](#receipt) |
 | A menu of actions off a button (⋯, "Thao tác") | **Dropdown** | [Dropdown](#dropdown--menu) |
 | An inline message inside a page/form | **Alert** | [Alert](#alert--banner) |
 | A transient "saved / failed" notification | **Toast** | [Toast](#toast) |
 | A confirm / focused task over a dimmed screen | **Modal** | [Modal](#modal--dialog) |
 | A slide-in filters / detail / side-menu panel | **Drawer** | [Drawer](#drawer--offcanvas) |
 | Switch between views, or a Thu/Chi segmented toggle | **Tabs** | [Tabs](#tabs) |
+| The top app bar (brand · links · actions) | **Navbar** | [Navbar](#navbar--nav-menu) |
+| A set of page-navigation links (a menu) | **Nav** (`.cash-nav`) | [Navbar](#navbar--nav-menu) |
+| The left navigation rail of an app shell | **Sidebar** (`.cash-sidenav`) | [Sidebar](#sidebar-side-nav) |
 | A segmented filter of joined buttons (Ngày/Tuần/Tháng) | **Button group** | [Button group](#button-group) |
 | Budget usage / completion ratio | **Progress** | [Progress](#progress) |
 | A loading placeholder before data arrives | **Skeleton** | [Skeleton](#skeleton) |
@@ -440,6 +444,32 @@ the dashed "droppable" affordance for statements/receipts — a `<label>` around
 <div class="cash-card cash-card--dashed"><div class="cash-card__body">＋ Thêm</div></div>
 ```
 
+## Receipt
+
+`.cash-receipt` (wrapper — casts the drop-shadow that follows the torn edge) > `.cash-receipt__paper`
+(the paper — `--cash-surface` fill + a zig-zag **mask** on the top & bottom edge). For a **hoá đơn**:
+one transaction, a bill, a small statement. Parts: `__head` (`__merchant` + `__meta`), a `__body` of
+`__line` rows (desc left, amount right — tabular), `__rule` (dashed perforation), `__total`, `__note`.
+Modifiers: `--bottom` (tear only the bottom, clean header), `--flat` (no shadow); tune the teeth with
+`--cash-receipt-tw` / `--cash-receipt-th`.
+
+```html
+<div class="cash-receipt">
+  <div class="cash-receipt__paper">
+    <div class="cash-receipt__head">
+      <div class="cash-receipt__merchant">Highlands Coffee</div>
+      <div class="cash-receipt__meta">08/07/2026 · #HD-0192</div>
+    </div>
+    <div class="cash-receipt__body">
+      <div class="cash-receipt__line"><span>Cà phê sữa</span><span>45.000</span></div>
+    </div>
+    <div class="cash-receipt__rule"></div>
+    <div class="cash-receipt__total"><span>Tổng</span><span>192.240 ₫</span></div>
+  </div>
+</div>
+```
+The shadow lives on the wrapper by design — a mask would clip a shadow set on the paper itself. Static, no JS.
+
 ## Dropdown / Menu
 
 `.cash-dropdown` wraps a trigger + `.cash-dropdown__menu`; toggle `.is-open`. `.cash-menu`
@@ -523,6 +553,43 @@ overlay (the shared modal JS works: `data-modal-open` / `-close`, click scrim to
     <div class="cash-drawer__foot"> … </div>
   </aside>
 </div>
+```
+
+## Navbar / Nav (menu)
+
+`.cash-navbar` = the top app bar: `__brand` (+ `__mark` square logo), a `.cash-nav` of links, `__spacer`
+(pushes the rest right), `__actions`. `--sticky` pins it. `.cash-nav` is the standalone **menu** primitive —
+`.cash-nav__link` (+ `.is-active` / `.is-disabled`, optional `.cash-ico`); `--vertical` stacks it, `--underline`
+gives a page-tab look. Active is a plain highlight (no left bar). Wire `.is-active` to the router; mobile
+menu toggling is the app's job.
+
+```html
+<div class="cash-navbar">
+  <a class="cash-navbar__brand"><span class="cash-navbar__mark">C</span> Cashy</a>
+  <nav class="cash-nav">
+    <a class="cash-nav__link is-active">Tổng quan</a>
+    <a class="cash-nav__link">Giao dịch</a>
+  </nav>
+  <span class="cash-navbar__spacer"></span>
+  <div class="cash-navbar__actions"><span class="cash-avatar cash-avatar--sm">DV</span></div>
+</div>
+```
+App: keep the classes; drive `.is-active` from React Router (`NavLink`).
+
+## Sidebar (side-nav)
+
+`.cash-sidenav` = the vertical app rail: `__section` (uppercase group label), `__link` (icon + label,
++ `.is-active`), `__badge` (right-aligned count). A shippable sibling of the docs' own sidebar (which adds
+collapse behaviour and stays docs chrome). Add `.cash-scroll-y` if it gets long; compose with `.cash-navbar`
+for a full app shell.
+
+```html
+<nav class="cash-sidenav">
+  <div class="cash-sidenav__section">Tổng quan</div>
+  <a class="cash-sidenav__link is-active"><span class="cash-ico">dashboard</span> Bảng điều khiển</a>
+  <a class="cash-sidenav__link"><span class="cash-ico">receipt_long</span> Giao dịch
+    <span class="cash-sidenav__badge">128</span></a>
+</nav>
 ```
 
 ## Tabs
