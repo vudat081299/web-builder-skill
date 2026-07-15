@@ -96,6 +96,31 @@
   </div>
 
   <div class="doc-block">
+    <h4>Emoji + chữ</h4>
+    <p class="doc-block__desc">Gắn emoji ngay sau dấu <code>#</code> (do <code>.cash-tag</code> tự thêm) để nhãn danh mục dễ nhận ra. Chạy với mọi hình dạng, màu &amp; nút xoá.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cash-cluster" style="gap:8px;margin-bottom:12px">
+          <span class="cash-tag">🚴 đạp-xe</span>
+          <span class="cash-tag">🎾 tennis</span>
+          <span class="cash-tag">🏊 bơi</span>
+          <span class="cash-tag">⚽ thể-thao</span>
+          <span class="cash-tag">🍳 ăn-sáng</span>
+          <span class="cash-tag">☕ cà-phê</span>
+        </div>
+        <div class="cash-cluster" style="gap:8px">
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488">🚴 đạp-xe</span>
+          <span class="cash-tag cash-tag--tinted cash-tag--rect" style="--cash-tag-color:#7c3aed">🎾 tennis</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#d97706">🍳 ăn-sáng</span>
+          <span class="cash-tag cash-tag--info">🏊 bơi<button class="cash-tag__x" aria-label="Xoá">×</button></span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="cash-tag"&gt;🎾 tennis&lt;/span&gt;                       &lt;!-- # tự thêm → "#🎾 tennis" --&gt;
+&lt;span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488"&gt;🚴 đạp-xe&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
     <h4>Kích thước &amp; xoá được</h4>
     <p class="doc-block__desc">Ba cỡ như capsule. Thêm nút <code>×</code> để làm tag có thể gỡ (bộ lọc, ô nhập tag).</p>
     <div class="demo demo--plain">

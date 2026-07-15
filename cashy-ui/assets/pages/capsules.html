@@ -117,6 +117,33 @@
   </div>
 
   <div class="doc-block">
+    <h4>Emoji + chữ — nhãn danh mục thân thiện</h4>
+    <p class="doc-block__desc">Emoji là cách nhẹ (không cần icon-font) để danh mục người dùng đặt trông sinh động. Đặt emoji ngay trước chữ; chạy với mọi fill / tone / màu <code>--tinted</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cash-cluster" style="margin-bottom:12px">
+          <span class="cash-cap">🚴 Đạp xe</span>
+          <span class="cash-cap">🎾 Tennis</span>
+          <span class="cash-cap">🏊 Bơi</span>
+          <span class="cash-cap">⚽ Thể thao</span>
+          <span class="cash-cap">🍳 Ăn sáng</span>
+          <span class="cash-cap">☕ Cà phê</span>
+        </div>
+        <div class="cash-cluster">
+          <span class="cash-cap cash-cap--tinted" style="--cash-cap-color:#0d9488">🚴 Đạp xe</span>
+          <span class="cash-cap cash-cap--tinted" style="--cash-cap-color:#7c3aed">🎾 Tennis</span>
+          <span class="cash-cap cash-cap--tinted" style="--cash-cap-color:#2563eb">🏊 Bơi</span>
+          <span class="cash-cap cash-cap--tinted" style="--cash-cap-color:#d97706">🍳 Ăn sáng</span>
+          <span class="cash-cap cash-cap--tinted cash-cap--solid" style="--cash-cap-color:#16a34a">💰 Tiết kiệm</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="cash-cap"&gt;🚴 Đạp xe&lt;/span&gt;
+&lt;span class="cash-cap cash-cap--tinted" style="--cash-cap-color:#0d9488"&gt;🎾 Tennis&lt;/span&gt;
+&lt;span class="cash-cap cash-cap--tinted cash-cap--solid" style="--cash-cap-color:#16a34a"&gt;💰 Tiết kiệm&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
     <h4>Xem đồng thời ở Light &amp; Dark</h4>
     <p class="doc-block__desc">Cùng một bộ capsule, render ở cả hai chế độ cạnh nhau — để thấy ngay dải màu ở mode kia
     mà không cần bật đổi theme. (Neutral <code>--solid</code> cố ý đảo: đen ở light ↔ trắng ở dark; màu semantic giữ tông ở cả hai.)</p>
