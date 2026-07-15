@@ -37,7 +37,8 @@ Tailwind note below).
 | Tooltips | ✅ `wb-tooltip` | pure-CSS bubble |
 | Forms (controls, select, checks, range, input-group, validation) | ✅ full | + colour input, file dropzone, **switch locked** state — beyond Bootstrap |
 | Floating labels | ❌ not used | we use a top `wb-label` (clearer for dense forms; a deliberate call, not a gap) |
-| Layout (12-col grid, breakpoints, gutters) | 🟡 by design | flex-first utilities instead — see below & design-principles §17 |
+| Layout (12-col grid, breakpoints, gutters) | 🟡 by design | flex-first utilities instead — **with full flex alignment** (justify / align / self / grow); no 12-col scaffold. See below & design-principles §17 |
+| Flex/align utilities (justify-content, align-items, align-self, flex-fill) | ✅ | on `.wb-cluster` / `.wb-stack` (`--start/end/center/between/around/evenly`, `--top/bottom/baseline`) + `.wb-grow` / `.wb-self--*` |
 
 **Only in Web Builder (flagship finance extras, no Bootstrap equivalent):** tags (`#` category chips), stat/KPI cards,
 charts (line/bars/combo/donut/sparkline + budget), category **tree** (drag reorder/reparent), **sortable**
@@ -58,7 +59,10 @@ breakpoints (sm/md/lg/xl/xxl), and gutter utilities. Most Bootstrap pages are sc
 
 Web Builder keeps layout as a **small flex-first utility set** — `.wb-cluster` (wrap row), `.wb-stack`
 (column), `.wb-grid` (`--auto/-2/-3/-4/--equal`), `.wb-container`, `.wb-ratio` — each collapsing
-sensibly on mobile, no breakpoint bookkeeping. Reasoning (full version in `design-principles.md §17`):
+sensibly on mobile, no breakpoint bookkeeping. The set carries **full flex alignment** so a row/column is
+never hand-styled: cluster justifies (`--start/end/center/between/around/evenly`) and aligns
+(`--top/bottom/baseline`), stack aligns (`--start/center/end`), plus `.wb-grow` and `.wb-self--*` for
+per-item control. What we skip is only the 12-column scaffold, not alignment. Reasoning (full version in `design-principles.md §17`):
 a 12-col foundation is a lot of vocabulary (five breakpoints × twelve columns × gutters) for what real
 pages actually need — "wrap these chips / stack this form / reflow these cards" — which the five utilities
 already express. Keeping the set small is the **minimalist** call, not a deferral: the utilities are
@@ -72,8 +76,9 @@ Builder is component-first, so it deliberately does **not** replicate Tailwind's
 spacing scale, every flex/grid/position/type atom, arbitrary values). What it *does* take — kept minimal and
 token-based:
 
-- **Layout utilities** — `wb-cluster / wb-stack / wb-grid / wb-container / wb-ratio` (the common flex/grid
-  jobs), not hundreds of atoms.
+- **Layout utilities** — `wb-cluster / wb-stack / wb-grid / wb-container / wb-ratio` plus their alignment
+  modifiers (justify / align / `wb-grow` / `wb-self--*`) — the common flex/grid jobs *including* full
+  alignment, but not hundreds of spacing/sizing atoms.
 - **Design tokens** — one `--wb-*` variable set for colour / space / radius / shadow, editable live in
   Config: Tailwind's "constraints in a config", but as plain CSS variables with no build.
 - **Dark mode off a class** — the same `.dark` model as Tailwind's `darkMode: "class"`.

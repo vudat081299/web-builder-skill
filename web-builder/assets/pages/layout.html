@@ -8,9 +8,10 @@
 
 <section class="doc-sec">
   <h3>Cluster — hàng ngang, tự xuống dòng (wrap)</h3>
-  <p class="doc-sec__desc">Phần tử xếp ngang và <b>wrap</b> khi hết chỗ. Modifier căn chỉnh: mặc định (trái) ·
-  <code>--end</code> (phải) · <code>--center</code> · <code>--between</code> · <code>--stretch</code> (giãn đều, các item bằng nhau) ·
-  <code>--tight</code> (khít) · <code>--nowrap</code>.</p>
+  <p class="doc-sec__desc"><b>Trục ngang</b> (justify — dồn theo hàng): mặc định trái · <code>--end</code> (phải) ·
+  <code>--center</code> · <code>--between</code> · <code>--around</code> · <code>--evenly</code> · <code>--stretch</code> (các item bằng nhau, phủ kín hàng).
+  <b>Trục dọc</b> (align — khi item cao thấp khác nhau): mặc định giữa · <code>--top</code> · <code>--bottom</code> · <code>--baseline</code>.
+  Khoảng cách: <code>--tight</code> / <code>--loose</code>; <code>--nowrap</code> để không xuống dòng.</p>
 
   <div class="doc-block">
     <h4>Wrap (mặc định)</h4>
@@ -52,6 +53,57 @@
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-cluster wb-cluster--end"&gt; … &lt;/div&gt;      &lt;!-- dồn phải --&gt;
 &lt;div class="wb-cluster wb-cluster--stretch"&gt; … &lt;/div&gt;  &lt;!-- 3 nút bằng nhau, phủ kín hàng --&gt;
 &lt;div class="wb-cluster wb-cluster--between"&gt; … &lt;/div&gt;  &lt;!-- label trái · số phải --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Căn trục dọc — khi các item cao thấp khác nhau</h4>
+    <p class="doc-block__desc">Mặc định căn <b>giữa</b>. Đổi bằng <code>--top</code> (căn trên) · <code>--bottom</code> (căn dưới) ·
+    <code>--baseline</code> (thẳng chân chữ). Đây là mảnh trước đây hay phải chèn <code>style="align-items:…"</code> tay.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:14px">
+          <div class="wb-cluster wb-cluster--top">
+            <span class="lay-box" style="padding-block:24px">cao</span><span class="lay-box">vừa</span><span class="lay-box" style="padding-block:6px">thấp</span>
+            <span class="wb-cell-muted" style="font-size:12px">← --top</span>
+          </div>
+          <div class="wb-cluster wb-cluster--bottom">
+            <span class="lay-box" style="padding-block:24px">cao</span><span class="lay-box">vừa</span><span class="lay-box" style="padding-block:6px">thấp</span>
+            <span class="wb-cell-muted" style="font-size:12px">← --bottom</span>
+          </div>
+          <div class="wb-cluster wb-cluster--baseline">
+            <span class="lay-box" style="font-size:26px">Aa</span><span class="lay-box">Aa</span><span class="lay-box" style="font-size:13px">Aa</span>
+            <span class="wb-cell-muted" style="font-size:12px">← --baseline</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-cluster wb-cluster--top"&gt; … &lt;/div&gt;       &lt;!-- căn trên --&gt;
+&lt;div class="wb-cluster wb-cluster--bottom"&gt; … &lt;/div&gt;    &lt;!-- căn dưới --&gt;
+&lt;div class="wb-cluster wb-cluster--baseline"&gt; … &lt;/div&gt;  &lt;!-- thẳng chân chữ --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Rải đều · một item chiếm phần dư · căn riêng từng item</h4>
+    <p class="doc-block__desc"><code>--around</code> / <code>--evenly</code> rải đều khoảng cách. <code>.wb-grow</code> cho <b>một</b> item
+    “ăn” hết chỗ trống (ô tìm kiếm co giãn, nút giữ nguyên). <code>.wb-self--top/--center/--bottom</code> căn riêng một item, ghi đè căn chung.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:14px">
+          <div class="wb-cluster wb-cluster--nowrap">
+            <input class="wb-input wb-grow" placeholder="Tìm giao dịch…" />
+            <button class="wb-btn">Lọc</button>
+          </div>
+          <div class="wb-cluster wb-cluster--evenly">
+            <span class="lay-box">Thu</span><span class="lay-box">Chi</span><span class="lay-box">Còn lại</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-cluster wb-cluster--nowrap"&gt;
+  &lt;input class="wb-input wb-grow" /&gt;    &lt;!-- ô co giãn, ăn phần dư --&gt;
+  &lt;button class="wb-btn"&gt;Lọc&lt;/button&gt;    &lt;!-- nút giữ nguyên bề rộng --&gt;
+&lt;/div&gt;
+&lt;div class="wb-cluster wb-cluster--evenly"&gt; … &lt;/div&gt;  &lt;!-- rải đều khoảng cách --&gt;</code></pre></div>
     </div>
   </div>
 </section>
@@ -121,6 +173,36 @@
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-stack"&gt;        &lt;!-- --tight | --loose --&gt;
   &lt;input class="wb-input" /&gt; … &lt;button class="wb-btn wb-btn--block"&gt;Lưu&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Stack — căn ngang các item</h4>
+    <p class="doc-block__desc">Mặc định item giãn hết bề ngang. <code>--start</code> (trái) · <code>--center</code> (giữa) ·
+    <code>--end</code> (phải) — vd căn giữa một nút, hay dồn phải một cụm nhỏ.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-grid wb-grid--3">
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-stack wb-stack--start" style="--wb-stack-gap:8px">
+              <span class="wb-cell-muted" style="font-size:12px">--start</span><button class="wb-btn wb-btn--outline">Nút</button>
+            </div>
+          </div></div>
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-stack wb-stack--center" style="--wb-stack-gap:8px">
+              <span class="wb-cell-muted" style="font-size:12px">--center</span><button class="wb-btn wb-btn--outline">Nút</button>
+            </div>
+          </div></div>
+          <div class="wb-card"><div class="wb-card__body">
+            <div class="wb-stack wb-stack--end" style="--wb-stack-gap:8px">
+              <span class="wb-cell-muted" style="font-size:12px">--end</span><button class="wb-btn wb-btn--outline">Nút</button>
+            </div>
+          </div></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-stack wb-stack--center"&gt;   &lt;!-- --start | --center | --end --&gt;
+  &lt;button class="wb-btn"&gt;Nút&lt;/button&gt;
 &lt;/div&gt;</code></pre></div>
     </div>
   </div>

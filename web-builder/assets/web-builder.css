@@ -1474,7 +1474,9 @@
    -----------------------------------------------------------------------------
    Small, composable layout primitives so a page is assembled, not hand-styled:
      .wb-grid --auto|--2|--3|--4|--equal   (2-D grids; --auto fills by min width)
-     .wb-cluster --tight|--end|--center|--between|--stretch|--nowrap  (1-D, wraps)
+     .wb-cluster (1-D row, wraps) — main axis: --start/end/center/between/around/evenly;
+                 cross axis (vertical): --top/bottom/baseline (default center); + --tight/loose/nowrap/stretch
+     .wb-grow (child eats slack) · .wb-self--top/center/bottom/stretch/baseline (per-item align)
    -------------------------------------------------------------------------- */
 .wb-grid { display: grid; gap: 14px; }
 .wb-grid--auto { grid-template-columns: repeat(auto-fill, minmax(var(--wb-grid-min, 200px), 1fr)); }
@@ -1487,11 +1489,27 @@
 }
 .wb-cluster { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .wb-cluster--tight   { gap: 6px; }
+.wb-cluster--loose   { gap: 16px; }
+/* main axis (justify) — where items sit along the row */
+.wb-cluster--start   { justify-content: flex-start; }
 .wb-cluster--end     { justify-content: flex-end; }
 .wb-cluster--center  { justify-content: center; }
 .wb-cluster--between { justify-content: space-between; }
+.wb-cluster--around  { justify-content: space-around; }
+.wb-cluster--evenly  { justify-content: space-evenly; }
+/* cross axis (align) — vertical alignment when items differ in height (default: center) */
+.wb-cluster--top      { align-items: flex-start; }
+.wb-cluster--bottom   { align-items: flex-end; }
+.wb-cluster--baseline { align-items: baseline; }
 .wb-cluster--nowrap  { flex-wrap: nowrap; }
-.wb-cluster--stretch > * { flex: 1 1 0; }   /* equal-size items that fill the row */
+.wb-cluster--stretch > * { flex: 1 1 0; }   /* equal-WIDTH items filling the row (for equal-HEIGHT blocks use .wb-grid) */
+/* per-item helpers — on a flex child of .wb-cluster or .wb-stack */
+.wb-grow { flex: 1 1 auto; }                       /* this item eats the remaining space */
+.wb-self--top      { align-self: flex-start; }
+.wb-self--center   { align-self: center; }
+.wb-self--bottom   { align-self: flex-end; }
+.wb-self--stretch  { align-self: stretch; }
+.wb-self--baseline { align-self: baseline; }
 
 /* -----------------------------------------------------------------------------
    27. SCROLL AREAS  (theme-aware scrollbar + tail breathing room)
@@ -1717,13 +1735,18 @@
 /* -----------------------------------------------------------------------------
    34. LAYOUT — STACK · CONTAINER · RATIO  (companions to grid / cluster, §26)
    -----------------------------------------------------------------------------
-   .wb-stack     vertical flow with a gap (the vertical partner of --cluster)
+   .wb-stack     vertical flow with a gap (the vertical partner of --cluster);
+                 align items horizontally with --start / --center / --end
    .wb-container centered max-width page column (--narrow / --wide)
    .wb-ratio     hold an aspect ratio for embeds/media (--1x1 / --4x3 / --16x9)
    -------------------------------------------------------------------------- */
 .wb-stack { display: flex; flex-direction: column; gap: var(--wb-stack-gap, 14px); }
 .wb-stack--tight { --wb-stack-gap: 8px; }
 .wb-stack--loose { --wb-stack-gap: 22px; }
+/* cross axis (align) — horizontal alignment of items (default: stretch = full width) */
+.wb-stack--start  { align-items: flex-start; }   /* left  */
+.wb-stack--center { align-items: center; }        /* horizontally centered */
+.wb-stack--end    { align-items: flex-end; }      /* right */
 .wb-container { width: 100%; max-width: var(--wb-container-max, 1120px); margin-inline: auto; padding-inline: 20px; }
 .wb-container--narrow { --wb-container-max: 720px; }
 .wb-container--wide   { --wb-container-max: 1320px; }

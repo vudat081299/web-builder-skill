@@ -78,7 +78,7 @@ for the look (see `integration.md`).
 | Nested categories (drag to reorder / reparent) | **Tree** | [Tree](#tree) |
 | Reorder a flat list or grid of cards (drag) | **Sortable** | [Sortable](#sortable-list--grid) |
 | Reorder rows inside a data table (drag) | **Sortable table** (`--sortable`) | [Sortable](#sortable-list--grid) |
-| Arrange cards/chips: wrap, equal widths, right-align | **Grid / Layout** utilities | [Layout](#grid--layout) |
+| Arrange in a row/column, align (top/center/bottom, left/right), wrap, equal widths | **Grid / Layout** utilities | [Layout](#grid--layout) |
 | A UI icon (chevron, close, drag, search…) | **Icon** (`.wb-ico`) | [Icons](#icons) |
 | Fine-tune tokens live + export a `.md` | **Config** (docs playground) | [Config](#config--tweak) |
 
@@ -938,16 +938,24 @@ toggle, close ×) and stay empty in markup; a `<select>` gets its chevron from a
 
 Composable layout utilities (no colour/meaning — just placement; swap for Tailwind flex/grid if you
 prefer):
-- `.wb-cluster` — a row that **wraps**; align via `--end` / `--center` / `--between` / `--stretch`
-  (equal-size items fill the row) / `--tight` / `--nowrap`.
+- `.wb-cluster` — a row that **wraps**. Main axis (justify): `--start` / `--end` / `--center` /
+  `--between` / `--around` / `--evenly` / `--stretch` (equal-**width** items fill the row). Cross axis
+  (align, when items differ in height): `--top` / `--bottom` / `--baseline` (default centred). Gap
+  `--tight` / `--loose`; `--nowrap` to stop wrapping.
 - `.wb-grid` — 2-D grid: `--auto` (auto-fill by `--wb-grid-min`), `--2/--3/--4` (fixed cols, → 1
-  col on mobile), `--equal` (equal columns in one row).
+  col on mobile), `--equal` (equal columns in one row). Cells are **equal-height** — use this for a row
+  of equal-height cards rather than a cluster.
 - `.wb-stack` — vertical flow with a gap (`--tight` / `--loose`); the vertical partner of `--cluster`.
+  Align items horizontally: `--start` (left) / `--center` / `--end` (right).
 - `.wb-container` — centered max-width column (`--narrow` 720 · default 1120 · `--wide` 1320px).
 - `.wb-ratio` — hold an aspect ratio (`--1x1` / `--4x3` / `--16x9`) for embeds / receipt images.
+- **Per-item helpers** (on a flex child): `.wb-grow` (eat the remaining space) ·
+  `.wb-self--top` / `--center` / `--bottom` / `--stretch` / `--baseline` (override alignment for one item).
 
 ```html
 <div class="wb-cluster wb-cluster--between"><span>Tổng chi</span><span class="wb-num">−11,8tr</span></div>
+<div class="wb-cluster wb-cluster--top"> … </div>            <!-- top-align a row of unequal-height items -->
+<div class="wb-cluster wb-cluster--nowrap"><input class="wb-input wb-grow"/><button class="wb-btn">Lọc</button></div>
 <div class="wb-grid wb-grid--auto" style="--wb-grid-min:150px"> … </div>
 ```
 

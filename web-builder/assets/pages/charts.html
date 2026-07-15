@@ -202,7 +202,7 @@
     <div class="demo__stage">
       <div class="wb-card" style="max-width:480px"><div class="wb-card__body">
         <p class="wb-chart__title" style="margin-bottom:14px">Chi tháng 7 theo danh mục</p>
-        <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+        <div class="wb-cluster" style="gap:24px">
           <svg class="wb-chart" width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Donut cơ cấu chi">
             <g transform="rotate(-90 70 70)" fill="none" stroke-width="18">
               <circle class="wb-donut__track" cx="70" cy="70" r="52" stroke-width="18"/>
@@ -245,7 +245,7 @@
       <div style="display:flex;gap:20px;align-items:stretch;flex-wrap:wrap">
         <div class="wb-card" style="flex:2;min-width:280px"><div class="wb-card__body">
           <p class="wb-chart__title" style="margin-bottom:12px">Cơ cấu chi (mảnh, bo tròn)</p>
-          <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+          <div class="wb-cluster" style="gap:20px">
             <svg class="wb-chart" width="150" height="150" viewBox="0 0 140 140" role="img" aria-label="Donut mảnh bo tròn">
               <g transform="rotate(-90 70 70)" fill="none" stroke-width="10">
                 <circle class="wb-donut__track" cx="70" cy="70" r="54"/>
@@ -300,21 +300,21 @@
   <p class="doc-sec__desc">Dùng lại <code>.wb-progress</code>: xanh khi còn thoải mái, vàng khi sắp chạm, đỏ khi chạm/vượt. Thanh vượt hạn mức chốt ở 100% và ghi rõ % vượt.</p>
   <div class="demo">
     <div class="demo__stage">
-      <div class="wb-card" style="max-width:480px"><div class="wb-card__body" style="display:flex;flex-direction:column;gap:16px">
+      <div class="wb-card" style="max-width:480px"><div class="wb-card__body wb-stack" style="--wb-stack-gap:16px">
         <div>
-          <div style="display:flex;font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Di chuyển</span><span class="wb-cell-muted" style="margin-left:auto">1,15tr / 2,0tr</span></div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Di chuyển</span><span class="wb-cell-muted">1,15tr / 2,0tr</span></div>
           <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--success" style="width:57%"></div></div>
         </div>
         <div>
-          <div style="display:flex;font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Ăn uống</span><span class="wb-cell-muted" style="margin-left:auto">3,28tr / 4,0tr</span></div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Ăn uống</span><span class="wb-cell-muted">3,28tr / 4,0tr</span></div>
           <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
         </div>
         <div>
-          <div style="display:flex;font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Nhà ở</span><span class="wb-cell-muted" style="margin-left:auto">6,5tr / 6,5tr</span></div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Nhà ở</span><span class="wb-cell-muted">6,5tr / 6,5tr</span></div>
           <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--danger" style="width:100%"></div></div>
         </div>
         <div>
-          <div style="display:flex;font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Ăn ngoài</span><span class="wb-num--neg" style="margin-left:auto;font-size:13px">2,4tr / 2,0tr · vượt 20%</span></div>
+          <div class="wb-cluster wb-cluster--between" style="font-size:13px;margin-bottom:6px"><span class="wb-cell-strong">Ăn ngoài</span><span class="wb-num--neg" style="font-size:13px">2,4tr / 2,0tr · vượt 20%</span></div>
           <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--danger" style="width:100%"></div></div>
         </div>
       </div></div>
@@ -370,7 +370,7 @@
       <div class="chart-grid">
         <div class="wb-card"><div class="wb-card__body">
           <p class="wb-chart__title" style="margin-bottom:12px">Thang xám</p>
-          <div class="wb-chart-scheme--mono wb-chart-ramp--4" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div class="wb-chart-scheme--mono wb-chart-ramp--4 wb-cluster" style="gap:16px">
             <svg class="wb-chart" width="104" height="104" viewBox="0 0 140 140" aria-label="Donut thang xám">
               <g transform="rotate(-90 70 70)" fill="none" stroke-width="18">
                 <circle class="wb-donut__track" cx="70" cy="70" r="52" stroke-width="18"/>
@@ -390,7 +390,7 @@
         </div></div>
         <div class="wb-card"><div class="wb-card__body">
           <p class="wb-chart__title" style="margin-bottom:12px">Một tông xanh</p>
-          <div class="wb-chart-scheme--blue wb-chart-ramp--4" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div class="wb-chart-scheme--blue wb-chart-ramp--4 wb-cluster" style="gap:16px">
             <svg class="wb-chart" width="104" height="104" viewBox="0 0 140 140" aria-label="Donut một tông xanh">
               <g transform="rotate(-90 70 70)" fill="none" stroke-width="18">
                 <circle class="wb-donut__track" cx="70" cy="70" r="52" stroke-width="18"/>

@@ -252,6 +252,15 @@ utilities as the layout layer. They cover the real cases on their own; if you ha
 a genuine 12-col case, its grid is right there — a bonus, not a dependency. Add a utility only when a real
 screen can't be expressed (see §16) — not to mirror Bootstrap.
 
+**Alignment is part of this small set, not an extra beyond it.** The flex utilities carry full main- and
+cross-axis control: `.wb-cluster` justifies with `--start/end/center/between/around/evenly` and aligns with
+`--top/bottom/baseline`; `.wb-stack` aligns items with `--start/center/end`; `.wb-grow` lets one child eat
+the slack and `.wb-self--*` overrides a single item. So "lay these out in a row and top-align them" is always
+a class, never an inline `style="align-items:…"`. What stays out is the *spacing/sizing* firehose (a full
+`m-*/p-*/w-*` scale) — **alignment is core expressiveness a flex utility set must have**, and its earlier
+absence (cluster was locked to `align-items:center`, stack had none) was a genuine gap now fixed — distinct
+from the deliberate no-12-col-grid stance above.
+
 ## 18. Minimalism discipline: tokens over magic numbers
 
 The visual ethos (white-black-grey first, colour only for meaning, one soft shadow scale) is the easy
