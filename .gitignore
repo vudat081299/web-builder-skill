@@ -4,3 +4,7 @@
 # Local AI tooling — never part of the project (also covered by global excludes)
 .kv/
 .remember/
+
+# Build artifacts (packaged skill)
+*.zip
+*.skill

@@ -1,0 +1,44 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Checkbox &amp; Radio</h2>
+  <p>Vẽ trực tiếp trên input gốc bằng <code>appearance:none</code> — vẫn chuẩn accessibility (focus/bàn phím/form nguyên vẹn):
+  ô &amp; vòng viền đen, khi chọn <b>đặc đen</b> + tick/chấm trắng (tự đảo trắng ở dark). Độ dày viền chỉnh được qua
+  <code>--wb-check-bw</code>, bo góc theo token. Bọc trong <code>.wb-check</code> / <code>.wb-radio</code> để căn nhãn.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Checkbox</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:12px">
+          <label class="wb-check"><input type="checkbox" checked /> Giao dịch định kỳ</label>
+          <label class="wb-check"><input type="checkbox" /> Gửi email nhắc nợ</label>
+          <label class="wb-check"><input type="checkbox" disabled /> Tuỳ chọn bị khoá</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-check"&gt;&lt;input type="checkbox" checked /&gt; Giao dịch định kỳ&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Radio</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster" style="gap:22px">
+          <label class="wb-radio"><input type="radio" name="tt" checked /> Chi</label>
+          <label class="wb-radio"><input type="radio" name="tt" /> Thu</label>
+          <label class="wb-radio"><input type="radio" name="tt" /> Chuyển khoản</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="wb-radio"&gt;&lt;input type="radio" name="tt" checked /&gt; Chi&lt;/label&gt;
+&lt;label class="wb-radio"&gt;&lt;input type="radio" name="tt" /&gt; Thu&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Ô/vòng vẽ bằng <code>appearance:none</code> nên chỉnh được: <b>độ dày viền</b> qua <code>--wb-check-bw</code>
+    (Config → Viền → “Viền checkbox”) và <b>bo góc</b> theo token (Config → Kiểu góc → “Vuông sắc” cho ô vuông).</div>
+  </div>
+</section>

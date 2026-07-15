@@ -1,0 +1,83 @@
+<div class="doc-hero">
+  <h2>Bộ component CSS tối giản để build web</h2>
+  <p>Một thư viện CSS + hệ thiết kế tối giản, ưu tiên trắng–đen–xám, dùng lại được — viết tay, token-based,
+  không cần build, drop-in một file, prefix <code>wb-*</code> nên ghép được với mọi stack. Mạnh nhất cho web
+  tài chính cá nhân (bảng tiền, ngân sách, hoá đơn) nhưng dùng tốt cho web bất kỳ. Mỗi nhóm nằm ở một trang
+  riêng — chọn ở sidebar để xem đúng nhóm. Khi build web, ghép từ catalog thay vì thiết kế lại từ đầu.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Có gì trong hộp</h3>
+  <p class="doc-sec__desc">Các primitive cơ bản mà hầu như web nào cũng cần — thống nhất một ngôn ngữ hình ảnh.</p>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:210px;margin-top:8px">
+    <div class="nav-card">
+      <p class="nav-card__t">Nền tảng</p>
+      <p class="nav-card__d"><a href="#/color">Triết lý màu</a> · <a href="#/tokens">Tokens</a> · <a href="#/typography">Typography</a> · <a href="#/fonts">Fonts</a> · <a href="#/border">Border</a> · <a href="#/config">Config / Tweak</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Hành động</p>
+      <p class="nav-card__d"><a href="#/buttons">Buttons</a> · <a href="#/dropdown">Dropdown / Menu</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Nhập liệu</p>
+      <p class="nav-card__d"><a href="#/input">Input (prefix/suffix), select, textarea, checkbox/radio, switch</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Hiển thị dữ liệu</p>
+      <p class="nav-card__d"><a href="#/card">Card</a> · <a href="#/receipt">Hoá đơn</a> · <a href="#/tables">Tables</a> · <a href="#/stats">Stat/KPI</a> · <a href="#/capsules">Capsules</a> · <a href="#/tags">Tags</a> · <a href="#/avatar">Avatar</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Phản hồi</p>
+      <p class="nav-card__d"><a href="#/alert">Alert</a> · <a href="#/toast">Toast</a> · <a href="#/modal">Modal</a> · <a href="#/progress">Progress</a> · <a href="#/skeleton">Skeleton</a> · <a href="#/empty">Empty</a> · <a href="#/tooltip">Tooltip</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Điều hướng</p>
+      <p class="nav-card__d"><a href="#/navbar">Navbar &amp; menu</a> · <a href="#/sidenav">Sidebar</a> · <a href="#/tabs">Tabs</a> · <a href="#/breadcrumb">Breadcrumb</a> · <a href="#/pagination">Pagination</a> · <a href="#/accordion">Accordion</a> · <a href="#/divider">Divider</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Biểu đồ</p>
+      <p class="nav-card__d"><a href="#/charts">Charts</a> — đường (tooltip hover), cột, donut, ngân sách, sparkline, thang xám/xanh</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Cấu trúc</p>
+      <p class="nav-card__d"><a href="#/tree">Tree danh mục</a> · <a href="#/sortable">List/Grid/Bảng kéo–thả</a> · <a href="#/layout">Grid / Layout</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Lộ trình</h3>
+  <p class="doc-sec__desc">Xây theo đợt để review dần cho chắc.</p>
+  <div class="tier">
+    <div class="tier__item">
+      <div class="tier__n">ĐỢT 1 · XONG</div>
+      <div class="tier__t">Nền tảng, nhãn &amp; primitive cơ bản</div>
+      <p class="tier__d">Docs dạng module + sidebar cây, Typography, Fonts, Tags, và bộ primitive (card, dropdown, alert, modal, toast, tabs, tooltip, breadcrumb, pagination, avatar, progress, accordion, divider, skeleton, empty).</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">ĐỢT 2 · XONG</div>
+      <div class="tier__t">Tree danh mục</div>
+      <p class="tier__d">Cây danh mục: xổ ra/thu vào, kéo–thả đổi vị trí &amp; đổi cấp cha, độ sâu tùy ý — kèm biến thể guide-lines, màu+số tiền, checkbox.</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">ĐỢT 2.5 · XONG</div>
+      <div class="tier__t">Tinh chỉnh: border, tabs, tree &amp; sortable</div>
+      <p class="tier__d">Bỏ vạch màu bên trái toàn site (chuyển sang outline + nền mờ), sidebar (thanh bên) thu gọn được, tab "boxed", tree nhiều kiểu, và List/Grid kéo–thả với ô thả nét đứt.</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">ĐỢT 3 · XONG</div>
+      <div class="tier__t">Charts</div>
+      <p class="tier__d">Đường/vùng, cột thu–chi, donut theo danh mục, tiến độ ngân sách, sparkline + bảng màu &amp; style trục/legend/tooltip (SVG/CSS, map sang Recharts).</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">ĐỢT 4 · XONG</div>
+      <div class="tier__t">Icon-font, Config, charts &amp; layout</div>
+      <p class="tier__d">Icon chuyển sang <b>icon-font</b> (Material Symbols — đậm &amp; sắc, bỏ vẽ tay); trang <b>Config</b> tinh chỉnh token sống + xuất .md; charts làm lại (tooltip hover, cột đẹp hơn, donut hài hoà, thang xám/xanh); input tách file + prefix + <code>.is-invalid</code>; bảng kéo sắp xếp hàng; tiện ích Grid/Layout; border về 1px + shadow đồng bộ.</p>
+    </div>
+    <div class="tier__item">
+      <div class="tier__n">ĐỢT 5 · XONG</div>
+      <div class="tier__t">Hoá đơn, điều hướng &amp; rà soát tối giản</div>
+      <p class="tier__d">Thêm <b>Hoá đơn</b> (thẻ giấy cạnh xé), bộ primitive <b>điều hướng</b> (navbar · nav/menu · sidebar) ghép thành app shell; rà toàn bộ trang docs để dùng lại chính utility của thư viện (dogfood), siết token (hairline &amp; pill về đúng biến), và đối chiếu phạm vi với Bootstrap.</p>
+    </div>
+  </div>
+</section>

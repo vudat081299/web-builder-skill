@@ -1,0 +1,117 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Text input</h2>
+  <p>Ô nhập trung tính; màu duy nhất là trạng thái lỗi (đỏ). Gói trong <code>.wb-field</code> (label + control +
+  help/error). Ghép <b>prefix / suffix</b> bằng <code>.wb-input-group</code> — addon là chữ (₫, %, https://) hoặc icon.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:380px">
+          <label class="wb-label">Tên giao dịch</label>
+          <input class="wb-input" placeholder="VD: Ăn trưa với khách hàng" />
+          <span class="wb-help">Tối đa 120 ký tự.</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-field"&gt;
+  &lt;label class="wb-label"&gt;Tên giao dịch&lt;/label&gt;
+  &lt;input class="wb-input" placeholder="VD: Ăn trưa…" /&gt;
+  &lt;span class="wb-help"&gt;Tối đa 120 ký tự.&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Prefix &amp; suffix (input-group)</h4>
+    <p class="doc-block__desc">Addon đứng <b>trước</b> (prefix) hoặc <b>sau</b> (suffix) ô nhập — cho tiền tệ, %, đường dẫn, tìm kiếm…</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:420px">
+          <div class="wb-input-group">
+            <span class="wb-input-group__addon">https://</span>
+            <input class="wb-input" value="ledger.app/vi" />
+          </div>
+          <div class="wb-input-group">
+            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+            <input class="wb-input" placeholder="Tìm giao dịch…" />
+          </div>
+          <div class="wb-input-group">
+            <span class="wb-input-group__addon">₫</span>
+            <input class="wb-input" value="1.280.000" inputmode="numeric" />
+            <span class="wb-input-group__addon">.00</span>
+          </div>
+          <div class="wb-input-group">
+            <input class="wb-input" value="8" inputmode="numeric" />
+            <span class="wb-input-group__addon">% / năm</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- prefix: chữ --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;https://&lt;/span&gt;
+  &lt;input class="wb-input" value="ledger.app/vi" /&gt;
+&lt;/div&gt;
+
+&lt;!-- prefix: icon --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;search&lt;/span&gt;&lt;/span&gt;
+  &lt;input class="wb-input" placeholder="Tìm giao dịch…" /&gt;
+&lt;/div&gt;
+
+&lt;!-- prefix + suffix --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;₫&lt;/span&gt;
+  &lt;input class="wb-input" value="1.280.000" /&gt;
+  &lt;span class="wb-input-group__addon"&gt;.00&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trạng thái</h4>
+    <p class="doc-block__desc">Lỗi dùng state <code>.is-invalid</code> (không phải <code>--invalid</code>) — thống nhất với các state
+    runtime khác (<code>.is-active</code>, <code>.is-open</code>). Kèm <code>aria-invalid</code> cho screen reader.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack" style="max-width:380px">
+          <div class="wb-field">
+            <label class="wb-label">Email nhắc nợ</label>
+            <input class="wb-input is-invalid" value="sai-email" aria-invalid="true" />
+            <span class="wb-error">Email không hợp lệ.</span>
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Mã giao dịch <span class="wb-label__opt">(khoá)</span></label>
+            <input class="wb-input" value="TXN-2026-0714" disabled />
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;input class="wb-input is-invalid" value="sai-email" aria-invalid="true" /&gt;
+&lt;span class="wb-error"&gt;Email không hợp lệ.&lt;/span&gt;
+
+&lt;input class="wb-input" value="TXN-2026-0714" disabled /&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Chọn màu — <code>wb-color</code></h4>
+    <p class="doc-block__desc">Ô chọn màu gốc được dọn sạch: cả ô là một <b>swatch bo góc</b> mang đúng màu đang chọn (bỏ viền/đệm mặc định
+    của trình duyệt, không còn "ô vuông trong nút tròn"). Ghép nhãn hex bằng <code>.wb-color-field</code>. Dùng cho màu danh mục / nhãn.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster" style="gap:20px">
+          <span class="wb-color-field"><input class="wb-color" type="color" value="#6366f1" aria-label="Màu danh mục" /><code>#6366F1</code></span>
+          <input class="wb-color wb-color--pill" type="color" value="#16a34a" aria-label="Màu (bo tròn)" />
+          <input class="wb-color wb-color--sm" type="color" value="#d97706" aria-label="Màu (nhỏ)" />
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-color-field"&gt;
+  &lt;input class="wb-color" type="color" value="#6366f1" /&gt;&lt;code&gt;#6366F1&lt;/code&gt;
+&lt;/span&gt;
+&lt;input class="wb-color wb-color--pill" type="color" /&gt;   &lt;!-- tròn --&gt;
+&lt;input class="wb-color wb-color--sm" type="color" /&gt;     &lt;!-- nhỏ --&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

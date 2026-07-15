@@ -1,0 +1,41 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Textarea</h2>
+  <p>Vùng nhập nhiều dòng, chỉ cho kéo dọc (<code>resize: vertical</code>). Cùng bộ token với input nên viền, focus,
+  trạng thái lỗi đồng nhất.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Cơ bản + đếm ký tự</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:440px">
+          <label class="wb-label">Ghi chú <span class="wb-label__opt">(tuỳ chọn)</span></label>
+          <textarea class="wb-textarea" placeholder="Thêm mô tả giao dịch…"></textarea>
+          <span class="wb-help">Tối đa 200 ký tự.</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-field"&gt;
+  &lt;label class="wb-label"&gt;Ghi chú &lt;span class="wb-label__opt"&gt;(tuỳ chọn)&lt;/span&gt;&lt;/label&gt;
+  &lt;textarea class="wb-textarea" placeholder="Thêm mô tả…"&gt;&lt;/textarea&gt;
+  &lt;span class="wb-help"&gt;Tối đa 200 ký tự.&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trạng thái lỗi</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-field" style="max-width:440px">
+          <label class="wb-label">Lý do điều chỉnh</label>
+          <textarea class="wb-textarea is-invalid" aria-invalid="true">x</textarea>
+          <span class="wb-error">Cần ít nhất 10 ký tự.</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;textarea class="wb-textarea is-invalid" aria-invalid="true"&gt;&lt;/textarea&gt;
+&lt;span class="wb-error"&gt;Cần ít nhất 10 ký tự.&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

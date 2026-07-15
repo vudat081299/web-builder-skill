@@ -1,0 +1,48 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Phản hồi</p>
+  <h2>Progress</h2>
+  <p>Thanh tiến độ — rất hợp thể hiện <b>đã chi / ngân sách</b>. Neutral mặc định; dùng màu khi mức chi
+  chạm ngưỡng cảnh báo/vượt (đúng thang màu).</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Màu &amp; kích thước</h4>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-stack" style="--wb-stack-gap:16px;max-width:420px">
+          <div><div class="wb-cell-muted" style="font-size:12px;margin-bottom:6px">Neutral · 40%</div><div class="wb-progress"><div class="wb-progress__bar" style="width:40%"></div></div></div>
+          <div><div class="wb-cell-muted" style="font-size:12px;margin-bottom:6px">Success · 62%</div><div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--success" style="width:62%"></div></div></div>
+          <div><div class="wb-cell-muted" style="font-size:12px;margin-bottom:6px">Warning · 82%</div><div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div></div>
+          <div><div class="wb-cell-muted" style="font-size:12px;margin-bottom:6px">Danger · 104% (vượt)</div><div class="wb-progress wb-progress--lg"><div class="wb-progress__bar wb-progress__bar--danger" style="width:100%"></div></div></div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-progress"&gt;
+  &lt;div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- lớn hơn --&gt;
+&lt;div class="wb-progress wb-progress--lg"&gt;
+  &lt;div class="wb-progress__bar wb-progress__bar--danger" style="width:100%"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trong card ngân sách</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-card" style="max-width:360px">
+          <div class="wb-card__body">
+            <div class="wb-cluster wb-cluster--between" style="margin-bottom:8px">
+              <span class="wb-cell-strong">Ăn uống</span>
+              <span class="wb-num wb-cell-muted">8.240.000 / 10.000.000&nbsp;₫</span>
+            </div>
+            <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-progress"&gt;&lt;div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

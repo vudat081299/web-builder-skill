@@ -1,0 +1,50 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Phản hồi</p>
+  <h2>Alert / Banner</h2>
+  <p>Khối thông báo tại chỗ (trong trang/form). Trung tính mặc định; thêm tone để có nền mờ + viền màu
+  bao quanh (outline). Dùng màu đúng ý nghĩa như thang màu chung.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-stack" style="--wb-stack-gap:12px;max-width:560px">
+        <div class="wb-alert wb-alert--info">
+          <span class="wb-alert__icon">ℹ</span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Đồng bộ ngân hàng</p>
+            <p class="wb-alert__msg">Lần đồng bộ gần nhất: 5 phút trước.</p>
+          </div>
+          <button class="wb-close" aria-label="Đóng">×</button>
+        </div>
+        <div class="wb-alert wb-alert--success">
+          <span class="wb-alert__icon">✓</span>
+          <div class="wb-alert__body"><p class="wb-alert__title">Đã lưu giao dịch</p></div>
+        </div>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon">!</span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Sắp vượt ngân sách “Ăn uống”</p>
+            <p class="wb-alert__msg">Đã dùng 82% hạn mức tháng này.</p>
+          </div>
+        </div>
+        <div class="wb-alert wb-alert--danger">
+          <span class="wb-alert__icon">✕</span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Có 2 khoản quá hạn</p>
+            <p class="wb-alert__msg">Tổng 6.800.000&nbsp;₫. Kiểm tra mục Công nợ.</p>
+          </div>
+          <button class="wb-close" aria-label="Đóng">×</button>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-alert wb-alert--warning"&gt;
+  &lt;span class="wb-alert__icon"&gt;!&lt;/span&gt;
+  &lt;div class="wb-alert__body"&gt;
+    &lt;p class="wb-alert__title"&gt;Sắp vượt ngân sách “Ăn uống”&lt;/p&gt;
+    &lt;p class="wb-alert__msg"&gt;Đã dùng 82% hạn mức tháng này.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button class="wb-close" aria-label="Đóng"&gt;×&lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
