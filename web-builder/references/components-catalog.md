@@ -269,7 +269,7 @@ Anatomy (all parts optional except the `<table>`):
 `--no-hover` (hover is on by default).
 
 **Cell helpers:** `wb-num` (right-align + tabular) · `wb-num--pos|--neg|--strong` ·
-`wb-cell-strong` · `wb-cell-muted` · `wb-cell-sub` (small second line) · `wb-inline`.
+`wb-cell-strong` · `wb-cell-muted` · `wb-cell-sub` (small second line).
 
 **Row states (use colour only when it means something):**
 `wb-row--danger` · `wb-row--warning` · `wb-row--success` — a subtle background tint
@@ -943,6 +943,9 @@ prefer):
   (align, when items differ in height): `--top` / `--middle` (vertical centre = default) / `--bottom` /
   `--baseline` — note `--center` is horizontal (justify), `--middle` is vertical (align). Gap
   `--tight` / `--loose`; `--nowrap` to stop wrapping.
+- `.wb-inline` — the **inline** sibling of `.wb-cluster`: an `inline-flex` row (8px gap, items
+  vertically centred) that flows *inside* text or a cell instead of forming a block-level row. Reach for
+  it for an icon + label on one line; reach for `.wb-cluster` for a full, wrapping row.
 - `.wb-grid` — 2-D grid: `--auto` (auto-fill by `--wb-grid-min`), `--2/--3/--4` (fixed cols, → 1
   col on mobile), `--equal` (equal columns in one row). Cells are **equal-height** — use this for a row
   of equal-height cards rather than a cluster.
