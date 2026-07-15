@@ -17,7 +17,7 @@ layer**: it owns the look; interactive behaviour is delegated to Radix/shadcn + 
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `cashy-ui/SKILL.md` + `cashy-ui/references/` | Instructions + a component catalog an AI reads so it builds finance UI from `cash-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `cashy-ui/assets/` | A living component gallery — **43 pages**, light/dark, browsable. Ships `cashy-ui.css`, the one file the real app consumes. |
+| **2 · Docs** (for a human) | `cashy-ui/assets/` | A living component gallery — **40+ pages**, light/dark, browsable. Ships `cashy-ui.css`, the one file the real app consumes. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`cashy-ui.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
@@ -32,7 +32,7 @@ layer**: it owns the look; interactive behaviour is delegated to Radix/shadcn + 
 **2 · Docs** — the living gallery in `cashy-ui/assets/`:
 - `cashy-ui.css` — **the library** (design tokens + all `cash-*` components). **The only file that ships to the app.**
 - `index.html` + `app.js` + `docs.css` — the docs **shell** (hash router, sidebar tree, theme toggle, config drawer). Docs chrome — **never ships**.
-- `pages/<id>.html` — one small, markup-only page per component/foundation (43 total).
+- `pages/<id>.html` — one small, markup-only page per component/foundation (one per `NAV` route — kept in parity; see the self-check below).
 - `serve.py` — a `no-store` dev server so a normal reload shows edits.
 
 **3 · Code documentation** — no separate manual needed: every component page renders its own copy-paste

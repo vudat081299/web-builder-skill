@@ -70,41 +70,35 @@ status earns colour.
 
 ## Current scope
 
-**Shipped:** foundations (colour ladder, tokens, **typography** scale, **fonts** guidance —
-default is the system stack, swap `--cash-font`; the Fonts page showcases top web/brand fonts —
-**border & radius** conventions, and a **Config/tweak** playground that live-edits tokens and
-exports a `.md`); **buttons** (incl. **button-group** segmented, **social-login** with brand logos) and
-**dropdown/menu**; **form inputs**, one primitive per page (text input incl. **prefix/suffix** + icon addons,
-select — wrapped for an icon-font chevron, textarea, checkbox/radio, switch — **disabled** + a **locked**
-state (lock beside the toggle, shakes on a blocked flip), **range/slider**, **file** upload
-+ dashed **dropzone**, **colour** swatch input; validation via the `.is-invalid` state — red border that stays
-red on focus); data display — **card**
-(incl. `--dashed`), **tables** (basic, transactions, striped/compact, bordered, sticky,
-debt/receivables), **list group** (settings/accounts), **stat/KPI cards**, **capsules/badges** (incl. `--tinted`
-category hue), **tags** (leading `#`, shapes pill/rect/notch, optional per-category colour, removable),
-**avatar**, **receipt** (hoá đơn — a torn-paper slip with a zig-zag mask edge, `--bottom` / `--flat`);
-feedback — **alert**, **toast**, **modal/dialog**, **drawer/offcanvas**, **progress**, **skeleton**,
-**empty state**, **tooltip**; navigation — **navbar** (top app bar), **nav / menu** (`.cash-nav` link set,
-underline / vertical), **sidebar** (`.cash-sidenav` app rail — a shippable sibling of the docs sidebar),
-**tabs** (underline / pill / **boxed**), **breadcrumb**,
-**pagination**, **accordion**, **divider**; **charts** (line/area with hover tooltip, income-vs-expense
-bars (bright green/red — `--cash-chart-income/-expense`), **combo bar+line**, **horizontal ranked bars**
-(reusing `.cash-progress`), category donut + **thin rounded** donut & **progress ring** (`.cash-arc--round`),
-budget progress, sparkline + finance palette, **mono/blue schemes** with count-aware `.cash-chart-ramp--N`
-intensity ramps, axis/legend — SVG/CSS, map to Recharts); structure — a drag-and-drop **tree** (nested, reorder + reparent,
-arbitrary depth, variants: lines / right-chevron / flat-static / colour+amount / checkbox / emoji /
-hover-or-always row actions), a flat **sortable** list / grid / **table rows** (dashed drop placeholder),
-and **Grid/Layout** utilities (`.cash-cluster`, `.cash-grid`, `.cash-stack`, `.cash-container`, `.cash-ratio`).
-Docs are one page per group under `assets/pages/`. The docs site is **dogfooded** — every page is built
-from the library's own `cash-*` primitives (cluster / grid / stack / nav / sidenav / card…); `docs.css` holds
-only chrome the library has no equivalent for (sidebar tree, code block, config drawer, specimens).
-Interactive components render with a tiny vanilla toggle in
-the docs and map onto Radix/shadcn + sonner + dnd-kit in the app (see `cashy-integration.md`). Primitive
-coverage is benchmarked against **Bootstrap's** component set, re-cut minimalist (white-black-grey first) —
-including a minimal **navbar / nav / sidenav** for app shells; only heavy or branded pieces (carousel,
-scrollspy) are intentionally skipped. Layout stays a small set of flex/grid utilities rather than a
-Bootstrap-style 12-column foundation, because in the app Tailwind already owns responsive columns/breakpoints
-(see `design-principles.md`).
+Coverage maps to the **eight intent-groups** in the docs sidebar (this is the map; the exhaustive
+roster with every modifier + copy-paste markup lives in `components-catalog.md` — **that's the single
+source of truth**, kept in sync per-component, so it never drifts here):
+
+- **Nền tảng** — colour ladder, tokens, typography scale, fonts guidance (system stack by default, swap
+  `--cash-font`), border & radius, and a live **Config** playground that edits tokens and exports a `.md`.
+- **Hành động** — buttons (incl. button-group, social-login with brand logos), dropdown / menu.
+- **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea, checkbox/radio, switch
+  (incl. a **locked** state), range, file + dropzone, colour; validation via the `.is-invalid` state.
+- **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
+  list group, stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**
+  (hoá đơn — a torn-paper slip).
+- **Phản hồi** — alert, toast, modal/dialog, drawer/offcanvas, progress, skeleton, empty state, tooltip.
+- **Điều hướng** — navbar, nav / menu, sidenav (app rail), tabs, breadcrumb, pagination, accordion, divider.
+- **Biểu đồ** — line/area, income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin
+  donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps.
+- **Cấu trúc** — drag-and-drop **tree** (reorder + reparent), flat **sortable** list/grid/rows, and the
+  grid/layout utilities (`.cash-cluster`, `.cash-grid`, `.cash-stack`, `.cash-container`, `.cash-ratio`).
+
+Three standing decisions shape the set:
+
+1. **Dogfooded docs.** Every page is built from the library's own `cash-*` primitives (cluster / grid /
+   stack / nav / sidenav / card…); `docs.css` holds only chrome the library has no equivalent for.
+2. **Style here, behaviour in the app.** Interactive components run on a tiny vanilla toggle in the docs
+   and map onto Radix/shadcn + sonner + dnd-kit in cashy (see `cashy-integration.md`).
+3. **Bootstrap-benchmarked, re-cut minimalist** (white-black-grey first) — incl. a minimal navbar / nav /
+   sidenav for app shells; only heavy or branded pieces (carousel, scrollspy) are intentionally skipped.
+   Layout stays a small flex/grid utility set — **not** a 12-column foundation — because in the app Tailwind
+   already owns responsive columns/breakpoints (see `design-principles.md` §17).
 
 **House conventions to keep:** icons come from an **icon font** — Material Symbols, `@import`ed in
 `cashy-ui.css`; use `<span class="cash-ico">name</span>` (weight ~600 so they're crisp), **never

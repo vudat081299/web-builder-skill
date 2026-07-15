@@ -1,2 +1,6 @@
 .DS_Store
 *.log
+
+# Local AI tooling — never part of the project (also covered by global excludes)
+.kv/
+.remember/
