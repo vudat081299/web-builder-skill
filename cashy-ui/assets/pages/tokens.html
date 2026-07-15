@@ -1,0 +1,42 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Design tokens</h2>
+  <p>Tất cả màu đến từ CSS variables. Đổi token → đổi toàn hệ. Đây là các token hay dùng nhất
+  (xem đủ trong <code>cashy-ui.css</code>). Bảng dưới đổi theo Light/Dark bạn đang bật.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="swatches" data-swatches><!-- rendered by app.js --></div>
+</section>
+
+<section class="doc-sec">
+  <h3>Nhóm token chính</h3>
+  <p class="doc-sec__desc">Tham chiếu các token “semantic” này thay vì thang xám thô, để cả 2 theme luôn đúng.</p>
+  <div class="demo">
+    <div class="demo__code">
+      <pre><code>/* Bề mặt &amp; chữ */
+--cash-canvas      /* nền app          */   --cash-fg         /* chữ chính     */
+--cash-surface     /* card, table      */   --cash-fg-muted   /* chữ phụ       */
+--cash-surface-2   /* header, sọc      */   --cash-fg-subtle  /* chữ mờ nhất   */
+--cash-border      /* viền hairline    */   --cash-border-strong
+
+/* Màu có ý nghĩa — mỗi màu có 3 biến */
+--cash-success / --cash-success-soft / --cash-success-text   /* xanh: đã trả  */
+--cash-danger  / --cash-danger-soft  / --cash-danger-text    /* đỏ:  quá hạn  */
+--cash-warning / --cash-warning-soft / --cash-warning-text   /* vàng: sắp hạn */
+--cash-info    / --cash-info-soft    / --cash-info-text      /* xanh dương    */
+
+/* Hình khối &amp; đổ bóng */
+--cash-radius-sm | --cash-radius | --cash-radius-lg | --cash-radius-pill
+--cash-shadow-sm (nghỉ) | --cash-shadow-md (nổi)
+
+/* Font — đổi 1 dòng này là đổi toàn bộ chữ (xem trang Fonts) */
+--cash-font</code></pre>
+    </div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Cần một màu mới? Thêm token ở <b>cả</b> <code>:root</code> và <code>.dark</code>, rồi dùng token —
+    đừng bao giờ viết mã hex thẳng vào component.</div>
+  </div>
+</section>

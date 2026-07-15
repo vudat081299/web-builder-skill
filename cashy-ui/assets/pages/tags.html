@@ -1,0 +1,160 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>Tags <span style="color:var(--cash-fg-subtle);font-weight:600">(#)</span></h2>
+  <p>Nhãn tự do người dùng gắn vào giao dịch — <b>luôn có “#” phía trước</b>. Cùng hệ với capsule nhưng
+  thêm 3 hình dạng (pill · chữ nhật · thẻ có khía) và màu tùy chọn cho từng danh mục.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Hình dạng</h4>
+    <p class="doc-block__desc">Mặc định là <b>pill</b>. Thêm <code>--rect</code> cho chữ nhật, <code>--notch</code> cho dáng “thẻ” (có khía + lỗ bấm).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-grid">
+          <span class="cash-tag">pill</span>
+          <span class="cash-tag cash-tag--rect">rect</span>
+          <span class="cash-tag cash-tag--notch">notch</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="cash-tag"&gt;an-uong&lt;/span&gt;                    &lt;!-- pill (mặc định) --&gt;
+&lt;span class="cash-tag cash-tag--rect"&gt;an-uong&lt;/span&gt;      &lt;!-- chữ nhật --&gt;
+&lt;span class="cash-tag cash-tag--notch"&gt;an-uong&lt;/span&gt;     &lt;!-- thẻ có khía --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Không màu &amp; có màu</h4>
+    <p class="doc-block__desc">Neutral (mặc định) cho nhãn thường. Dùng tone semantic, hoặc gán màu riêng cho danh mục qua biến <code>--cash-tag-color</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Neutral</span>
+          <span class="cash-tag">hang-ngay</span>
+          <span class="cash-tag">tien-mat</span>
+          <span class="cash-tag">chua-phan-loai</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Semantic</span>
+          <span class="cash-tag cash-tag--success">hoan-tien</span>
+          <span class="cash-tag cash-tag--warning">can-xem-lai</span>
+          <span class="cash-tag cash-tag--danger">vuot-ngan-sach</span>
+          <span class="cash-tag cash-tag--info">dinh-ky</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Màu riêng</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488">du-lich</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#7c3aed">gia-dinh</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#d97706">dau-tu</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#db2777">qua-tang</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Solid</span>
+          <span class="cash-tag cash-tag--danger cash-tag--solid">khan-cap</span>
+          <span class="cash-tag cash-tag--tinted cash-tag--solid" style="--cash-tag-color:#0d9488">du-lich</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- neutral / semantic --&gt;
+&lt;span class="cash-tag"&gt;hang-ngay&lt;/span&gt;
+&lt;span class="cash-tag cash-tag--success"&gt;hoan-tien&lt;/span&gt;
+
+&lt;!-- màu riêng cho danh mục: 1 biến là đủ --&gt;
+&lt;span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488"&gt;du-lich&lt;/span&gt;
+
+&lt;!-- nhấn mạnh --&gt;
+&lt;span class="cash-tag cash-tag--danger cash-tag--solid"&gt;khan-cap&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bảng màu danh mục — mỗi danh mục một sắc</h4>
+    <p class="doc-block__desc">Chỉ cần đổi <code>--cash-tag-color</code> là ra vô số màu. Đây là một bảng gợi ý (dịu, phân biệt tốt),
+    hợp làm khoá màu cho danh mục người dùng tự đặt.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cash-tags" style="gap:8px">
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#4f46e5">an-uong</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488">di-chuyen</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#d97706">nha-o</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#db2777">giai-tri</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#2563eb">hoa-don</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#16a34a">tiet-kiem</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0891b2">suc-khoe</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#7c3aed">giao-duc</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#ca8a04">dau-tu</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#ea580c">mua-sam</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#059669">luong</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#e11d48">no</span>
+        </div>
+        <hr class="cash-divider" />
+        <div class="cap-row"><span class="cap-row__label">3 hình dạng</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488">du-lich</span>
+          <span class="cash-tag cash-tag--tinted cash-tag--rect" style="--cash-tag-color:#7c3aed">gia-dinh</span>
+          <span class="cash-tag cash-tag--tinted cash-tag--notch" style="--cash-tag-color:#d97706">dau-tu</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#4f46e5"&gt;an-uong&lt;/span&gt;
+&lt;span class="cash-tag cash-tag--tinted cash-tag--rect"  style="--cash-tag-color:#7c3aed"&gt;gia-dinh&lt;/span&gt;
+&lt;span class="cash-tag cash-tag--tinted cash-tag--notch" style="--cash-tag-color:#d97706"&gt;dau-tu&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Kích thước &amp; xoá được</h4>
+    <p class="doc-block__desc">Ba cỡ như capsule. Thêm nút <code>×</code> để làm tag có thể gỡ (bộ lọc, ô nhập tag).</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Size</span>
+          <span class="cash-tag cash-tag--sm">nho</span>
+          <span class="cash-tag">vua</span>
+          <span class="cash-tag cash-tag--lg">lon</span>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Xoá được</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488">du-lich<button class="cash-tag__x" aria-label="Xoá">×</button></span>
+          <span class="cash-tag">an-uong<button class="cash-tag__x" aria-label="Xoá">×</button></span>
+          <span class="cash-tag cash-tag--info">dinh-ky<button class="cash-tag__x" aria-label="Xoá">×</button></span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="cash-tag"&gt;an-uong
+  &lt;button class="cash-tag__x" aria-label="Xoá"&gt;×&lt;/button&gt;
+&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trên một giao dịch</h4>
+    <p class="doc-block__desc">Gom nhiều tag bằng <code>.cash-tags</code> (tự xuống dòng).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="cash-card" style="max-width:460px;padding:16px">
+          <div class="cash-cell-strong" style="margin-bottom:2px">Vé máy bay Tết</div>
+          <div class="cash-cell-muted" style="font-size:13px;margin-bottom:10px">−3.450.000&nbsp;₫ · 12/07</div>
+          <div class="cash-tags">
+            <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488">du-lich</span>
+            <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#7c3aed">gia-dinh</span>
+            <span class="cash-tag">tet-2027</span>
+            <span class="cash-tag cash-tag--info">dinh-ky</span>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="cash-tags"&gt;
+  &lt;span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488"&gt;du-lich&lt;/span&gt;
+  &lt;span class="cash-tag"&gt;tet-2027&lt;/span&gt;
+  &lt;span class="cash-tag cash-tag--info"&gt;dinh-ky&lt;/span&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Xem đồng thời ở Light &amp; Dark</h4>
+    <p class="doc-block__desc">Màu tag hiển thị đúng ở cả hai chế độ — xem cạnh nhau bên dưới.</p>
+    <div class="dual" data-dual data-pad="18px">
+      <template>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span class="cash-tag">an-uong</span>
+          <span class="cash-tag cash-tag--notch">tien-mat</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#0d9488">du-lich</span>
+          <span class="cash-tag cash-tag--tinted" style="--cash-tag-color:#7c3aed">gia-dinh</span>
+          <span class="cash-tag cash-tag--success">hoan-tien</span>
+          <span class="cash-tag cash-tag--danger cash-tag--solid">khan-cap</span>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>

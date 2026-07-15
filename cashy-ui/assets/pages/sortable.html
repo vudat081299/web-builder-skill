@@ -1,0 +1,89 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Cấu trúc</p>
+  <h2>List / Grid kéo–thả</h2>
+  <p>Sắp xếp lại thứ tự một danh sách, lưới thẻ, hoặc <b>hàng trong bảng</b> bằng cách <b>kéo–thả</b> (một cấp, không
+  lồng nhau như tree). Khi bắt đầu kéo, chỗ sẽ thả hiện một <b>ô/hàng viền đứt nét</b> (dashed) để mắt bắt ngay vị trí đích.</p>
+</div>
+
+<section class="doc-sec">
+  <h3>Danh sách — đổi thứ tự</h3>
+  <p class="doc-sec__desc">Hợp để người dùng sắp lại thứ tự danh mục, ví, hay widget dashboard. Kéo cả hàng (tay nắm chỉ là gợi ý).</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="cash-sortable" data-sortable style="max-width:360px">
+        <div class="cash-sortable__item" draggable="true"><span class="cash-grip" aria-hidden="true"></span><span class="cash-tree__ico">🍜</span><span class="cash-sortable__label">Ăn uống</span><span class="cash-sortable__meta">−3.280.000 ₫</span></div>
+        <div class="cash-sortable__item" draggable="true"><span class="cash-grip" aria-hidden="true"></span><span class="cash-tree__ico">🏠</span><span class="cash-sortable__label">Nhà ở</span><span class="cash-sortable__meta">−6.500.000 ₫</span></div>
+        <div class="cash-sortable__item" draggable="true"><span class="cash-grip" aria-hidden="true"></span><span class="cash-tree__ico">🚕</span><span class="cash-sortable__label">Di chuyển</span><span class="cash-sortable__meta">−1.150.000 ₫</span></div>
+        <div class="cash-sortable__item" draggable="true"><span class="cash-grip" aria-hidden="true"></span><span class="cash-tree__ico">🎬</span><span class="cash-sortable__label">Giải trí</span><span class="cash-sortable__meta">−820.000 ₫</span></div>
+        <div class="cash-sortable__item" draggable="true"><span class="cash-grip" aria-hidden="true"></span><span class="cash-tree__ico">💊</span><span class="cash-sortable__label">Sức khỏe</span><span class="cash-sortable__meta">−450.000 ₫</span></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="cash-sortable" data-sortable&gt;
+  &lt;div class="cash-sortable__item" draggable="true"&gt;
+    &lt;span class="cash-grip"&gt;&lt;/span&gt;
+    &lt;span class="cash-sortable__label"&gt;Ăn uống&lt;/span&gt;
+    &lt;span class="cash-sortable__meta"&gt;−3.280.000 ₫&lt;/span&gt;
+  &lt;/div&gt;
+  … &lt;!-- các hàng khác --&gt;
+&lt;/div&gt;
+&lt;!-- ô thả (dashed) do JS chèn: &lt;div class="cash-sortable__ph"&gt;&lt;/div&gt; --&gt;</code></pre></div>
+  </div>
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Docs kéo–thả bằng HTML5 drag-and-drop thuần: khi kéo, một <code>.cash-sortable__ph</code> (viền đứt) hiện ở
+    vị trí sẽ thả. Trong app cashy dùng <b>dnd-kit</b> (<code>@dnd-kit/sortable</code>) cho mượt + hỗ trợ bàn phím,
+    và giữ nguyên các class <code>cash-sortable*</code>.</div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Lưới thẻ — đổi vị trí</h3>
+  <p class="doc-sec__desc">Cùng cơ chế, thêm <code>--grid</code> để xếp thành lưới thẻ (vd sắp lại các thẻ trên dashboard). Ô thả cũng là dashed.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="cash-sortable cash-sortable--grid" data-sortable>
+        <div class="cash-sortable__item" draggable="true" style="flex-direction:column;align-items:flex-start;gap:6px"><span class="cash-grip" aria-hidden="true"></span><span class="cash-cell-strong">Số dư</span><span class="cash-cell-muted" style="font-size:12.5px">47.590.000 ₫</span></div>
+        <div class="cash-sortable__item" draggable="true" style="flex-direction:column;align-items:flex-start;gap:6px"><span class="cash-grip" aria-hidden="true"></span><span class="cash-cell-strong">Chi tháng này</span><span class="cash-cell-muted" style="font-size:12.5px">−11.840.000 ₫</span></div>
+        <div class="cash-sortable__item" draggable="true" style="flex-direction:column;align-items:flex-start;gap:6px"><span class="cash-grip" aria-hidden="true"></span><span class="cash-cell-strong">Ngân sách</span><span class="cash-cell-muted" style="font-size:12.5px">còn 34%</span></div>
+        <div class="cash-sortable__item" draggable="true" style="flex-direction:column;align-items:flex-start;gap:6px"><span class="cash-grip" aria-hidden="true"></span><span class="cash-cell-strong">Công nợ</span><span class="cash-cell-muted" style="font-size:12.5px">2 khoản</span></div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="cash-sortable cash-sortable--grid" data-sortable&gt;
+  &lt;div class="cash-sortable__item" draggable="true"&gt; … &lt;/div&gt;
+  …
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Bảng — kéo sắp xếp hàng</h3>
+  <p class="doc-sec__desc">Bảng dữ liệu mà kéo được cả <b>hàng</b> để đổi thứ tự (ưu tiên hạng mục, thứ tự hiển thị…).
+  Thêm <code>--sortable</code>, cho mỗi <code>&lt;tr&gt;</code> một ô tay nắm + <code>draggable</code>, và đặt
+  <code>data-sortable-rows</code> lên <code>&lt;tbody&gt;</code>. Khi kéo, đích là một <b>hàng viền đứt</b>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="cash-card" style="max-width:540px">
+        <div class="cash-table-scroll">
+          <table class="cash-table cash-table--sortable cash-table--compact">
+            <thead><tr><th style="width:30px"></th><th>Danh mục</th><th class="cash-num">Đã chi</th><th class="cash-num">Ngân sách</th></tr></thead>
+            <tbody data-sortable-rows>
+              <tr draggable="true"><td class="cash-row-grip"><span class="cash-grip" aria-hidden="true"></span></td><td class="cash-cell-strong">Nhà ở</td><td class="cash-num cash-num--strong">6.500.000&nbsp;₫</td><td class="cash-num cash-cell-muted">6.500.000&nbsp;₫</td></tr>
+              <tr draggable="true"><td class="cash-row-grip"><span class="cash-grip" aria-hidden="true"></span></td><td class="cash-cell-strong">Ăn uống</td><td class="cash-num cash-num--strong">3.280.000&nbsp;₫</td><td class="cash-num cash-cell-muted">4.000.000&nbsp;₫</td></tr>
+              <tr draggable="true"><td class="cash-row-grip"><span class="cash-grip" aria-hidden="true"></span></td><td class="cash-cell-strong">Di chuyển</td><td class="cash-num cash-num--strong">1.150.000&nbsp;₫</td><td class="cash-num cash-cell-muted">2.000.000&nbsp;₫</td></tr>
+              <tr draggable="true"><td class="cash-row-grip"><span class="cash-grip" aria-hidden="true"></span></td><td class="cash-cell-strong">Giải trí</td><td class="cash-num cash-num--strong">820.000&nbsp;₫</td><td class="cash-num cash-cell-muted">1.000.000&nbsp;₫</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;table class="cash-table cash-table--sortable"&gt;
+  &lt;tbody data-sortable-rows&gt;
+    &lt;tr draggable="true"&gt;
+      &lt;td class="cash-row-grip"&gt;&lt;span class="cash-grip"&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;Nhà ở&lt;/td&gt; …
+    &lt;/tr&gt; …
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;!-- hàng đích khi kéo (JS chèn): &lt;tr class="cash-row-ph"&gt;&lt;td colspan="n"&gt;&lt;div class="cash-row-ph__inner"&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt; --&gt;</code></pre></div>
+  </div>
+</section>

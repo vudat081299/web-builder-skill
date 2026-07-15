@@ -1,0 +1,37 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nhập liệu</p>
+  <h2>Checkbox &amp; Radio</h2>
+  <p>Dùng input gốc (đúng chuẩn accessibility) với <code>accent-color</code> trung tính (đen ở light, trắng ở dark).
+  Bọc trong <code>.cash-check</code> / <code>.cash-radio</code> để căn nhãn.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Checkbox</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <label class="cash-check"><input type="checkbox" checked /> Giao dịch định kỳ</label>
+          <label class="cash-check"><input type="checkbox" /> Gửi email nhắc nợ</label>
+          <label class="cash-check"><input type="checkbox" disabled /> Tuỳ chọn bị khoá</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="cash-check"&gt;&lt;input type="checkbox" checked /&gt; Giao dịch định kỳ&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Radio</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <div style="display:flex;gap:22px;flex-wrap:wrap">
+          <label class="cash-radio"><input type="radio" name="tt" checked /> Chi</label>
+          <label class="cash-radio"><input type="radio" name="tt" /> Thu</label>
+          <label class="cash-radio"><input type="radio" name="tt" /> Chuyển khoản</label>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;label class="cash-radio"&gt;&lt;input type="radio" name="tt" checked /&gt; Chi&lt;/label&gt;
+&lt;label class="cash-radio"&gt;&lt;input type="radio" name="tt" /&gt; Thu&lt;/label&gt;</code></pre></div>
+    </div>
+  </div>
+</section>

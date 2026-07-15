@@ -1,0 +1,66 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Config / Tweak</h2>
+  <p>Bảng tinh chỉnh trượt ra từ bên phải (nút <span class="cash-ico cash-ico--sm" style="vertical-align:-5px">tune</span>
+  trên thanh trên cùng). Kéo các thông số và xem giao diện đổi <b>ngay lập tức</b>. Việc chỉnh ở đây
+  <b>chỉ ảnh hưởng bản docs</b> đang mở — hoàn toàn không đụng tới <code>cashy-ui.css</code> hay component gốc.
+  Chỉnh xong bấm <b>Xuất .md</b> để lấy khối token, rồi dán vào source (hoặc đưa cho AI cập nhật).</p>
+</div>
+
+<section class="doc-sec">
+  <button class="cash-btn cash-btn--lg" data-config-open>
+    <span class="cash-ico cash-ico--sm">tune</span> Mở bảng tinh chỉnh
+  </button>
+
+  <div class="doc-note" style="margin-top:20px">
+    <span class="cash-ico" style="color:var(--cash-info-text)">info</span>
+    <div>Cơ chế: bảng chỉ ghi các biến CSS (<code>--cash-*</code>) lên <code>:root</code> của trang docs. Vì component
+    dùng biến, chúng đổi theo tức thì; còn file thư viện thì <b>bất biến</b>. Màu áp dụng cho <b>theme đang xem</b> —
+    muốn chỉnh cả sáng &amp; tối thì đổi theme rồi xuất thêm một lần nữa.</div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Xem trực tiếp khi chỉnh</h4>
+    <p class="doc-block__desc">Mở bảng và thử kéo "Bo góc", "Độ dày viền", "Cỡ/đậm icon" hay đổi màu — cụm dưới đây đổi theo.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="cash-cluster">
+          <button class="cash-btn">Lưu giao dịch</button>
+          <button class="cash-btn cash-btn--outline">Huỷ</button>
+          <span class="cash-cap cash-cap--success cash-cap--solid">Đã trả</span>
+          <span class="cash-cap cash-cap--warning">Sắp đến hạn</span>
+          <span class="cash-tag cash-tag--info">#hoá-đơn</span>
+        </div>
+        <div class="cash-card" style="margin-top:16px;max-width:340px">
+          <div class="cash-card__body cash-cluster" style="gap:14px">
+            <span class="cash-stat__icon"><span class="cash-ico cash-ico--sm">savings</span></span>
+            <div>
+              <div class="cash-stat__value" style="font-size:22px">2.480.000&nbsp;₫</div>
+              <div class="cash-cell-muted" style="font-size:13px">Số dư khả dụng</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Chỉnh được những gì</h4>
+    <div class="cash-card" style="max-width:640px">
+      <div class="cash-table-scroll">
+        <table class="cash-table cash-table--compact">
+          <thead><tr><th>Nhóm</th><th>Thông số</th></tr></thead>
+          <tbody>
+            <tr><td class="cash-cell-strong">Chữ &amp; icon</td><td>Font (10 font chữ đẹp + font hệ thống), cỡ icon, độ đậm icon</td></tr>
+            <tr><td class="cash-cell-strong">Bo góc</td><td>Radius toàn cục (nhỏ/vừa/lớn) + riêng nút, card, input</td></tr>
+            <tr><td class="cash-cell-strong">Viền &amp; đổ bóng</td><td>Độ dày viền, đổ bóng component; viền + đổ bóng của sample trong docs; màu divider</td></tr>
+            <tr><td class="cash-cell-strong">Màu</td><td>Canvas, surface, chữ, viền, success/danger/warning/info — theo theme đang xem</td></tr>
+            <tr><td class="cash-cell-strong">Biểu đồ</td><td>Thang màu (đa sắc / xám / một tông xanh), màu Thu &amp; Chi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="doc-block__desc" style="margin-top:12px">Nút <b>Đặt lại</b> trả mọi thứ về mặc định. Nút <b>Xuất .md</b> tải
+    về file <code>cashy-ui-tweaks.md</code> chứa khối <code>:root { … }</code> đúng các giá trị bạn đã đổi.</p>
+  </div>
+</section>

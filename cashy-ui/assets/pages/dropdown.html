@@ -1,0 +1,48 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hành động</p>
+  <h2>Dropdown / Menu</h2>
+  <p>Menu nổi gắn với một nút. <code>.cash-dropdown</code> bọc trigger + <code>.cash-dropdown__menu</code>;
+  bật/tắt bằng class <code>.is-open</code> (JS ở docs, hoặc Radix DropdownMenu trong app).
+  <code>.cash-menu</code> cũng dùng độc lập được.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Bấm để mở</h4>
+    <div class="demo">
+      <div class="demo__stage" style="min-height:280px">
+        <div class="cash-dropdown">
+          <button class="cash-btn cash-btn--secondary" data-dd-toggle>Thao tác ▾</button>
+          <div class="cash-dropdown__menu">
+            <div class="cash-menu">
+              <div class="cash-menu__label">Giao dịch</div>
+              <button class="cash-menu__item"><span class="cash-menu__ico">✎</span> Sửa <span class="cash-menu__kbd">E</span></button>
+              <button class="cash-menu__item"><span class="cash-menu__ico">⧉</span> Nhân bản</button>
+              <button class="cash-menu__item"><span class="cash-menu__ico">↗</span> Xuất CSV</button>
+              <div class="cash-menu__sep"></div>
+              <button class="cash-menu__item cash-menu__item--danger"><span class="cash-menu__ico">🗑</span> Xoá</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="cash-dropdown"&gt;
+  &lt;button class="cash-btn cash-btn--secondary" data-dd-toggle&gt;Thao tác ▾&lt;/button&gt;
+  &lt;div class="cash-dropdown__menu"&gt;
+    &lt;div class="cash-menu"&gt;
+      &lt;div class="cash-menu__label"&gt;Giao dịch&lt;/div&gt;
+      &lt;button class="cash-menu__item"&gt;&lt;span class="cash-menu__ico"&gt;✎&lt;/span&gt; Sửa &lt;span class="cash-menu__kbd"&gt;E&lt;/span&gt;&lt;/button&gt;
+      &lt;div class="cash-menu__sep"&gt;&lt;/div&gt;
+      &lt;button class="cash-menu__item cash-menu__item--danger"&gt;&lt;span class="cash-menu__ico"&gt;🗑&lt;/span&gt; Xoá&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span>💡</span>
+    <div>Ở docs, JS chỉ toggle <code>.is-open</code> và đóng khi bấm ra ngoài. Trong cashy dùng
+    <b>Radix DropdownMenu</b> để có focus-trap, điều hướng bàn phím và portal — rồi gắn class
+    <code>cash-menu*</code> để giữ đúng “ngôn ngữ hình ảnh”.</div>
+  </div>
+</section>

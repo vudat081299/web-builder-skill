@@ -1,0 +1,91 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Phản hồi</p>
+  <h2>Modal / Dialog</h2>
+  <p><code>.cash-overlay</code> làm mờ nền (bật bằng <code>.is-open</code>), bên trong là <code>.cash-modal</code>.
+  Ở app dùng <b>Radix Dialog</b> cho focus-trap/portal; các class này lo phần nhìn.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Xem trước (tĩnh) &amp; mở thử</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <button class="cash-btn" data-modal-open="#demoModal">Mở modal</button>
+        <button class="cash-btn cash-btn--danger" data-modal-open="#confirmModal" style="margin-left:8px">Xoá giao dịch…</button>
+
+        <!-- panel tĩnh cho dễ xem -->
+        <div style="margin-top:20px" class="cash-modal">
+          <div class="cash-modal__head">
+            <div>
+              <h4 class="cash-modal__title">Thêm giao dịch</h4>
+              <p class="cash-modal__sub">Ghi nhận một khoản thu hoặc chi.</p>
+            </div>
+            <button class="cash-close" aria-label="Đóng">×</button>
+          </div>
+          <div class="cash-modal__body">
+            <div class="cash-field"><label class="cash-label">Nội dung</label><input class="cash-input" placeholder="VD: Ăn trưa" /></div>
+          </div>
+          <div class="cash-modal__foot">
+            <button class="cash-btn cash-btn--ghost">Huỷ</button>
+            <button class="cash-btn">Lưu</button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;button class="cash-btn" data-modal-open="#demoModal"&gt;Mở modal&lt;/button&gt;
+
+&lt;div class="cash-overlay" id="demoModal"&gt;
+  &lt;div class="cash-modal"&gt;
+    &lt;div class="cash-modal__head"&gt;
+      &lt;div&gt;&lt;h4 class="cash-modal__title"&gt;Thêm giao dịch&lt;/h4&gt;&lt;/div&gt;
+      &lt;button class="cash-close" data-modal-close&gt;×&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="cash-modal__body"&gt;…&lt;/div&gt;
+    &lt;div class="cash-modal__foot"&gt;
+      &lt;button class="cash-btn cash-btn--ghost" data-modal-close&gt;Huỷ&lt;/button&gt;
+      &lt;button class="cash-btn"&gt;Lưu&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- overlays thật (bấm nút ở trên để mở; bấm nền hoặc × để đóng) -->
+<div class="cash-overlay" id="demoModal">
+  <div class="cash-modal">
+    <div class="cash-modal__head">
+      <div>
+        <h4 class="cash-modal__title">Thêm giao dịch</h4>
+        <p class="cash-modal__sub">Ghi nhận một khoản thu hoặc chi.</p>
+      </div>
+      <button class="cash-close" data-modal-close aria-label="Đóng">×</button>
+    </div>
+    <div class="cash-modal__body">
+      <div style="display:grid;gap:14px">
+        <div class="cash-field"><label class="cash-label">Nội dung</label><input class="cash-input" placeholder="VD: Ăn trưa với khách" /></div>
+        <div class="cash-field"><label class="cash-label">Số tiền</label>
+          <div class="cash-input-group"><input class="cash-input" inputmode="numeric" placeholder="0" /><span class="cash-input-group__addon">₫</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="cash-modal__foot">
+      <button class="cash-btn cash-btn--ghost" data-modal-close>Huỷ</button>
+      <button class="cash-btn" data-modal-close>Lưu</button>
+    </div>
+  </div>
+</div>
+
+<div class="cash-overlay" id="confirmModal">
+  <div class="cash-modal" style="max-width:400px">
+    <div class="cash-modal__head">
+      <div>
+        <h4 class="cash-modal__title">Xoá giao dịch?</h4>
+        <p class="cash-modal__sub">Hành động này không thể hoàn tác.</p>
+      </div>
+    </div>
+    <div class="cash-modal__foot">
+      <button class="cash-btn cash-btn--ghost" data-modal-close>Huỷ</button>
+      <button class="cash-btn cash-btn--danger" data-modal-close>Xoá</button>
+    </div>
+  </div>
+</div>

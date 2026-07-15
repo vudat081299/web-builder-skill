@@ -1,0 +1,66 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Hiển thị dữ liệu</p>
+  <h2>List group</h2>
+  <p>Danh sách viền gọn, chia hàng bằng nét mảnh — cho danh sách tài khoản/ví, cài đặt, hay một bộ chọn.
+  Nhẹ hơn bảng khi mỗi dòng là <b>một mục</b> chứ không phải nhiều cột.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Danh sách tài khoản</h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <ul class="cash-list" style="max-width:440px">
+          <li class="cash-list__item"><span class="cash-list__title">Tiền mặt<span class="cash-list__sub">Ví</span></span><span class="cash-list__end cash-num--strong">2.150.000&nbsp;₫</span></li>
+          <li class="cash-list__item"><span class="cash-list__title">Vietcombank<span class="cash-list__sub">•••• 8842</span></span><span class="cash-list__end cash-num--strong">18.740.000&nbsp;₫</span></li>
+          <li class="cash-list__item"><span class="cash-list__title">Momo<span class="cash-list__sub">Ví điện tử</span></span><span class="cash-list__end cash-num--strong">640.000&nbsp;₫</span></li>
+        </ul>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;ul class="cash-list"&gt;
+  &lt;li class="cash-list__item"&gt;
+    &lt;span class="cash-list__title"&gt;Vietcombank&lt;span class="cash-list__sub"&gt;•••• 8842&lt;/span&gt;&lt;/span&gt;
+    &lt;span class="cash-list__end cash-num--strong"&gt;18.740.000 ₫&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bấm được · đang chọn — <code>--link</code> / <code>.is-active</code></h4>
+    <div class="demo">
+      <div class="demo__stage">
+        <ul class="cash-list" style="max-width:440px">
+          <a class="cash-list__item cash-list__item--link is-active" href="#/list"><span class="cash-list__title">Tất cả giao dịch</span><span class="cash-list__end">128</span></a>
+          <a class="cash-list__item cash-list__item--link" href="#/list"><span class="cash-list__title">Chưa phân loại</span><span class="cash-list__end">12</span></a>
+          <a class="cash-list__item cash-list__item--link" href="#/list"><span class="cash-list__title">Cần xem lại</span><span class="cash-list__end">3</span></a>
+          <li class="cash-list__item is-disabled"><span class="cash-list__title">Đã lưu trữ</span><span class="cash-list__end">—</span></li>
+        </ul>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;a class="cash-list__item cash-list__item--link is-active" href="#"&gt;
+  &lt;span class="cash-list__title"&gt;Tất cả giao dịch&lt;/span&gt;&lt;span class="cash-list__end"&gt;128&lt;/span&gt;
+&lt;/a&gt;
+&lt;li class="cash-list__item is-disabled"&gt; … &lt;/li&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Trong card — <code>--flush</code></h4>
+    <p class="doc-block__desc">Bỏ viền/bo ngoài để nằm gọn bên trong <code>.cash-card</code> (dùng cho danh sách cài đặt).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="cash-card" style="max-width:440px">
+          <div class="cash-card__head"><h3 class="cash-card__title">Cài đặt</h3></div>
+          <ul class="cash-list cash-list--flush" style="padding:2px 18px 8px">
+            <li class="cash-list__item"><span class="cash-list__title">Thông báo đẩy<span class="cash-list__sub">Nhắc hạn thanh toán</span></span><span class="cash-list__end"><label class="cash-switch"><input type="checkbox" checked /><span class="cash-switch__track"></span></label></span></li>
+            <li class="cash-list__item"><span class="cash-list__title">Đồng bộ tự động</span><span class="cash-list__end"><label class="cash-switch"><input type="checkbox" /><span class="cash-switch__track"></span></label></span></li>
+            <li class="cash-list__item"><span class="cash-list__title">Đơn vị tiền</span><span class="cash-list__end">VND (₫)</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="cash-card"&gt;
+  &lt;div class="cash-card__head"&gt; … &lt;/div&gt;
+  &lt;ul class="cash-list cash-list--flush" style="padding:2px 18px 8px"&gt; … &lt;/ul&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+</section>
