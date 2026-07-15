@@ -1,21 +1,15 @@
 ---
 name: cashy-ui
 description: >-
-  Bộ component + design system cho web quản lý tài chính cá nhân (dự án cashy). LUÔN dùng
-  skill này khi build hoặc sửa BẤT KỲ giao diện/UI nào cho cashy hay app tài chính cá nhân —
-  thay vì tự thiết kế lại từ đầu (tốn token và lệch phong cách). Cung cấp: design tokens
-  (ưu tiên trắng-đen-xám, có dark mode), typography & gợi ý font, form input (prefix/suffix, validation), capsule/badge, tag (#)
-  cho giao dịch, và bảng (table) đẹp cho dữ liệu tiền (giao dịch, số dư, ngân sách, công
-  nợ, thu/chi); biểu đồ (line/cột/donut/sparkline + thang màu), cây danh mục (tree) + kéo–thả sắp xếp (list/grid/bảng), tiện ích grid/layout, bộ icon (icon-font), và trang Config để tinh chỉnh token trực tiếp. Trigger: "build trang
-  cashy", "thêm/làm component", "làm giao diện", "làm UI", "thiết kế bảng", "làm table",
-  "badge/capsule/tag trạng thái", "card số dư/thu chi", "dashboard tài chính", "màn hình
-  giao dịch", "màn hình công nợ", "build a cashy page", "financial table", "finance
-  dashboard UI", "transaction list UI", "component library", "tag/nhãn giao dịch",
-  "typography/kiểu chữ", "chọn font", "biểu đồ/chart/donut/sparkline", "cây danh mục/tree",
-  "modal/dialog", "dropdown/menu", "tabs", "toast/thông báo", "card", "alert", "avatar",
-  "pagination/phân trang", "tooltip", "accordion", "empty state", "skeleton", "config/tweak/playground", "grid/layout/wrap", "icon", "border/viền/bo
-  góc", "kéo thả sắp xếp/sortable/list kéo thả". KHÔNG dùng cho logic
-  backend/tính toán không liên quan giao diện, hay project không phải tài chính cá nhân.
+  Bộ component + design system cho web tài chính cá nhân (dự án cashy). Dùng skill này khi build
+  hoặc sửa bất kỳ giao diện/UI nào cho cashy hay app tài chính cá nhân — để ráp từ các thành phần
+  đã duyệt (class cash-* + design tokens, ưu tiên trắng-đen-xám, có dark mode) thay vì thiết kế lại
+  từ đầu (tốn token, lệch phong cách). Bao gồm: bảng cho dữ liệu tiền (giao dịch, số dư, ngân sách,
+  công nợ), capsule/badge/tag, card, form input, biểu đồ (chart/donut/sparkline), cây danh mục +
+  kéo-thả sắp xếp, tiện ích grid/layout, icon-font, và trang Config chỉnh token. Ví dụ khi cần: làm
+  bảng giao dịch, card số dư/thu chi, dashboard tài chính, badge trạng thái, financial table,
+  finance dashboard UI. KHÔNG dùng cho backend/logic không liên quan giao diện, hay project không
+  phải tài chính cá nhân.
 ---
 
 # Cashy UI
@@ -62,11 +56,11 @@ Spend colour, don't sprinkle it. Lowest tier that does the job:
 1. **white / black / grey** — the default for nearly everything.
 2. **bright solid colour** — only for unmistakable status (paid = green, overdue / bad
    debt = red, due-soon = amber, info = blue).
-3. **bright colour + low opacity (soft)** — the calm version of tier 2; default for status
-   capsules and subtle row tints.
+3. **bright colour + low opacity (soft)** — the calm version of tier 2 (same meaning, dialled down).
 
-Classification (a category/method tag) is **not** status → keep it neutral grey. Only real
-status earns colour.
+Tiers 2–3 are colour-spend **levels, not per-component styles** — either can ride on any component (capsule,
+tag, number, border, row tint, card, chart), not just capsules. Classification (a category/method tag) is
+**not** status → keep it neutral grey. Only real status earns colour.
 
 ## Current scope
 

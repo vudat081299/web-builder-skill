@@ -14,7 +14,11 @@ Colour is spent, not sprinkled. Reach for the lowest tier that does the job.
 |------|---------|---------|
 | **1 — default** | white / black / grey | Almost everything: backgrounds, text, borders, most capsules, most numbers. |
 | **2 — meaningful, solid** | bright solid colour | Only when a status must be unmistakable: paid = green, overdue / bad debt = red, due-soon = amber, info/processing = blue. |
-| **3 — meaningful, soft** | bright colour + low alpha | The quiet version of tier 2 — soft tinted background + same-hue text. Preferred over tier 2 when the signal should be present but calm (default for status capsules, subtle row tints). |
+| **3 — meaningful, soft** | bright colour + low alpha | The **calm version of tier 2** — same meaning, dialled down (soft tinted background + same-hue text). Reach for it when the signal should be present but quiet. |
+
+These tiers are **levels of colour-spend, not per-component styles**: tier 2 and tier 3 can ride on *any*
+component — capsule, tag, number, border, row tint, card, chart — not just status capsules. Tier 3 is
+simply tier 2 with the volume down; pick the tier by how loud the signal must be, then apply it where it belongs.
 
 **Decision rule:** if a colour is not carrying meaning, it should not be there. A
 category tag ("Ăn uống", "Nhà ở") is *classification, not status* → keep it neutral

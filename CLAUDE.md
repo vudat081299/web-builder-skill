@@ -3,6 +3,9 @@
 This repo packages the **cashy-ui** skill — a minimalist design system for personal-finance web apps.
 See `README.md` for the project map, and `cashy-ui/SKILL.md` for how to build UI with it.
 
+The repo's north star is **reuse**: assemble finance UI from approved `cash-*` parts, and when you build
+something genuinely new, fold it back into the library + docs (the sync steps below) so the next build reuses it.
+
 ## Working here
 
 - **Use the cashy-ui skill. Don't invent styling** — assemble from `cash-*` classes + tokens
@@ -30,10 +33,15 @@ If these drift, the skill misleads the next AI. Verify: number of `NAV` routes =
 
 ## Conventions to keep
 
-White-black-grey first; colour only for real meaning; **tokens over magic numbers**; the docs are
-**dogfooded** (built from `cash-*` primitives); dark flips shadows to a soft light lift; dismiss **×**
-top-right; **no left-accent bars**; layout is a small flex/grid utility set, **not** a 12-column foundation.
-Full numbered rules: `cashy-ui/references/design-principles.md`.
+The **colour ladder is the most important rule** (design-principles §1): white-black-grey first (tier 1);
+bright **solid** colour only for real status (tier 2 — paid / overdue / due-soon); the same colour **soft**
+when the signal should stay calm (tier 3). Tiers 2–3 are colour-spend *levels* that ride on **any** component
+(capsule, tag, number, border, row tint, card, chart) — not just capsules. Classification (a category) is
+*not* status — keep it grey.
+
+Then: **tokens over magic numbers**; the docs are **dogfooded** (built from `cash-*` primitives); dark flips
+shadows to a soft light lift; dismiss **×** top-right; **no left-accent bars**; layout is a small flex/grid
+utility set, **not** a 12-column foundation. Full numbered rules: `cashy-ui/references/design-principles.md`.
 
 ## Git
 
