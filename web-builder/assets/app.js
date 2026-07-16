@@ -189,7 +189,7 @@ function initColorPicker(el) {
   const preview   = el.querySelector(".wb-colorpicker__preview");
   const hexInput  = el.querySelector("[data-cp-hex]");
   const presets   = [...el.querySelectorAll(".wb-swatch")];
-  let h = 239, s = 59, v = 95;   // default ≈ #6366F1
+  let h = 239, s = 59, v = 95, ready = false;   // default ≈ #6366F1
 
   const hex2 = (n) => Math.round(n).toString(16).padStart(2, "0");
   function hsvToHex(H, S, V) {
@@ -220,7 +220,7 @@ function initColorPicker(el) {
     if (!/^[0-9a-f]{6}$/i.test(hx)) return null;
     return rgbToHsv(parseInt(hx.slice(0, 2), 16), parseInt(hx.slice(2, 4), 16), parseInt(hx.slice(4, 6), 16));
   }
-  function render() {
+  function render(silent) {
     const hex = hsvToHex(h, s, v);
     area.style.setProperty("--wb-cp-hue", "hsl(" + h + ", 100%, 50%)");
     areaThumb.style.left = s + "%";
@@ -233,6 +233,9 @@ function initColorPicker(el) {
       const c = parseColor(getComputedStyle(sw).backgroundColor);
       sw.classList.toggle("is-selected", !!c && hsvToHex(c.h, c.s, c.v) === hex);
     });
+    /* Notify hosts (e.g. the Config drawer) of a colour change without exposing internals.
+       The initial seed render stays silent so it never registers as a user tweak. */
+    if (!silent && ready) el.dispatchEvent(new CustomEvent("wb-cp-input", { bubbles: true, detail: "#" + hex }));
   }
   function track(node, fn) {
     node.addEventListener("pointerdown", (e) => {
@@ -257,7 +260,9 @@ function initColorPicker(el) {
   presets.forEach((sw) => sw.addEventListener("click", () => { const c = parseColor(getComputedStyle(sw).backgroundColor); if (c) { h = c.h; s = c.s; v = c.v; render(); } }));
   const init = hexInput && parseColor(hexInput.value);
   if (init) { h = init.h; s = init.s; v = init.v; }
+  el._cpSet = (val, silent) => { const c = parseColor(val); if (!c) return; h = c.h; s = c.s; v = c.v; render(silent); };
   render();
+  ready = true;
 }
 
 /* ---- Sortable: flat drag-to-reorder for a list OR grid, with a dashed slot -
@@ -792,7 +797,26 @@ function renderConfigRow(r) {
       '" min="' + r.min + '" max="' + r.max + '" step="' + r.step + '" value="' + v + '">' +
       '<output class="doc-config__out">' + v + (r.unit || "") + "</output>";
   } else if (r.type === "color") {
-    ctrl = '<input type="color" class="wb-color wb-color--sm" data-k="' + r.k + '" data-type="color">';
+    const cur = resolveColor(r.k);
+    const seed = cur.charAt(0) === "#" ? cur.slice(1).toUpperCase() : cur;
+    ctrl =
+      '<span class="wb-popover wb-popover--left doc-config__color">' +
+        '<button type="button" class="doc-config__swatch" data-pop-toggle aria-label="Chọn màu ' + r.label + '" style="background:' + cur + '"></button>' +
+        '<div class="wb-popover__panel">' +
+          '<div class="wb-popover__arrow"></div>' +
+          '<div class="wb-colorpicker" data-colorpicker data-k="' + r.k + '" data-type="color">' +
+            '<div class="wb-colorpicker__area"><span class="wb-colorpicker__thumb"></span></div>' +
+            '<div class="wb-colorpicker__hue"><span class="wb-colorpicker__thumb"></span></div>' +
+            '<div class="wb-colorpicker__foot"><span class="wb-colorpicker__preview"></span>' +
+              '<div class="wb-input-group"><span class="wb-input-group__addon">#</span>' +
+              '<input class="wb-input" data-cp-hex value="' + seed + '" spellcheck="false" aria-label="Mã màu hex"></div>' +
+            '</div>' +
+            '<div class="wb-swatches wb-swatches--sm" role="group" aria-label="Màu gợi ý">' +
+              [1, 2, 3, 4, 5, 6, 8].map(function (n) { return '<button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-' + n + ')"></button>'; }).join("") +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</span>';
   } else if (r.type === "font") {
     ctrl = selectCtrl("--wb-font", "raw", opts(FONT_OPTIONS, "'"));
   } else if (r.type === "shadow") {
@@ -803,7 +827,8 @@ function renderConfigRow(r) {
   } else if (r.type === "corner") {
     ctrl = selectCtrl("corner-preset", "corner", opts(r.options));
   }
-  return '<label class="doc-config__row"><span class="doc-config__label">' + r.label + "</span>" + ctrl + "</label>";
+  const rowTag = r.type === "color" ? "div" : "label";
+  return "<" + rowTag + ' class="doc-config__row"><span class="doc-config__label">' + r.label + "</span>" + ctrl + "</" + rowTag + ">";
 }
 function renderConfigGroup(g) {
   return '<div class="doc-config__group"><div class="doc-config__gtitle">' + g.title + "</div>" +
@@ -818,7 +843,10 @@ function onConfigInput(e) {
     const out = el.parentNode.querySelector(".doc-config__out");
     if (out) out.textContent = val;
   } else if (type === "color") {
-    setVar(k, el.value);
+    const val = el.style.getPropertyValue("--wb-cp-value").trim();
+    if (val) setVar(k, val);
+    const sw = el.closest(".wb-popover") && el.closest(".wb-popover").querySelector(".doc-config__swatch");
+    if (sw && val) sw.style.background = val;
   } else if (type === "raw") {
     if (el.value) setVar(k, el.value);
     else { delete tweak[k]; document.documentElement.style.removeProperty(k); }
@@ -866,7 +894,12 @@ function resetConfig() {
       el.value = CONFIG_DEFAULTS[k];
       const o = el.parentNode.querySelector(".doc-config__out");
       if (o) o.textContent = CONFIG_DEFAULTS[k] + (el.dataset.unit || "");
-    } else if (type === "color") { el.value = resolveColor(k); }
+    } else if (type === "color") {
+      const c = resolveColor(k);
+      if (el._cpSet) el._cpSet(c, true);
+      const sw = el.closest(".wb-popover") && el.closest(".wb-popover").querySelector(".doc-config__swatch");
+      if (sw) sw.style.background = c;
+    }
     else { el.selectedIndex = 0; }
   });
   mirrorToFrames();
@@ -880,7 +913,8 @@ function initConfig() {
   body.innerHTML = CONFIG_GROUPS.map(renderConfigGroup).join("");
   body.addEventListener("input", onConfigInput);
   body.addEventListener("change", onConfigInput);
-  drawer.querySelectorAll('input[type="color"][data-k]').forEach((inp) => { inp.value = resolveColor(inp.dataset.k); });
+  body.addEventListener("wb-cp-input", onConfigInput);
+  body.querySelectorAll("[data-colorpicker]").forEach(initColorPicker);
   drawer.querySelector("[data-config-export]").addEventListener("click", exportConfig);
   drawer.querySelector("[data-config-reset]").addEventListener("click", resetConfig);
   drawer.querySelector("[data-config-close]").addEventListener("click", () => drawer.classList.remove("is-open"));

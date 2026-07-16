@@ -96,31 +96,11 @@
   </div>
 
   <div class="doc-block">
-    <h4>Chọn màu — <code>wb-color</code></h4>
-    <p class="doc-block__desc">Ô chọn màu gốc được dọn sạch: cả ô là một <b>swatch bo góc</b> mang đúng màu đang chọn (bỏ viền/đệm mặc định
-    của trình duyệt, không còn "ô vuông trong nút tròn"). Ghép nhãn hex bằng <code>.wb-color-field</code>. Dùng cho màu danh mục / nhãn.</p>
-    <div class="demo">
-      <div class="demo__stage">
-        <div class="wb-cluster" style="gap:20px">
-          <span class="wb-color-field"><input class="wb-color" type="color" value="#6366f1" aria-label="Màu danh mục" /><code>#6366F1</code></span>
-          <input class="wb-color wb-color--pill" type="color" value="#16a34a" aria-label="Màu (bo tròn)" />
-          <input class="wb-color wb-color--sm" type="color" value="#d97706" aria-label="Màu (nhỏ)" />
-        </div>
-      </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-color-field"&gt;
-  &lt;input class="wb-color" type="color" value="#6366f1" /&gt;&lt;code&gt;#6366F1&lt;/code&gt;
-&lt;/span&gt;
-&lt;input class="wb-color wb-color--pill" type="color" /&gt;   &lt;!-- tròn --&gt;
-&lt;input class="wb-color wb-color--sm" type="color" /&gt;     &lt;!-- nhỏ --&gt;</code></pre></div>
-    </div>
-  </div>
-
-  <div class="doc-block">
     <h4>Bảng màu — <code>wb-swatches</code></h4>
     <p class="doc-block__desc">Picker tối giản, thuần CSS: một lưới ô màu <b>preset</b> để chọn từ — giữ lựa chọn trong các hue đã duyệt (đúng
     thang màu), thay vì mở hộp chọn màu của hệ điều hành. Đặt hue mỗi ô bằng <code>--wb-swatch-color</code>; ô đang chọn thêm
     <code>.is-selected</code> (viền nhấn theo màu chữ, đọc rõ trên mọi hue). Biến thể <code>--round</code> (tròn) · <code>--sm</code> (nhỏ).
-    Cần màu tự do thì ghép thêm <code>.wb-color</code> ở trên.</p>
+    Cần màu tự do thì dùng <code>.wb-colorpicker</code> bên dưới.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-stack">
@@ -159,7 +139,7 @@
 
   <div class="doc-block">
     <h4>Bộ chọn màu — <code>wb-colorpicker</code></h4>
-    <p class="doc-block__desc">Panel custom <b>thay hẳn hộp thoại màu của hệ điều hành</b> (thứ bung ra khi bấm <code>wb-color</code>) — tối giản, đúng tông:
+    <p class="doc-block__desc">Panel custom <b>thay hẳn hộp thoại màu của hệ điều hành</b> (hộp màu mặc định của trình duyệt) — tối giản, đúng tông:
     vùng <b>SV</b> (đậm/sáng) + thanh <b>hue</b> cầu vồng + ô nhập <b>hex</b> + hàng <b>preset</b> (tái dùng <code>wb-swatches</code>). Thư viện lo <i>giao diện</i>;
     phần kéo-chọn + quy đổi HSV do một handler nhỏ đảm nhiệm (bản docs này có sẵn) hoặc một lib headless. Kéo thử vùng màu / thanh hue, gõ hex, hay bấm preset:</p>
     <div class="demo">

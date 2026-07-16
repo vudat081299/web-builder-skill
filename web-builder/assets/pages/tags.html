@@ -25,7 +25,7 @@
 
   <div class="doc-block">
     <h4>Không màu &amp; có màu</h4>
-    <p class="doc-block__desc">Neutral (mặc định) cho nhãn thường. Dùng tone semantic, hoặc gán màu riêng cho danh mục qua biến <code>--wb-tag-color</code>.</p>
+    <p class="doc-block__desc">Neutral (mặc định) cho nhãn thường. Dùng tone semantic, gán màu riêng qua <code>--wb-tag-color</code>, hoặc <code>--solid</code> để nhấn mạnh — <code>--solid</code> đứng một mình là <b>đen chữ trắng</b> (đảo ở dark).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="cap-row"><span class="cap-row__label">Neutral</span>
@@ -46,6 +46,8 @@
           <span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#db2777">qua-tang</span>
         </div>
         <div class="cap-row"><span class="cap-row__label">Solid</span>
+          <span class="wb-tag wb-tag--solid">hang-ngay</span>
+          <span class="wb-tag wb-tag--solid">tien-mat</span>
           <span class="wb-tag wb-tag--danger wb-tag--solid">khan-cap</span>
           <span class="wb-tag wb-tag--tinted wb-tag--solid" style="--wb-tag-color:#0d9488">du-lich</span>
         </div>
@@ -57,7 +59,8 @@
 &lt;!-- màu riêng cho danh mục: 1 biến là đủ --&gt;
 &lt;span class="wb-tag wb-tag--tinted" style="--wb-tag-color:#0d9488"&gt;du-lich&lt;/span&gt;
 
-&lt;!-- nhấn mạnh --&gt;
+&lt;!-- nhấn mạnh: solid trung tính (đen) hoặc solid theo tone --&gt;
+&lt;span class="wb-tag wb-tag--solid"&gt;hang-ngay&lt;/span&gt;
 &lt;span class="wb-tag wb-tag--danger wb-tag--solid"&gt;khan-cap&lt;/span&gt;</code></pre></div>
     </div>
   </div>

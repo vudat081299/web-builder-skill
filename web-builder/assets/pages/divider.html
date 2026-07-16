@@ -55,18 +55,20 @@
     <h4>Tia sáng chạy dọc <span class="wb-cap wb-cap--sm wb-cap--outline">animation</span></h4>
     <p class="doc-block__desc">Một vệt sáng lướt dọc đường kẻ theo vòng lặp — <b>trang trí</b>, không phải
     thanh tiến trình (đường kẻ luôn hiện đủ, vệt chỉ chạy qua). Tôn trọng <code>prefers-reduced-motion</code>.
-    Đổi màu vệt bằng <code>--wb-divider-ray</code>.</p>
+    Đổi <b>màu vệt</b> bằng <code>--wb-divider-ray</code>, <b>độ rộng vệt</b> bằng <code>--wb-divider-ray-w</code>.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-stack" style="max-width:460px;--wb-stack-gap:20px">
           <hr class="wb-divider--ray" />
           <hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-info)" />
-          <hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-success)" />
+          <hr class="wb-divider--ray" style="--wb-divider-ray-w:70%" />
+          <hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-success);--wb-divider-ray-w:18%" />
         </div>
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;hr class="wb-divider--ray" /&gt;                                  &lt;!-- vệt mực/trắng --&gt;
 &lt;hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-info)" /&gt;
-&lt;hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-success)" /&gt;</code></pre></div>
+&lt;hr class="wb-divider--ray" style="--wb-divider-ray-w:70%" /&gt;    &lt;!-- vệt rộng --&gt;
+&lt;hr class="wb-divider--ray" style="--wb-divider-ray-w:18%" /&gt;    &lt;!-- vệt hẹp --&gt;</code></pre></div>
     </div>
   </div>
 

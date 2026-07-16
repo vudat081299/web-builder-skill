@@ -9,6 +9,14 @@
   <div class="demo">
     <div class="demo__stage">
       <div class="wb-stack" style="--wb-stack-gap:12px;max-width:560px">
+        <div class="wb-alert">
+          <span class="wb-alert__icon">•</span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Nhắc nhở chung</p>
+            <p class="wb-alert__msg">Thông báo trung tính, không mang trạng thái — mặc định nên dùng bản này trước.</p>
+          </div>
+          <button class="wb-close" aria-label="Đóng">×</button>
+        </div>
         <div class="wb-alert wb-alert--info">
           <span class="wb-alert__icon">ℹ</span>
           <div class="wb-alert__body">
@@ -38,7 +46,11 @@
         </div>
       </div>
     </div>
-    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-alert wb-alert--warning"&gt;
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- trung tính (mặc định — ưu tiên) --&gt;
+&lt;div class="wb-alert"&gt;…&lt;/div&gt;
+
+&lt;!-- có trạng thái --&gt;
+&lt;div class="wb-alert wb-alert--warning"&gt;
   &lt;span class="wb-alert__icon"&gt;!&lt;/span&gt;
   &lt;div class="wb-alert__body"&gt;
     &lt;p class="wb-alert__title"&gt;Sắp vượt ngân sách “Ăn uống”&lt;/p&gt;

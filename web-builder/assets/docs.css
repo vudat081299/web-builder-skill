@@ -366,14 +366,23 @@ html::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 .doc-config__group .doc-config__row:first-of-type { border-top: 0; }
 .doc-config__label { flex: 1 1 auto; min-width: 0; }
 
-/* Slider, colour and select all reuse the library primitives (.wb-range /
-   .wb-color / .wb-select) so the panel matches the docs; size them to the row. */
+/* Slider and select reuse the library primitives (.wb-range / .wb-select) so the panel
+   matches the docs; size them to the row. */
 .doc-config__row .wb-range { width: 122px; flex: none; margin: 0; }
 .doc-config__row .wb-select-wrap { flex: none; width: 172px; }
 .doc-config__row .wb-select { font-size: 13px; padding: 7px 30px 7px 10px; cursor: pointer; }
 .doc-config__row .wb-select-wrap > .wb-ico { right: 8px; font-size: 18px; }
-/* Trim the colour swatch so its row lines up with the slider / select rows. */
-.doc-config__row .wb-color { width: 30px; height: 20px; }
+/* Colour: a compact swatch that opens the wb-colorpicker in a popover (replaces the old
+   native .wb-color swatch). Opens to the LEFT so the panel stays inside the drawer. */
+.doc-config__color { flex: none; }
+.doc-config__swatch {
+  width: 30px; height: 20px; padding: 0; cursor: pointer;
+  border: var(--wb-bw) solid var(--wb-border-strong); border-radius: var(--wb-radius-sm);
+}
+.doc-config__color .wb-popover__panel { width: 216px; }
+/* Scroll room so the last colour rows can rise to the middle where their popover fits (the body
+   scrolls, so an edge row's picker would otherwise clip against the overflow boundary). */
+.doc-config__body { padding-bottom: 150px; }
 .doc-config__out {
   min-width: 44px; text-align: right; font-size: 12px; color: var(--wb-fg-muted);
   font-variant-numeric: tabular-nums; font-family: "SF Mono", ui-monospace, monospace;

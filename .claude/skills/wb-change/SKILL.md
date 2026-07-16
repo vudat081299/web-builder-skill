@@ -3,7 +3,7 @@ name: wb-change
 description: >-
   Quy trình chuẩn để THÊM/SỬA một primitive component hoặc RESTRUCTURE trong repo web-builder —
   điều phối: discover → plan → confirm → implement → đồng bộ 6 nơi (cascade) → check lỗi → verify →
-  review code → review docs → guardrails → commit + push. Dùng khi user muốn thêm component wb-*,
+  rà soát tái dùng → review code → review docs → guardrails → commit + push. Dùng khi user muốn thêm component wb-*,
   đổi token/cấu trúc, hay sửa nhiều file liên đới trong repo này. Trigger: "thêm component",
   "add primitive", "component mới", "restructure", "đổi token", "sửa wb-*", "add a component",
   "/wb-change". KHÔNG dùng khi: chỉ DÙNG thư viện để dựng UI ứng dụng (đó là skill web-builder),
@@ -17,7 +17,7 @@ AI kế tiếp. Skill này là bản điều phối của quy trình trong `CLAU
 
 > **Sản phẩm cuối cùng của repo = bộ skill `web-builder`** (SKILL.md + references + `web-builder.css` —
 > file duy nhất ship). Mọi thay đổi phải để lại skill ở trạng thái **shippable, chất lượng**; vì thế
-> guardrail validate **cả skill**, không chỉ docs site (xem bước 8).
+> guardrail validate **cả skill**, không chỉ docs site (xem bước 9).
 **Tiết kiệm token**: đẩy việc đọc rộng cho subagent, để hook shell lo phần deterministic; model chỉ làm
 phần semantic.
 
@@ -50,18 +50,24 @@ không `<style>` lạc · `node --check app.js`). Lỗi → quay lại bước 3
 **5 · Verify đúng yêu cầu (xem thật).** `cd web-builder/assets && python3 serve.py` → mở `#/<id>` trong
 Browser pane; kiểm cả **sáng/tối**. Xem nhiều trang → subagent, trả kết luận gọn.
 
-**6 · Review code.** Chạy `/code-review` trên diff.
+**6 · Rà soát tái dùng (reuse sweep) — BẮT BUỘC.** Sau khi phần mới/đã-sửa chạy đúng: rà **toàn repo** tìm
+chỗ đang làm theo cách cũ mà **nay thay được** bằng component vừa tạo, hoặc chỗ nên **áp bản cập nhật mới**
+(biến thể/token/knob vừa thêm) của một component đã dùng. Quét rộng → **subagent** (trả `file:line` + đề xuất).
+Áp thay thế → **verify lại** đúng chỗ vừa đổi (quay bước 5). Áp dụng cho **cả** thêm mới lẫn cập nhật component —
+đây là cách repo reuse-first tự dồn chất lượng; đừng bỏ qua.
 
-**7 · Review docs liên đới.** Đối chiếu 6 nơi có nhất quán không (catalog ↔ SKILL.md ↔ CSS ↔ comparison).
+**7 · Review code.** Chạy `/code-review` trên diff.
+
+**8 · Review docs liên đới.** Đối chiếu 6 nơi có nhất quán không (catalog ↔ SKILL.md ↔ CSS ↔ comparison).
 Giao **subagent** đọc chéo, trả danh sách lệch → sửa.
 
-**8 · Guardrails (bộ tiêu chuẩn, tự chạy khi commit).** `validate-sync.sh` (cũng là PreToolUse gate) kiểm
+**9 · Guardrails (bộ tiêu chuẩn, tự chạy khi commit).** `validate-sync.sh` (cũng là PreToolUse gate) kiểm
 **cả docs lẫn skill deliverable**: docs (routes==pages · page markup-only · `app.js` parse) + **skill**
 (SKILL.md có frontmatter + description ≤ cap · mọi `references/*.md` tồn tại · catalog không khai class CSS
 không có · `web-builder.css` cân ngoặc). Rồi soi bằng mắt: color-ladder (§1) · token-over-magic-number
 (§18) · × top-right (§15) · no left-accent bar (§9) · dark = light-lift shadow (§2).
 
-**9 · Commit + push.** Commit thẳng `main` (workflow solo, CLAUDE.md § Git). Message kết bằng:
+**10 · Commit + push.** Commit thẳng `main` (workflow solo, CLAUDE.md § Git). Message kết bằng:
 `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. Rồi push.
 
 ## Token discipline (mục tiêu tối ưu)

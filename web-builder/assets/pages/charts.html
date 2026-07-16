@@ -11,8 +11,38 @@
   <p class="doc-sec__desc">Chi theo tháng. Đường + vùng tô mờ, có lưới ngang, nhãn trục, điểm mốc và <b>tooltip hiện khi rê chuột</b> vào điểm.</p>
   <div class="demo">
     <div class="demo__stage">
-      <div class="wb-card" style="max-width:480px"><div class="wb-card__body">
-        <p class="wb-chart__title">Chi tiêu 6 tháng</p>
+      <div class="wb-grid wb-grid--2">
+      <div class="wb-card wb-chart-scheme--mono"><div class="wb-card__body">
+        <p class="wb-chart__title">Chi tiêu 6 tháng · xám (neutral)</p>
+        <p class="wb-chart__sub">Ưu tiên bảng màu trung tính trước</p>
+        <div class="wb-chart">
+          <svg class="wb-chart__svg" viewBox="0 0 340 172" aria-label="Biểu đồ đường chi tiêu 6 tháng (xám)">
+            <line class="wb-grid-line" x1="40" y1="22"  x2="320" y2="22"/>
+            <line class="wb-grid-line" x1="40" y1="81"  x2="320" y2="81"/>
+            <line class="wb-axis-line" x1="40" y1="140" x2="320" y2="140"/>
+            <text class="wb-axis-label" x="2"  y="26">12</text>
+            <text class="wb-axis-label" x="8"  y="85">6</text>
+            <text class="wb-axis-label" x="14" y="144">0</text>
+            <path class="wb-series-area" style="fill:var(--wb-chart-expense)" d="M40,58 L96,49 L152,66 L208,22 L264,38 L320,22 L320,140 L40,140 Z"/>
+            <polyline class="wb-series-line" style="stroke:var(--wb-chart-expense)" points="40,58 96,49 152,66 208,22 264,38 320,22"/>
+            <g class="wb-point"><circle class="wb-point__hit" cx="40" cy="58" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="40" cy="58" r="3.5"/><g class="wb-point__tip" transform="translate(40,58)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">8,3tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="96" cy="49" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="96" cy="49" r="3.5"/><g class="wb-point__tip" transform="translate(96,49)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">9,3tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="152" cy="66" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="152" cy="66" r="3.5"/><g class="wb-point__tip" transform="translate(152,66)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">7,5tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="208" cy="22" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="208" cy="22" r="4"/><g class="wb-point__tip" transform="translate(208,22)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">11,8tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="264" cy="38" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="264" cy="38" r="3.5"/><g class="wb-point__tip" transform="translate(264,38)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">10,4tr</text></g></g>
+            <g class="wb-point"><circle class="wb-point__hit" cx="320" cy="22" r="14"/><circle class="wb-series-dot" style="fill:var(--wb-chart-expense)" cx="320" cy="22" r="3.5"/><g class="wb-point__tip" transform="translate(320,22)"><rect x="-20" y="-26" width="40" height="17" rx="4"/><text x="0" y="-14" text-anchor="middle">12,0tr</text></g></g>
+            <text class="wb-axis-label" x="40"  y="158" text-anchor="middle">T2</text>
+            <text class="wb-axis-label" x="96"  y="158" text-anchor="middle">T3</text>
+            <text class="wb-axis-label" x="152" y="158" text-anchor="middle">T4</text>
+            <text class="wb-axis-label" x="208" y="158" text-anchor="middle">T5</text>
+            <text class="wb-axis-label" x="264" y="158" text-anchor="middle">T6</text>
+            <text class="wb-axis-label" x="320" y="158" text-anchor="middle">T7</text>
+          </svg>
+          <p class="wb-chart__sub" style="margin:6px 0 0">Cùng dữ liệu, thang màu trung tính.</p>
+        </div>
+      </div></div>
+      <div class="wb-card"><div class="wb-card__body">
+        <p class="wb-chart__title">Chi tiêu 6 tháng · màu</p>
         <p class="wb-chart__sub">Đơn vị: triệu ₫</p>
         <div class="wb-chart">
           <svg class="wb-chart__svg" viewBox="0 0 340 172" aria-label="Biểu đồ đường chi tiêu 6 tháng">
@@ -41,6 +71,7 @@
           <p class="wb-chart__sub" style="margin:6px 0 0">Di chuột vào điểm để xem chi tiết.</p>
         </div>
       </div></div>
+      </div>
     </div>
     <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;svg class="wb-chart__svg" viewBox="0 0 340 172"&gt;
   &lt;line class="wb-grid-line" x1="40" y1="22" x2="320" y2="22"/&gt;

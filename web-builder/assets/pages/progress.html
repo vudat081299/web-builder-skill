@@ -47,22 +47,29 @@
   </div>
 
   <div class="doc-block">
-    <h4>Loading — tiến độ vô định <span class="wb-cap wb-cap--sm wb-cap--outline">animation</span></h4>
-    <p class="doc-block__desc">Khi chưa biết % (đang tải / đồng bộ): một vệt chạy dọc track theo vòng lặp —
-    hiệu ứng <b>loading</b>, không phải thanh lấp đầy. Không cần thẻ <code>__bar</code>. Đổi màu vệt bằng
-    <code>--wb-progress-c</code>; tôn trọng <code>prefers-reduced-motion</code>.</p>
+    <h4>Loading — đang tải (fill % + vệt shimmer) <span class="wb-cap wb-cap--sm wb-cap--outline">animation</span></h4>
+    <p class="doc-block__desc">Thanh vẫn hiện <b>% thật</b> (đúng thẻ <code>__bar</code>), nhưng phần <b>đã lấp</b> có một vệt sáng
+    kiểu skeleton chạy qua — báo "đang xử lý". Vệt chỉ chạy trong phần có màu (0 → đúng width của bar). Đổi
+    <b>màu vệt</b> bằng <code>--wb-progress-shimmer</code>, <b>độ rộng dải chạy</b> bằng <code>--wb-progress-band</code>;
+    tôn trọng <code>prefers-reduced-motion</code>.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-stack" style="--wb-stack-gap:16px;max-width:420px">
-          <div class="wb-progress wb-progress--loading"></div>
-          <div class="wb-progress wb-progress--loading wb-progress--lg" style="--wb-progress-c:var(--wb-info)"></div>
+          <div><div class="wb-cell-muted" style="font-size:12px;margin-bottom:6px">Đang tải · 70%</div><div class="wb-progress wb-progress--loading"><div class="wb-progress__bar" style="width:70%"></div></div></div>
+          <div><div class="wb-cell-muted" style="font-size:12px;margin-bottom:6px">Dải hẹp hơn · --wb-progress-band:22%</div><div class="wb-progress wb-progress--loading wb-progress--lg" style="--wb-progress-band:22%"><div class="wb-progress__bar" style="width:55%"></div></div></div>
+          <div><div class="wb-cell-muted" style="font-size:12px;margin-bottom:6px">Đổi màu vệt · --wb-progress-shimmer:var(--wb-info)</div><div class="wb-progress wb-progress--loading" style="--wb-progress-shimmer:var(--wb-info)"><div class="wb-progress__bar wb-progress__bar--success" style="width:60%"></div></div></div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-progress wb-progress--loading"&gt;&lt;/div&gt;
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- fill % thật + vệt shimmer chạy trong phần đã lấp --&gt;
+&lt;div class="wb-progress wb-progress--loading"&gt;
+  &lt;div class="wb-progress__bar" style="width:70%"&gt;&lt;/div&gt;
+&lt;/div&gt;
 
-&lt;!-- lớn hơn + đổi màu vệt --&gt;
-&lt;div class="wb-progress wb-progress--loading wb-progress--lg"
-     style="--wb-progress-c:var(--wb-info)"&gt;&lt;/div&gt;</code></pre></div>
+&lt;!-- chỉnh độ rộng dải + màu vệt --&gt;
+&lt;div class="wb-progress wb-progress--loading"
+     style="--wb-progress-band:22%;--wb-progress-shimmer:var(--wb-info)"&gt;
+  &lt;div class="wb-progress__bar" style="width:55%"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
     </div>
   </div>
 </section>

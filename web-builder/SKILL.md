@@ -79,7 +79,7 @@ source of truth**, kept in sync per-component, so it never drifts here):
 - **Hành động** — buttons (incl. button-group, social-login with brand logos), dropdown / menu.
 - **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea, checkbox/radio, switch
   (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone,
-  **colour** — a preset **swatch palette** (`.wb-swatches`, pick from approved hues), a custom **colour picker** (`.wb-colorpicker` — SV area · hue · hex · presets; replaces the OS dialog), and a native `.wb-color` fallback; validation via the `.is-invalid` state.
+  **colour** — a preset **swatch palette** (`.wb-swatches`, pick from approved hues), a custom **colour picker** (`.wb-colorpicker` — SV area · hue · hex · presets; replaces the OS dialog); validation via the `.is-invalid` state.
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
   stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**

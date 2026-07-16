@@ -46,38 +46,68 @@
 </section>
 
 <section class="doc-sec">
-  <h3>Lộ trình</h3>
-  <p class="doc-sec__desc">Xây theo từng đợt để review dần.</p>
-  <div class="tier">
-    <div class="tier__item">
-      <div class="tier__n">ĐỢT 1 · XONG</div>
-      <div class="tier__t">Nền tảng, nhãn &amp; primitive cơ bản</div>
-      <p class="tier__d">Docs dạng module + sidebar cây, Typography, Fonts, Tags, và bộ primitive (card, dropdown, alert, modal, toast, tabs, tooltip, breadcrumb, pagination, avatar, progress, accordion, divider, skeleton, empty).</p>
+  <h3>Repo này là gì</h3>
+  <p class="doc-sec__desc"><b>Sản phẩm cuối cùng của repo = bộ skill <code>web-builder</code></b> — thứ duy nhất “ship”: một file CSS
+  drop-in (<code>web-builder.css</code>) cùng <code>SKILL.md</code> + <code>references/</code>. Trang docs bạn đang xem, <code>/wb-change</code>
+  và các hook <b>không ship</b> — chúng chỉ để dựng, review, dogfood và bảo vệ chất lượng của skill.</p>
+  <p class="doc-sec__desc">Cách lib hoạt động: CSS viết tay, <b>token-based</b> (đổi <a href="#/tokens">token</a> là đổi cả hệ),
+  <b>không cần build</b>, một file duy nhất, prefix <code>wb-*</code> nên ghép với mọi stack mà không xung đột. Ưu tiên
+  trắng–đen–xám, có dark mode. Khi build web thì <b>ráp lại từ catalog</b> thay vì thiết kế lại — nguyên tắc reuse-first.</p>
+</section>
+
+<section class="doc-sec">
+  <h3>Ba lớp — mỗi lớp cho ai</h3>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:230px;margin-top:8px">
+    <div class="nav-card">
+      <p class="nav-card__t">Skill — <b>ship</b></p>
+      <p class="nav-card__d"><code>web-builder.css</code> + <code>SKILL.md</code> + <code>references/</code>. Cho <b>AI dựng UI web</b>:
+      drop-in một file rồi ráp từ class <code>wb-*</code> + token. Đây là thứ đi vào app của bạn.</p>
     </div>
-    <div class="tier__item">
-      <div class="tier__n">ĐỢT 2 · XONG</div>
-      <div class="tier__t">Tree danh mục</div>
-      <p class="tier__d">Cây danh mục: xổ ra/thu vào, kéo–thả đổi vị trí &amp; đổi cấp cha, độ sâu tùy ý — kèm biến thể guide-lines, màu+số tiền, checkbox.</p>
+    <div class="nav-card">
+      <p class="nav-card__t">Docs site — không ship</p>
+      <p class="nav-card__d"><code>index.html</code> · <code>app.js</code> · <code>pages/</code> (trang này). Cho <b>người &amp; AI</b> tra cứu,
+      xem thật từng component ở light/dark và verify trước khi tin.</p>
     </div>
-    <div class="tier__item">
-      <div class="tier__n">ĐỢT 2.5 · XONG</div>
-      <div class="tier__t">Tinh chỉnh: border, tabs, tree &amp; sortable</div>
-      <p class="tier__d">Bỏ vạch màu bên trái toàn site (chuyển sang outline + nền mờ), sidebar (thanh bên) thu gọn được, tab "boxed", tree nhiều kiểu, và List/Grid kéo–thả với ô thả nét đứt.</p>
+    <div class="nav-card">
+      <p class="nav-card__t">Tooling — không ship</p>
+      <p class="nav-card__d"><code>/wb-change</code> · hook · <code>validate-sync.sh</code>. Để <b>thêm/sửa component an toàn</b> và giữ
+      6 nơi (CSS ↔ demo ↔ NAV ↔ catalog ↔ SKILL ↔ principles) không lệch nhau.</p>
     </div>
-    <div class="tier__item">
-      <div class="tier__n">ĐỢT 3 · XONG</div>
-      <div class="tier__t">Charts</div>
-      <p class="tier__d">Đường/vùng, cột thu–chi, donut theo danh mục, tiến độ ngân sách, sparkline + bảng màu &amp; style trục/legend/tooltip (SVG/CSS, map sang Recharts).</p>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>AI làm gì với repo này</h3>
+  <p class="doc-sec__desc">Repo được thiết kế để một AI vừa <b>dùng</b> vừa <b>mở rộng</b> bộ component — không chỉ để tra cứu.</p>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:250px;margin-top:8px">
+    <div class="nav-card">
+      <p class="nav-card__t">Build UI web</p>
+      <p class="nav-card__d">Ráp màn hình từ <code>wb-*</code> + token, bám <a href="#/color">thang màu</a> (trắng–đen–xám trước,
+      màu chỉ cho status). Không tự chế style.</p>
     </div>
-    <div class="tier__item">
-      <div class="tier__n">ĐỢT 4 · XONG</div>
-      <div class="tier__t">Icon-font, Config, charts &amp; layout</div>
-      <p class="tier__d">Icon chuyển sang <b>icon-font</b> (Material Symbols — đậm &amp; sắc, bỏ vẽ tay); trang <b>Config</b> tinh chỉnh token sống + xuất .md; charts làm lại (tooltip hover, cột đẹp hơn, donut hài hoà, thang xám/xanh); input tách file + prefix + <code>.is-invalid</code>; bảng kéo sắp xếp hàng; tiện ích Grid/Layout; border về 1px + shadow đồng bộ.</p>
+    <div class="nav-card">
+      <p class="nav-card__t">Thêm primitive mới</p>
+      <p class="nav-card__d">Chạy <code>/wb-change</code>: discover → plan → implement → đồng bộ 6 nơi → verify →
+      <b>rà soát tái dùng</b> → review → commit.</p>
     </div>
-    <div class="tier__item">
-      <div class="tier__n">ĐỢT 5 · XONG</div>
-      <div class="tier__t">Hoá đơn, điều hướng &amp; rà soát tối giản</div>
-      <p class="tier__d">Thêm <b>Hoá đơn</b> (thẻ giấy cạnh xé), bộ primitive <b>điều hướng</b> (navbar · nav/menu · sidebar) ghép thành app shell; rà toàn bộ trang docs để dùng lại chính utility của thư viện (dogfood), siết token (hairline &amp; pill về đúng biến), và đối chiếu phạm vi với Bootstrap.</p>
+    <div class="nav-card">
+      <p class="nav-card__t">Update component đã có</p>
+      <p class="nav-card__d">Cùng workflow; sửa xong phải <b>rà toàn repo</b> tìm chỗ thay được bằng bản mới, hoặc áp biến thể/token vừa thêm.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Sync docs ↔ lib ↔ skill</p>
+      <p class="nav-card__d">Giữ <code>components-catalog.md</code>, <code>SKILL.md</code>, CSS và demo khớp nhau — lệch một nơi là skill
+      nói dối AI kế tiếp; <code>validate-sync.sh</code> gác cổng khi commit.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">So với lib khác</p>
+      <p class="nav-card__d">Đối chiếu phạm vi với Bootstrap (<code>bootstrap-comparison.md</code>) để lộ khoảng trống trong bộ component,
+      quyết định thêm gì tiếp.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Tích hợp vào app thật</p>
+      <p class="nav-card__d">Class lo phần nhìn; map sang engine hành vi (Radix, Recharts, dnd-kit) mà vẫn giữ nguyên pixel —
+      xem <code>integration.md</code>.</p>
     </div>
   </div>
 </section>

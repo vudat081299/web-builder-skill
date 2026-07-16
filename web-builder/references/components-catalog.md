@@ -48,9 +48,8 @@ for the look (see `integration.md`).
 | A money input, a category picker, a yes/no setting | input-group / select / switch | [Forms](#form-controls) |
 | A slider for a budget cap / threshold | **Range** | [Range](#range--slider) |
 | Attach a statement / receipt (button or drop area) | **File / dropzone** | [File](#file--upload) |
-| Pick a category / label colour from a preset palette | **Swatches** (`.wb-swatches`) | [Colour](#colour-input--swatches) |
+| Pick a category / label colour from a preset palette | **Swatches** (`.wb-swatches`) | [Swatches](#colour-swatches) |
 | Pick any colour with a nice custom UI (SV + hue + hex) | **Colour picker** (`.wb-colorpicker`) | [Colour picker](#colour-picker) |
-| Pick any colour with zero JS (native dialog) | **Colour input** (`.wb-color`) | [Colour](#colour-input--swatches) |
 | A settings / accounts list (one item per row) | **List group** | [List group](#list-group) |
 | A content container / section with header + body | **Card** | [Card](#card) |
 | Show one transaction / bill as a torn-paper slip | **Receipt** (hoá đơn) | [Receipt](#receipt) |
@@ -65,7 +64,7 @@ for the look (see `integration.md`).
 | The left navigation rail of an app shell | **Sidebar** (`.wb-sidenav`) | [Sidebar](#sidebar-side-nav) |
 | A segmented filter of joined buttons (Ngày/Tuần/Tháng) | **Button group** | [Button group](#button-group) |
 | Budget usage / completion ratio | **Progress** | [Progress](#progress) |
-| A loading bar with no known % (loading / syncing) | **Progress** `--loading` | [Progress](#progress) |
+| A % bar that's still loading / syncing (shimmer on the fill) | **Progress** `--loading` | [Progress](#progress) |
 | A loading placeholder before data arrives | **Skeleton** | [Skeleton](#skeleton) |
 | A "no data yet" / empty list screen | **Empty state** | [Empty](#empty-state) |
 | A short hint on hover / focus | **Tooltip** | [Tooltip](#tooltip) |
@@ -230,14 +229,15 @@ fixed category). Same family as capsules; the leading `#` is added by CSS.
 SHAPE:  (pill, default) · --rect · --notch    (notch = physical-tag look, with a punch hole)
 TONE:   (neutral) · --success · --danger · --warning · --info
 COLOUR: --tinted + style="--wb-tag-color:#hex"   (a custom per-category hue)
-EMPH:   --solid  (tier-2 full colour; pair with a tone or --tinted)
+EMPH:   --solid  (alone = neutral solid black / white text, tier-1, flips in dark; + a tone or --tinted = that colour at full strength, tier 2)
 SIZE:   (default) · --sm · --lg      REMOVE: add <button class="wb-tag__x">×</button>
 GROUP:  wrap several in .wb-tags   (flex-wrap row)
 ```
 
 **Choosing:** most tags are **neutral** (classification, not status). Give a tag its own
 hue only when the category genuinely has one in the app — pass it via the one variable so
-both themes stay correct. Reserve `--solid` for a tag that must shout.
+both themes stay correct. `--solid` on its own is a neutral high-emphasis tag (solid black / white text, flips
+in dark); pair it with a tone or `--tinted` to make a status hue shout at full strength.
 
 ```html
 <!-- neutral, and a category with its own colour -->
@@ -470,7 +470,7 @@ see [Filter bar](#filter-bar)). App: Radix **Slider** for keyboard robustness; k
 </div>
 ```
 
-## Colour input & swatches
+## Colour swatches
 
 **`.wb-swatches`** is the minimalist picker: a grid of preset colour chips you pick *from*, so the choice
 stays inside approved hues (the colour ladder) instead of the OS colour dialog. Pure CSS — give each
@@ -485,23 +485,16 @@ chips), `--sm` (smaller). Reach for this to pick a category / label colour from 
 </div>
 ```
 
-**`.wb-color`** is the escape hatch for a *genuinely free* colour: it cleans up the native `<input type=color>`
-so the whole control becomes a rounded swatch of the current value (browser inner border/padding stripped —
-no "square stuck in a button"). `--pill`, `--sm`; pair a hex label with `.wb-color-field`.
-
-```html
-<span class="wb-color-field"><input class="wb-color" type="color" value="#6366f1" /><code>#6366F1</code></span>
-```
-
 ## Colour picker
 
-`.wb-colorpicker` is a custom panel that **replaces the ugly native OS colour dialog** — the thing `.wb-color`
-pops on click. It composes an **SV area** (`__area`, saturation×value), a **hue slider** (`__hue`), a **hex
-field** (`.wb-input-group` with a `#` addon), a **current-colour preview** (`__preview`), and a **preset row**
-(reuses `.wb-swatches`). Both `__area` and `__hue` hold a `.wb-colorpicker__thumb` handle. Web Builder ships
-only the *look*; the drag + HSV maths is a behaviour engine (a headless colour lib, or a small pointer handler
-— the docs ship one). Host it inside `.wb-popover` for a trigger→popup, or drop it inline. Keep `.wb-color`
-as the zero-JS fallback.
+`.wb-colorpicker` is a custom panel that **replaces the ugly native OS colour dialog** — the escape hatch for
+a *genuinely free* colour, for when the preset swatches aren't enough. It composes an **SV area** (`__area`,
+saturation×value), a **hue slider** (`__hue`), a **hex field** (`.wb-input-group` with a `#` addon), a
+**current-colour preview** (`__preview`), and a **preset row** (reuses `.wb-swatches`). Both `__area` and
+`__hue` hold a `.wb-colorpicker__thumb` handle. Web Builder ships only the *look*; the drag + HSV maths is a
+behaviour engine (a headless colour lib, or a small pointer handler — the docs ship one). Host it inside
+`.wb-popover` for a trigger→popup, or drop it inline. It fully replaces the old native colour input for
+free-colour picking — no OS dialog anywhere.
 
 ```html
 <div class="wb-colorpicker">
@@ -517,7 +510,8 @@ as the zero-JS fallback.
 
 ## File / Upload
 
-`.wb-file` styles the native file control (neutral "choose" button + filename). `.wb-dropzone` is
+`.wb-file` styles the native file control (neutral "choose" button + filename); `--solid` makes that small
+"choose" button solid black (white text, flips in dark). `.wb-dropzone` is
 the dashed "droppable" affordance for statements/receipts — a `<label>` around a hidden input; add
 `.is-dragover` on drag in the app.
 
@@ -782,8 +776,9 @@ for the last (current) crumb.
 
 ## Avatar
 
-`.wb-avatar` (image or initials). Sizes `--sm|--lg`, shape `--square`. Stack with
-`.wb-avatar-group`. Give it a category hue via inline `background`/`color` if needed.
+`.wb-avatar` (image or initials). Sizes `--sm|--lg`, shape `--square`, emphasis `--solid` (solid black avatar /
+white text, flips in dark). Stack with `.wb-avatar-group`. Give it a category hue via inline
+`background`/`color` if needed.
 
 ```html
 <span class="wb-avatar">VD</span>
@@ -800,13 +795,15 @@ for the last (current) crumb.
 <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
 ```
 
-**Indeterminate / loading** — no known %; a lit segment travels the track on a loop (loading /
-syncing, not a measured fill). Add `--loading` to the track, no `__bar` child; recolour the
-segment with `--wb-progress-c`. Respects `prefers-reduced-motion`.
+**Loading (still filling)** — a **determinate** bar that shows the real % via `__bar`, but the filled part
+carries a **skeleton-style shimmer** sweeping across it (loading / syncing, not a static fill). Add `--loading`
+to the track; it **needs** a `.wb-progress__bar` child with a real `width`. Tune the sheen with
+`--wb-progress-shimmer` (colour) and the sweeping band with `--wb-progress-band` (width, default 45%). Respects
+`prefers-reduced-motion`.
 
 ```html
-<div class="wb-progress wb-progress--loading"></div>
-<div class="wb-progress wb-progress--loading wb-progress--lg" style="--wb-progress-c:var(--wb-info)"></div>
+<div class="wb-progress wb-progress--loading"><div class="wb-progress__bar" style="width:64%"></div></div>
+<div class="wb-progress wb-progress--loading wb-progress--lg" style="--wb-progress-band:55%"><div class="wb-progress__bar wb-progress__bar--warning" style="width:40%"></div></div>
 ```
 
 ## Accordion
@@ -848,14 +845,14 @@ Need one-open-at-a-time across many sections? Use **Accordion** instead. App: Ra
 **Tone** (colour = status, per the ladder — plain breaks stay grey): `--success` / `--danger` /
 `--warning` / `--info` / `--strong` (ink). `--vertical` (between inline clusters), `--label`
 (centred text). `--ray` = a decorative **light-ray that sweeps along** the line on a loop (respects
-`prefers-reduced-motion`; **not** a progress bar — the full line stays visible). One knob
-`--wb-divider-c` colours line + ticks; `--wb-divider-ray` sets the sweep colour.
+`prefers-reduced-motion`; **not** a progress bar — the full line stays visible). One colour knob
+`--wb-divider-c` colours line + ticks; `--wb-divider-ray` sets the sweep colour, `--wb-divider-ray-w` its width (default 40%).
 
 ```html
 <hr class="wb-divider wb-divider--dashed" />
 <hr class="wb-divider wb-divider--fade" />
 <hr class="wb-divider wb-divider--success" />        <!-- tone: only for a meaningful boundary -->
-<hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-info)" />
+<hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-info);--wb-divider-ray-w:55%" />
 <div class="wb-divider--label">HOẶC</div>
 <span class="wb-divider--vertical"></span>
 ```

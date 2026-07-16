@@ -35,6 +35,18 @@ Do not colour every expense red or every income green by reflex. In a transactio
 list, expenses stay neutral dark (`.wb-num--strong`); reserve green (`.wb-num--pos`)
 for genuine inflows and red (`.wb-num--neg`) for genuine problems (over budget, loss).
 
+**Solid-neutral emphasis is for *small* elements only.** A solid black fill with white text
+(`.wb-tag--solid`, `.wb-avatar--solid`, `.wb-file--solid`, a small button, a `--loading` progress bar) is
+still **tier 1** — it spends *contrast*, not colour. Use it only on **small** parts: a tag, an avatar, a small
+button, a file-picker button, a progress bar. Never turn a **large** surface — a card, an alert, a dropzone,
+a whole chart — into a big black block: at that size the high contrast is harsh and tiring to read. Large
+surfaces stay neutral through grey and outline instead.
+
+**Demos are neutral-first.** When a component has both a neutral and a coloured form, place the grey /
+neutral example *before* the coloured one — a grey chart to the left of a coloured chart, a plain alert before
+a toned alert. The reader meets the tier-1 default first and sees colour as the exception, exactly as the
+ladder intends.
+
 ## 2. The neutral shadow/contrast rule
 
 The user's signature look for neutral elements:

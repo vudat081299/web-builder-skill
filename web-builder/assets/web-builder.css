@@ -381,7 +381,11 @@
   color:      color-mix(in srgb, var(--wb-tag-color, var(--wb-gray-200)) 80%, white);
 }
 
-/* --- EMPH: solid (tier 2) — bright, high-emphasis -------------------------- */
+/* --- EMPH: solid — neutral high-emphasis (tier 1 black) by default; + a tone/--tinted paints
+   that colour full-strength (tier 2). Neutral rules go FIRST so the compound tone rules (equal
+   specificity) still win in dark — mirrors .wb-cap--solid; the reverse order greys them out. */
+.wb-tag--solid { background: var(--wb-gray-900); color: var(--wb-white); }
+.dark .wb-tag--solid { background: var(--wb-gray-100); color: var(--wb-gray-900); }
 .wb-tag--solid.wb-tag--success { background: var(--wb-success); color: var(--wb-success-fg); }
 .wb-tag--solid.wb-tag--danger  { background: var(--wb-danger);  color: var(--wb-danger-fg);  }
 .wb-tag--solid.wb-tag--warning { background: var(--wb-warning); color: var(--wb-warning-fg); }
@@ -686,6 +690,13 @@
   display: inline-flex; align-items: center; padding: 0 12px; font-size: 14px; white-space: nowrap;
   color: var(--wb-fg-muted); background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border-strong);
 }
+/* Focus: lift the focused control above its siblings so its ring isn't overpainted by the
+   next addon, and carry the focus colour onto the shared edge. Non-last children drop their
+   right border (the collapse rule above), so that edge is drawn by the neighbour's left border
+   and would otherwise stay grey — the "missing edge" when focusing a non-last input. */
+.wb-input-group > :focus { position: relative; z-index: 2; }
+.wb-input-group > :focus + :not(.is-invalid) { border-left-color: var(--wb-gray-500); }
+.dark .wb-input-group > :focus + :not(.is-invalid) { border-left-color: var(--wb-gray-400); }
 
 /* Checkbox & radio — neutral accent, native for accessibility. */
 /* Checkbox & radio — drawn on the native input itself (appearance:none keeps it
@@ -1045,6 +1056,9 @@
   background: var(--wb-gray-200); color: var(--wb-gray-700);
 }
 .dark .wb-avatar { background: var(--wb-gray-700); color: var(--wb-gray-100); }
+/* Solid — neutral high-emphasis avatar (black chip); flips in dark. */
+.wb-avatar--solid { background: var(--wb-gray-900); color: var(--wb-white); }
+.dark .wb-avatar--solid { background: var(--wb-gray-100); color: var(--wb-gray-900); }
 .wb-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .wb-avatar--sm { width: 28px; height: 28px; font-size: 11px; }
 .wb-avatar--lg { width: 48px; height: 48px; font-size: 16px; }
@@ -1065,19 +1079,26 @@
 .wb-progress__bar--warning { background: var(--wb-warning); }
 .wb-progress__bar--danger  { background: var(--wb-danger); }
 .wb-progress--lg { height: 12px; }
-/* Indeterminate — no known %, a lit segment travels across the track on a loop (a "loading"
-   state, not a measured fill). Colour follows the theme; override with --wb-progress-c.
-   Use on the track alone — no __bar child. Respects prefers-reduced-motion. */
-.wb-progress--loading { position: relative; }
-.wb-progress--loading::after {
-  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%;
-  border-radius: var(--wb-radius-pill); background: var(--wb-progress-c, var(--wb-gray-900));
-  animation: wb-progress-loading 1.3s cubic-bezier(.65, .1, .35, .9) infinite;
+/* Loading — a determinate bar that is still working: the __bar shows the real %, and a
+   skeleton-like sheen sweeps ACROSS THE FILLED part only (0 → the bar's width, never the empty
+   track). Tune the sheen colour with --wb-progress-shimmer and the sweeping band's width with
+   --wb-progress-band. Needs a .wb-progress__bar child. Respects prefers-reduced-motion. */
+.wb-progress--loading .wb-progress__bar { position: relative; overflow: hidden; }
+.wb-progress--loading .wb-progress__bar::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: var(--wb-progress-band, 45%);
+  background: linear-gradient(90deg, transparent, var(--wb-progress-shimmer, rgba(255, 255, 255, .55)), transparent);
+  animation: wb-progress-shimmer 1.3s cubic-bezier(.65, .1, .35, .9) infinite;
 }
-.dark .wb-progress--loading::after { background: var(--wb-progress-c, var(--wb-gray-100)); }
-@keyframes wb-progress-loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+.dark .wb-progress--loading .wb-progress__bar::after {
+  background: linear-gradient(90deg, transparent, var(--wb-progress-shimmer, rgba(0, 0, 0, .4)), transparent);
+}
+/* Sweep in bar-relative % so the sheen stays inside the fill for ANY band width. */
+@keyframes wb-progress-shimmer {
+  0%   { left: calc(-1 * var(--wb-progress-band, 45%)); }
+  100% { left: 100%; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .wb-progress--loading::after { animation: none; left: 0; width: 35%; opacity: .55; }
+  .wb-progress--loading .wb-progress__bar::after { animation: none; opacity: .5; }
 }
 
 /* -----------------------------------------------------------------------------
@@ -1136,7 +1157,7 @@
 .wb-divider--ray { border: 0; height: max(var(--wb-bw), 2px);
   background: var(--wb-divider-c, var(--wb-border-strong));   /* base line always visible */
   border-radius: var(--wb-radius-pill); position: relative; overflow: hidden; margin: 16px 0; }
-.wb-divider--ray::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 40%;
+.wb-divider--ray::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--wb-divider-ray-w, 40%);
   background: linear-gradient(90deg, transparent, var(--wb-divider-ray, var(--wb-fg)), transparent);
   transform: translateX(-110%);
   animation: wb-divider-ray 2.6s cubic-bezier(.45, 0, .2, 1) infinite; }
@@ -1410,6 +1431,10 @@
   --wb-chart-6: color-mix(in srgb, var(--wb-ramp-ink)  44%, var(--wb-ramp-bg));
   --wb-chart-7: color-mix(in srgb, var(--wb-ramp-ink)  33%, var(--wb-ramp-bg));
   --wb-chart-8: color-mix(in srgb, var(--wb-ramp-ink)  22%, var(--wb-ramp-bg));
+  /* Semantic series follow the scheme too, so line/area/bar charts that use income/expense go
+     mono/blue as well — expense = full ink, income = a lighter step (still tell-apart). */
+  --wb-chart-expense: color-mix(in srgb, var(--wb-ramp-ink) 100%, var(--wb-ramp-bg));
+  --wb-chart-income:  color-mix(in srgb, var(--wb-ramp-ink)  55%, var(--wb-ramp-bg));
 }
 
 /* Count-aware ramps — spread exactly N series evenly from 100% → 25% ink. */
@@ -1621,41 +1646,22 @@
 .wb-range-dual__input:focus-visible::-moz-range-thumb     { box-shadow: 0 0 0 3px var(--wb-ring); }
 
 /* -----------------------------------------------------------------------------
-   29. COLOUR INPUT, SWATCHES & PICKER  (native input · preset palette · custom panel)
+   29. SWATCHES & COLOUR PICKER  (preset palette · custom panel)
    -----------------------------------------------------------------------------
-   .wb-color — the whole control becomes a rounded swatch of the current value; the
-   browser's default inner border / padding is stripped so it never looks like a
-   square stuck inside a button. Pair with a hex label via .wb-color-field.
-
    .wb-swatches — the minimalist picker: a grid of preset colour chips you pick FROM,
    so choice stays inside approved hues (the colour ladder) rather than opening the
    OS colour dialog. Give each chip its hue inline via --wb-swatch-color (same recipe
    as --wb-tag-color); the selected chip gets a gap-ring in the fg colour that reads
-   on any hue. For a genuinely free colour, pair it with the .wb-color escape hatch.
+   on any hue. For a genuinely free colour, use the .wb-colorpicker panel below.
 
-   .wb-colorpicker — a custom panel that REPLACES the ugly native OS colour dialog:
-   an SV (saturation/value) area + a hue slider + a hex field + a preset row (reuses
-   .wb-swatches). Look + layout only; wire the drag / HSV maths with a small pointer
-   handler (the docs ship one) or a headless lib — Web Builder owns the pixels. Host
-   it in .wb-popover for a trigger→popup, or inline. NOTE: the #fff/#000 and rainbow
-   gradients below are HSV colour-space construction, not themeable UI colours.
+   .wb-colorpicker — a custom panel that REPLACES the ugly native OS colour dialog
+   (and the old .wb-color native input it used to open): an SV (saturation/value) area
+   + a hue slider + a hex field + a preset row (reuses .wb-swatches). Look + layout only;
+   wire the drag / HSV maths with a small pointer handler (the docs ship one) or a headless
+   lib — Web Builder owns the pixels. Host it in .wb-popover for a trigger→popup, or inline.
+   NOTE: the #fff/#000 and rainbow gradients below are HSV colour-space construction,
+   not themeable UI colours.
    -------------------------------------------------------------------------- */
-.wb-color {
-  -webkit-appearance: none; appearance: none; flex: none; cursor: pointer;
-  width: 44px; height: 30px; padding: 0; background: none;
-  border: var(--wb-bw) solid var(--wb-border-strong); border-radius: var(--wb-radius-sm);
-}
-.wb-color::-webkit-color-swatch-wrapper { padding: 0; }
-.wb-color::-webkit-color-swatch { border: none; border-radius: calc(var(--wb-radius-sm) - 1px); }
-.wb-color::-moz-color-swatch    { border: none; border-radius: calc(var(--wb-radius-sm) - 1px); }
-.wb-color--pill { border-radius: var(--wb-radius-pill); }
-.wb-color--pill::-webkit-color-swatch { border-radius: var(--wb-radius-pill); }
-.wb-color--pill::-moz-color-swatch    { border-radius: var(--wb-radius-pill); }
-.wb-color--sm { width: 34px; height: 26px; }
-.wb-color-field { display: inline-flex; align-items: center; gap: 8px; }
-.wb-color-field code { font-size: 12px; color: var(--wb-fg-muted);
-  font-family: "SF Mono", ui-monospace, monospace; }
-
 /* Swatch grid — pick from preset hues (the minimalist, on-ladder picker). */
 .wb-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
 .wb-swatch {
@@ -1770,6 +1776,13 @@
   padding: 9px 14px; margin-right: 12px; cursor: pointer; transition: background-color .12s ease;
 }
 .wb-file::file-selector-button:hover { background: var(--wb-surface-hover); }
+/* Solid — a high-emphasis (neutral black) file button; small control, flips in dark. */
+.wb-file--solid { border-color: var(--wb-gray-900); }
+.wb-file--solid::file-selector-button { background: var(--wb-gray-900); color: var(--wb-white); border-right-color: var(--wb-gray-900); }
+.wb-file--solid::file-selector-button:hover { background: var(--wb-gray-700); }
+.dark .wb-file--solid { border-color: var(--wb-gray-100); }
+.dark .wb-file--solid::file-selector-button { background: var(--wb-gray-100); color: var(--wb-gray-900); border-right-color: var(--wb-gray-100); }
+.dark .wb-file--solid::file-selector-button:hover { background: var(--wb-gray-300); }
 /* Dropzone — the dashed "droppable" affordance for statements / receipts. */
 .wb-dropzone {
   display: grid; place-items: center; gap: 6px; text-align: center;
