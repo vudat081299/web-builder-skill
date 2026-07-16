@@ -1792,14 +1792,14 @@
        .wb-receipt__paper  the paper — surface fill + the torn MASK + content
    The tear is a mask (not a bitmap) so it works on any background and in dark.
    Scallops tune via --wb-receipt-tw (one scallop wide) / --wb-receipt-th (bite depth);
-   Default edge = SPACED small scallops with a dashed perforation between them.
-   Edge styles (pick one): (default) scallop+perforation · --wave (smooth touching)
-   · --zigzag (saw-tooth) · --dashed (flat coupon edge, perforation only).
+   Default edge = clean TOUCHING scallops (tw = 2·th) — one smooth wavy tear, no extra lines.
+   Edge styles (pick one): (default) scallop · --wave (larger scallop)
+   · --zigzag (saw-tooth) · --dashed (flat coupon edge with a dashed perforation line).
    Modifiers: --flat (no shadow) · --bottom (tear only the bottom, clean top).
    -------------------------------------------------------------------------- */
 .wb-receipt {
-  --wb-receipt-tw: 17px;   /* one scallop wide (period) — bites are SPACED   */
-  --wb-receipt-th: 6px;    /* bite depth / arc radius (~30% smaller than before) */
+  --wb-receipt-tw: 16px;   /* one scallop wide (period) — tw = 2·th → clean touching scallops */
+  --wb-receipt-th: 8px;    /* scallop radius / bite depth */
   display: block; width: fit-content; max-width: 100%;
   font-family: var(--wb-font);
   filter: drop-shadow(0 2px 4px rgba(16, 17, 18, .10));
@@ -1813,14 +1813,9 @@
 .wb-receipt__paper {
   width: 300px; max-width: 100%;
   color: var(--wb-fg);
-  padding: calc(20px + var(--wb-receipt-th)) 22px;   /* room past the scallops */
-  /* Paper fill + a short dash sitting just below each GAP between two scallops
-     (one dash per period, aligned to the arc tiling) → the "…⌣–⌣–⌣…" look. */
-  background:
-    repeating-linear-gradient(90deg, var(--wb-border-strong) 0 5px, #0000 5px var(--wb-receipt-tw)) 0 calc(var(--wb-receipt-th) + 1px) / var(--wb-receipt-tw) 1.5px repeat-x,
-    repeating-linear-gradient(90deg, var(--wb-border-strong) 0 5px, #0000 5px var(--wb-receipt-tw)) 0 calc(100% - var(--wb-receipt-th) - 1px) / var(--wb-receipt-tw) 1.5px repeat-x,
-    var(--wb-surface);
-  /* Solid middle band + a row of SPACED rounded bites at each edge (tw > 2·th). */
+  padding: calc(20px + var(--wb-receipt-th)) 24px;   /* room past the scallops */
+  background: var(--wb-surface);
+  /* Solid middle band + a row of TOUCHING rounded bites at each edge → a clean wavy tear. */
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-th)) no-repeat,
     radial-gradient(var(--wb-receipt-th) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x,
@@ -1831,9 +1826,7 @@
 /* Tear only the bottom (keep a clean header edge) — one perforation + one row. */
 .wb-receipt--bottom .wb-receipt__paper {
   padding-block: 20px calc(20px + var(--wb-receipt-th));
-  background:
-    repeating-linear-gradient(90deg, var(--wb-border-strong) 0 5px, #0000 5px var(--wb-receipt-tw)) 0 calc(100% - var(--wb-receipt-th) - 1px) / var(--wb-receipt-tw) 1.5px repeat-x,
-    var(--wb-surface);
+  background: var(--wb-surface);
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-th)) no-repeat,
     radial-gradient(var(--wb-receipt-th) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;

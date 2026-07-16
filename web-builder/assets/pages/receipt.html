@@ -1,10 +1,10 @@
 <div class="doc-page-head">
   <p class="doc-eyebrow">Hiển thị dữ liệu</p>
   <h2>Hoá đơn (Receipt)</h2>
-  <p>Một mảnh giấy biên lai với <b>cạnh xé bo tròn + đường răng kim (perforation)</b> ở trên &amp; dưới — dáng tờ hoá đơn / vé
+  <p>Một mảnh giấy biên lai với <b>cạnh xé bo tròn (scallop)</b> ở trên &amp; dưới — dáng tờ hoá đơn / vé
   xé khỏi cuộn. Hợp để in một giao dịch, khoản chi, phiếu chuyển khoản, voucher hay bản kê nhỏ.
   Cạnh xé là <code>mask</code> (không phải ảnh) nên chạy trên mọi nền &amp; ở dark. Có <b>4 kiểu xé để chọn</b>:
-  mặc định (scallop + răng kim) · <code>--wave</code> · <code>--zigzag</code> · <code>--dashed</code>.</p>
+  mặc định (scallop liền) · <code>--wave</code> (scallop to hơn) · <code>--zigzag</code> · <code>--dashed</code> (mép thẳng + răng kim).</p>
 </div>
 
 <section class="doc-sec">
@@ -51,7 +51,7 @@
 
   <div class="doc-block">
     <h4>Kiểu cạnh xé — chọn 1</h4>
-    <p class="doc-block__desc">Bốn kiểu mép cho tuỳ gu: <b>mặc định</b> (scallop nhỏ + răng kim xen giữa) · <code>--wave</code> (lượn tròn to, liền)
+    <p class="doc-block__desc">Bốn kiểu mép để lựa chọn: <b>mặc định</b> (scallop liền — lượn tròn đều) · <code>--wave</code> (lượn tròn to hơn)
     · <code>--zigzag</code> (răng cưa sắc) · <code>--dashed</code> (mép thẳng, chỉ có đường răng kim — kiểu voucher).
     Chỉnh mật độ / độ sâu qua <code>--wb-receipt-tw</code> / <code>--wb-receipt-th</code>.</p>
     <div class="demo demo--plain">
@@ -64,7 +64,7 @@
                 <div class="wb-receipt__meta">mặc định</div></div>
               <div class="wb-receipt__rule"></div>
               <div class="wb-receipt__total"><span>Tổng</span><span>123.000&nbsp;₫</span></div>
-              <div class="wb-receipt__note">scallop + răng kim</div>
+              <div class="wb-receipt__note">scallop liền</div>
             </div>
           </div>
 

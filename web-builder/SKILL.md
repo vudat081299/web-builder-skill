@@ -82,7 +82,7 @@ source of truth**, kept in sync per-component, so it never drifts here):
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
   stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**
-  (hoá đơn — a torn-paper slip; **4 edge styles** scallop+perforation (default) / `--wave` / `--zigzag` / `--dashed`, plus `--bottom`/`--flat`, `__barcode`; bill · transfer · voucher templates).
+  (hoá đơn — a torn-paper slip; **4 edge styles** scallop (default) / `--wave` / `--zigzag` / `--dashed`, plus `--bottom`/`--flat`, `__barcode`; bill · transfer · voucher templates).
 - **Phản hồi** — alert, toast, modal/dialog, drawer/offcanvas (backdrop options on `.wb-overlay`: `--blur` /
   `--clear`, or `--pass` = **non-modal**, page below stays usable), progress (+ indeterminate/loading),
   skeleton, empty state, tooltip, **popover** (click-toggled card w/ arrow + × — richer than tooltip, not a menu).

@@ -514,8 +514,8 @@ the dashed "droppable" affordance for statements/receipts — a `<label>` around
 one transaction, a bill, a transfer slip, a voucher, a small statement. Parts: `__head` (`__merchant` +
 `__meta`), a `__body` of `__line` rows (desc left, amount right — tabular), `__rule` (dashed perforation),
 `__total`, `__note`; plus a decorative `__barcode` + `__code` for a full invoice.
-**Edge styles — pick one:** (default) small scallops + a dashed perforation between them · `--wave` (smooth
-touching wave) · `--zigzag` (sharp saw-tooth) · `--dashed` (flat coupon edge, perforation only). **Modifiers**
+**Edge styles — pick one:** (default) clean touching scallops (a smooth wavy tear) · `--wave` (larger
+scallops) · `--zigzag` (sharp saw-tooth) · `--dashed` (flat coupon edge with a dashed perforation). **Modifiers**
 (combine with any edge): `--bottom` (tear only the bottom), `--flat` (no shadow); tune with `--wb-receipt-tw` /
 `--wb-receipt-th`.
 
