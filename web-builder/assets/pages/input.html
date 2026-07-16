@@ -114,4 +114,46 @@
 &lt;input class="wb-color wb-color--sm" type="color" /&gt;     &lt;!-- nhỏ --&gt;</code></pre></div>
     </div>
   </div>
+
+  <div class="doc-block">
+    <h4>Bảng màu — <code>wb-swatches</code></h4>
+    <p class="doc-block__desc">Picker tối giản, thuần CSS: một lưới ô màu <b>preset</b> để chọn từ — giữ lựa chọn trong các hue đã duyệt (đúng
+    thang màu), thay vì mở hộp chọn màu của hệ điều hành. Đặt hue mỗi ô bằng <code>--wb-swatch-color</code>; ô đang chọn thêm
+    <code>.is-selected</code> (viền nhấn theo màu chữ, đọc rõ trên mọi hue). Biến thể <code>--round</code> (tròn) · <code>--sm</code> (nhỏ).
+    Cần màu tự do thì ghép thêm <code>.wb-color</code> ở trên.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-stack">
+          <div class="wb-swatches" role="group" aria-label="Chọn màu danh mục">
+            <button type="button" class="wb-swatch is-selected" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm" aria-pressed="true"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-3)" aria-label="Hổ phách"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-5)" aria-label="Xanh dương"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-7)" aria-label="Xanh lơ"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-gray-400)" aria-label="Xám"></button>
+          </div>
+          <div class="wb-swatches wb-swatches--round wb-swatches--sm" role="group" aria-label="Chọn màu (tròn, nhỏ)">
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"></button>
+            <button type="button" class="wb-swatch is-selected" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két" aria-pressed="true"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
+            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-swatches" role="group" aria-label="Chọn màu"&gt;
+  &lt;button type="button" class="wb-swatch is-selected"
+          style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"&gt;&lt;/button&gt;
+  &lt;button type="button" class="wb-swatch"
+          style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Teal"&gt;&lt;/button&gt;
+  &lt;!-- … --&gt;
+&lt;/div&gt;
+
+&lt;!-- tròn + nhỏ --&gt;
+&lt;div class="wb-swatches wb-swatches--round wb-swatches--sm"&gt;…&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
 </section>

@@ -48,7 +48,8 @@ for the look (see `integration.md`).
 | A money input, a category picker, a yes/no setting | input-group / select / switch | [Forms](#form-controls) |
 | A slider for a budget cap / threshold | **Range** | [Range](#range--slider) |
 | Attach a statement / receipt (button or drop area) | **File / dropzone** | [File](#file--upload) |
-| Pick a category / label colour | **Colour input** | [Colour](#colour-input) |
+| Pick a category / label colour from a preset palette | **Swatches** (`.wb-swatches`) | [Colour](#colour-input--swatches) |
+| Pick a genuinely free / custom colour | **Colour input** (`.wb-color`) | [Colour](#colour-input--swatches) |
 | A settings / accounts list (one item per row) | **List group** | [List group](#list-group) |
 | A content container / section with header + body | **Card** | [Card](#card) |
 | Show one transaction / bill as a torn-paper slip | **Receipt** (hoá đơn) | [Receipt](#receipt) |
@@ -468,11 +469,24 @@ see [Filter bar](#filter-bar)). App: Radix **Slider** for keyboard robustness; k
 </div>
 ```
 
-## Colour input
+## Colour input & swatches
 
-`.wb-color` cleans up the native `<input type=color>`: the whole control becomes a rounded swatch of
-the current value (browser inner border/padding stripped — no "square stuck in a button"). `--pill`,
-`--sm`; pair a hex label with `.wb-color-field`. Use for category / label colours.
+**`.wb-swatches`** is the minimalist picker: a grid of preset colour chips you pick *from*, so the choice
+stays inside approved hues (the colour ladder) instead of the OS colour dialog. Pure CSS — give each
+`.wb-swatch` its hue inline via `--wb-swatch-color` (same recipe as `--wb-tag-color`), and mark the chosen
+one `.is-selected` (a gap-ring in the fg colour, legible on any hue). Grid modifiers: `--round` (circular
+chips), `--sm` (smaller). Reach for this to pick a category / label colour from the palette.
+
+```html
+<div class="wb-swatches" role="group" aria-label="Chọn màu">
+  <button type="button" class="wb-swatch is-selected" style="--wb-swatch-color:var(--wb-chart-1)"></button>
+  <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-2)"></button>
+</div>
+```
+
+**`.wb-color`** is the escape hatch for a *genuinely free* colour: it cleans up the native `<input type=color>`
+so the whole control becomes a rounded swatch of the current value (browser inner border/padding stripped —
+no "square stuck in a button"). `--pill`, `--sm`; pair a hex label with `.wb-color-field`.
 
 ```html
 <span class="wb-color-field"><input class="wb-color" type="color" value="#6366f1" /><code>#6366F1</code></span>

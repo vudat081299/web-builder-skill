@@ -1621,11 +1621,17 @@
 .wb-range-dual__input:focus-visible::-moz-range-thumb     { box-shadow: 0 0 0 3px var(--wb-ring); }
 
 /* -----------------------------------------------------------------------------
-   29. COLOUR INPUT  (native <input type=color>, cleaned up)
+   29. COLOUR INPUT & SWATCHES  (cleaned-up native input + preset palette)
    -----------------------------------------------------------------------------
-   The whole control becomes a rounded swatch of the current value — the browser's
-   default inner border / padding is stripped so it never looks like a square stuck
-   inside a button. Pair with a hex label via .wb-color-field if you want the value.
+   .wb-color — the whole control becomes a rounded swatch of the current value; the
+   browser's default inner border / padding is stripped so it never looks like a
+   square stuck inside a button. Pair with a hex label via .wb-color-field.
+
+   .wb-swatches — the minimalist picker: a grid of preset colour chips you pick FROM,
+   so choice stays inside approved hues (the colour ladder) rather than opening the
+   OS colour dialog. Give each chip its hue inline via --wb-swatch-color (same recipe
+   as --wb-tag-color); the selected chip gets a gap-ring in the fg colour that reads
+   on any hue. For a genuinely free colour, pair it with the .wb-color escape hatch.
    -------------------------------------------------------------------------- */
 .wb-color {
   -webkit-appearance: none; appearance: none; flex: none; cursor: pointer;
@@ -1642,6 +1648,23 @@
 .wb-color-field { display: inline-flex; align-items: center; gap: 8px; }
 .wb-color-field code { font-size: 12px; color: var(--wb-fg-muted);
   font-family: "SF Mono", ui-monospace, monospace; }
+
+/* Swatch grid — pick from preset hues (the minimalist, on-ladder picker). */
+.wb-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.wb-swatch {
+  --wb-swatch-color: var(--wb-gray-400);   /* visible fallback if a chip omits its hue (distinct from the border) */
+  flex: none; width: 28px; height: 28px; padding: 0; cursor: pointer;
+  background: var(--wb-swatch-color);
+  border: var(--wb-bw) solid var(--wb-border-strong); border-radius: var(--wb-radius-sm);
+  transition: transform .1s ease, box-shadow .13s ease;
+}
+.wb-swatch:hover { transform: scale(1.08); }
+/* Selected = a gap-ring in the fg colour (surface-coloured gap), legible on any hue.
+   Assumes the grid sits on a surface (card / popover) — the usual case. */
+.wb-swatch.is-selected { box-shadow: 0 0 0 2px var(--wb-surface), 0 0 0 4px var(--wb-fg); }
+.wb-swatch:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-swatches--round .wb-swatch { border-radius: var(--wb-radius-pill); }
+.wb-swatches--sm .wb-swatch { width: 22px; height: 22px; }
 
 /* -----------------------------------------------------------------------------
    30. BUTTON GROUP  (segmented — joined buttons sharing a border)

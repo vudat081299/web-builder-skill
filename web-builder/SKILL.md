@@ -78,7 +78,8 @@ source of truth**, kept in sync per-component, so it never drifts here):
   **sticky** (`.wb-sticky` / `--bottom` — pin a bar/card to an edge on scroll), and a live **Config** playground that edits tokens and exports a `.md`.
 - **Hành động** — buttons (incl. button-group, social-login with brand logos), dropdown / menu.
 - **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea, checkbox/radio, switch
-  (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone, colour; validation via the `.is-invalid` state.
+  (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone,
+  **colour** — a preset **swatch palette** (`.wb-swatches`, pick from approved hues) plus a native `.wb-color` escape hatch; validation via the `.is-invalid` state.
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
   stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**
