@@ -20,7 +20,7 @@ Tailwind note below).
 | Card | ✅ `wb-card` | + `--dashed/--flat/--hover` |
 | Carousel | ❌ **skipped** | heavy/branded; rarely needed and hard to keep minimal |
 | Close button | ✅ `wb-close` | always top-right |
-| Collapse | 🟡 partial | `wb-accordion` covers the common case; no generic toggle-collapse |
+| Collapse | ✅ `wb-collapse` | one standalone show/hide region (`wb-accordion` for grouped) |
 | Dropdowns | ✅ `wb-dropdown` / `wb-menu` | behaviour → Radix |
 | List group | ✅ `wb-list` | settings/accounts |
 | Modal | ✅ `wb-modal` + `wb-overlay` | behaviour → Radix Dialog |
@@ -29,7 +29,7 @@ Tailwind note below).
 | Offcanvas | ✅ `wb-drawer` | slide-in over the scrim |
 | Pagination | ✅ `wb-pagination` | |
 | Placeholders | ✅ `wb-skeleton` | loading shimmer |
-| Popovers | 🟡 via dropdown + tooltip | no separate primitive (kept minimal) — style a Radix Popover with `wb-menu`/`wb-card` + `wb-tooltip__bubble` |
+| Popovers | ✅ `wb-popover` | click-toggled card + arrow + × — richer than tooltip, not a menu; behaviour → Radix Popover |
 | Progress | ✅ `wb-progress` | also budget "đã chi / hạn mức" |
 | Scrollspy | ❌ **skipped** | a docs-nav behaviour; the app uses its router |
 | Spinners | ✅ `wb-spinner` | on buttons + `.is-loading` |
@@ -47,10 +47,10 @@ and the live **Config** token playground.
 
 ## The popup family — do we have it?
 
-Yes: **modal, drawer (offcanvas), dropdown/menu, tooltip, toast** — the full practical set. The one
-Bootstrap piece we don't ship as its own class is **popover**; it's covered by dropdown (click panel) +
-tooltip (hover bubble). Add a dedicated `wb-popover` only if a real screen needs an anchored, titled,
-click-triggered card that neither covers — not preemptively.
+Yes — the full practical set: **modal, drawer (offcanvas), dropdown/menu, tooltip, toast, and popover**.
+`wb-popover` is a click-toggled, anchored card with an arrow + × dismiss (richer than a tooltip, not a
+menu); it closed the last Bootstrap popup gap, so every overlay Bootstrap ships now has a Web Builder
+primitive. Behaviour still delegates to a behaviour engine (Radix Popover/Dialog etc.; see `integration.md`).
 
 ## Layout: Bootstrap makes it a *foundation*; we don't (on purpose)
 
@@ -98,8 +98,10 @@ the look, Tailwind for one-off spacing); off Tailwind, the built-ins are enough 
   "is this a Component or a Utility?".
 
 Both open with a foundation section (Bootstrap: Getting started/Customize; Web Builder: Nền tảng — colour
-ladder, tokens, typography). The difference: Web Builder folds **layout into "Cấu trúc"** as utilities
-rather than a foundational grid section — consistent with the layout decision above.
+ladder, tokens, typography, **and the flex-first layout utilities**). The difference from Bootstrap: Web
+Builder keeps layout as a small utility set *inside* that foundation rather than as a separate 12-column
+grid section — consistent with the layout decision above. **Cấu trúc** then holds only the structural
+pieces: the drag-and-drop tree + sortable.
 
 ## Honest pros / cons
 

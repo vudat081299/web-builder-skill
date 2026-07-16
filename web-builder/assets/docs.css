@@ -288,6 +288,14 @@ html::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 /* Layout helper: responsive grid for chart cards. */
 .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
 
+/* Layout-page demo tile — filler that visualises the grid / cluster / ratio utilities.
+   Not a shipped component: it lives here as docs chrome (like the specimens above),
+   never in a per-page <style> block. Colour/border/radius are tokens; the px are
+   docs-only sizing (docs.css never ships, and there is no space/type-scale token yet). */
+.lay-box { background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm); padding: 16px; text-align: center; font-size: 13px;
+  font-weight: 600; color: var(--wb-fg-muted); }
+
 /* Unify elevation: every specimen/demo container gets the SAME hairline + soft
    shadow (some previously had a shadow, some didn't — this syncs them). One knob
    (--wb-demo-shadow) turns it up/down/off for the whole docs site. */
