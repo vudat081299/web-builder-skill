@@ -1,0 +1,81 @@
+<div class="doc-page-head">
+  <p class="doc-eyebrow">Nền tảng</p>
+  <h2>Sticky</h2>
+  <p>Tiện ích bố cục để <b>ghim một phần tử theo cạnh trên hoặc dưới</b> khi cuộn — thanh công cụ, thẻ,
+  nút hành động hay menu bám mép trong lúc phần còn lại trôi qua. Chạy trên <code>position: sticky</code> nên
+  phần tử vẫn nằm trong luồng rồi mới dính lại. Đặt khoảng hở bằng <code>--wb-sticky-gap</code> (mặc định 0).
+  Cần một vùng cuộn / trang đủ dài mới thấy nó ghim.</p>
+</div>
+
+<section class="doc-sec">
+  <div class="doc-block">
+    <h4>Ghim mép trên</h4>
+    <p class="doc-block__desc"><code>.wb-sticky</code> dính vào cạnh trên của vùng cuộn. Cho nền (<code>--wb-surface</code>) để nội dung
+    không lộ ra sau khi trôi bên dưới. Cuộn ô dưới để thấy tiêu đề ở lại.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-scroll-y" style="max-height:240px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius)">
+          <div class="wb-sticky" style="background:var(--wb-surface);border-bottom:var(--wb-bw) solid var(--wb-border);padding:12px 16px">
+            <div class="wb-cluster wb-cluster--between">
+              <b>Giao dịch tháng 7</b>
+              <span class="wb-cap wb-cap--tinted">42 mục</span>
+            </div>
+          </div>
+          <div class="wb-stack" style="gap:0">
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Cà phê sữa đá</span><span>−45.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Grab tới công ty</span><span>−52.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Lương tháng 7</span><span style="color:var(--wb-success-text)">+18.000.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Tiền nhà</span><span>−4.500.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Siêu thị WinMart</span><span>−399.600</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Netflix</span><span>−260.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px;border-bottom:var(--wb-bw) solid var(--wb-border)"><span>Ăn trưa</span><span>−65.000</span></div>
+            <div class="wb-cluster wb-cluster--between" style="padding:12px 16px"><span>Tiền điện</span><span>−1.086.400</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-scroll-y" style="max-height:240px"&gt;
+  &lt;div class="wb-sticky" style="background:var(--wb-surface);border-bottom:1px solid var(--wb-border);padding:12px 16px"&gt;
+    &lt;b&gt;Giao dịch tháng 7&lt;/b&gt;
+  &lt;/div&gt;
+  &lt;!-- danh sách dài --&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Ghim mép dưới (thanh hành động)</h4>
+    <p class="doc-block__desc"><code>.wb-sticky--bottom</code> dính vào cạnh dưới — hợp cho thanh nút “Lưu / Huỷ” luôn thấy được khi cuộn form dài.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-scroll-y" style="max-height:240px;border:var(--wb-bw) solid var(--wb-border);border-radius:var(--wb-radius)">
+          <div class="wb-stack" style="padding:16px;gap:14px">
+            <div class="wb-field"><label class="wb-label">Tên giao dịch</label><input class="wb-input" value="Thanh toán nhà cung cấp" /></div>
+            <div class="wb-field"><label class="wb-label">Số tiền</label><input class="wb-input" value="12.500.000 ₫" /></div>
+            <div class="wb-field"><label class="wb-label">Ghi chú</label><textarea class="wb-textarea" rows="4">Đợt 2/3 hợp đồng #A-118</textarea></div>
+            <div class="wb-field"><label class="wb-label">Danh mục</label><input class="wb-input" value="Chi phí vận hành" /></div>
+            <div class="wb-field"><label class="wb-label">Ngày</label><input class="wb-input" value="16/07/2026" /></div>
+          </div>
+          <div class="wb-sticky--bottom wb-sticky" style="background:var(--wb-surface);border-top:var(--wb-bw) solid var(--wb-border);padding:12px 16px">
+            <div class="wb-cluster wb-cluster--end" style="gap:8px">
+              <button class="wb-btn wb-btn--ghost wb-btn--sm">Huỷ</button>
+              <button class="wb-btn wb-btn--sm">Lưu giao dịch</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-sticky wb-sticky--bottom" style="background:var(--wb-surface);border-top:1px solid var(--wb-border);padding:12px 16px"&gt;
+  &lt;div class="wb-cluster wb-cluster--end"&gt;
+    &lt;button class="wb-btn wb-btn--ghost wb-btn--sm"&gt;Huỷ&lt;/button&gt;
+    &lt;button class="wb-btn wb-btn--sm"&gt;Lưu giao dịch&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Dưới một thanh app cố định (navbar), đặt khoảng hở đúng chiều cao navbar:
+    <code>style="--wb-sticky-gap:56px"</code>. <code>z-index</code> của <code>.wb-sticky</code> (20) nằm dưới navbar (30)
+    nên nó tuồn xuống dưới app bar chứ không đè lên. Navbar cả trang thì đã có sẵn <code>.wb-navbar--sticky</code>.</div>
+  </div>
+</section>

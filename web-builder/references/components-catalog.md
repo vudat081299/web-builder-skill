@@ -6,15 +6,16 @@ library. Each is rendered live on its own page under `assets/pages/` (served ove
 see SKILL.md).
 
 Scope so far: foundations (**colour**, **tokens**, **typography**, **fonts**, **border & radius**,
-**Config/tweak** playground); **Buttons** (+ button-group), **Dropdown**; **inputs** — one primitive per
+**Grid/Layout** utilities (cluster / grid / stack / container / ratio), **Sticky**, **Config/tweak** playground);
+**Buttons** (+ button-group), **Dropdown**; **inputs** — one primitive per
 page: **Text input**, **Select**, **Textarea**, **Checkbox/Radio**, **Switch**, **Range/Slider**,
 **File/Upload**, **Colour**; **Card**, **Tables**, **Filter bar**, **List group**, **Stat/KPI**, **Capsules**, **Tags**,
 **Avatar**; **Alert**, **Toast**, **Modal**, **Drawer/Offcanvas**, **Progress**, **Skeleton**,
-**Empty state**, **Tooltip**; **Tabs** (underline / pill / boxed), **Breadcrumb**, **Pagination**,
-**Accordion**, **Divider**; **Charts** (line/area, bars, **combo bar+line**, **horizontal ranked bars**,
+**Empty state**, **Tooltip**, **Popover**; **Tabs** (underline / pill / boxed), **Breadcrumb**, **Pagination**,
+**Accordion**, **Collapse**, **Divider**; **Charts** (line/area, bars, **combo bar+line**, **horizontal ranked bars**,
 donut + thin/rounded + progress ring, budget, sparkline, mono/blue schemes + count-aware ramps); a
-drag-and-drop **Tree**; a flat **Sortable** list /
-grid / **table rows**; and **Grid/Layout** utilities (cluster / grid / stack / container / ratio). Coverage
+drag-and-drop **Tree**; and a flat **Sortable** list /
+grid / **table rows** (layout utilities now live under *foundations*, above). Coverage
 tracks **Bootstrap**'s primitive set, re-cut minimalist. Icons come from an **icon font** (Material Symbols, loaded
 by `@import` in `web-builder.css` — swap `--wb-icon-font` to use another set); tones use outline + soft
 background (no left-accent bar on components — documented as a non-default variant on the Border page).
@@ -66,10 +67,12 @@ for the look (see `integration.md`).
 | A loading placeholder before data arrives | **Skeleton** | [Skeleton](#skeleton) |
 | A "no data yet" / empty list screen | **Empty state** | [Empty](#empty-state) |
 | A short hint on hover / focus | **Tooltip** | [Tooltip](#tooltip) |
+| A click-toggled card (title + body + actions) anchored to a trigger | **Popover** | [Popover](#popover) |
 | The path "where am I" above a page | **Breadcrumb** | [Breadcrumb](#breadcrumb) |
 | Page through a long list/table | **Pagination** | [Pagination](#pagination) |
 | A person / initials / member group | **Avatar** | [Avatar](#avatar) |
-| Collapsible FAQ / sections | **Accordion** | [Accordion](#accordion) |
+| Collapsible FAQ / sections (grouped) | **Accordion** | [Accordion](#accordion) |
+| One standalone show/hide region (read-more, optional form section) | **Collapse** | [Collapse](#collapse) |
 | A visual separator (solid / dashed / dotted / fade / tone / **ray** / labelled) | **Divider** | [Divider](#divider) |
 | Border widths / radii / dashed / outline-tone conventions | **Border** | [Border](#border--radius) |
 | A spending line, income-vs-expense bars, **combo bar+line**, category donut, sparkline | **Charts** | [Charts](#charts) |
@@ -79,6 +82,7 @@ for the look (see `integration.md`).
 | Reorder a flat list or grid of cards (drag) | **Sortable** | [Sortable](#sortable-list--grid) |
 | Reorder rows inside a data table (drag) | **Sortable table** (`--sortable`) | [Sortable](#sortable-list--grid) |
 | Arrange in a row/column, align (top/center/bottom, left/right), wrap, equal widths | **Grid / Layout** utilities | [Layout](#grid--layout) |
+| Pin a bar / card / button to the top or bottom edge on scroll | **Sticky** (`.wb-sticky`) | [Sticky](#sticky) |
 | A UI icon (chevron, close, drag, search…) | **Icon** (`.wb-ico`) | [Icons](#icons) |
 | Fine-tune tokens live + export a `.md` | **Config** (docs playground) | [Config](#config--tweak) |
 
@@ -506,11 +510,14 @@ the dashed "droppable" affordance for statements/receipts — a `<label>` around
 ## Receipt
 
 `.wb-receipt` (wrapper — casts the drop-shadow that follows the torn edge) > `.wb-receipt__paper`
-(the paper — `--wb-surface` fill + a zig-zag **mask** on the top & bottom edge). For a **hoá đơn**:
-one transaction, a bill, a small statement. Parts: `__head` (`__merchant` + `__meta`), a `__body` of
-`__line` rows (desc left, amount right — tabular), `__rule` (dashed perforation), `__total`, `__note`.
-Modifiers: `--bottom` (tear only the bottom, clean header), `--flat` (no shadow); tune the teeth with
-`--wb-receipt-tw` / `--wb-receipt-th`.
+(the paper — `--wb-surface` fill + a torn **mask** on the top & bottom edge). For a **hoá đơn**:
+one transaction, a bill, a transfer slip, a voucher, a small statement. Parts: `__head` (`__merchant` +
+`__meta`), a `__body` of `__line` rows (desc left, amount right — tabular), `__rule` (dashed perforation),
+`__total`, `__note`; plus a decorative `__barcode` + `__code` for a full invoice.
+**Edge styles — pick one:** (default) small scallops + a dashed perforation between them · `--wave` (smooth
+touching wave) · `--zigzag` (sharp saw-tooth) · `--dashed` (flat coupon edge, perforation only). **Modifiers**
+(combine with any edge): `--bottom` (tear only the bottom), `--flat` (no shadow); tune with `--wb-receipt-tw` /
+`--wb-receipt-th`.
 
 ```html
 <div class="wb-receipt">
@@ -581,6 +588,10 @@ App: use **sonner**; keep `wb-toast*` classes.
 
 `.wb-overlay` (dims screen, toggle `.is-open`) → `.wb-modal` with `__head` / `__body` /
 `__foot`. `data-modal-open="#id"` opens, `data-modal-close` (or clicking the backdrop) closes.
+
+**Backdrop options** (on `.wb-overlay`, shared with Drawer): default dims + light blur and **blocks**
+the page; `--blur` frosted glass; `--clear` no dim (still blocks); `--pass` **non-modal** — the page
+below stays interactive (scrim lets clicks through, so click-outside-to-close no longer fires).
 
 ```html
 <div class="wb-overlay" id="m1">
@@ -686,6 +697,27 @@ Pure-CSS hover/focus hint. `.wb-tooltip` wraps the trigger + `.wb-tooltip__bubbl
 ```
 App: Radix Tooltip when you need smart positioning / delay.
 
+## Popover
+
+A click-toggled floating **card** (title + body + optional actions), with a pointer arrow and a
+top-right `.wb-close`. Richer than a tooltip (hover, text-only), not a menu of actions (dropdown).
+Toggle `.is-open` on `.wb-popover` (docs use vanilla JS; a click inside the panel keeps it open,
+the × / an outside click closes it). Default floats **above**; `--bottom` / `--left` / `--right` flip it
+(the arrow follows).
+
+```html
+<span class="wb-popover wb-popover--bottom">
+  <button class="wb-btn wb-btn--outline" data-pop-toggle>Số dư khả dụng</button>
+  <div class="wb-popover__panel">
+    <div class="wb-popover__arrow"></div>
+    <button class="wb-close" aria-label="Đóng"></button>
+    <div class="wb-popover__title">Số dư khả dụng</div>
+    <p class="wb-popover__body">Đã trừ giao dịch đang chờ. Cập nhật 14:32.</p>
+  </div>
+</span>
+```
+App: Radix Popover / Floating UI for collision-aware placement (auto-flip at the screen edge).
+
 ## Breadcrumb
 
 `.wb-breadcrumb` with `<a>` links, `.wb-breadcrumb__sep` between, `.wb-breadcrumb__current`
@@ -753,6 +785,25 @@ Built on native `<details>` (no JS). `.wb-accordion` > `.wb-accordion__item` (a
   </details>
 </div>
 ```
+
+## Collapse
+
+One **standalone** show/hide region — read-more, an optional form section, a details drawer in a card.
+Distinct from Accordion (a grouped `<details>` set). Height animates with the grid `0fr → 1fr` trick
+(no fixed height, no measuring). Toggle `.is-open` on `.wb-collapse`; give the trigger `data-collapse-toggle`
+and add `.wb-collapse__caret` to its icon so it rotates.
+
+```html
+<div class="wb-collapse">
+  <button class="wb-btn wb-btn--ghost wb-btn--sm" data-collapse-toggle>
+    <span class="wb-ico wb-ico--sm wb-collapse__caret">expand_more</span> Xem chi tiết
+  </button>
+  <div class="wb-collapse__panel"><div class="wb-collapse__inner">
+    …nội dung ẩn/hiện…
+  </div></div>
+</div>
+```
+Need one-open-at-a-time across many sections? Use **Accordion** instead. App: Radix Collapsible.
 
 ## Divider
 
@@ -963,6 +1014,24 @@ prefer):
 <div class="wb-grid wb-grid--auto" style="--wb-grid-min:150px"> … </div>
 ```
 
+## Sticky
+
+A layout utility (foundations): pin a bar / card / button / menu to an edge while its section scrolls —
+`position: sticky`, so it stays in flow then pins. `.wb-sticky` pins to the **top**; `.wb-sticky--bottom`
+to the bottom. Set the offset with `--wb-sticky-gap` (default 0; e.g. the navbar height). Give the pinned
+element a `--wb-surface` background so scrolled content doesn't show through. `z-index` sits under the
+navbar (30) so it tucks beneath a fixed app bar. Needs a scrollable ancestor / long page to pin. A full-page
+top bar already has `.wb-navbar--sticky`; sticky table headers use `.wb-table--sticky`.
+
+```html
+<div class="wb-scroll-y" style="max-height:240px">
+  <div class="wb-sticky" style="background:var(--wb-surface);border-bottom:1px solid var(--wb-border);padding:12px 16px">Giao dịch tháng 7</div>
+  … danh sách dài …
+</div>
+<!-- action bar pinned to the bottom of a long form -->
+<div class="wb-sticky wb-sticky--bottom" style="background:var(--wb-surface);border-top:1px solid var(--wb-border)"> … Lưu / Huỷ … </div>
+```
+
 ## Scroll areas
 
 `.wb-scroll-y` — put on any `overflow-y` region (a bounded list, a category picker, a side panel). It
@@ -980,7 +1049,8 @@ to the case — a short menu needs little, a long list wants more.
 
 A **docs-only** playground (gear in the topbar, or the Config page) that slides in a drawer to tune
 tokens **live**, grouped by job: a **corner-style preset** (Bo tròn / **Vuông sắc = 0** / Bo nhiều) that
-squares *every* control at once, plus per-radius sliders; border width (incl. a **checkbox** border knob)
+squares *every* control at once, plus per-radius sliders — including **per-component** ones (switch
+track/thumb, slider track/thumb, checkbox — drag to 0 for square); border width (incl. a **checkbox** border knob)
 and border colours; shadow; surface/text colours + the status palette (for the theme being viewed); font +
 icon; chart scheme; and a separate **docs-only** group (`--wb-demo-bw`, `--wb-demo-shadow`,
 `--wb-doc-divider`). **Xuất .md** downloads the changed `:root{}` block to paste

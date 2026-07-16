@@ -73,23 +73,25 @@ roster with every modifier + copy-paste markup lives in `components-catalog.md` 
 source of truth**, kept in sync per-component, so it never drifts here):
 
 - **Nền tảng** — colour ladder, tokens, typography scale, fonts guidance (system stack by default, swap
-  `--wb-font`), border & radius, and a live **Config** playground that edits tokens and exports a `.md`.
+  `--wb-font`), border & radius, the **grid/layout utilities** (`.wb-cluster`/`.wb-grid`/`.wb-stack`/`.wb-container`/`.wb-ratio`
+  with full row/column **alignment** + `.wb-self--*` per-item + `.wb-grow` — they're the base every component composes on),
+  **sticky** (`.wb-sticky` / `--bottom` — pin a bar/card to an edge on scroll), and a live **Config** playground that edits tokens and exports a `.md`.
 - **Hành động** — buttons (incl. button-group, social-login with brand logos), dropdown / menu.
 - **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea, checkbox/radio, switch
   (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone, colour; validation via the `.is-invalid` state.
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
   stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**
-  (hoá đơn — a torn-paper slip).
-- **Phản hồi** — alert, toast, modal/dialog, drawer/offcanvas, progress (+ indeterminate/loading),
-  skeleton, empty state, tooltip.
-- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**), nav / menu, sidenav (app rail), tabs, breadcrumb, pagination, accordion, divider.
+  (hoá đơn — a torn-paper slip; **4 edge styles** scallop+perforation (default) / `--wave` / `--zigzag` / `--dashed`, plus `--bottom`/`--flat`, `__barcode`; bill · transfer · voucher templates).
+- **Phản hồi** — alert, toast, modal/dialog, drawer/offcanvas (backdrop options on `.wb-overlay`: `--blur` /
+  `--clear`, or `--pass` = **non-modal**, page below stays usable), progress (+ indeterminate/loading),
+  skeleton, empty state, tooltip, **popover** (click-toggled card w/ arrow + × — richer than tooltip, not a menu).
+- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**), nav / menu, sidenav (app rail), tabs, breadcrumb, pagination, accordion, **collapse** (one standalone show/hide region), divider.
 - **Biểu đồ** — line/area, income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin
   donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps.
-- **Cấu trúc** — drag-and-drop **tree** (reorder + reparent), flat **sortable** list/grid/rows, and the
-  grid/layout utilities (`.wb-cluster`, `.wb-grid`, `.wb-stack`, `.wb-container`, `.wb-ratio`) with full
-  row/column **alignment** (justify + cross-axis align + `.wb-self--*` per-item + `.wb-grow`) — so a row/column
-  is a class, never an inline `align-items`.
+- **Cấu trúc** — drag-and-drop **tree** (reorder + reparent) and a flat **sortable** list/grid/rows.
+  (The grid/layout utilities moved up to **Nền tảng** — they're a foundation, not a structural component;
+  a row/column is still a class, never an inline `align-items`.)
 
 Three standing decisions shape the set:
 

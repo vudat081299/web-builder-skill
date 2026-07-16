@@ -1,8 +1,10 @@
 <div class="doc-page-head">
   <p class="doc-eyebrow">Hiển thị dữ liệu</p>
   <h2>Hoá đơn (Receipt)</h2>
-  <p>Một mảnh giấy biên lai với <b>cạnh xé</b> (răng cưa) ở trên &amp; dưới — đúng dáng tờ hoá đơn nhiệt xé khỏi cuộn.
-  Hợp để in một giao dịch, một khoản chi, hay bản kê nhỏ. Cạnh xé là <code>mask</code> (không phải ảnh) nên chạy trên mọi nền &amp; ở dark.</p>
+  <p>Một mảnh giấy biên lai với <b>cạnh xé bo tròn + đường răng kim (perforation)</b> ở trên &amp; dưới — dáng tờ hoá đơn / vé
+  xé khỏi cuộn. Hợp để in một giao dịch, khoản chi, phiếu chuyển khoản, voucher hay bản kê nhỏ.
+  Cạnh xé là <code>mask</code> (không phải ảnh) nên chạy trên mọi nền &amp; ở dark. Có <b>4 kiểu xé để chọn</b>:
+  mặc định (scallop + răng kim) · <code>--wave</code> · <code>--zigzag</code> · <code>--dashed</code>.</p>
 </div>
 
 <section class="doc-sec">
@@ -48,8 +50,67 @@
   </div>
 
   <div class="doc-block">
-    <h4>Biến thể</h4>
-    <p class="doc-block__desc"><code>--bottom</code> chỉ xé mép dưới (đầu trang phẳng — hợp khi có logo) · <code>--flat</code> bỏ đổ bóng · thêm <code>.wb-cap</code> vào header để gắn trạng thái (đã trả / quá hạn). Chỉnh răng cưa qua <code>--wb-receipt-tw</code> / <code>--wb-receipt-th</code>.</p>
+    <h4>Kiểu cạnh xé — chọn 1</h4>
+    <p class="doc-block__desc">Bốn kiểu mép cho tuỳ gu: <b>mặc định</b> (scallop nhỏ + răng kim xen giữa) · <code>--wave</code> (lượn tròn to, liền)
+    · <code>--zigzag</code> (răng cưa sắc) · <code>--dashed</code> (mép thẳng, chỉ có đường răng kim — kiểu voucher).
+    Chỉnh mật độ / độ sâu qua <code>--wb-receipt-tw</code> / <code>--wb-receipt-th</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster wb-cluster--top" style="gap:20px">
+
+          <div class="wb-receipt">
+            <div class="wb-receipt__paper" style="width:210px">
+              <div class="wb-receipt__head"><div class="wb-receipt__merchant">Highlands</div>
+                <div class="wb-receipt__meta">mặc định</div></div>
+              <div class="wb-receipt__rule"></div>
+              <div class="wb-receipt__total"><span>Tổng</span><span>123.000&nbsp;₫</span></div>
+              <div class="wb-receipt__note">scallop + răng kim</div>
+            </div>
+          </div>
+
+          <div class="wb-receipt wb-receipt--wave">
+            <div class="wb-receipt__paper" style="width:210px">
+              <div class="wb-receipt__head"><div class="wb-receipt__merchant">Highlands</div>
+                <div class="wb-receipt__meta">--wave</div></div>
+              <div class="wb-receipt__rule"></div>
+              <div class="wb-receipt__total"><span>Tổng</span><span>123.000&nbsp;₫</span></div>
+              <div class="wb-receipt__note">lượn tròn liền</div>
+            </div>
+          </div>
+
+          <div class="wb-receipt wb-receipt--zigzag">
+            <div class="wb-receipt__paper" style="width:210px">
+              <div class="wb-receipt__head"><div class="wb-receipt__merchant">Highlands</div>
+                <div class="wb-receipt__meta">--zigzag</div></div>
+              <div class="wb-receipt__rule"></div>
+              <div class="wb-receipt__total"><span>Tổng</span><span>123.000&nbsp;₫</span></div>
+              <div class="wb-receipt__note">răng cưa sắc</div>
+            </div>
+          </div>
+
+          <div class="wb-receipt wb-receipt--dashed">
+            <div class="wb-receipt__paper" style="width:210px">
+              <div class="wb-receipt__head"><div class="wb-receipt__merchant">Highlands</div>
+                <div class="wb-receipt__meta">--dashed</div></div>
+              <div class="wb-receipt__rule"></div>
+              <div class="wb-receipt__total"><span>Tổng</span><span>123.000&nbsp;₫</span></div>
+              <div class="wb-receipt__note">mép thẳng, răng kim</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-receipt"&gt;…&lt;/div&gt;                 &lt;!-- mặc định --&gt;
+&lt;div class="wb-receipt wb-receipt--wave"&gt;…&lt;/div&gt;
+&lt;div class="wb-receipt wb-receipt--zigzag"&gt;…&lt;/div&gt;
+&lt;div class="wb-receipt wb-receipt--dashed"&gt;…&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Xé mép dưới · bỏ bóng</h4>
+    <p class="doc-block__desc"><code>--bottom</code> chỉ xé mép dưới (đầu trang phẳng — hợp khi có logo) · <code>--flat</code> bỏ đổ bóng.
+    Ghép được với bất kỳ kiểu xé nào ở trên, và thêm <code>.wb-cap</code> vào header để gắn trạng thái.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-cluster wb-cluster--top" style="gap:22px">
@@ -71,7 +132,7 @@
           </div>
 
           <div class="wb-receipt wb-receipt--flat">
-            <div class="wb-receipt__paper" style="--wb-receipt-tw:18px;--wb-receipt-th:9px">
+            <div class="wb-receipt__paper">
               <div class="wb-receipt__head">
                 <span class="wb-cap wb-cap--success"><span class="wb-cap__dot"></span> Đã trả</span>
                 <div class="wb-receipt__merchant" style="margin-top:8px">Netflix Premium</div>
@@ -82,25 +143,133 @@
               </div>
               <div class="wb-receipt__rule"></div>
               <div class="wb-receipt__total"><span>Tổng</span><span>260.000&nbsp;₫</span></div>
-              <div class="wb-receipt__note">--flat · răng cưa lớn hơn</div>
+              <div class="wb-receipt__note">--flat · bỏ đổ bóng</div>
             </div>
           </div>
 
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- chỉ xé mép dưới --&gt;
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- ghép kiểu xé + modifier --&gt;
 &lt;div class="wb-receipt wb-receipt--bottom"&gt;…&lt;/div&gt;
+&lt;div class="wb-receipt wb-receipt--wave wb-receipt--flat"&gt;…&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
 
-&lt;!-- bỏ bóng + răng cưa to hơn --&gt;
-&lt;div class="wb-receipt wb-receipt--flat"&gt;
-  &lt;div class="wb-receipt__paper" style="--wb-receipt-tw:18px;--wb-receipt-th:9px"&gt;…&lt;/div&gt;
+  <div class="doc-block">
+    <h4>Hoá đơn đầy đủ + mã vạch</h4>
+    <p class="doc-block__desc">Bản kê nhiều dòng: tạm tính · giảm giá · VAT rồi <b>Tổng</b>, đóng bằng dải mã vạch
+    <code>.wb-receipt__barcode</code> + mã số <code>.wb-receipt__code</code> (thuần CSS, ăn màu <code>--wb-fg</code> nên tự lật ở dark).</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-receipt">
+          <div class="wb-receipt__paper" style="width:320px">
+            <div class="wb-receipt__head">
+              <div class="wb-receipt__merchant">WinMart+ Nguyễn Trãi</div>
+              <div class="wb-receipt__meta">08/07/2026 · 18:47 · Quầy 03 · #INV-77410</div>
+            </div>
+            <div class="wb-receipt__body">
+              <div class="wb-receipt__line"><span>Gạo ST25 5kg</span><span>185.000</span></div>
+              <div class="wb-receipt__line"><span>Trứng gà hộp 10</span><span>38.000</span></div>
+              <div class="wb-receipt__line"><span>Sữa tươi TH ×3</span><span>102.000</span></div>
+              <div class="wb-receipt__line"><span>Rau củ các loại</span><span>64.500</span></div>
+            </div>
+            <div class="wb-receipt__rule"></div>
+            <div class="wb-receipt__body">
+              <div class="wb-receipt__line wb-receipt__line--muted"><span>Tạm tính</span><span>389.500</span></div>
+              <div class="wb-receipt__line wb-receipt__line--muted"><span>Giảm giá thành viên</span><span>−19.500</span></div>
+              <div class="wb-receipt__line wb-receipt__line--muted"><span>VAT 8%</span><span>29.600</span></div>
+            </div>
+            <div class="wb-receipt__rule"></div>
+            <div class="wb-receipt__total"><span>Tổng</span><span>399.600&nbsp;₫</span></div>
+            <div class="wb-receipt__barcode"></div>
+            <div class="wb-receipt__code">8 936012 774108</div>
+            <div class="wb-receipt__note">Đổi trả trong 7 ngày kèm hoá đơn</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-receipt"&gt;
+  &lt;div class="wb-receipt__paper" style="width:320px"&gt;
+    …
+    &lt;div class="wb-receipt__total"&gt;&lt;span&gt;Tổng&lt;/span&gt;&lt;span&gt;399.600 ₫&lt;/span&gt;&lt;/div&gt;
+    &lt;div class="wb-receipt__barcode"&gt;&lt;/div&gt;
+    &lt;div class="wb-receipt__code"&gt;8 936012 774108&lt;/div&gt;
+    &lt;div class="wb-receipt__note"&gt;Đổi trả trong 7 ngày kèm hoá đơn&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Phiếu chuyển khoản</h4>
+    <p class="doc-block__desc">Cùng bộ khung cho một biên lai chuyển tiền: trạng thái ở đầu, số tiền lớn làm tâm điểm,
+    rồi Từ / Đến / Nội dung / Mã GD ở phần thân.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-receipt">
+          <div class="wb-receipt__paper" style="width:300px">
+            <div class="wb-receipt__head">
+              <span class="wb-cap wb-cap--success wb-cap--solid"><span class="wb-ico wb-ico--xs">check</span> Thành công</span>
+              <div class="wb-receipt__merchant" style="margin-top:10px;font-size:24px">−2.500.000&nbsp;₫</div>
+              <div class="wb-receipt__meta">08/07/2026 · 09:12:44</div>
+            </div>
+            <div class="wb-receipt__rule"></div>
+            <div class="wb-receipt__body">
+              <div class="wb-receipt__line"><span class="wb-cell-muted">Từ</span><span>Vietcombank ••4821</span></div>
+              <div class="wb-receipt__line"><span class="wb-cell-muted">Đến</span><span>Nguyễn Văn A</span></div>
+              <div class="wb-receipt__line"><span class="wb-cell-muted">Ngân hàng</span><span>Techcombank</span></div>
+              <div class="wb-receipt__line"><span class="wb-cell-muted">Nội dung</span><span>Tra tien thang 7</span></div>
+              <div class="wb-receipt__line"><span class="wb-cell-muted">Mã GD</span><span>FT26189004821</span></div>
+            </div>
+            <div class="wb-receipt__note">Giữ biên lai để đối soát</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-receipt"&gt;
+  &lt;div class="wb-receipt__paper"&gt;
+    &lt;div class="wb-receipt__head"&gt;
+      &lt;span class="wb-cap wb-cap--success wb-cap--solid"&gt;&lt;span class="wb-ico wb-ico--xs"&gt;check&lt;/span&gt; Thành công&lt;/span&gt;
+      &lt;div class="wb-receipt__merchant" style="margin-top:10px;font-size:24px"&gt;−2.500.000 ₫&lt;/div&gt;
+      &lt;div class="wb-receipt__meta"&gt;08/07/2026 · 09:12:44&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="wb-receipt__rule"&gt;&lt;/div&gt;
+    &lt;div class="wb-receipt__body"&gt;
+      &lt;div class="wb-receipt__line"&gt;&lt;span class="wb-cell-muted"&gt;Đến&lt;/span&gt;&lt;span&gt;Nguyễn Văn A&lt;/span&gt;&lt;/div&gt;
+      …
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Voucher / mã giảm giá</h4>
+    <p class="doc-block__desc">Mép <code>--dashed</code> hợp cho phiếu cắt rời: mã lớn ở giữa, điều kiện &amp; hạn dùng bên dưới.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-receipt wb-receipt--dashed">
+          <div class="wb-receipt__paper" style="width:300px;text-align:center">
+            <div class="wb-receipt__meta" style="letter-spacing:.14em;text-transform:uppercase">Ưu đãi thành viên</div>
+            <div class="wb-receipt__merchant" style="font-size:30px;margin:8px 0 2px">−50.000&nbsp;₫</div>
+            <div class="wb-receipt__meta">cho hoá đơn từ 200.000&nbsp;₫</div>
+            <div class="wb-receipt__rule"></div>
+            <div class="wb-receipt__code" style="font-size:15px;letter-spacing:.24em">LEDGER50K</div>
+            <div class="wb-receipt__note">HSD 31/07/2026 · áp dụng 1 lần</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-receipt wb-receipt--dashed"&gt;
+  &lt;div class="wb-receipt__paper" style="text-align:center"&gt;
+    &lt;div class="wb-receipt__merchant" style="font-size:30px"&gt;−50.000 ₫&lt;/div&gt;
+    &lt;div class="wb-receipt__rule"&gt;&lt;/div&gt;
+    &lt;div class="wb-receipt__code"&gt;LEDGER50K&lt;/div&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre></div>
     </div>
   </div>
 
   <div class="doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
-    <div>Cạnh xé dùng CSS <code>mask</code> nên bóng đổ được đặt ở lớp bọc ngoài để ôm theo mép răng cưa (bóng trên chính tờ giấy sẽ bị mask cắt).
+    <div>Cạnh xé dùng CSS <code>mask</code> nên bóng đổ được đặt ở lớp bọc ngoài để ôm theo mép xé (bóng trên chính tờ giấy sẽ bị mask cắt).
     Bề rộng mặc định 300px — chỉnh bằng <code>.wb-receipt__paper { width: … }</code>.</div>
   </div>
 

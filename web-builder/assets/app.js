@@ -19,6 +19,8 @@ const NAV = [
     { id: "typography", label: "Typography" },
     { id: "fonts",      label: "Fonts" },
     { id: "border",     label: "Border & bo góc" },
+    { id: "layout",     label: "Grid / Layout" },
+    { id: "sticky",     label: "Sticky" },
     { id: "config",     label: "Config / Tweak" },
   ]},
   { group: "Hành động", items: [
@@ -54,6 +56,7 @@ const NAV = [
     { id: "skeleton", label: "Skeleton" },
     { id: "empty",    label: "Empty state" },
     { id: "tooltip",  label: "Tooltip" },
+    { id: "popover",  label: "Popover" },
   ]},
   { group: "Điều hướng", items: [
     { id: "navbar",     label: "Navbar & menu" },
@@ -62,6 +65,7 @@ const NAV = [
     { id: "breadcrumb", label: "Breadcrumb" },
     { id: "pagination", label: "Pagination" },
     { id: "accordion",  label: "Accordion" },
+    { id: "collapse",   label: "Collapse" },
     { id: "divider",    label: "Divider" },
   ]},
   { group: "Biểu đồ", items: [
@@ -70,7 +74,6 @@ const NAV = [
   { group: "Cấu trúc", items: [
     { id: "tree",     label: "Tree danh mục" },
     { id: "sortable", label: "List / Grid kéo–thả" },
-    { id: "layout",   label: "Grid / Layout" },
   ]},
 ];
 
@@ -473,6 +476,24 @@ document.addEventListener("click", (e) => {
   });
   if (ddToggle) { ddToggle.closest(".wb-dropdown").classList.toggle("is-open"); return; }
 
+  /* Popover: click-toggled floating card. Close every open popover except the one
+     being toggled or the one whose panel was clicked (so buttons inside it work);
+     the × and any outside click close it. */
+  const popToggle = e.target.closest("[data-pop-toggle]");
+  const popPanel  = e.target.closest(".wb-popover__panel");
+  const popClose  = e.target.closest(".wb-popover__panel .wb-close");
+  document.querySelectorAll(".wb-popover.is-open").forEach((p) => {
+    const keep = (popToggle && p === popToggle.closest(".wb-popover")) ||
+                 (popPanel && !popClose && p === popPanel.closest(".wb-popover"));
+    if (!keep) p.classList.remove("is-open");
+  });
+  if (popToggle) { popToggle.closest(".wb-popover").classList.toggle("is-open"); return; }
+  if (popPanel) return;   // a click inside the card (not ×) — leave it open
+
+  /* Collapse: toggle the nearest show/hide region. */
+  const colToggle = e.target.closest("[data-collapse-toggle]");
+  if (colToggle) { colToggle.closest(".wb-collapse").classList.toggle("is-open"); return; }
+
   /* Modal: open / close. */
   const open = e.target.closest("[data-modal-open]");
   if (open) { const m = document.querySelector(open.getAttribute("data-modal-open"));
@@ -532,6 +553,11 @@ const CONFIG_GROUPS = [
     { k: "--wb-btn-radius", label: "Radius nút", type: "range", min: 0, max: 22, step: 1, unit: "px" },
     { k: "--wb-card-radius", label: "Radius card", type: "range", min: 0, max: 28, step: 1, unit: "px" },
     { k: "--wb-input-radius", label: "Radius input", type: "range", min: 0, max: 22, step: 1, unit: "px" },
+    { k: "--wb-switch-radius", label: "Bo switch (rãnh)", type: "range", min: 0, max: 12, step: 1, unit: "px" },
+    { k: "--wb-switch-thumb-radius", label: "Bo núm switch", type: "range", min: 0, max: 10, step: 1, unit: "px" },
+    { k: "--wb-range-radius", label: "Bo thanh slider", type: "range", min: 0, max: 8, step: 1, unit: "px" },
+    { k: "--wb-range-thumb-radius", label: "Bo núm slider", type: "range", min: 0, max: 9, step: 1, unit: "px" },
+    { k: "--wb-check-radius", label: "Bo checkbox", type: "range", min: 0, max: 10, step: 1, unit: "px" },
   ]},
   { title: "Viền", rows: [
     { k: "--wb-bw", label: "Độ dày viền", type: "range", min: 0, max: 3, step: 1, unit: "px" },
@@ -609,6 +635,8 @@ const CONFIG_DEFAULTS = {
   "--wb-ico-size": 20, "--wb-ico-weight": 600,
   "--wb-radius-sm": 6, "--wb-radius": 10, "--wb-radius-lg": 14,
   "--wb-btn-radius": 6, "--wb-card-radius": 14, "--wb-input-radius": 6,
+  "--wb-switch-radius": 12, "--wb-switch-thumb-radius": 10,
+  "--wb-range-radius": 6, "--wb-range-thumb-radius": 9, "--wb-check-radius": 6,
   "--wb-bw": 1, "--wb-check-bw": 2, "--wb-demo-bw": 1,
 };
 const tweak = {};   /* var/key -> value the user has overridden this session */
@@ -660,6 +688,16 @@ function applyCorner(preset) {
   syncRadiusSliders();
 }
 
+/* A dogfooded select: the real .wb-select (appearance:none + overlaid chevron),
+   so the panel's dropdowns match the Select component in the docs. */
+function selectCtrl(dataK, dataType, optionsHtml) {
+  return '<span class="wb-select-wrap"><select class="wb-select" data-k="' + dataK + '" data-type="' + dataType + '">' +
+    optionsHtml + '</select><span class="wb-ico" aria-hidden="true">expand_more</span></span>';
+}
+function opts(list, quote) {
+  const q = quote || '"';
+  return list.map((o) => '<option value=' + q + o[0] + q + '>' + o[1] + "</option>").join("");
+}
 function renderConfigRow(r) {
   let ctrl = "";
   if (r.type === "range") {
@@ -670,17 +708,14 @@ function renderConfigRow(r) {
   } else if (r.type === "color") {
     ctrl = '<input type="color" class="wb-color wb-color--sm" data-k="' + r.k + '" data-type="color">';
   } else if (r.type === "font") {
-    ctrl = '<select data-k="--wb-font" data-type="raw">' +
-      FONT_OPTIONS.map((o) => '<option value=\'' + o[0] + "'>" + o[1] + "</option>").join("") + "</select>";
+    ctrl = selectCtrl("--wb-font", "raw", opts(FONT_OPTIONS, "'"));
   } else if (r.type === "shadow") {
-    ctrl = '<select data-k="' + r.k + '" data-type="shadow">' +
-      '<option value="soft">Nhẹ</option><option value="medium">Vừa</option><option value="none">Tắt</option></select>';
+    ctrl = selectCtrl(r.k, "shadow",
+      '<option value="soft">Nhẹ</option><option value="medium">Vừa</option><option value="none">Tắt</option>');
   } else if (r.type === "select") {
-    ctrl = '<select data-k="' + r.k + '" data-type="' + (r.k === "chart-scheme" ? "scheme" : "raw") + '">' +
-      r.options.map((o) => '<option value="' + o[0] + '">' + o[1] + "</option>").join("") + "</select>";
+    ctrl = selectCtrl(r.k, r.k === "chart-scheme" ? "scheme" : "raw", opts(r.options));
   } else if (r.type === "corner") {
-    ctrl = '<select data-k="corner-preset" data-type="corner">' +
-      r.options.map((o) => '<option value="' + o[0] + '">' + o[1] + "</option>").join("") + "</select>";
+    ctrl = selectCtrl("corner-preset", "corner", opts(r.options));
   }
   return '<label class="doc-config__row"><span class="doc-config__label">' + r.label + "</span>" + ctrl + "</label>";
 }

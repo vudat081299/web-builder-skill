@@ -33,6 +33,12 @@
     <div>Docs mở/đóng bằng đúng JS của modal (<code>data-modal-open</code>/<code>-close</code>, bấm nền để đóng). Trong app
     dùng Radix <b>Dialog</b> hoặc <b>vaul</b> để có focus-trap, khoá cuộn nền và kéo mượt — giữ nguyên class <code>wb-drawer*</code>.</div>
   </div>
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Lớp phủ dùng chung với modal nên nhận cùng tuỳ chọn backdrop:
+    <code>--blur</code> (kính mờ) · <code>--clear</code> (không làm mờ) · <code>--pass</code> (non-modal — vẫn thao tác được trang dưới).
+    Xem bảng ở trang <a href="#/modal">Modal</a>.</div>
+  </div>
 </section>
 
 <!-- overlays thật (bấm nút ở trên để mở; bấm nền hoặc × để đóng) -->

@@ -898,6 +898,15 @@
   background: rgba(9, 9, 11, .5); backdrop-filter: blur(2px);
 }
 .wb-overlay.is-open { display: flex; }
+/* Backdrop options. Default = modal: dims + light blur, blocks the page, click-
+   outside closes. Swap the feel or make it non-modal:
+     --blur   frosted glass (làm mờ mạnh)         --clear  no dim, still blocks
+     --pass   non-modal: page below stays usable (không chặn — the scrim lets
+              clicks through; note click-outside-to-close no longer fires). */
+.wb-overlay--blur  { background: rgba(9, 9, 11, .32); backdrop-filter: blur(8px); }
+.wb-overlay--clear { background: none; backdrop-filter: none; }
+.wb-overlay--pass  { background: none; backdrop-filter: none; pointer-events: none; }
+.wb-overlay--pass > * { pointer-events: auto; }
 .wb-modal {
   width: 100%; max-width: 460px; font-family: var(--wb-font); overflow: hidden;
   background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
@@ -1776,17 +1785,21 @@
    36. RECEIPT  (hoá đơn — a torn-paper slip for one transaction / bill)
    -----------------------------------------------------------------------------
    The shape a thermal receipt has when torn off the roll: a narrow paper slip
-   with a ragged (zig-zag) top & bottom edge. Two elements, so the soft shadow
-   can trace the torn silhouette instead of a flat rectangle:
-     .wb-receipt           wrapper — casts the drop-shadow (follows the teeth)
+   with a softly SCALLOPED (rounded) top & bottom edge — cleaner and more legible
+   than sharp teeth. Two elements, so the soft shadow can trace the torn
+   silhouette instead of a flat rectangle:
+     .wb-receipt           wrapper — casts the drop-shadow (follows the scallops)
        .wb-receipt__paper  the paper — surface fill + the torn MASK + content
    The tear is a mask (not a bitmap) so it works on any background and in dark.
-   Teeth tune via --wb-receipt-tw / --wb-receipt-th.
+   Scallops tune via --wb-receipt-tw (one scallop wide) / --wb-receipt-th (bite depth);
+   Default edge = SPACED small scallops with a dashed perforation between them.
+   Edge styles (pick one): (default) scallop+perforation · --wave (smooth touching)
+   · --zigzag (saw-tooth) · --dashed (flat coupon edge, perforation only).
    Modifiers: --flat (no shadow) · --bottom (tear only the bottom, clean top).
    -------------------------------------------------------------------------- */
 .wb-receipt {
-  --wb-receipt-tw: 13px;   /* tooth width  (one zig)           */
-  --wb-receipt-th: 6px;    /* tooth height (how deep it bites) */
+  --wb-receipt-tw: 17px;   /* one scallop wide (period) — bites are SPACED   */
+  --wb-receipt-th: 6px;    /* bite depth / arc radius (~30% smaller than before) */
   display: block; width: fit-content; max-width: 100%;
   font-family: var(--wb-font);
   filter: drop-shadow(0 2px 4px rgba(16, 17, 18, .10));
@@ -1799,23 +1812,63 @@
 
 .wb-receipt__paper {
   width: 300px; max-width: 100%;
-  background: var(--wb-surface);
   color: var(--wb-fg);
-  padding: calc(20px + var(--wb-receipt-th)) 22px;   /* extra block padding = room past the teeth */
-  /* Torn top + bottom: a solid middle band + a row of triangular teeth at each edge. */
+  padding: calc(20px + var(--wb-receipt-th)) 22px;   /* room past the scallops */
+  /* Paper fill + a short dash sitting just below each GAP between two scallops
+     (one dash per period, aligned to the arc tiling) → the "…⌣–⌣–⌣…" look. */
+  background:
+    repeating-linear-gradient(90deg, var(--wb-border-strong) 0 5px, #0000 5px var(--wb-receipt-tw)) 0 calc(var(--wb-receipt-th) + 1px) / var(--wb-receipt-tw) 1.5px repeat-x,
+    repeating-linear-gradient(90deg, var(--wb-border-strong) 0 5px, #0000 5px var(--wb-receipt-tw)) 0 calc(100% - var(--wb-receipt-th) - 1px) / var(--wb-receipt-tw) 1.5px repeat-x,
+    var(--wb-surface);
+  /* Solid middle band + a row of SPACED rounded bites at each edge (tw > 2·th). */
+  --wb-receipt-mask:
+    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-th)) no-repeat,
+    radial-gradient(var(--wb-receipt-th) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x,
+    radial-gradient(var(--wb-receipt-th) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
+  -webkit-mask: var(--wb-receipt-mask);
+          mask: var(--wb-receipt-mask);
+}
+/* Tear only the bottom (keep a clean header edge) — one perforation + one row. */
+.wb-receipt--bottom .wb-receipt__paper {
+  padding-block: 20px calc(20px + var(--wb-receipt-th));
+  background:
+    repeating-linear-gradient(90deg, var(--wb-border-strong) 0 5px, #0000 5px var(--wb-receipt-tw)) 0 calc(100% - var(--wb-receipt-th) - 1px) / var(--wb-receipt-tw) 1.5px repeat-x,
+    var(--wb-surface);
+  --wb-receipt-mask:
+    linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-th)) no-repeat,
+    radial-gradient(var(--wb-receipt-th) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
+}
+
+/* --- Alternate tear edges — pick one -------------------------------------- */
+/* Smooth continuous wave: larger TOUCHING bites, no perforation dashes. */
+.wb-receipt--wave { --wb-receipt-tw: 22px; --wb-receipt-th: 11px; }
+.wb-receipt--wave .wb-receipt__paper { background: var(--wb-surface); }
+/* Sharp saw-tooth (the classic thermal look), no perforation dashes. */
+.wb-receipt--zigzag { --wb-receipt-tw: 14px; --wb-receipt-th: 7px; }
+.wb-receipt--zigzag .wb-receipt__paper {
+  background: var(--wb-surface);
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-th)) no-repeat,
     conic-gradient(from -45deg at bottom, #0000 25%, #000 0 75%, #0000 0) 0 100% / var(--wb-receipt-tw) 100% repeat-x,
     conic-gradient(from 135deg at top,    #0000 25%, #000 0 75%, #0000 0) 0 0    / var(--wb-receipt-tw) 100% repeat-x;
-  -webkit-mask: var(--wb-receipt-mask);
-          mask: var(--wb-receipt-mask);
 }
-/* Tear only the bottom (keep a clean header edge). */
-.wb-receipt--bottom .wb-receipt__paper {
-  padding-block: 20px calc(20px + var(--wb-receipt-th));
+.wb-receipt--zigzag.wb-receipt--bottom .wb-receipt__paper {
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-th)) no-repeat,
     conic-gradient(from -45deg at bottom, #0000 25%, #000 0 75%, #0000 0) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
+}
+/* Straight coupon edge: no torn silhouette, just a dashed perforation line. */
+.wb-receipt--dashed .wb-receipt__paper {
+  -webkit-mask: none; mask: none; padding-block: 22px;
+  background:
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 4px, #0000 4px 9px) 50% 7px / 100% 1px repeat-x,
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 4px, #0000 4px 9px) 50% calc(100% - 7px) / 100% 1px repeat-x,
+    var(--wb-surface);
+}
+.wb-receipt--dashed.wb-receipt--bottom .wb-receipt__paper {
+  background:
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 4px, #0000 4px 9px) 50% calc(100% - 7px) / 100% 1px repeat-x,
+    var(--wb-surface);
 }
 
 /* Header — merchant + meta (date / id), centred like a printed slip. */
@@ -1838,6 +1891,21 @@
 
 /* A centred muted footer note (thank-you / code). */
 .wb-receipt__note { text-align: center; font-size: 11.5px; color: var(--wb-fg-subtle); margin-top: 12px; }
+
+/* Optional decorative barcode + code line (pure CSS — inks in --wb-fg, so it flips in dark).
+   Bars of uneven width repeat so it reads like a real Code-128 strip, not a grid. */
+.wb-receipt__barcode {
+  height: 40px; margin-top: 14px; border-radius: 1px;
+  background: repeating-linear-gradient(90deg,
+    var(--wb-fg) 0 2px, transparent 2px 4px,
+    var(--wb-fg) 4px 5px, transparent 5px 8px,
+    var(--wb-fg) 8px 11px, transparent 11px 12px,
+    var(--wb-fg) 12px 15px, transparent 15px 17px);
+}
+.wb-receipt__code {
+  text-align: center; margin-top: 6px; font-size: 11px; letter-spacing: .3em;
+  color: var(--wb-fg-muted); font-family: "SF Mono", ui-monospace, monospace;
+}
 
 /* -----------------------------------------------------------------------------
    37. NAVBAR  (the top app bar — brand · inline nav · actions)
@@ -2015,3 +2083,87 @@
    min/max inputs, all kept in sync (app.js demo shows the wiring; in an app use Radix Slider). */
 .wb-range-filter { display: flex; flex-direction: column; gap: 12px; }
 .wb-range-filter__summary { font-size: 14px; font-weight: 650; color: var(--wb-fg); font-variant-numeric: tabular-nums; }
+
+/* =============================================================================
+   41. POPOVER  (a click-toggled floating card — title + body + arrow)
+   -----------------------------------------------------------------------------
+   Richer than a tooltip (hover, text-only) and not a list of actions (dropdown):
+   a small card anchored to a trigger, with a pointer arrow and a top-right ×.
+   Toggle .is-open on .wb-popover (JS in docs; Radix Popover / Floating UI in the
+   app handles real collision-aware placement). Default sits ABOVE the trigger;
+   --bottom / --left / --right flip it. Structure:
+     <span class="wb-popover">
+       <button data-pop-toggle>…</button>
+       <div class="wb-popover__panel">
+         <div class="wb-popover__arrow"></div> … </div>
+     </span>
+   -------------------------------------------------------------------------- */
+.wb-popover { position: relative; display: inline-block; }
+.wb-popover__panel {
+  position: absolute; z-index: 60; display: none;
+  width: max-content; max-width: 280px; padding: 12px 14px;
+  font-family: var(--wb-font); font-size: 13px; line-height: 1.5; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+  /* default placement: above, centred */
+  bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+}
+.wb-popover.is-open > .wb-popover__panel { display: block; }
+.wb-popover__title { font-size: 13.5px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 4px; }
+.wb-popover__body { margin: 0; color: var(--wb-fg-muted); }
+.wb-popover__panel .wb-close { position: absolute; top: 8px; right: 8px; }
+.wb-popover__panel .wb-close ~ .wb-popover__title,
+.wb-popover__panel .wb-close ~ * .wb-popover__title { padding-right: 18px; }
+
+/* Arrow — a rotated square straddling the panel border; only the two outward-
+   facing borders show, so it reads as a bordered point in light & dark. */
+.wb-popover__arrow {
+  position: absolute; width: 10px; height: 10px; background: var(--wb-surface);
+  border: var(--wb-bw) solid var(--wb-border);
+  bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg);
+  border-top: 0; border-left: 0;
+}
+/* Placement flips — panel offset + arrow side. */
+.wb-popover--bottom > .wb-popover__panel { bottom: auto; top: calc(100% + 10px); }
+.wb-popover--bottom > .wb-popover__panel > .wb-popover__arrow {
+  bottom: auto; top: -5px; border: var(--wb-bw) solid var(--wb-border); border-bottom: 0; border-right: 0; }
+.wb-popover--right > .wb-popover__panel {
+  bottom: auto; left: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.wb-popover--right > .wb-popover__panel > .wb-popover__arrow {
+  bottom: auto; left: -5px; top: 50%; transform: translateY(-50%) rotate(45deg);
+  border: var(--wb-bw) solid var(--wb-border); border-top: 0; border-right: 0; }
+.wb-popover--left > .wb-popover__panel {
+  bottom: auto; left: auto; right: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.wb-popover--left > .wb-popover__panel > .wb-popover__arrow {
+  bottom: auto; left: auto; right: -5px; top: 50%; transform: translateY(-50%) rotate(45deg);
+  border: var(--wb-bw) solid var(--wb-border); border-bottom: 0; border-left: 0; }
+
+/* =============================================================================
+   42. COLLAPSE  (a standalone show/hide region — Bootstrap's .collapse)
+   -----------------------------------------------------------------------------
+   A single toggle-able block (read-more, an optional form section, a details
+   drawer inside a card) — distinct from ACCORDION (§18, a grouped, native
+   <details> set). Height animates via the grid 0fr→1fr trick, so no fixed
+   height or JS measuring is needed. Toggle .is-open on .wb-collapse.
+     <div class="wb-collapse">
+       <button data-collapse-toggle>… <span class="wb-collapse__caret wb-ico">expand_more</span></button>
+       <div class="wb-collapse__panel"><div class="wb-collapse__inner">…</div></div>
+     </div>
+   -------------------------------------------------------------------------- */
+.wb-collapse__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .24s ease; }
+.wb-collapse.is-open > .wb-collapse__panel { grid-template-rows: 1fr; }
+.wb-collapse__inner { overflow: hidden; min-height: 0; }
+.wb-collapse__caret { transition: transform .2s ease; }
+.wb-collapse.is-open .wb-collapse__caret { transform: rotate(180deg); }
+
+/* =============================================================================
+   43. STICKY  (pin an element to the top / bottom edge while its section scrolls)
+   -----------------------------------------------------------------------------
+   A layout utility (foundation): a toolbar, card, action button or menu that
+   follows an edge on scroll — position: sticky, so it stays in normal flow then
+   pins at the offset. Set the gap with --wb-sticky-gap (default 0). Needs a
+   scrollable ancestor / long page to actually pin. z-index sits under the navbar
+   (30) so a sticky bar tucks beneath a fixed app bar, not over it.
+   -------------------------------------------------------------------------- */
+.wb-sticky         { position: sticky; top: var(--wb-sticky-gap, 0px); z-index: 20; }
+.wb-sticky--bottom { top: auto; bottom: var(--wb-sticky-gap, 0px); }
