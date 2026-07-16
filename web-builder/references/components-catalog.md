@@ -1021,7 +1021,10 @@ A layout utility (foundations): pin a bar / card / button / menu to an edge whil
 to the bottom. Set the offset with `--wb-sticky-gap` (default 0; e.g. the navbar height). Give the pinned
 element a `--wb-surface` background so scrolled content doesn't show through. `z-index` sits under the
 navbar (30) so it tucks beneath a fixed app bar. Needs a scrollable ancestor / long page to pin. A full-page
-top bar already has `.wb-navbar--sticky`; sticky table headers use `.wb-table--sticky`.
+top bar already has `.wb-navbar--sticky`; sticky table headers use `.wb-table--sticky`. Common patterns
+(shown on the page): a **summary / brief card** that follows long content (`.wb-sticky.wb-self--top` in a
+grid so the cell doesn't stretch), and **sticky group headers** in a long list (one `.wb-sticky` per group,
+each pinning until the next pushes it up).
 
 ```html
 <div class="wb-scroll-y" style="max-height:240px">
