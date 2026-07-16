@@ -35,7 +35,7 @@ Tailwind note below).
 | Spinners | ✅ `wb-spinner` | on buttons + `.is-loading` |
 | Toasts | ✅ `wb-toast` / `wb-toaster` | behaviour → sonner |
 | Tooltips | ✅ `wb-tooltip` | pure-CSS bubble |
-| Forms (controls, select, checks, range, input-group, validation) | ✅ full | + **preset colour swatches** + colour input, file dropzone, **switch locked** state — beyond Bootstrap |
+| Forms (controls, select, checks, range, input-group, validation) | ✅ full | + a **custom colour picker** + **preset colour swatches** + colour input, file dropzone, **switch locked** state — beyond Bootstrap |
 | Floating labels | ❌ not used | we use a top `wb-label` (clearer for dense forms; a deliberate call, not a gap) |
 | Layout (12-col grid, breakpoints, gutters) | 🟡 by design | flex-first utilities instead — **with full flex alignment** (justify / align / self / grow); no 12-col scaffold. See below & design-principles §17 |
 | Flex/align utilities (justify-content, align-items, align-self, flex-fill) | ✅ | on `.wb-cluster` / `.wb-stack` (`--start/end/center/between/around/evenly`, `--top/middle/bottom/baseline`) + `.wb-grow` / `.wb-self--*` |

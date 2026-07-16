@@ -49,7 +49,8 @@ for the look (see `integration.md`).
 | A slider for a budget cap / threshold | **Range** | [Range](#range--slider) |
 | Attach a statement / receipt (button or drop area) | **File / dropzone** | [File](#file--upload) |
 | Pick a category / label colour from a preset palette | **Swatches** (`.wb-swatches`) | [Colour](#colour-input--swatches) |
-| Pick a genuinely free / custom colour | **Colour input** (`.wb-color`) | [Colour](#colour-input--swatches) |
+| Pick any colour with a nice custom UI (SV + hue + hex) | **Colour picker** (`.wb-colorpicker`) | [Colour picker](#colour-picker) |
+| Pick any colour with zero JS (native dialog) | **Colour input** (`.wb-color`) | [Colour](#colour-input--swatches) |
 | A settings / accounts list (one item per row) | **List group** | [List group](#list-group) |
 | A content container / section with header + body | **Card** | [Card](#card) |
 | Show one transaction / bill as a torn-paper slip | **Receipt** (hoá đơn) | [Receipt](#receipt) |
@@ -490,6 +491,28 @@ no "square stuck in a button"). `--pill`, `--sm`; pair a hex label with `.wb-col
 
 ```html
 <span class="wb-color-field"><input class="wb-color" type="color" value="#6366f1" /><code>#6366F1</code></span>
+```
+
+## Colour picker
+
+`.wb-colorpicker` is a custom panel that **replaces the ugly native OS colour dialog** — the thing `.wb-color`
+pops on click. It composes an **SV area** (`__area`, saturation×value), a **hue slider** (`__hue`), a **hex
+field** (`.wb-input-group` with a `#` addon), a **current-colour preview** (`__preview`), and a **preset row**
+(reuses `.wb-swatches`). Both `__area` and `__hue` hold a `.wb-colorpicker__thumb` handle. Web Builder ships
+only the *look*; the drag + HSV maths is a behaviour engine (a headless colour lib, or a small pointer handler
+— the docs ship one). Host it inside `.wb-popover` for a trigger→popup, or drop it inline. Keep `.wb-color`
+as the zero-JS fallback.
+
+```html
+<div class="wb-colorpicker">
+  <div class="wb-colorpicker__area"><span class="wb-colorpicker__thumb"></span></div>
+  <div class="wb-colorpicker__hue"><span class="wb-colorpicker__thumb"></span></div>
+  <div class="wb-colorpicker__foot">
+    <span class="wb-colorpicker__preview"></span>
+    <div class="wb-input-group"><span class="wb-input-group__addon">#</span><input class="wb-input" value="6366F1" /></div>
+  </div>
+  <div class="wb-swatches wb-swatches--sm">…</div>   <!-- presets -->
+</div>
 ```
 
 ## File / Upload

@@ -1621,7 +1621,7 @@
 .wb-range-dual__input:focus-visible::-moz-range-thumb     { box-shadow: 0 0 0 3px var(--wb-ring); }
 
 /* -----------------------------------------------------------------------------
-   29. COLOUR INPUT & SWATCHES  (cleaned-up native input + preset palette)
+   29. COLOUR INPUT, SWATCHES & PICKER  (native input · preset palette · custom panel)
    -----------------------------------------------------------------------------
    .wb-color — the whole control becomes a rounded swatch of the current value; the
    browser's default inner border / padding is stripped so it never looks like a
@@ -1632,6 +1632,13 @@
    OS colour dialog. Give each chip its hue inline via --wb-swatch-color (same recipe
    as --wb-tag-color); the selected chip gets a gap-ring in the fg colour that reads
    on any hue. For a genuinely free colour, pair it with the .wb-color escape hatch.
+
+   .wb-colorpicker — a custom panel that REPLACES the ugly native OS colour dialog:
+   an SV (saturation/value) area + a hue slider + a hex field + a preset row (reuses
+   .wb-swatches). Look + layout only; wire the drag / HSV maths with a small pointer
+   handler (the docs ship one) or a headless lib — Web Builder owns the pixels. Host
+   it in .wb-popover for a trigger→popup, or inline. NOTE: the #fff/#000 and rainbow
+   gradients below are HSV colour-space construction, not themeable UI colours.
    -------------------------------------------------------------------------- */
 .wb-color {
   -webkit-appearance: none; appearance: none; flex: none; cursor: pointer;
@@ -1665,6 +1672,45 @@
 .wb-swatch:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
 .wb-swatches--round .wb-swatch { border-radius: var(--wb-radius-pill); }
 .wb-swatches--sm .wb-swatch { width: 22px; height: 22px; }
+
+/* Colour picker — custom panel replacing the native OS dialog (look + layout only). */
+.wb-colorpicker {
+  width: 216px; display: flex; flex-direction: column; gap: 10px; padding: 12px;
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+}
+/* SV area + hue track: #fff/#000/rainbow are HSV colour-space, not themeable tokens. */
+.wb-colorpicker__area {
+  position: relative; width: 100%; height: 132px; cursor: crosshair; touch-action: none;
+  border-radius: var(--wb-radius-sm);
+  background:
+    linear-gradient(to top, #000, transparent),
+    linear-gradient(to right, #fff, transparent),
+    var(--wb-cp-hue, #ff0000);
+}
+.wb-colorpicker__hue {
+  position: relative; width: 100%; height: 12px; cursor: pointer; touch-action: none;
+  border-radius: var(--wb-radius-pill);
+  background: linear-gradient(to right,
+    #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+}
+/* Draggable handle — hollow white ring so the colour underneath shows through. */
+.wb-colorpicker__thumb {
+  position: absolute; width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--wb-white);
+  box-shadow: 0 0 0 var(--wb-bw) var(--wb-ring), var(--wb-shadow-sm);
+  transform: translate(-50%, -50%); pointer-events: none;
+}
+.wb-colorpicker__hue > .wb-colorpicker__thumb { top: 50%; }
+.wb-colorpicker__foot { display: flex; align-items: center; gap: 8px; }
+.wb-colorpicker__foot > .wb-input-group { flex: 1; }
+.wb-colorpicker__preview {
+  flex: none; width: 30px; height: 30px; border-radius: var(--wb-radius-sm);
+  border: var(--wb-bw) solid var(--wb-border-strong);
+  background: var(--wb-cp-value, #6366f1);
+}
+/* Hosted in a popover: the panel already supplies the card, so drop the picker's own. */
+.wb-popover__panel > .wb-colorpicker { padding: 0; background: none; border: 0; box-shadow: none; }
 
 /* -----------------------------------------------------------------------------
    30. BUTTON GROUP  (segmented — joined buttons sharing a border)

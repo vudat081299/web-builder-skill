@@ -136,6 +136,7 @@ function initPage(root) {
   root.querySelectorAll("[data-sortable]").forEach(initSortable);
   root.querySelectorAll("[data-sortable-rows]").forEach(initSortableTable);
   root.querySelectorAll("[data-range-filter]").forEach(initRangeFilter);
+  root.querySelectorAll("[data-colorpicker]").forEach(initColorPicker);
 }
 
 /* ---- Range filter — dual slider ⇄ min/max inputs ⇄ plain-language summary -----
@@ -171,6 +172,91 @@ function initRangeFilter(rf) {
   sMax.addEventListener("input", () => { if (+sMax.value < +sMin.value) sMax.value = sMin.value; render(); });
   if (nMin) nMin.addEventListener("input", () => { sMin.value = Math.max(lo, Math.min(+nMin.value || lo, +sMax.value)); render(); });
   if (nMax) nMax.addEventListener("input", () => { sMax.value = Math.min(hi, Math.max(+nMax.value || hi, +sMin.value)); render(); });
+  render();
+}
+
+/* ---- Colour picker — SV area + hue slider + hex + presets, all kept in sync ---
+   Docs-only wiring; in an app use a headless colour lib (e.g. react-colorful) or
+   your own pointer handlers — Web Builder ships only the look. Pointer drag on the
+   SV area sets saturation/value, the hue track sets hue, the hex field round-trips
+   (never rewritten while focused), and a preset click snaps to that hue. ---------- */
+function initColorPicker(el) {
+  const area = el.querySelector(".wb-colorpicker__area");
+  const hue  = el.querySelector(".wb-colorpicker__hue");
+  if (!area || !hue) return;
+  const areaThumb = area.querySelector(".wb-colorpicker__thumb");
+  const hueThumb  = hue.querySelector(".wb-colorpicker__thumb");
+  const preview   = el.querySelector(".wb-colorpicker__preview");
+  const hexInput  = el.querySelector("[data-cp-hex]");
+  const presets   = [...el.querySelectorAll(".wb-swatch")];
+  let h = 239, s = 59, v = 95;   // default ≈ #6366F1
+
+  const hex2 = (n) => Math.round(n).toString(16).padStart(2, "0");
+  function hsvToHex(H, S, V) {
+    S /= 100; V /= 100;
+    const c = V * S, x = c * (1 - Math.abs(((H / 60) % 2) - 1)), m = V - c;
+    const [r, g, b] =
+      H < 60 ? [c, x, 0] : H < 120 ? [x, c, 0] : H < 180 ? [0, c, x] :
+      H < 240 ? [0, x, c] : H < 300 ? [x, 0, c] : [c, 0, x];
+    return (hex2((r + m) * 255) + hex2((g + m) * 255) + hex2((b + m) * 255)).toUpperCase();
+  }
+  function rgbToHsv(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+    let H = 0;
+    if (d) {
+      H = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      H = (H * 60 + 360) % 360;
+    }
+    return { h: H, s: mx ? (d / mx) * 100 : 0, v: mx * 100 };
+  }
+  function parseColor(str) {                       // "#RRGGBB", "RGB", or "rgb(r,g,b)"
+    if (str.trim().startsWith("rgb")) {
+      const n = str.match(/\d+/g);
+      return n && n.length >= 3 ? rgbToHsv(+n[0], +n[1], +n[2]) : null;
+    }
+    let hx = str.replace("#", "").trim();
+    if (hx.length === 3) hx = hx.split("").map((c) => c + c).join("");
+    if (!/^[0-9a-f]{6}$/i.test(hx)) return null;
+    return rgbToHsv(parseInt(hx.slice(0, 2), 16), parseInt(hx.slice(2, 4), 16), parseInt(hx.slice(4, 6), 16));
+  }
+  function render() {
+    const hex = hsvToHex(h, s, v);
+    area.style.setProperty("--wb-cp-hue", "hsl(" + h + ", 100%, 50%)");
+    areaThumb.style.left = s + "%";
+    areaThumb.style.top = 100 - v + "%";
+    hueThumb.style.left = (h / 360) * 100 + "%";
+    el.style.setProperty("--wb-cp-value", "#" + hex);
+    if (preview) preview.style.background = "#" + hex;
+    if (hexInput && document.activeElement !== hexInput) hexInput.value = hex;
+    presets.forEach((sw) => {
+      const c = parseColor(getComputedStyle(sw).backgroundColor);
+      sw.classList.toggle("is-selected", !!c && hsvToHex(c.h, c.s, c.v) === hex);
+    });
+  }
+  function track(node, fn) {
+    node.addEventListener("pointerdown", (e) => {
+      if (hexInput && document.activeElement === hexInput) hexInput.blur();   // let the field re-sync during the drag
+      const move = (ev) => fn(ev, node.getBoundingClientRect());
+      move(e);                                   // register the press position first
+      try { node.setPointerCapture(e.pointerId); } catch (_) {}
+      const up = () => {
+        node.removeEventListener("pointermove", move);
+        node.removeEventListener("pointerup", up);
+        node.removeEventListener("pointercancel", up);   // touch scroll / interruption also ends the drag
+      };
+      node.addEventListener("pointermove", move);
+      node.addEventListener("pointerup", up);
+      node.addEventListener("pointercancel", up);
+    });
+  }
+  const clamp01 = (n) => Math.max(0, Math.min(1, n));
+  track(area, (e, r) => { s = clamp01((e.clientX - r.left) / r.width) * 100; v = (1 - clamp01((e.clientY - r.top) / r.height)) * 100; render(); });
+  track(hue, (e, r) => { h = clamp01((e.clientX - r.left) / r.width) * 360; render(); });
+  if (hexInput) hexInput.addEventListener("input", () => { const c = parseColor(hexInput.value); if (c) { h = c.h; s = c.s; v = c.v; render(); } });
+  presets.forEach((sw) => sw.addEventListener("click", () => { const c = parseColor(getComputedStyle(sw).backgroundColor); if (c) { h = c.h; s = c.s; v = c.v; render(); } }));
+  const init = hexInput && parseColor(hexInput.value);
+  if (init) { h = init.h; s = init.s; v = init.v; }
   render();
 }
 
