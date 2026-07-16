@@ -18,6 +18,15 @@ something genuinely new, fold it back into the library + docs (the sync steps be
   reload shows edits). Drive the SPA by setting the hash, e.g. `#/receipt`; after editing `app.js`, do a
   full reload (its in-memory `NAV`/`ROUTES` is stale until then).
 
+## The change workflow (`/wb-change`) + guardrails
+
+A component/token change touches many files, so run **`/wb-change`** — it orchestrates the full flow
+(discover → plan → confirm → implement → sync the 6 places below → verify in the browser → `/code-review`
+→ commit + push), pushing heavy reads to subagents to save tokens. Two hooks in `.claude/` back it up:
+a **PostToolUse** nudge injects the 6-place checklist the moment you edit `web-builder.css`, and a
+**PreToolUse** gate blocks `git commit`/`git push` when `.claude/hooks/validate-sync.sh` fails. The full
+workflow lives in the skill/hooks (loaded on demand), not here — this file stays a lean pointer.
+
 ## Adding or changing a component — sync ALL of these in one change
 
 1. `web-builder/assets/web-builder.css` — the `.wb-*` rules (numbered section; **tokens, not magic numbers** —
@@ -34,7 +43,8 @@ something genuinely new, fold it back into the library + docs (the sync steps be
 6. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
    engine), `bootstrap-comparison.md` (coverage note).
 
-If these drift, the skill misleads the next AI. Verify: number of `NAV` routes == number of `pages/*.html`.
+If these drift, the skill misleads the next AI. Verify with `.claude/hooks/validate-sync.sh`
+(routes == pages · no per-page `<style>` · `app.js` parses) — the commit gate runs it for you.
 
 ## Conventions to keep
 
