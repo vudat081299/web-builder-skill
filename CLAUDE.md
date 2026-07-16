@@ -1,11 +1,21 @@
 # CLAUDE.md
 
-This repo packages the **web-builder** skill — a minimalist, zero-build CSS component library for building
-web UIs (personal-finance is its flagship use, not its boundary). See `README.md` for the project map, and
-`web-builder/SKILL.md` for how to build UI with it.
+## The product is the skill — everything else serves it (read first)
 
-The repo's north star is **reuse**: assemble web UI from approved `wb-*` parts, and when you build
-something genuinely new, fold it back into the library + docs (the sync steps below) so the next build reuses it.
+**This project produces one thing: the `web-builder` skill.** The docs site, the `/wb-change` workflow, the
+`.claude/` hooks, even this file — all of it exists **only to produce and protect a high-quality skill**.
+It is instrumentation, never the goal. Judge every change by one question: *does this leave the shipped skill
+better, and still coherent?* A pretty demo, a passing check, or a green hook mean nothing if the skill itself
+regresses — so any guardrail, validator, or review worth having validates the **skill**, not just the docs plumbing.
+
+The skill = `web-builder/SKILL.md` + `web-builder/references/` + `web-builder/assets/web-builder.css` (**the
+only file that ships**). The docs site (`index.html` / `app.js` / `docs.css` / `pages/`) and `.claude/`
+tooling **never ship** — they exist to review, dogfood, and safeguard the skill. What the skill is: a
+minimalist, zero-build CSS component library for web UIs (personal-finance is its flagship use, not its
+boundary). `README.md` = project map; `web-builder/SKILL.md` = how to build UI with it.
+
+North star: **reuse** — assemble web UI from approved `wb-*` parts, and fold anything genuinely new back into
+the skill (the sync steps below), so the skill keeps compounding in quality.
 
 ## Working here
 
@@ -43,8 +53,10 @@ workflow lives in the skill/hooks (loaded on demand), not here — this file sta
 6. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
    engine), `bootstrap-comparison.md` (coverage note).
 
-If these drift, the skill misleads the next AI. Verify with `.claude/hooks/validate-sync.sh`
-(routes == pages · no per-page `<style>` · `app.js` parses) — the commit gate runs it for you.
+If these drift, the skill misleads the next AI. Verify with `.claude/hooks/validate-sync.sh` — it validates
+both the **docs site** (routes == pages · no per-page `<style>` · `app.js` parses) **and the skill
+deliverable** (SKILL.md frontmatter + trigger description · every `references/*.md` exists · the catalog
+never documents a class the CSS lacks · `web-builder.css` braces balanced). The commit gate runs it for you.
 
 ## Conventions to keep
 

@@ -2,8 +2,11 @@
 # =============================================================================
 # web-builder — deterministic guardrails (the "standards review", in shell)
 # -----------------------------------------------------------------------------
-# Runs only the invariants that DON'T need a model, so they're ~free and can gate
-# every commit: route<->page parity, markup-only demo pages, and app.js syntax.
+# The repo's DELIVERABLE is the web-builder skill, so this validates BOTH:
+#   • the docs site   — route<->page parity, markup-only pages, app.js syntax
+#   • the skill itself — SKILL.md frontmatter, references exist, catalog<->CSS
+#                        coherence, and structural validity of the shipping CSS
+# All checks are model-free, so they're ~free and can gate every commit.
 #
 # Used by:  .claude/hooks/pre-commit-gate.sh  (blocks a broken `git commit`/`push`)
 #           and by hand:  .claude/hooks/validate-sync.sh
@@ -84,6 +87,60 @@ if printf '%s\n' "$changed" | grep -q 'web-builder/assets/web-builder.css' \
     echo "       Adding or changing a component is a 6-place sync (CLAUDE.md / /wb-change)."; } >&2
 fi
 
+# =============================================================================
+#  SKILL DELIVERABLE — the repo ships the web-builder skill; validate the skill
+#  artifact, not just the docs site.
+# =============================================================================
+SKILL="web-builder/SKILL.md"
+CAT="web-builder/references/components-catalog.md"
+
+# --- CHECK 6 (hard): SKILL.md frontmatter present; trigger description healthy --
+if [ -f "$SKILL" ] && command -v python3 >/dev/null 2>&1; then
+  fmout="$(python3 - "$SKILL" <<'PY'
+import re,sys
+t=open(sys.argv[1],encoding="utf-8").read()
+m=re.match(r"^---\n(.*?)\n---",t,re.S)
+if not m: print("HARD:no YAML frontmatter"); sys.exit()
+fm=m.group(1)
+if not re.search(r"^name:\s*\S",fm,re.M): print("HARD:missing name:")
+dm=re.search(r"description:\s*>-?\s*\n(.*?)(?=\n[A-Za-z_]+:|\Z)",fm,re.S) or re.search(r"description:\s*(.+)",fm)
+desc=" ".join(l.strip() for l in dm.group(1).splitlines()).strip() if dm else ""
+print("HARD:missing description" if not desc else f"LEN:{len(desc)}")
+PY
+)"
+  if printf '%s' "$fmout" | grep -q '^HARD:'; then
+    { echo "BLOCK · SKILL.md frontmatter:"; printf '%s\n' "$fmout" | grep '^HARD:' | sed 's/^HARD:/    /'; } >&2
+    fail=1
+  fi
+  len="$(printf '%s' "$fmout" | sed -n 's/^LEN://p')"
+  [ -n "$len" ] && [ "$len" -gt 1024 ] && echo "note · SKILL.md description is ${len} chars (>1024) — the skill listing truncates it; keep it tighter for reliable triggering." >&2
+fi
+
+# --- CHECK 7 (hard): every references/*.md the SKILL points at exists -----------
+if [ -f "$SKILL" ]; then
+  while IFS= read -r ref; do
+    [ -n "$ref" ] && { [ -f "web-builder/$ref" ] || { echo "BLOCK · SKILL.md references a missing file: web-builder/$ref" >&2; fail=1; }; }
+  done < <(grep -oE 'references/[a-z0-9-]+\.md' "$SKILL" | sort -u)
+fi
+
+# --- CHECK 8 (hard): the catalog must not document a wb-* class the CSS lacks ----
+if [ -f "$CAT" ]; then
+  phantom="$(comm -23 <(grep -oE '\.wb-[a-z0-9-]+' "$CAT" | sort -u) <(grep -oE '\.wb-[a-z0-9-]+' "$A/web-builder.css" | sort -u))"
+  if [ -n "$phantom" ]; then
+    { echo "BLOCK · components-catalog.md documents wb-* class(es) not defined in web-builder.css:"
+      printf '%s\n' "$phantom" | sed 's/^/    /'; } >&2
+    fail=1
+  fi
+fi
+
+# --- CHECK 9 (hard): the shipping CSS is structurally valid (balanced braces) ---
+opens="$(grep -o '{' "$A/web-builder.css" | wc -l | tr -d ' ')"
+closes="$(grep -o '}' "$A/web-builder.css" | wc -l | tr -d ' ')"
+if [ "$opens" != "$closes" ]; then
+  { echo "BLOCK · web-builder.css brace mismatch: { = $opens vs } = $closes (structural error in the shipping CSS)."; } >&2
+  fail=1
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "" >&2
   echo "^ Fix the BLOCK item(s) and keep editing (don't restart). Guardrail: .claude/hooks/validate-sync.sh" >&2
@@ -93,6 +150,6 @@ fi
 # Quiet as a hook (stdout is piped); informative when run by hand in a terminal.
 if [ -t 1 ]; then
   n="$(printf '%s\n' "$routes" | grep -c .)"
-  echo "web-builder guardrails OK · ${n} routes == ${n} pages · no stray <style> · app.js parses."
+  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces coherent."
 fi
 exit 0

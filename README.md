@@ -16,6 +16,10 @@ budgets, receipts, tags — its **flagship** use), but general-purpose for any m
 
 ### The three parts
 
+**Part 1 — the skill — is the product.** Parts 2 and 3 are *instrumentation*: the docs site and its source
+exist only to review, dogfood, and improve the skill, and never ship. Every change is judged by whether it
+leaves the shipped skill better and coherent.
+
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |

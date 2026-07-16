@@ -4,6 +4,11 @@ These are the rules that keep every screen looking like one product. Follow them
 whenever you build or extend a component. They exist so the user does **not** have
 to re-review basic aesthetic decisions on every page — the decisions are made here.
 
+> **What ships is the skill.** These principles serve the shipped artifact (`web-builder.css` + `SKILL.md` +
+> references); the docs are only where we review them. A change that makes a demo look nice but the *shipped
+> component* worse — or that drifts the CSS from what SKILL.md/the catalog promise — has failed, no matter how
+> good the page looks.
+
 ---
 
 ## 1. The colour ladder (most important rule)

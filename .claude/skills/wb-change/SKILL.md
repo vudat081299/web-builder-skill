@@ -14,6 +14,10 @@ description: >-
 
 Repo này là **reuse-first**: một thay đổi component chạm nhiều file, lệch một nơi là SKILL/docs nói dối
 AI kế tiếp. Skill này là bản điều phối của quy trình trong `CLAUDE.md` (§ *Adding or changing a component*).
+
+> **Sản phẩm cuối cùng của repo = bộ skill `web-builder`** (SKILL.md + references + `web-builder.css` —
+> file duy nhất ship). Mọi thay đổi phải để lại skill ở trạng thái **shippable, chất lượng**; vì thế
+> guardrail validate **cả skill**, không chỉ docs site (xem bước 8).
 **Tiết kiệm token**: đẩy việc đọc rộng cho subagent, để hook shell lo phần deterministic; model chỉ làm
 phần semantic.
 
@@ -51,9 +55,11 @@ Browser pane; kiểm cả **sáng/tối**. Xem nhiều trang → subagent, trả
 **7 · Review docs liên đới.** Đối chiếu 6 nơi có nhất quán không (catalog ↔ SKILL.md ↔ CSS ↔ comparison).
 Giao **subagent** đọc chéo, trả danh sách lệch → sửa.
 
-**8 · Guardrails (bộ tiêu chuẩn, tự chạy khi commit).** `validate-sync.sh` cũng là PreToolUse gate chặn
-commit nếu invariant vỡ. Soi lại bằng mắt: color-ladder (§1) · token-over-magic-number (§18) · × top-right
-(§15) · no left-accent bar (§9) · dark = light-lift shadow (§2).
+**8 · Guardrails (bộ tiêu chuẩn, tự chạy khi commit).** `validate-sync.sh` (cũng là PreToolUse gate) kiểm
+**cả docs lẫn skill deliverable**: docs (routes==pages · page markup-only · `app.js` parse) + **skill**
+(SKILL.md có frontmatter + description ≤ cap · mọi `references/*.md` tồn tại · catalog không khai class CSS
+không có · `web-builder.css` cân ngoặc). Rồi soi bằng mắt: color-ladder (§1) · token-over-magic-number
+(§18) · × top-right (§15) · no left-accent bar (§9) · dark = light-lift shadow (§2).
 
 **9 · Commit + push.** Commit thẳng `main` (workflow solo, CLAUDE.md § Git). Message kết bằng:
 `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. Rồi push.
