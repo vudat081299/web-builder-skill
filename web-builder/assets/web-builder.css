@@ -1935,23 +1935,34 @@
 /* -----------------------------------------------------------------------------
    36. RECEIPT  (hoá đơn — a torn-paper slip for one transaction / bill)
    -----------------------------------------------------------------------------
-   The shape a thermal receipt has when torn off the roll: a narrow paper slip
-   whose top & bottom edges are a row of soft SCALLOPS — rounded half-circle
-   bumps that bulge OUTWARD (not notches bitten in, which read as sharp teeth).
-   Two elements, so the soft shadow can trace the scalloped silhouette instead
-   of a flat rectangle:
-     .wb-receipt           wrapper — casts the drop-shadow (follows the scallops)
-       .wb-receipt__paper  the paper — surface fill + the scallop MASK + content
-   The edge is a mask (not a bitmap) so it works on any background and in dark.
-   Scallops tune via --wb-receipt-tw (one scallop wide) / --wb-receipt-th (bump radius);
-   tw = 2·th → clean TOUCHING half-circles — one smooth wavy edge, no extra lines.
-   Edge styles (pick one): (default) scallop · --wave (larger scallop)
-   · --dashed (flat coupon edge with a dashed perforation line).
-   Modifiers: --flat (no shadow) · --bottom (scallop only the bottom, clean top).
+   The shape a ticket / thermal slip has: a narrow paper strip whose edge is a
+   row of SCALLOPS — half-circle notches bitten UP into the paper, each one held
+   apart from the next by a flat gap (a torn-off stub / stamp-perforation look).
+   The notches are REAL transparent cuts (a CSS mask, not a same-colour circle
+   painted on top), so the edge works on ANY background and in dark, and the soft
+   drop-shadow traces the scalloped silhouette. Two elements:
+     .wb-receipt           wrapper — casts the drop-shadow (follows the notches)
+       .wb-receipt__paper  the paper — surface fill + the notch MASK + content
+   Two knobs (any CSS length) — this is where you change the look:
+     --wb-receipt-d    = D, one notch's diameter (how wide each half-circle is)
+     --wb-receipt-gap  = G, the flat gap between two neighbouring notches
+   Derived from those: radius/depth = D/2, repeat period = D + G. Notches tile
+   with repeat-x to the paper's width — never hard-coded — so it's responsive; a
+   partial notch at the far end just gets clipped, which is fine.
+   Edge styles (pick one): (default) scallop · --wave (bigger, sparser notches)
+   · --dashed (flat coupon edge with a dashed perforation line, no cut).
+   Modifiers: --flat (no shadow) · --bottom (notch only the bottom, flat top)
+   · --ticket (a tear-off: a dashed rule across with a half-circle notch cut into
+     each SIDE edge at its ends — see the --ticket rule + its two knobs below).
    -------------------------------------------------------------------------- */
 .wb-receipt {
-  --wb-receipt-tw: 16px;   /* one scallop wide (period) — tw = 2·th → clean touching scallops */
-  --wb-receipt-th: 8px;    /* scallop bump radius (how far each half-circle bulges) */
+  --wb-receipt-d: 12px;      /* D — notch diameter        ← chỉnh ở đây */
+  --wb-receipt-gap: 6px;     /* G — flat gap between notches ← chỉnh ở đây */
+  --wb-receipt-r: calc(var(--wb-receipt-d) / 2);                          /* radius = notch depth */
+  --wb-receipt-period: calc(var(--wb-receipt-d) + var(--wb-receipt-gap)); /* one repeat = D + G */
+  --wb-receipt-side-d: 20px;   /* --ticket: đường kính bán nguyệt khoét ở 2 CẠNH tại đường xé ← chỉnh được */
+  --wb-receipt-side-r: calc(var(--wb-receipt-side-d) / 2);
+  --wb-receipt-tear: 50%;      /* --ticket: vị trí (dọc) của đường xé + 2 vết khoét cạnh ← chỉnh được */
   display: block; width: fit-content; max-width: 100%;
   font-family: var(--wb-font);
   filter: drop-shadow(0 2px 4px rgba(16, 17, 18, .10));
@@ -1965,41 +1976,75 @@
 .wb-receipt__paper {
   width: 300px; max-width: 100%;
   color: var(--wb-fg);
-  padding: calc(20px + var(--wb-receipt-th)) 24px;   /* room past the scallops */
+  padding: calc(20px + var(--wb-receipt-r)) 24px;   /* keep content clear of the notch depth */
   background: var(--wb-surface);
-  /* Solid middle band + a row of TOUCHING half-circle bumps that bulge OUT at each
-     edge → a smooth scallop (keep-the-circle, not bite-it-out — no sharp teeth). */
+  /* A solid middle band, then a row of half-circle CUTS at the top & bottom edge.
+     Each tile is one period (D+G) wide; the notch — a transparent disc of radius
+     r=D/2 centred on the tile — carves a semicircle into the edge, leaving G/2 of
+     flat paper on either side → notches spaced by a flat gap G, tiled to any width. */
   --wb-receipt-mask:
-    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-th)) no-repeat,
-    radial-gradient(var(--wb-receipt-th) at 50% 0,    #000 98%, #0000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x,
-    radial-gradient(var(--wb-receipt-th) at 50% 100%, #000 98%, #0000 100%) 0 0    / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
+    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-r)) no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x,
+    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x;
   -webkit-mask: var(--wb-receipt-mask);
           mask: var(--wb-receipt-mask);
 }
-/* Scallop only the bottom (keep a clean header edge) — one row of bumps. */
+/* Notch only the BOTTOM edge (top stays flat — good under a logo header). */
 .wb-receipt--bottom .wb-receipt__paper {
-  padding-block: 20px calc(20px + var(--wb-receipt-th));
-  background: var(--wb-surface);
+  padding-block: 20px calc(20px + var(--wb-receipt-r));
   --wb-receipt-mask:
-    linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-th)) no-repeat,
-    radial-gradient(var(--wb-receipt-th) at 50% 0, #000 98%, #0000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
+    linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-r)) no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x;
 }
 
 /* --- Alternate edges — pick one ------------------------------------------- */
-/* Larger, more generous scallops (same bumps, bigger radius). */
-.wb-receipt--wave { --wb-receipt-tw: 22px; --wb-receipt-th: 11px; }
-.wb-receipt--wave .wb-receipt__paper { background: var(--wb-surface); }
-/* Straight coupon edge: no scalloped silhouette, just a dashed perforation line. */
+/* Bigger, more generous notches (larger D + wider gap). */
+.wb-receipt--wave { --wb-receipt-d: 18px; --wb-receipt-gap: 12px; }
+/* Straight coupon edge: no cut at all, just a dashed perforation line. */
 .wb-receipt--dashed .wb-receipt__paper {
   -webkit-mask: none; mask: none; padding-block: 22px;
   background:
-    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 4px, #0000 4px 9px) 50% 7px / 100% 1px repeat-x,
-    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 4px, #0000 4px 9px) 50% calc(100% - 7px) / 100% 1px repeat-x,
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px) 50% 7px / 100% 1px repeat-x,
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px) 50% calc(100% - 7px) / 100% 1px repeat-x,
     var(--wb-surface);
 }
 .wb-receipt--dashed.wb-receipt--bottom .wb-receipt__paper {
   background:
-    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 4px, #0000 4px 9px) 50% calc(100% - 7px) / 100% 1px repeat-x,
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px) 50% calc(100% - 7px) / 100% 1px repeat-x,
+    var(--wb-surface);
+}
+
+/* --- Tear-off ticket (vé xé) ---------------------------------------------- */
+/* A horizontal TEAR across the body: a dashed rule with a half-circle notch
+   bitten into BOTH side edges at its ends — the classic detachable stub / vé.
+   The two side notches are REAL transparent cuts: the paper mask keeps the
+   scallop silhouette (top+bottom, composited `add`) and then SUBTRACTS a disc
+   at each side edge, so it shows the background through — same as the top/bottom
+   notches, works on any background. Knobs on .wb-receipt:
+     --wb-receipt-side-d  = notch diameter (how far each half-circle bites in)
+     --wb-receipt-tear    = where the tear sits down the paper (length or %)
+   The dashed line is drawn between the two notches (auto-stops at their inner
+   edge) so line + notches always stay aligned. Leave a blank band in the
+   content at --wb-receipt-tear so nothing gets clipped by the cut. */
+.wb-receipt--ticket .wb-receipt__paper {
+  /* Layers bottom→top: the two side discs are the destination; the solid band is
+     laid over them with `subtract` (band ∖ discs) so the discs punch holes in the
+     body; then the top & bottom scallop rows are `add`ed back on. `subtract` is
+     source∖destination, hence this order (not "discs on top"). */
+  --wb-receipt-mask:
+    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x,
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x,
+    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-r)) no-repeat,
+    radial-gradient(var(--wb-receipt-side-r) at 0    var(--wb-receipt-tear), #000 98%, #0000 100%) no-repeat,
+    radial-gradient(var(--wb-receipt-side-r) at 100% var(--wb-receipt-tear), #000 98%, #0000 100%) no-repeat;
+  -webkit-mask: var(--wb-receipt-mask);
+          mask: var(--wb-receipt-mask);
+  -webkit-mask-composite: source-over, source-over, source-out, source-over, source-over;
+          mask-composite: add, add, subtract, add, add;
+  /* the dashed tear line, centred between the two notches at the same tear line */
+  background:
+    repeating-linear-gradient(90deg, var(--wb-fg-subtle) 0 9px, #0000 9px 16px)
+      50% var(--wb-receipt-tear) / calc(100% - 2 * var(--wb-receipt-side-d)) var(--wb-bw) no-repeat,
     var(--wb-surface);
 }
 
@@ -2014,8 +2059,13 @@
 .wb-receipt__line > span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .wb-receipt__line--muted { color: var(--wb-fg-muted); font-size: 12px; }
 
-/* Perforation — the dashed tear-off rule between items and the total. */
-.wb-receipt__rule { border-top: var(--wb-bw) dashed var(--wb-border-strong); margin: 12px 0; }
+/* Perforation — the dashed tear-off rule between items and the total.
+   A repeating-gradient (not a CSS dashed border) so the dash length + gap are
+   tunable and read clearly, not a fuzzy 1px hairline. */
+.wb-receipt__rule {
+  height: var(--wb-bw); margin: 12px 0;
+  background: repeating-linear-gradient(90deg, var(--wb-border-strong) 0 7px, #0000 7px 13px);
+}
 
 /* Total — the emphasised bottom line. */
 .wb-receipt__total { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 700; }

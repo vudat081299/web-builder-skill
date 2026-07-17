@@ -657,10 +657,16 @@ numbered figure **reuse** `.wb-avatar--solid` (no new badge); `--center` vertica
 one transaction, a bill, a transfer slip, a voucher, a small statement. Parts: `__head` (`__merchant` +
 `__meta`), a `__body` of `__line` rows (desc left, amount right — tabular), `__rule` (dashed perforation),
 `__total`, `__note`; plus a decorative `__barcode` + `__code` for a full invoice.
-**Edge styles — pick one:** (default) clean touching scallops — rounded half-circle bumps that bulge out
-(a smooth wavy edge) · `--wave` (larger scallops) · `--dashed` (flat coupon edge with a dashed perforation). **Modifiers**
-(combine with any edge): `--bottom` (scallop only the bottom), `--flat` (no shadow); tune with `--wb-receipt-tw` /
-`--wb-receipt-th`.
+**Edge styles — pick one:** (default) scallop — half-circle notches bitten UP into the paper, spaced by a
+flat gap (a ticket-stub / stamp-perf look; real transparent cuts via `mask`, not painted circles) ·
+`--wave` (bigger, sparser notches) · `--dashed` (flat coupon edge with a dashed perforation). **Modifiers**
+(combine with any edge): `--bottom` (notch only the bottom, flat top), `--flat` (no shadow), `--ticket`
+(a tear-off: a dashed rule across the body with a half-circle notch cut into BOTH side edges at its ends —
+real transparent cuts, so it shows the background through; place a blank band in the content at the tear).
+Tune the geometry knobs on `.wb-receipt`: `--wb-receipt-d` (notch diameter; depth = d/2) and
+`--wb-receipt-gap` (flat gap between notches) for the top/bottom edge — repeat period = d + gap, tiled
+responsively (no fixed notch count); plus `--wb-receipt-side-d` (side-notch diameter) and `--wb-receipt-tear`
+(tear position, length or %) for `--ticket`.
 
 ```html
 <div class="wb-receipt">
