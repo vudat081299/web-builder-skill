@@ -1936,21 +1936,22 @@
    36. RECEIPT  (hoá đơn — a torn-paper slip for one transaction / bill)
    -----------------------------------------------------------------------------
    The shape a thermal receipt has when torn off the roll: a narrow paper slip
-   with a softly SCALLOPED (rounded) top & bottom edge — cleaner and more legible
-   than sharp teeth. Two elements, so the soft shadow can trace the torn
-   silhouette instead of a flat rectangle:
+   whose top & bottom edges are a row of soft SCALLOPS — rounded half-circle
+   bumps that bulge OUTWARD (not notches bitten in, which read as sharp teeth).
+   Two elements, so the soft shadow can trace the scalloped silhouette instead
+   of a flat rectangle:
      .wb-receipt           wrapper — casts the drop-shadow (follows the scallops)
-       .wb-receipt__paper  the paper — surface fill + the torn MASK + content
-   The tear is a mask (not a bitmap) so it works on any background and in dark.
-   Scallops tune via --wb-receipt-tw (one scallop wide) / --wb-receipt-th (bite depth);
-   Default edge = clean TOUCHING scallops (tw = 2·th) — one smooth wavy tear, no extra lines.
+       .wb-receipt__paper  the paper — surface fill + the scallop MASK + content
+   The edge is a mask (not a bitmap) so it works on any background and in dark.
+   Scallops tune via --wb-receipt-tw (one scallop wide) / --wb-receipt-th (bump radius);
+   tw = 2·th → clean TOUCHING half-circles — one smooth wavy edge, no extra lines.
    Edge styles (pick one): (default) scallop · --wave (larger scallop)
-   · --zigzag (saw-tooth) · --dashed (flat coupon edge with a dashed perforation line).
-   Modifiers: --flat (no shadow) · --bottom (tear only the bottom, clean top).
+   · --dashed (flat coupon edge with a dashed perforation line).
+   Modifiers: --flat (no shadow) · --bottom (scallop only the bottom, clean top).
    -------------------------------------------------------------------------- */
 .wb-receipt {
   --wb-receipt-tw: 16px;   /* one scallop wide (period) — tw = 2·th → clean touching scallops */
-  --wb-receipt-th: 8px;    /* scallop radius / bite depth */
+  --wb-receipt-th: 8px;    /* scallop bump radius (how far each half-circle bulges) */
   display: block; width: fit-content; max-width: 100%;
   font-family: var(--wb-font);
   filter: drop-shadow(0 2px 4px rgba(16, 17, 18, .10));
@@ -1966,42 +1967,29 @@
   color: var(--wb-fg);
   padding: calc(20px + var(--wb-receipt-th)) 24px;   /* room past the scallops */
   background: var(--wb-surface);
-  /* Solid middle band + a row of TOUCHING rounded bites at each edge → a clean wavy tear. */
+  /* Solid middle band + a row of TOUCHING half-circle bumps that bulge OUT at each
+     edge → a smooth scallop (keep-the-circle, not bite-it-out — no sharp teeth). */
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-th)) no-repeat,
-    radial-gradient(var(--wb-receipt-th) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x,
-    radial-gradient(var(--wb-receipt-th) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
+    radial-gradient(var(--wb-receipt-th) at 50% 0,    #000 98%, #0000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x,
+    radial-gradient(var(--wb-receipt-th) at 50% 100%, #000 98%, #0000 100%) 0 0    / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
   -webkit-mask: var(--wb-receipt-mask);
           mask: var(--wb-receipt-mask);
 }
-/* Tear only the bottom (keep a clean header edge) — one perforation + one row. */
+/* Scallop only the bottom (keep a clean header edge) — one row of bumps. */
 .wb-receipt--bottom .wb-receipt__paper {
   padding-block: 20px calc(20px + var(--wb-receipt-th));
   background: var(--wb-surface);
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-th)) no-repeat,
-    radial-gradient(var(--wb-receipt-th) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
+    radial-gradient(var(--wb-receipt-th) at 50% 0, #000 98%, #0000 100%) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
 }
 
-/* --- Alternate tear edges — pick one -------------------------------------- */
-/* Smooth continuous wave: larger TOUCHING bites, no perforation dashes. */
+/* --- Alternate edges — pick one ------------------------------------------- */
+/* Larger, more generous scallops (same bumps, bigger radius). */
 .wb-receipt--wave { --wb-receipt-tw: 22px; --wb-receipt-th: 11px; }
 .wb-receipt--wave .wb-receipt__paper { background: var(--wb-surface); }
-/* Sharp saw-tooth (the classic thermal look), no perforation dashes. */
-.wb-receipt--zigzag { --wb-receipt-tw: 14px; --wb-receipt-th: 7px; }
-.wb-receipt--zigzag .wb-receipt__paper {
-  background: var(--wb-surface);
-  --wb-receipt-mask:
-    linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-th)) no-repeat,
-    conic-gradient(from -45deg at bottom, #0000 25%, #000 0 75%, #0000 0) 0 100% / var(--wb-receipt-tw) 100% repeat-x,
-    conic-gradient(from 135deg at top,    #0000 25%, #000 0 75%, #0000 0) 0 0    / var(--wb-receipt-tw) 100% repeat-x;
-}
-.wb-receipt--zigzag.wb-receipt--bottom .wb-receipt__paper {
-  --wb-receipt-mask:
-    linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-th)) no-repeat,
-    conic-gradient(from -45deg at bottom, #0000 25%, #000 0 75%, #0000 0) 0 100% / var(--wb-receipt-tw) var(--wb-receipt-th) repeat-x;
-}
-/* Straight coupon edge: no torn silhouette, just a dashed perforation line. */
+/* Straight coupon edge: no scalloped silhouette, just a dashed perforation line. */
 .wb-receipt--dashed .wb-receipt__paper {
   -webkit-mask: none; mask: none; padding-block: 22px;
   background:

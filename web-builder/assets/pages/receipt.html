@@ -1,10 +1,10 @@
 <div class="doc-page-head">
   <p class="doc-eyebrow">Hiển thị dữ liệu</p>
   <h2>Hoá đơn (Receipt)</h2>
-  <p>Một mảnh giấy biên lai với <b>cạnh xé bo tròn (scallop)</b> ở trên &amp; dưới — dáng tờ hoá đơn / vé
-  xé khỏi cuộn. Hợp để in một giao dịch, khoản chi, phiếu chuyển khoản, voucher hay bản kê nhỏ.
-  Cạnh xé là <code>mask</code> (không phải ảnh) nên chạy trên mọi nền &amp; ở dark. Có <b>4 kiểu xé để chọn</b>:
-  mặc định (scallop liền) · <code>--wave</code> (scallop to hơn) · <code>--zigzag</code> · <code>--dashed</code> (mép thẳng + răng kim).</p>
+  <p>Một mảnh giấy biên lai với <b>cạnh bo tròn (scallop)</b> ở trên &amp; dưới — những múi bán nguyệt lồi ra,
+  dáng tờ hoá đơn / vé xé khỏi cuộn. Hợp để in một giao dịch, khoản chi, phiếu chuyển khoản, voucher hay bản kê nhỏ.
+  Cạnh là <code>mask</code> (không phải ảnh) nên chạy trên mọi nền &amp; ở dark. Có <b>3 kiểu cạnh để chọn</b>:
+  mặc định (scallop liền) · <code>--wave</code> (scallop to hơn) · <code>--dashed</code> (mép thẳng + răng kim).</p>
 </div>
 
 <section class="doc-sec">
@@ -51,8 +51,8 @@
 
   <div class="doc-block">
     <h4>Kiểu cạnh xé — chọn 1</h4>
-    <p class="doc-block__desc">Bốn kiểu mép để lựa chọn: <b>mặc định</b> (scallop liền — lượn tròn đều) · <code>--wave</code> (lượn tròn to hơn)
-    · <code>--zigzag</code> (răng cưa sắc) · <code>--dashed</code> (mép thẳng, chỉ có đường răng kim — kiểu voucher).
+    <p class="doc-block__desc">Ba kiểu mép để lựa chọn: <b>mặc định</b> (scallop liền — múi bán nguyệt lồi, lượn tròn đều) · <code>--wave</code> (lượn tròn to hơn)
+    · <code>--dashed</code> (mép thẳng, chỉ có đường răng kim — kiểu voucher).
     Chỉnh mật độ / độ sâu qua <code>--wb-receipt-tw</code> / <code>--wb-receipt-th</code>.</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
@@ -78,16 +78,6 @@
             </div>
           </div>
 
-          <div class="wb-receipt wb-receipt--zigzag">
-            <div class="wb-receipt__paper" style="width:210px">
-              <div class="wb-receipt__head"><div class="wb-receipt__merchant">Highlands</div>
-                <div class="wb-receipt__meta">--zigzag</div></div>
-              <div class="wb-receipt__rule"></div>
-              <div class="wb-receipt__total"><span>Tổng</span><span>123.000&nbsp;₫</span></div>
-              <div class="wb-receipt__note">răng cưa sắc</div>
-            </div>
-          </div>
-
           <div class="wb-receipt wb-receipt--dashed">
             <div class="wb-receipt__paper" style="width:210px">
               <div class="wb-receipt__head"><div class="wb-receipt__merchant">Highlands</div>
@@ -102,34 +92,33 @@
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-receipt"&gt;…&lt;/div&gt;                 &lt;!-- mặc định --&gt;
 &lt;div class="wb-receipt wb-receipt--wave"&gt;…&lt;/div&gt;
-&lt;div class="wb-receipt wb-receipt--zigzag"&gt;…&lt;/div&gt;
 &lt;div class="wb-receipt wb-receipt--dashed"&gt;…&lt;/div&gt;</code></pre></div>
     </div>
   </div>
 
   <div class="doc-block">
     <h4>Chứng minh mask — trên nền gradient</h4>
-    <p class="doc-block__desc">Cạnh xé là <code>mask</code> thật (không phải hình nền cùng màu tô giả): đặt tờ giấy lên một nền
-    <b>gradient / ảnh bất kỳ</b> — răng cưa <b>cắt xuyên</b> để lộ nền phía sau, và bóng vẫn ôm theo mép xé. Đây chính là lý do
-    dùng <code>mask</code> (không vẽ răng bằng <code>linear-gradient</code> nền, không pseudo-element phủ màu) — và bóng đặt ở lớp
-    bọc ngoài bằng <code>filter: drop-shadow</code> để theo đúng đường răng (<code>box-shadow</code> sẽ vẫn là hình chữ nhật).</p>
+    <p class="doc-block__desc">Cạnh scallop là <code>mask</code> thật (không phải hình nền cùng màu tô giả): đặt tờ giấy lên một nền
+    <b>gradient / ảnh bất kỳ</b> — các múi bo tròn <b>cắt xuyên</b> để lộ nền phía sau, và bóng vẫn ôm theo mép. Đây chính là lý do
+    dùng <code>mask</code> (không vẽ cạnh bằng <code>linear-gradient</code> nền, không pseudo-element phủ màu) — và bóng đặt ở lớp
+    bọc ngoài bằng <code>filter: drop-shadow</code> để theo đúng đường scallop (<code>box-shadow</code> sẽ vẫn là hình chữ nhật).</p>
     <div class="demo demo--plain">
       <div class="demo__stage">
         <div class="wb-cluster wb-cluster--center" style="background:linear-gradient(135deg, var(--wb-chart-1), var(--wb-chart-2) 52%, var(--wb-chart-4)); border-radius:var(--wb-radius); padding:34px 20px">
-          <div class="wb-receipt wb-receipt--zigzag">
+          <div class="wb-receipt">
             <div class="wb-receipt__paper" style="width:230px">
               <div class="wb-receipt__head"><div class="wb-receipt__merchant">Highlands</div>
                 <div class="wb-receipt__meta">trên nền gradient</div></div>
               <div class="wb-receipt__rule"></div>
               <div class="wb-receipt__total"><span>Tổng</span><span>123.000&nbsp;₫</span></div>
-              <div class="wb-receipt__note">răng cưa cắt xuyên, để lộ nền</div>
+              <div class="wb-receipt__note">scallop cắt xuyên, để lộ nền</div>
             </div>
           </div>
         </div>
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- mask cắt xuyên: đặt trên nền bất kỳ vẫn đúng --&gt;
 &lt;div style="background:linear-gradient(135deg,var(--wb-chart-1),var(--wb-chart-2) 52%,var(--wb-chart-4));padding:34px"&gt;
-  &lt;div class="wb-receipt wb-receipt--zigzag"&gt;
+  &lt;div class="wb-receipt"&gt;
     &lt;div class="wb-receipt__paper"&gt;…&lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre></div>
