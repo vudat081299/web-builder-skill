@@ -233,6 +233,15 @@ html::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 .nav-card__d { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
 
 /* -----------------------------------------------------------------------------
+   Overview extras — a separator glyph for the phase strip + cascade.
+   The ranked list and the pipeline stepper it used to hold are now SHIPPED
+   primitives (.wb-media + .wb-steps); the overview dogfoods those directly, so
+   only this tiny separator (which the library has no primitive for) stays here.
+   -------------------------------------------------------------------------- */
+/* Neutral separator glyph — → between phases, ↔ across the cascade. */
+.doc-sep { color: var(--wb-fg-subtle); font-weight: 700; }
+
+/* -----------------------------------------------------------------------------
    Tokens (swatches) + colour tiers
    -------------------------------------------------------------------------- */
 .swatch { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); overflow: hidden; background: var(--wb-surface); }

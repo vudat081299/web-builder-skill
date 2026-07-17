@@ -62,6 +62,7 @@ const NAV = [
     { id: "navbar",     label: "Navbar & menu" },
     { id: "sidenav",    label: "Sidebar (side-nav)" },
     { id: "tabs",       label: "Tabs" },
+    { id: "steps",      label: "Steps / Stepper" },
     { id: "breadcrumb", label: "Breadcrumb" },
     { id: "pagination", label: "Pagination" },
     { id: "accordion",  label: "Accordion" },

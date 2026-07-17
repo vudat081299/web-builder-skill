@@ -40,10 +40,11 @@ Tailwind note below).
 | Layout (12-col grid, breakpoints, gutters) | 🟡 by design | flex-first utilities instead — **with full flex alignment** (justify / align / self / grow); no 12-col scaffold. See below & design-principles §17 |
 | Flex/align utilities (justify-content, align-items, align-self, flex-fill) | ✅ | on `.wb-cluster` / `.wb-stack` (`--start/end/center/between/around/evenly`, `--top/middle/bottom/baseline`) + `.wb-grow` / `.wb-self--*` |
 
-**Only in Web Builder (flagship finance extras, no Bootstrap equivalent):** tags (`#` category chips), stat/KPI cards,
+**Only in Web Builder (no Bootstrap 5 equivalent):** tags (`#` category chips), stat/KPI cards,
 charts (line/bars/combo/donut/sparkline + budget), category **tree** (drag reorder/reparent), **sortable**
 list/grid/rows, **receipt** (hoá đơn — torn-paper slip), tinted category capsules, social-login buttons,
-and the live **Config** token playground.
+a **steps/stepper** (`wb-steps` — wizard · timeline; Bootstrap has none), a **media object** (`wb-media` —
+figure + body; Bootstrap 5 dropped its `.media`), and the live **Config** token playground.
 
 ## The popup family — do we have it?
 

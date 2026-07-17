@@ -2,57 +2,27 @@
   <h2>Bộ component CSS tối giản để build web</h2>
   <p>Một thư viện CSS + hệ thiết kế tối giản, ưu tiên trắng–đen–xám, dùng lại được — viết tay, token-based,
   không cần build, drop-in một file, prefix <code>wb-*</code> nên ghép được với mọi stack. Mạnh nhất cho web
-  tài chính cá nhân (bảng tiền, ngân sách, hoá đơn) nhưng dùng tốt cho web bất kỳ. Mỗi nhóm nằm ở một trang
-  riêng — chọn ở sidebar để xem đúng nhóm. Khi build web, ghép từ catalog thay vì thiết kế lại từ đầu.</p>
+  tài chính cá nhân (bảng tiền, ngân sách, hoá đơn) nhưng dùng tốt cho web bất kỳ. Trang này là <b>góc nhìn
+  tổng quan nhất</b>: repo là gì · ưu tiên gì khi xây · tư duy thiết kế · và workflow vận hành. Mỗi component
+  nằm ở một trang riêng — chọn ở sidebar để xem chi tiết.</p>
 </div>
 
 <section class="doc-sec">
-  <h3>Có gì trong hộp</h3>
-  <p class="doc-sec__desc">Các primitive cơ bản mà hầu như web nào cũng cần — thống nhất một ngôn ngữ hình ảnh.</p>
-  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:210px;margin-top:8px">
-    <div class="nav-card">
-      <p class="nav-card__t">Nền tảng</p>
-      <p class="nav-card__d"><a href="#/color">Triết lý màu</a> · <a href="#/tokens">Tokens</a> · <a href="#/typography">Typography</a> · <a href="#/fonts">Fonts</a> · <a href="#/border">Border</a> · <a href="#/config">Config / Tweak</a></p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Hành động</p>
-      <p class="nav-card__d"><a href="#/buttons">Buttons</a> · <a href="#/dropdown">Dropdown / Menu</a></p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Nhập liệu</p>
-      <p class="nav-card__d"><a href="#/input">Input (prefix/suffix), select, textarea, checkbox/radio, switch</a></p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Hiển thị dữ liệu</p>
-      <p class="nav-card__d"><a href="#/card">Card</a> · <a href="#/receipt">Hoá đơn</a> · <a href="#/tables">Tables</a> · <a href="#/stats">Stat/KPI</a> · <a href="#/capsules">Capsules</a> · <a href="#/tags">Tags</a> · <a href="#/avatar">Avatar</a></p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Phản hồi</p>
-      <p class="nav-card__d"><a href="#/alert">Alert</a> · <a href="#/toast">Toast</a> · <a href="#/modal">Modal</a> · <a href="#/progress">Progress</a> · <a href="#/skeleton">Skeleton</a> · <a href="#/empty">Empty</a> · <a href="#/tooltip">Tooltip</a></p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Điều hướng</p>
-      <p class="nav-card__d"><a href="#/navbar">Navbar &amp; menu</a> · <a href="#/sidenav">Sidebar</a> · <a href="#/tabs">Tabs</a> · <a href="#/breadcrumb">Breadcrumb</a> · <a href="#/pagination">Pagination</a> · <a href="#/accordion">Accordion</a> · <a href="#/divider">Divider</a></p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Biểu đồ</p>
-      <p class="nav-card__d"><a href="#/charts">Charts</a> — đường (tooltip hover), cột, donut, ngân sách, sparkline, thang xám/xanh</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Cấu trúc</p>
-      <p class="nav-card__d"><a href="#/tree">Tree danh mục</a> · <a href="#/sortable">List/Grid/Bảng kéo–thả</a> · <a href="#/layout">Grid / Layout</a></p>
-    </div>
-  </div>
-</section>
-
-<section class="doc-sec">
   <h3>Repo này là gì</h3>
-  <p class="doc-sec__desc"><b>Sản phẩm cuối cùng của repo = bộ skill <code>web-builder</code></b> — thứ duy nhất “ship”: một file CSS
-  drop-in (<code>web-builder.css</code>) cùng <code>SKILL.md</code> + <code>references/</code>. Trang docs bạn đang xem, <code>/wb-change</code>
-  và các hook <b>không ship</b> — chúng chỉ để dựng, review, dogfood và bảo vệ chất lượng của skill.</p>
-  <p class="doc-sec__desc">Cách lib hoạt động: CSS viết tay, <b>token-based</b> (đổi <a href="#/tokens">token</a> là đổi cả hệ),
-  <b>không cần build</b>, một file duy nhất, prefix <code>wb-*</code> nên ghép với mọi stack mà không xung đột. Ưu tiên
-  trắng–đen–xám, có dark mode. Khi build web thì <b>ráp lại từ catalog</b> thay vì thiết kế lại — nguyên tắc reuse-first.</p>
+  <p class="doc-sec__desc">Một thư viện component để một AI vừa <b>dùng</b> (ráp UI) vừa <b>mở rộng</b> (thêm/sửa
+  component) — không chỉ để tra cứu.</p>
+  <div class="doc-note">
+    <span aria-hidden="true">🎯</span>
+    <div><b>Sản phẩm cuối cùng của repo = bộ skill <code>web-builder</code></b> (một file CSS drop-in
+    <code>web-builder.css</code> + <code>SKILL.md</code> + <code>references/</code>) — thứ <b>duy nhất “ship”</b>
+    vào app của bạn. Trang docs bạn đang xem, <code>/wb-change</code> và các hook <b>không ship</b> — chúng chỉ
+    để dựng, review, dogfood và bảo vệ chất lượng skill. Mọi thay đổi đo bằng một câu: <i>skill có tốt lên và
+    còn nhất quán không?</i></div>
+  </div>
+  <p class="doc-sec__desc">Cách lib hoạt động: CSS viết tay, <b>token-based</b> (đổi <a href="#/tokens">token</a>
+  là đổi cả hệ), <b>không cần build</b>, một file duy nhất, prefix <code>wb-*</code> nên ghép với mọi stack mà
+  không xung đột. Ưu tiên trắng–đen–xám, có dark mode. Khi build web thì <b>ráp lại từ catalog</b> thay vì
+  thiết kế lại — nguyên tắc reuse-first.</p>
 </section>
 
 <section class="doc-sec">
@@ -77,8 +47,319 @@
 </section>
 
 <section class="doc-sec">
+  <h3>Có gì trong hộp</h3>
+  <p class="doc-sec__desc">Các primitive cơ bản mà hầu như web nào cũng cần — thống nhất một ngôn ngữ hình ảnh.
+  Roster đầy đủ (mọi modifier + markup copy-paste) ở <code>components-catalog.md</code>.</p>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:210px;margin-top:8px">
+    <div class="nav-card">
+      <p class="nav-card__t">Nền tảng</p>
+      <p class="nav-card__d"><a href="#/color">Triết lý màu</a> · <a href="#/tokens">Tokens</a> · <a href="#/typography">Typography</a> · <a href="#/fonts">Fonts</a> · <a href="#/border">Border</a> · <a href="#/layout">Layout</a> · <a href="#/config">Config / Tweak</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Hành động</p>
+      <p class="nav-card__d"><a href="#/buttons">Buttons</a> · <a href="#/dropdown">Dropdown / Menu</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Nhập liệu</p>
+      <p class="nav-card__d"><a href="#/input">Input</a> (prefix/suffix), <a href="#/select">select</a>, <a href="#/textarea">textarea</a>, <a href="#/choice">checkbox/radio</a>, <a href="#/switch">switch</a>, <a href="#/range">range</a>, <a href="#/file">file</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Hiển thị dữ liệu</p>
+      <p class="nav-card__d"><a href="#/card">Card</a> · <a href="#/receipt">Hoá đơn</a> · <a href="#/tables">Tables</a> · <a href="#/filterbar">Filter bar</a> · <a href="#/stats">Stat/KPI</a> · <a href="#/capsules">Capsules</a> · <a href="#/tags">Tags</a> · <a href="#/avatar">Avatar</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Phản hồi</p>
+      <p class="nav-card__d"><a href="#/alert">Alert</a> · <a href="#/toast">Toast</a> · <a href="#/modal">Modal</a> · <a href="#/drawer">Drawer</a> · <a href="#/progress">Progress</a> · <a href="#/skeleton">Skeleton</a> · <a href="#/empty">Empty</a> · <a href="#/tooltip">Tooltip</a> · <a href="#/popover">Popover</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Điều hướng</p>
+      <p class="nav-card__d"><a href="#/navbar">Navbar</a> · <a href="#/sidenav">Sidebar</a> · <a href="#/tabs">Tabs</a> · <a href="#/steps">Steps / Stepper</a> · <a href="#/breadcrumb">Breadcrumb</a> · <a href="#/pagination">Pagination</a> · <a href="#/accordion">Accordion</a> · <a href="#/collapse">Collapse</a> · <a href="#/divider">Divider</a></p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Biểu đồ</p>
+      <p class="nav-card__d"><a href="#/charts">Charts</a> — đường (tooltip hover), cột, combo, donut, ngân sách, sparkline, thang xám/xanh</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Cấu trúc</p>
+      <p class="nav-card__d"><a href="#/tree">Tree danh mục</a> · <a href="#/sortable">List/Grid/Bảng kéo–thả</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Ưu tiên khi xây / sửa component</h3>
+  <p class="doc-sec__desc">Xếp theo thứ tự — khi hai điều va nhau, cái ở trên thắng. Đây là câu trả lời cho
+  “ưu tiên cái gì nhất”. (Chính các thẻ này dogfood <a href="#/card">card</a> + media object.)</p>
+  <div class="wb-stack">
+    <div class="wb-card"><div class="wb-card__body">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Reuse-first</p>
+          <p class="wb-media__text">Ráp UI từ các part <code>wb-*</code> đã duyệt; cái gì thật sự mới thì <b>gấp lại vào skill</b>
+          (theo cascade bên dưới) để skill cứ thế dày lên. Không tự chế style — gõ hex/px bằng tay là sai hướng.</p>
+        </div>
+      </div>
+    </div></div>
+    <div class="wb-card"><div class="wb-card__body">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Thang màu (luật thị giác số 1)</p>
+          <p class="wb-media__text">Trắng–đen–xám trước (tier 1); màu <b>đậm</b> chỉ cho status thật — đã trả/quá hạn/sắp đến hạn
+          (tier 2); cùng màu nhưng <b>nhạt</b> khi tín hiệu cần giữ êm (tier 3). Phân loại (một category) <b>không</b>
+          phải status → để xám.</p>
+        </div>
+      </div>
+    </div></div>
+    <div class="wb-card"><div class="wb-card__body">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Token thay cho số ma thuật</p>
+          <p class="wb-media__text">Hairline <code>var(--wb-bw)</code>, pill <code>var(--wb-radius-pill)</code>, màu/bo/bóng đều
+          từ <code>--wb-*</code>. Một knob đổi cả hệ. Đang gõ hex hay <code>px</code>? Gần như chắc chắn đã có token.</p>
+        </div>
+      </div>
+    </div></div>
+    <div class="wb-card"><div class="wb-card__body">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Skill không được nói dối</p>
+          <p class="wb-media__text">Đổi một component là đồng bộ đủ <b>6 nơi</b>. Catalog ↔ SKILL.md ↔ CSS ↔ demo lệch nhau
+          là AI kế tiếp bị dẫn sai — <code>validate-sync.sh</code> gác cổng khi commit.</p>
+        </div>
+      </div>
+    </div></div>
+    <div class="wb-card"><div class="wb-card__body">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Dogfood</p>
+          <p class="wb-media__text">Docs dựng bằng chính primitive nó tài liệu hoá (cluster/grid/stack/card…), nên lỗi lộ ra
+          ngay trên trang. <code>docs.css</code> chỉ giữ chrome lib không có primitive.</p>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>Tư duy thiết kế</h3>
+  <p class="doc-sec__desc">Những quyết định thẩm mỹ đã chốt sẵn, để không phải review lại trên từng trang. Đây là
+  bản tóm tắt — đầy đủ 18 nguyên tắc ở <code>references/design-principles.md</code>.</p>
+
+  <div class="doc-block">
+    <h4>Thang màu — 3 tầng chi tiêu màu</h4>
+    <p class="doc-block__desc">Không rắc màu; chọn tầng thấp nhất đủ dùng. Hai tầng màu cưỡi được lên <b>bất kỳ</b>
+    component (capsule, tag, số, viền, nền hàng, card, chart) — không riêng capsule.</p>
+    <div class="tier">
+      <div class="tier__item">
+        <p class="tier__n">TIER 1 · mặc định</p>
+        <p class="tier__t">Trắng / đen / xám</p>
+        <p class="tier__d">Gần như mọi thứ: nền, chữ, viền, đa số capsule, đa số con số.</p>
+      </div>
+      <div class="tier__item">
+        <p class="tier__n">TIER 2 · màu đậm</p>
+        <p class="tier__t">Solid, có nghĩa</p>
+        <p class="tier__d">Chỉ khi status phải rõ không nhầm: trả = xanh lá, quá hạn = đỏ, sắp đến hạn = hổ phách, info = xanh dương.</p>
+      </div>
+      <div class="tier__item">
+        <p class="tier__n">TIER 3 · màu nhạt</p>
+        <p class="tier__t">Soft, có nghĩa</p>
+        <p class="tier__d">Bản êm của tier 2 — cùng ý nghĩa, vặn nhỏ (nền tint nhạt + chữ cùng hue). Khi tín hiệu cần hiện diện mà vẫn êm.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:240px;margin-top:26px">
+    <div class="nav-card">
+      <p class="nav-card__t">Bóng trung tính · dark lật sáng</p>
+      <p class="nav-card__d">Nền sáng: bóng mực xám nhạt + hairline + chữ gần đen. Nền tối: bóng thành <b>vệt sáng nhẹ</b>
+      (bóng đen tàng hình trên nền tối). Dựng bằng token là tự đúng cả hai theme.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Layout = bộ utility nhỏ</p>
+      <p class="nav-card__d"><code>cluster</code>/<code>stack</code>/<code>grid</code>/<code>container</code>/<code>ratio</code> —
+      <b>không</b> phải lưới 12 cột. Đủ cho trang thật, ít thứ để học và để dùng sai; vẫn đủ căn chỉnh justify/align.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Icon từ icon font</p>
+      <p class="nav-card__d">Material Symbols, <code>&lt;span class="wb-ico"&gt;name&lt;/span&gt;</code> (weight ~600 cho sắc nét) —
+      <b>không</b> vẽ tay SVG/CSS. Emoji (📁 🧾) khi thật sự là pictogram.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Viền: outline + nền nhạt</p>
+      <p class="nav-card__d">Tone = viền kín cùng hue + nền soft (kiểu capsule), áp cho alert/toast/note. <b>Không</b> dùng thanh
+      viền trái. Dashed = “trống / thả được / tuỳ chọn / thêm mới”.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">× luôn ở góc phải-trên</p>
+      <p class="nav-card__d">Mọi nút đóng (<code>.wb-close</code>) của alert/toast/modal/drawer nằm góc phải-trên — không trôi
+      xuống giữa hàng.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Đặt tên nhất quán</p>
+      <p class="nav-card__d"><code>wb-block__element--modifier</code> cho cấu trúc; trạng thái runtime là <code>.is-*</code>
+      (<code>.is-open</code>, <code>.is-active</code>, cả <code>.is-invalid</code> khi validate).</p>
+    </div>
+  </div>
+  <p class="doc-sec__desc" style="margin-top:18px">Xem trực tiếp: <a href="#/color">Triết lý màu</a> ·
+  <a href="#/tokens">Design tokens</a> · <a href="#/border">Border &amp; bo góc</a> · <a href="#/config">Config playground</a>.</p>
+</section>
+
+<section class="doc-sec">
+  <h3>Workflow — pipeline <code>/wb-change</code></h3>
+  <p class="doc-sec__desc">Một thay đổi component chạm nhiều file, lệch một nơi là skill nói dối AI kế tiếp — nên có
+  quy trình chuẩn: <b>10 bước · 4 giai đoạn</b>, đồng bộ <b>6 nơi</b>, <b>2 hook</b> gác. Việc đọc rộng (discover ·
+  verify nhiều trang · review chéo) đẩy cho subagent để tiết kiệm token. (Stepper dưới đây dogfood
+  <a href="#/steps">wb-steps</a>.)</p>
+
+  <div class="wb-cluster" style="row-gap:8px;margin:6px 0 4px">
+    <span class="wb-cap wb-cap--elevated">A · Hiểu &amp; chốt</span>
+    <span class="doc-sep" aria-hidden="true">→</span>
+    <span class="wb-cap wb-cap--elevated">B · Làm</span>
+    <span class="doc-sep" aria-hidden="true">→</span>
+    <span class="wb-cap wb-cap--elevated">C · Kiểm chứng</span>
+    <span class="doc-sep" aria-hidden="true">→</span>
+    <span class="wb-cap wb-cap--elevated">D · Soát &amp; chốt</span>
+  </div>
+
+  <p class="doc-eyebrow" style="margin-top:20px">Giai đoạn A — Hiểu &amp; chốt</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">1</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Discover + khả thi</p>
+        <p class="wb-steps__desc">Đọc <code>components-catalog.md</code> + <code>design-principles.md</code> trước — có thể đã tồn tại
+        (reuse) hoặc ghép được từ primitive sẵn có. Đọc rộng → subagent Explore.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">2</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Plan + confirm</p>
+        <p class="wb-steps__desc">Nêu gọn: đổi gì · chạm nơi nào trong 6 · ghép từ primitive nào · tier màu. Mơ hồ thì hỏi
+        1–2 câu <b>trước khi</b> code; rõ thì đi tiếp.</p>
+      </div>
+    </li>
+  </ol>
+
+  <p class="doc-eyebrow" style="margin-top:24px">Giai đoạn B — Làm</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">3</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Implement</p>
+        <p class="wb-steps__desc">CSS trước (token, không magic number) → demo page → NAV → catalog → SKILL.md → (docs phụ nếu
+        cần). Hook PostToolUse tự nhắc checklist 6 nơi ngay khi chạm <code>web-builder.css</code>.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">4</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Check lỗi</p>
+        <p class="wb-steps__desc"><code>validate-sync.sh</code>: routes == pages · không <code>&lt;style&gt;</code> lạc · <code>app.js</code> parse.</p>
+        <span class="wb-steps__note">↺ Lỗi → sửa đúng chỗ đó (quay bước 3), không xoá làm lại</span>
+      </div>
+    </li>
+  </ol>
+
+  <p class="doc-eyebrow" style="margin-top:24px">Giai đoạn C — Kiểm chứng</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">5</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Verify (xem thật)</p>
+        <p class="wb-steps__desc"><code>python3 serve.py</code> → mở <code>#/&lt;id&gt;</code> trong Browser; kiểm cả <b>sáng &amp; tối</b>.
+        Xem nhiều trang → subagent, trả kết luận gọn.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">6</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Rà soát tái dùng (reuse sweep) — <b>bắt buộc</b></p>
+        <p class="wb-steps__desc">Rà toàn repo tìm chỗ đang làm cách cũ mà nay thay được bằng bản mới, hoặc nên áp biến thể/token
+        vừa thêm. Quét rộng → subagent (trả <code>file:line</code> + đề xuất).</p>
+        <span class="wb-steps__note">↺ Áp thay thế → verify lại đúng chỗ vừa đổi (quay bước 5)</span>
+      </div>
+    </li>
+  </ol>
+
+  <p class="doc-eyebrow" style="margin-top:24px">Giai đoạn D — Soát &amp; chốt</p>
+  <ol class="wb-steps">
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">7</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Review code</p>
+        <p class="wb-steps__desc">Chạy <code>/code-review</code> trên diff.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">8</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Review docs liên đới</p>
+        <p class="wb-steps__desc">Đối chiếu 6 nơi có nhất quán không (catalog ↔ SKILL.md ↔ CSS ↔ comparison). Giao subagent đọc
+        chéo, trả danh sách lệch → sửa.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">9</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Guardrails</p>
+        <p class="wb-steps__desc"><code>validate-sync.sh</code> (cũng là PreToolUse gate) kiểm cả docs lẫn skill deliverable. Rồi soi
+        mắt: color-ladder · token-over-magic-number · × top-right · no left-accent bar · dark = light-lift shadow.</p>
+      </div>
+    </li>
+    <li class="wb-steps__item">
+      <span class="wb-steps__marker">10</span>
+      <div class="wb-steps__content">
+        <p class="wb-steps__title">Commit + push</p>
+        <p class="wb-steps__desc">Commit thẳng <code>main</code> (workflow solo). Message kết bằng dòng
+        <code>Co-Authored-By</code>. Rồi push.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="doc-block">
+    <h4>Đồng bộ 6 nơi (cascade)</h4>
+    <p class="doc-block__desc">Sửa một component = cập nhật tối đa 6 nơi cùng một lần. Lệch một nơi = skill nói dối AI
+    kế tiếp.</p>
+    <div class="wb-cluster" style="row-gap:8px">
+      <span class="wb-cap">web-builder.css</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">pages/&lt;id&gt;.html</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">app.js (NAV)</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">components-catalog.md</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">SKILL.md</span>
+      <span class="doc-sep" aria-hidden="true">↔</span>
+      <span class="wb-cap">principles / integration / comparison</span>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>2 hook gác (chạy tự động)</h4>
+    <div class="wb-grid wb-grid--2" style="margin-top:6px">
+      <div class="nav-card">
+        <p class="nav-card__t">PostToolUse — nhắc cascade</p>
+        <p class="nav-card__d">Vừa chạm <code>web-builder.css</code> là hook chèn checklist 6 nơi, để không quên đồng bộ chỗ nào.</p>
+      </div>
+      <div class="nav-card">
+        <p class="nav-card__t">PreToolUse — cổng commit</p>
+        <p class="nav-card__d"><code>git commit</code>/<code>push</code> bị chặn nếu <code>validate-sync.sh</code> fail (routes==pages ·
+        SKILL.md có frontmatter · catalog không khai class CSS thiếu · CSS cân ngoặc…).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-sec">
   <h3>AI làm gì với repo này</h3>
-  <p class="doc-sec__desc">Repo được thiết kế để một AI vừa <b>dùng</b> vừa <b>mở rộng</b> bộ component — không chỉ để tra cứu.</p>
+  <p class="doc-sec__desc">Sáu việc thường gặp — tất cả đều xoay quanh giữ cho skill dày lên và không lệch.</p>
   <div class="wb-grid wb-grid--auto" style="--wb-grid-min:250px;margin-top:8px">
     <div class="nav-card">
       <p class="nav-card__t">Build UI web</p>

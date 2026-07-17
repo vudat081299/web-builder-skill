@@ -75,19 +75,20 @@ source of truth**, kept in sync per-component, so it never drifts here):
 - **Nền tảng** — colour ladder, tokens, typography scale, fonts guidance (system stack by default, swap
   `--wb-font`), border & radius, the **grid/layout utilities** (`.wb-cluster`/`.wb-grid`/`.wb-stack`/`.wb-container`/`.wb-ratio`
   with full row/column **alignment** + `.wb-self--*` per-item + `.wb-grow` — they're the base every component composes on),
-  **sticky** (`.wb-sticky` / `--bottom` — pin a bar/card to an edge on scroll), and a live **Config** playground that edits tokens and exports a `.md`.
+  **sticky** (`.wb-sticky` / `--bottom` — pin a bar/card to an edge on scroll), **scroll** (`.wb-scroll-y`/`-x` themed overflow regions + `.wb-scrollbars` — theme any scrollbar incl. the whole-page viewport), and a live **Config** playground that edits tokens and exports a `.md`.
 - **Hành động** — buttons (incl. button-group, social-login with brand logos), dropdown / menu.
-- **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea, checkbox/radio, switch
+- **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea (themed scrollbar both axes + a custom round-capped resize handle via `.wb-textarea-wrap`; `--code` for no-wrap horizontal scroll), checkbox/radio, switch
   (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone,
   **colour** — a preset **swatch palette** (`.wb-swatches`, pick from approved hues), a custom **colour picker** (`.wb-colorpicker` — SV area · hue · hex · presets; replaces the OS dialog); validation via the `.is-invalid` state.
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
-  stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **receipt**
+  stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **media object**
+  (`.wb-media` — a leading figure + title/text body: ranked rows, feature lists; pairs with card), **receipt**
   (hoá đơn — a torn-paper slip; **4 edge styles** scallop (default) / `--wave` / `--zigzag` / `--dashed`, plus `--bottom`/`--flat`, `__barcode`; bill · transfer · voucher templates).
 - **Phản hồi** — alert, toast, modal/dialog, drawer/offcanvas (backdrop options on `.wb-overlay`: `--blur` /
   `--clear`, or `--pass` = **non-modal**, page below stays usable), progress (+ indeterminate/loading),
   skeleton, empty state, tooltip, **popover** (click-toggled card w/ arrow + × — richer than tooltip, not a menu).
-- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**), nav / menu, sidenav (app rail), tabs, breadcrumb, pagination, accordion, **collapse** (one standalone show/hide region), divider.
+- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**), nav / menu, sidenav (app rail), tabs, **steps/stepper** (`.wb-steps` — numbered or `--dot`; vertical timeline + `--horizontal` wizard; `.is-todo`/`.is-active`/`.is-done` states), breadcrumb, pagination, accordion, **collapse** (one standalone show/hide region), divider.
 - **Biểu đồ** — line/area, income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin
   donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps.
 - **Cấu trúc** — drag-and-drop **tree** (reorder + reparent) and a flat **sortable** list/grid/rows.

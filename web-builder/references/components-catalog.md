@@ -46,12 +46,14 @@ for the look (see `integration.md`).
 | Filter by amount range (≥ / ≤ / between), a `#tag`, or a status | **Filter bar** tokens | [Filter bar](#filter-bar) |
 | A data-entry form (add/edit transaction, settings) | **Form controls** | [Forms](#form-controls) |
 | A money input, a category picker, a yes/no setting | input-group / select / switch | [Forms](#form-controls) |
+| A multi-line notes / code field with a clean resize handle | **Textarea** (`.wb-textarea` + `-wrap`) | [Forms](#form-controls) |
 | A slider for a budget cap / threshold | **Range** | [Range](#range--slider) |
 | Attach a statement / receipt (button or drop area) | **File / dropzone** | [File](#file--upload) |
 | Pick a category / label colour from a preset palette | **Swatches** (`.wb-swatches`) | [Swatches](#colour-swatches) |
 | Pick any colour with a nice custom UI (SV + hue + hex) | **Colour picker** (`.wb-colorpicker`) | [Colour picker](#colour-picker) |
 | A settings / accounts list (one item per row) | **List group** | [List group](#list-group) |
 | A content container / section with header + body | **Card** | [Card](#card) |
+| A row with a leading icon/number + title + text (rank, feature, setting) | **Media object** (`.wb-media`) | [Card](#card) |
 | Show one transaction / bill as a torn-paper slip | **Receipt** (hoá đơn) | [Receipt](#receipt) |
 | A menu of actions off a button (⋯, "Thao tác") | **Dropdown** | [Dropdown](#dropdown--menu) |
 | An inline message inside a page/form | **Alert** | [Alert](#alert--banner) |
@@ -59,6 +61,7 @@ for the look (see `integration.md`).
 | A confirm / focused task over a dimmed screen | **Modal** | [Modal](#modal--dialog) |
 | A slide-in filters / detail / side-menu panel | **Drawer** | [Drawer](#drawer--offcanvas) |
 | Switch between views, or a Thu/Chi segmented toggle | **Tabs** | [Tabs](#tabs) |
+| A multi-step flow / wizard / progress timeline | **Steps** (`.wb-steps`) | [Steps](#steps--stepper) |
 | The top app bar (brand · links · actions) | **Navbar** | [Navbar](#navbar--nav-menu) |
 | A set of page-navigation links (a menu) | **Nav** (`.wb-nav`) | [Navbar](#navbar--nav-menu) |
 | The left navigation rail of an app shell | **Sidebar** (`.wb-sidenav`) | [Sidebar](#sidebar-side-nav) |
@@ -538,6 +541,24 @@ the dashed "droppable" affordance for statements/receipts — a `<label>` around
 <div class="wb-card wb-card--dashed"><div class="wb-card__body">＋ Thêm</div></div>
 ```
 
+### Media object
+
+`.wb-media` = a leading **figure** + a flexible **body** (`__title` + `__text`). Drop it in a `.wb-card`
+for a "media card" (ranked rows, feature lists, settings), or in a `.wb-list` / alert / standalone. For a
+numbered figure **reuse** `.wb-avatar--solid` (no new badge); `--center` vertically centres a one-line row.
+
+```html
+<div class="wb-card"><div class="wb-card__body">
+  <div class="wb-media">
+    <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+    <div class="wb-media__body">
+      <p class="wb-media__title">Reuse-first</p>
+      <p class="wb-media__text">Ráp từ part đã duyệt…</p>
+    </div>
+  </div>
+</div></div>
+```
+
 ## Receipt
 
 `.wb-receipt` (wrapper — casts the drop-shadow that follows the torn edge) > `.wb-receipt__paper`
@@ -714,6 +735,33 @@ In the docs wrap in `[data-tabs]` with `data-tab`/`data-panel` for the JS switch
   <div class="wb-tab-panel" data-panel="a">…</div>
   <div class="wb-tab-panel" data-panel="b" hidden>…</div>
 </div>
+```
+
+## Steps / Stepper
+
+`.wb-steps` > `.wb-steps__item` (each = `.wb-steps__marker` + `.wb-steps__content` with `__title`/`__desc`).
+Vertical with a connector rail by default; `--horizontal` = wizard row, `--dot` = slim timeline. Per-item
+state: `.is-done` (put `<span class="wb-ico">check</span>` in the marker), `.is-active` (neutral ring),
+`.is-todo` (muted outline). Markers are tier-1 high-contrast (like `.wb-avatar--solid`) — contrast, not
+colour. `.wb-steps__note` = a dashed annotation pill on a step. Switching steps is app logic; the classes
+only style the look.
+
+```html
+<ol class="wb-steps">
+  <li class="wb-steps__item is-done">
+    <span class="wb-steps__marker"><span class="wb-ico">check</span></span>
+    <div class="wb-steps__content"><p class="wb-steps__title">Chọn nguồn</p></div>
+  </li>
+  <li class="wb-steps__item is-active">
+    <span class="wb-steps__marker">2</span>
+    <div class="wb-steps__content"><p class="wb-steps__title">Nhập số tiền</p></div>
+  </li>
+  <li class="wb-steps__item is-todo">
+    <span class="wb-steps__marker">3</span>
+    <div class="wb-steps__content"><p class="wb-steps__title">Xác nhận</p></div>
+  </li>
+</ol>
+<!-- --horizontal (wizard) · --dot (timeline) -->
 ```
 
 ## Tooltip

@@ -2242,3 +2242,90 @@
    -------------------------------------------------------------------------- */
 .wb-sticky         { position: sticky; top: var(--wb-sticky-gap, 0px); z-index: 20; }
 .wb-sticky--bottom { top: auto; bottom: var(--wb-sticky-gap, 0px); }
+
+/* =============================================================================
+   44. STEPS / STEPPER  (a numbered or dotted sequence — wizard, onboarding, timeline)
+   -----------------------------------------------------------------------------
+   Vertical by default (marker + connector rail + title/desc); add --horizontal for
+   a wizard row, or --dot for a slim timeline. Markers are a tier-1 high-contrast
+   neutral chip (spends contrast, not colour — same idiom as .wb-avatar--solid).
+   Per-item state classes drive a live flow:
+     .is-todo    → upcoming (muted outline marker)
+     .is-active  → current  (filled + neutral ring)
+     default / .is-done → filled  (put <span class="wb-ico">check</span> in a done marker)
+   .wb-steps__note is a dashed annotation pill hung under a step (e.g. a loop-back).
+   Marker size is one knob: --wb-steps-size.
+   -------------------------------------------------------------------------- */
+.wb-steps {
+  --wb-steps-size: 30px;
+  list-style: none; margin: 0; padding: 0; font-family: var(--wb-font);
+  display: flex; flex-direction: column;
+}
+.wb-steps__item { position: relative; display: flex; gap: 14px; padding-bottom: 20px; }
+.wb-steps__item:last-child { padding-bottom: 0; }
+/* Connector rail — centred on the marker, running down to the next marker. */
+.wb-steps__item::before {
+  content: ""; position: absolute; left: calc(var(--wb-steps-size) / 2);
+  top: var(--wb-steps-size); bottom: 0; width: var(--wb-bw);
+  background: var(--wb-border); transform: translateX(-50%);
+}
+.wb-steps__item:last-child::before { display: none; }
+.wb-steps__marker {
+  position: relative; z-index: 1; flex: none;
+  width: var(--wb-steps-size); height: var(--wb-steps-size);
+  border: var(--wb-bw) solid transparent; border-radius: var(--wb-radius-pill);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  background: var(--wb-gray-900); color: var(--wb-white);
+}
+.dark .wb-steps__marker { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-steps__marker .wb-ico { font-size: 18px; }
+.wb-steps__content { padding-top: 4px; min-width: 0; }
+.wb-steps__title { font-size: 14.5px; font-weight: 650; color: var(--wb-fg); margin: 0 0 2px; }
+.wb-steps__desc  { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
+.wb-steps__note {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+  font-size: 11.5px; font-weight: 600; color: var(--wb-fg-muted);
+  border: var(--wb-bw) dashed var(--wb-border-strong);
+  border-radius: var(--wb-radius-pill); padding: 3px 11px;
+}
+/* State: upcoming — a muted outline marker. */
+.wb-steps__item.is-todo .wb-steps__marker {
+  background: transparent; color: var(--wb-fg-subtle); border-color: var(--wb-border-strong);
+}
+.dark .wb-steps__item.is-todo .wb-steps__marker { background: transparent; color: var(--wb-fg-subtle); }
+/* State: active — filled + a neutral ring so the current step stands out. */
+.wb-steps__item.is-active .wb-steps__marker {
+  box-shadow: 0 0 0 3px var(--wb-surface), 0 0 0 5px var(--wb-border-strong);
+}
+/* --dot: small dots instead of numbers (a plain timeline). */
+.wb-steps--dot { --wb-steps-size: 12px; }
+.wb-steps--dot .wb-steps__marker { font-size: 0; }
+.wb-steps--dot .wb-steps__content { padding-top: 0; }
+/* --horizontal: marker on top, label below, rail between markers. */
+.wb-steps--horizontal { flex-direction: row; }
+.wb-steps--horizontal .wb-steps__item {
+  flex: 1 1 0; flex-direction: column; align-items: center; text-align: center;
+  gap: 8px; padding: 0;
+}
+.wb-steps--horizontal .wb-steps__item::before {
+  left: 50%; top: calc(var(--wb-steps-size) / 2); right: auto; bottom: auto;
+  width: 100%; height: var(--wb-bw); transform: translateY(-50%);
+}
+.wb-steps--horizontal .wb-steps__content { padding-top: 0; }
+
+/* =============================================================================
+   45. MEDIA OBJECT  (a leading figure + a title/text body — ranked rows, features)
+   -----------------------------------------------------------------------------
+   The classic media object: a fixed figure (icon / avatar / number / emoji) beside a
+   flexible body. Drop it in a .wb-card for a "media card" (see the Card page), in a
+   .wb-list row, an alert, or use standalone. For a numbered figure reuse
+   .wb-avatar.wb-avatar--solid (a tier-1 high-contrast chip) — no new badge needed.
+   -------------------------------------------------------------------------- */
+.wb-media { display: flex; align-items: flex-start; gap: 12px; font-family: var(--wb-font); }
+.wb-media--center { align-items: center; }
+/* Body grows + can shrink; the leading figure (an avatar / icon / emoji) keeps its
+   natural size, so there's no separate figure class to carry. */
+.wb-media__body   { flex: 1 1 auto; min-width: 0; }
+.wb-media__title  { font-size: 14.5px; font-weight: 650; color: var(--wb-fg); margin: 0 0 2px; }
+.wb-media__text   { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
