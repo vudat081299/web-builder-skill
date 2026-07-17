@@ -85,6 +85,7 @@ const NAV = [
   { group: "Cấu trúc", items: [
     { id: "tree",     label: "Tree danh mục" },
     { id: "sortable", label: "List / Grid kéo–thả" },
+    { id: "slotgrid", label: "Lưới ô cố định" },
   ]},
 ];
 
@@ -146,12 +147,14 @@ function initPage(root) {
   root.querySelectorAll("[data-tree]").forEach(initTree);
   root.querySelectorAll("[data-sortable]").forEach(initSortable);
   root.querySelectorAll("[data-sortable-rows]").forEach(initSortableTable);
+  root.querySelectorAll("[data-slotgrid]").forEach(initSlotGrid);
   root.querySelectorAll("[data-range-filter]").forEach(initRangeFilter);
   root.querySelectorAll("[data-colorpicker]").forEach(initColorPicker);
   root.querySelectorAll("[data-calendar]").forEach(initCalendar);
   root.querySelectorAll("[data-timepicker]").forEach(initTimePicker);
   root.querySelectorAll("[data-mask]").forEach(initMask);
   root.querySelectorAll("[data-reveal]").forEach(initReveal);
+  root.querySelectorAll("[data-picker-out]").forEach(initPickerField);
 }
 
 /* ---- Range filter — dual slider ⇄ min/max inputs ⇄ plain-language summary -----
@@ -417,6 +420,25 @@ function pickerToField(e) {
 document.addEventListener("wb-cal-input", pickerToField);
 document.addEventListener("wb-time-input", pickerToField);
 
+/* The inverse of pickerToField: when the user TYPES a (masked) date/time into the
+   field, mirror it in the hosted picker so "type OR pick" stay in sync. Also run
+   when the popover opens, to seed the picker from the field's current value. The
+   regex gate keeps a half-typed value from clearing the picker's current selection. */
+function syncFieldToPicker(pop) {
+  if (!pop) return;
+  const field = pop.querySelector("[data-picker-out]");
+  if (!field) return;
+  const val = (field.matches("input, textarea") ? field.value : field.textContent).trim();
+  const cal = pop.querySelector("[data-calendar]");
+  if (cal && cal._calSet && /^\d{2}\/\d{2}\/\d{4}$/.test(val)) cal._calSet(val);   // full dd/mm/yyyy only
+  const tp = pop.querySelector("[data-timepicker]");
+  if (tp && tp._timeSet && /^\d{1,2}:\d{2}(\s*[AP]M)?$/i.test(val)) tp._timeSet(val);
+}
+function initPickerField(field) {
+  const pop = field.closest(".wb-popover");
+  if (pop) field.addEventListener("input", () => syncFieldToPicker(pop));
+}
+
 /* ---- Masked inputs — format WHILE typing (no popup), docs-only driver -------------
    data-mask="date|time|datetime|card|daterange": strip to digits, then re-insert the
    fixed separators; the caret rides the end (fine for append typing). In an app use a
@@ -519,6 +541,48 @@ function initSortable(list) {
     if (dragged) dragged.classList.remove("is-dragging");
     if (ph.parentNode) ph.parentNode.removeChild(ph);
     dragged = null;
+  }
+}
+
+/* ---- Slot grid: FIXED cells; drag an item onto ANY cell to place it there, and
+   dropping on an occupied cell SWAPS the two. Empty cells persist, so gaps between
+   items stay. In the app use dnd-kit with rectSwappingStrategy; keep these classes. */
+function initSlotGrid(grid) {
+  let dragged = null, from = null;
+  const clearOver = () => grid.querySelectorAll(".wb-slotgrid__cell.is-over").forEach((c) => c.classList.remove("is-over"));
+
+  grid.addEventListener("dragstart", (e) => {
+    const item = e.target.closest(".wb-slotgrid__item");
+    if (!item || !grid.contains(item)) return;
+    dragged = item; from = item.parentElement;          // the source cell
+    e.dataTransfer.effectAllowed = "move";
+    try { e.dataTransfer.setData("text/plain", "item"); } catch (_) {}
+    setTimeout(() => item.classList.add("is-dragging"), 0);
+  });
+  grid.addEventListener("dragover", (e) => {
+    if (!dragged) return;
+    e.preventDefault();
+    const cell = e.target.closest(".wb-slotgrid__cell");
+    clearOver();
+    if (cell && cell !== from) cell.classList.add("is-over");   // highlight the target slot
+  });
+  grid.addEventListener("drop", (e) => {
+    if (!dragged) return;
+    e.preventDefault();
+    const cell = e.target.closest(".wb-slotgrid__cell");
+    if (cell && cell !== from) {
+      const occupant = cell.querySelector(".wb-slotgrid__item");
+      cell.appendChild(dragged);                        // move into the target slot
+      if (occupant) from.appendChild(occupant);         // occupied → swap the two
+    }
+    cleanup();
+  });
+  grid.addEventListener("dragend", cleanup);
+
+  function cleanup() {
+    if (dragged) dragged.classList.remove("is-dragging");
+    clearOver();
+    dragged = null; from = null;
   }
 }
 
@@ -735,7 +799,7 @@ document.addEventListener("click", (e) => {
   if (sideTog) {
     const hidden = document.querySelector(".doc-shell").classList.toggle("is-side-hidden");
     const ico = sideTog.querySelector(".wb-ico");
-    if (ico) ico.textContent = hidden ? "left_panel_open" : "left_panel_close";
+    if (ico) ico.textContent = hidden ? "menu" : "menu_open";
     return;
   }
 
@@ -781,8 +845,8 @@ document.addEventListener("click", (e) => {
   if (popToggle) {
     const pop = popToggle.closest(".wb-popover");
     const opened = pop.classList.toggle("is-open");
-    /* Now that the panel is shown, centre any scroll-column time picker on its selection. */
-    if (opened) pop.querySelectorAll("[data-timepicker]").forEach((tp) => tp._tpCenter && tp._tpCenter());
+    /* Seed the hosted picker from the field, then centre any time picker on its selection. */
+    if (opened) { syncFieldToPicker(pop); pop.querySelectorAll("[data-timepicker]").forEach((tp) => tp._tpCenter && tp._tpCenter()); }
     return;
   }
   if (popPanel) return;   // a click inside the card (not ×) — leave it open
@@ -1126,27 +1190,105 @@ function initConfig() {
   drawer.querySelector("[data-config-close]").addEventListener("click", () => drawer.classList.remove("is-open"));
 }
 
-/* ---- Theme toggle --------------------------------------------------------- */
+/* ---- Theme: cycle System → Light → Dark (System follows the OS) ------------ */
 const root = document.documentElement;
-function applyThemeLabel() {
-  const dark = root.classList.contains("dark");
-  document.getElementById("themeIcon").textContent = dark ? "☾" : "☀";
-  document.getElementById("themeLabel").textContent = dark ? "Dark" : "Light";
+const themeMQ = window.matchMedia("(prefers-color-scheme: dark)");
+function themeMode() { return localStorage.getItem("wb-theme") || "system"; }
+function applyTheme(mode) {
+  root.classList.toggle("dark", mode === "dark" || (mode === "system" && themeMQ.matches));
 }
-function toggleTheme() {
-  root.classList.toggle("dark");
-  localStorage.setItem("wb-theme", root.classList.contains("dark") ? "dark" : "light");
+function applyThemeLabel() {
+  const map = { system: ["◐", "Tự động"], light: ["☀", "Sáng"], dark: ["☾", "Tối"] };
+  const [icon, label] = map[themeMode()] || map.system;
+  document.getElementById("themeIcon").textContent = icon;
+  document.getElementById("themeLabel").textContent = label;
+}
+function setTheme(mode) {
+  localStorage.setItem("wb-theme", mode);
+  applyTheme(mode);
   applyThemeLabel();
 }
+function cycleTheme() {
+  const next = { system: "light", light: "dark", dark: "system" };
+  setTheme(next[themeMode()] || "light");
+}
+/* In System mode, track OS light/dark changes live. */
+themeMQ.addEventListener("change", () => { if (themeMode() === "system") applyTheme("system"); });
+
+/* ---- Search: full-text over every page (docs-only). The index is built lazily on
+   first open and cached; matching is a simple case-insensitive substring for now
+   (label first, then body). A hit links straight to its page. -------------------- */
+let SEARCH_INDEX = null, searchBuilding = null;
+function sEsc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function pageText(html) {
+  const d = document.createElement("div");
+  d.innerHTML = html;
+  d.querySelectorAll("script, style").forEach((n) => n.remove());
+  return (d.textContent || "").replace(/\s+/g, " ").trim();
+}
+function buildSearchIndex() {
+  if (SEARCH_INDEX || searchBuilding) return;
+  const items = NAV.flatMap((g) => g.items).filter((it) => !it.coming);
+  searchBuilding = Promise.all(items.map((it) =>
+    fetch("pages/" + it.id + ".html", { cache: "no-store" })
+      .then((r) => (r.ok ? r.text() : ""))
+      .then((html) => ({ id: it.id, label: it.label, text: pageText(html) }))
+      .catch(() => ({ id: it.id, label: it.label, text: "" }))
+  )).then((idx) => { SEARCH_INDEX = idx; renderSearch(document.getElementById("searchInput").value); });
+}
+function searchSnippet(text, i, len) {
+  if (i < 0) return sEsc(text.slice(0, 90)) + (text.length > 90 ? "…" : "");
+  const start = Math.max(0, i - 34);
+  return (start > 0 ? "…" : "") + sEsc(text.slice(start, i)) +
+    '<mark class="doc-search__hl">' + sEsc(text.slice(i, i + len)) + "</mark>" +
+    sEsc(text.slice(i + len, i + len + 52)) + (text.length > i + len + 52 ? "…" : "");
+}
+function renderSearch(q) {
+  const box = document.getElementById("searchResults");
+  q = (q || "").trim();
+  if (!SEARCH_INDEX) { box.innerHTML = '<p class="doc-search__hint">Đang lập chỉ mục…</p>'; return; }
+  if (!q) { box.innerHTML = '<p class="doc-search__hint">Gõ để tìm trong tiêu đề và nội dung mọi trang.</p>'; return; }
+  const ql = q.toLowerCase(), hits = [];
+  for (const p of SEARCH_INDEX) {
+    const inLabel = p.label.toLowerCase().includes(ql);
+    const i = p.text.toLowerCase().indexOf(ql);
+    if (inLabel || i >= 0) hits.push({ p, i, inLabel });
+  }
+  hits.sort((a, b) => (b.inLabel - a.inLabel) || (a.i - b.i));
+  if (!hits.length) { box.innerHTML = '<p class="doc-search__hint">Không thấy kết quả cho “' + sEsc(q) + '”.</p>'; return; }
+  box.innerHTML = '<div class="wb-list">' + hits.map(({ p, i }) =>
+    '<a class="wb-list__item wb-list__item--link" href="#/' + p.id + '" data-search-go>' +
+      '<span class="wb-list__title">' + sEsc(p.label) + "</span>" +
+      '<span class="wb-list__sub">' + searchSnippet(p.text, i, q.length) + "</span>" +
+    "</a>").join("") + "</div>";
+}
+function openSearch() {
+  document.getElementById("searchModal").classList.add("is-open");
+  buildSearchIndex();
+  const inp = document.getElementById("searchInput");
+  renderSearch(inp.value);
+  setTimeout(() => inp.focus(), 30);
+}
+function closeSearch() { document.getElementById("searchModal").classList.remove("is-open"); }
 
 /* ---- Boot ----------------------------------------------------------------- */
 renderNav();
+applyTheme(themeMode());
 applyThemeLabel();
 initConfig();
-document.getElementById("themeBtn").addEventListener("click", toggleTheme);
-/* Any .wb-theme-toggle inside a demo (e.g. the navbar's) flips the same theme. */
+document.getElementById("themeBtn").addEventListener("click", cycleTheme);
+/* Any .wb-theme-toggle inside a demo (e.g. the navbar's) flips light ⇄ dark. */
 document.addEventListener("click", (e) => {
-  if (e.target.closest(".wb-theme-toggle")) toggleTheme();
+  if (e.target.closest(".wb-theme-toggle")) setTheme(root.classList.contains("dark") ? "light" : "dark");
+});
+/* Search: button + ⌘K / "/" to open, Esc to close; clicking a hit navigates + closes. */
+document.getElementById("searchBtn").addEventListener("click", openSearch);
+document.getElementById("searchInput").addEventListener("input", (e) => renderSearch(e.target.value));
+document.getElementById("searchResults").addEventListener("click", (e) => { if (e.target.closest("[data-search-go]")) closeSearch(); });
+document.addEventListener("keydown", (e) => {
+  if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) { e.preventDefault(); openSearch(); }
+  else if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName) && !(document.activeElement && document.activeElement.isContentEditable)) { e.preventDefault(); openSearch(); }
+  else if (e.key === "Escape") closeSearch();
 });
 const cfgBtn = document.getElementById("configBtn");
 if (cfgBtn) cfgBtn.addEventListener("click", () =>

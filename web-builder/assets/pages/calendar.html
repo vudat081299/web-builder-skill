@@ -64,14 +64,14 @@
   </div>
 
   <div class="doc-block">
-    <h4>Bấm để mở (field + popover)</h4>
-    <p class="doc-block__desc">Ghép một ô nhập <code>.wb-input-group</code> (nút <code>.wb-input-group__btn</code> có icon lịch) làm nút mở
-    <code>.wb-popover</code> chứa calendar. Chọn xong, ngày tự điền vào ô (<code>data-picker-out</code>) và popover đóng lại.</p>
+    <h4>Gõ hoặc chọn (field + popover)</h4>
+    <p class="doc-block__desc">Ô nhập cho phép <b>gõ trực tiếp</b> — tự định dạng <code>dd/mm/yyyy</code> nhờ <code>data-mask="date"</code> — <b>hoặc</b> bấm icon lịch mở
+    <code>.wb-popover</code> để chọn. Gõ và chọn <b>đồng bộ hai chiều</b>; chọn xong ngày điền vào ô (<code>data-picker-out</code>) và popover đóng lại.</p>
     <div class="demo">
       <div class="demo__stage">
         <span class="wb-popover wb-popover--bottom">
           <span class="wb-input-group" style="width:216px">
-            <input class="wb-input" data-picker-out readonly value="14/07/2026" aria-label="Ngày đã chọn" />
+            <input class="wb-input" data-picker-out data-mask="date" inputmode="numeric" placeholder="dd/mm/yyyy" value="14/07/2026" aria-label="Ngày (gõ hoặc chọn)" />
             <button type="button" class="wb-input-group__btn" data-pop-toggle aria-label="Mở lịch"><span class="wb-ico wb-ico--sm">calendar_month</span></button>
           </span>
           <div class="wb-popover__panel">
@@ -89,7 +89,7 @@
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-popover wb-popover--bottom"&gt;
   &lt;span class="wb-input-group"&gt;
-    &lt;input class="wb-input" data-picker-out readonly value="14/07/2026" /&gt;
+    &lt;input class="wb-input" data-picker-out data-mask="date" placeholder="dd/mm/yyyy" value="14/07/2026" /&gt;
     &lt;button class="wb-input-group__btn" data-pop-toggle&gt;&lt;span class="wb-ico wb-ico--sm"&gt;calendar_month&lt;/span&gt;&lt;/button&gt;
   &lt;/span&gt;
   &lt;div class="wb-popover__panel"&gt;

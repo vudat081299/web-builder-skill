@@ -15,12 +15,12 @@
     window.__v = Date.now();
     document.write('<link rel="stylesheet" href="web-builder.css?v=' + window.__v + '">');
     document.write('<link rel="stylesheet" href="docs.css?v=' + window.__v + '">');
-    /* Set theme before paint to avoid a flash of the wrong mode. */
+    /* Set theme before paint to avoid a flash of the wrong mode. Modes: 'system'
+       (default — follow the OS), 'light', 'dark'. */
     try {
       var s = localStorage.getItem('wb-theme');
-      var d = s === 'dark' || (!s && window.matchMedia &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (d) document.documentElement.classList.add('dark');
+      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (s === 'dark' || ((s === 'system' || !s) && sysDark)) document.documentElement.classList.add('dark');
     } catch (e) {}
   </script>
 </head>
@@ -42,15 +42,20 @@
     <!-- ============================= MAIN ================================ -->
     <div class="doc-main">
       <header class="doc-topbar">
-        <button class="doc-side-toggle" data-side-toggle aria-label="Ẩn/hiện menu"><span class="wb-ico">left_panel_close</span></button>
+        <button class="doc-side-toggle" data-side-toggle aria-label="Ẩn/hiện menu"><span class="wb-ico">menu_open</span></button>
         <h1>Web Builder</h1>
         <span class="wb-cap wb-cap--outline wb-cap--sm">Minimalist UI kit</span>
         <div class="spacer"></div>
+        <button class="doc-search-trigger" id="searchBtn" aria-label="Tìm kiếm" title="Tìm kiếm — Ctrl/⌘K">
+          <span class="wb-ico wb-ico--sm">search</span>
+          <span class="doc-search-trigger__label">Tìm kiếm</span>
+          <kbd class="doc-search-trigger__kbd">⌘K</kbd>
+        </button>
         <button class="doc-icon-btn" id="configBtn" aria-label="Tinh chỉnh (Config)" title="Tinh chỉnh">
           <span class="wb-ico">tune</span>
         </button>
-        <button class="theme-btn" id="themeBtn">
-          <span id="themeIcon">◐</span> <span id="themeLabel">Theme</span>
+        <button class="theme-btn" id="themeBtn" title="Giao diện: Tự động → Sáng → Tối" aria-label="Đổi giao diện">
+          <span id="themeIcon">◐</span> <span id="themeLabel">Tự động</span>
         </button>
       </header>
 
@@ -77,6 +82,21 @@
       </button>
     </div>
   </aside>
+
+  <!-- Search dialog (docs-only): full-text search across every page. Reuses the
+       .wb-overlay + .wb-modal shell and .wb-input-group / .wb-list components. -->
+  <div class="wb-overlay doc-search" id="searchModal" aria-hidden="true">
+    <div class="wb-modal doc-search__box" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+      <div class="doc-search__bar">
+        <span class="wb-input-group">
+          <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+          <input class="wb-input" id="searchInput" type="search" placeholder="Tìm trong mọi trang…" autocomplete="off" spellcheck="false" />
+        </span>
+        <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+      </div>
+      <div class="doc-search__results wb-scrollbars" id="searchResults"></div>
+    </div>
+  </div>
 
   <script>document.write('<scr' + 'ipt src="app.js?v=' + window.__v + '"></scr' + 'ipt>');</script>
 </body>

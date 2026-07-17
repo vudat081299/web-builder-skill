@@ -1337,7 +1337,8 @@
    empty slot with a DASHED outline shows where the item will land — a dashed
    affordance the eye reads instantly. Docs use HTML5 drag; app → dnd-kit.
      .wb-sortable            vertical list (default)
-     .wb-sortable--grid      wrap into a responsive card grid
+     .wb-sortable--grid      wrap into a responsive card grid (grip sits top-left)
+     .wb-sortable--no-grip   hide the grip; drag the whole row/card instead
      .wb-sortable__item      a draggable row/card  (+ .is-dragging)
      .wb-sortable__ph        the dashed drop placeholder (inserted by JS)
      .wb-grip                the 6-dot drag handle (shared)
@@ -1369,6 +1370,15 @@
 .wb-grip::before { content: "\e945"; font-size: 18px; }   /* drag_indicator */
 .wb-grip:hover  { opacity: 1; }
 .wb-grip:active { cursor: grabbing; }
+/* Grid cards stack title over value; the grip sits at the TOP-LEFT — aligned with
+   the text's left edge, never floating centred. Card layout lives here, not inline. */
+.wb-sortable--grid .wb-sortable__item { flex-direction: column; align-items: flex-start; gap: 6px; }
+.wb-sortable--grid .wb-grip { align-self: flex-start; }
+/* Optional: hide the grip and make the whole row/card the drag surface. */
+.wb-sortable--no-grip .wb-grip { display: none; }
+.wb-sortable--no-grip .wb-sortable__item { cursor: grab; }
+.wb-sortable--no-grip .wb-sortable__item.is-dragging,
+.wb-sortable--no-grip .wb-sortable__item:active { cursor: grabbing; }
 
 /* -----------------------------------------------------------------------------
    24. CHARTS  (SVG/CSS primitives for finance visuals)
@@ -2514,3 +2524,47 @@
 .wb-timepicker__sep { align-self: center; padding: 0 2px; font-size: 15px; font-weight: 700; color: var(--wb-fg-subtle); }
 /* Hosted in a popover: drop the picker's own card chrome. */
 .wb-popover__panel > .wb-timepicker { padding: 0; background: none; border: 0; box-shadow: none; }
+
+/* -----------------------------------------------------------------------------
+   48. SLOT GRID  (fixed cells — drop an item into ANY slot; empty slots persist)
+   -----------------------------------------------------------------------------
+   Unlike .wb-sortable--grid (which reflows and closes gaps), the slot grid has a
+   FIXED set of cells. Each item keeps its exact slot and empty cells stay empty, so
+   you can leave gaps between items. Drag an item onto any cell to move it there;
+   dropping on an occupied cell SWAPS the two. A single column (--1) is the
+   "fixed-slot list". Docs use HTML5 drag; app → dnd-kit (rectSwappingStrategy).
+     .wb-slotgrid            the fixed grid  (data-slotgrid; default 2 columns)
+     .wb-slotgrid--1..--6    lock the column count (--1 = a list)
+     .wb-slotgrid__cell      one fixed slot  (dashed while empty; .is-over on hover)
+     .wb-slotgrid__item      a draggable card inside a cell  (+ .is-dragging)
+   -------------------------------------------------------------------------- */
+.wb-slotgrid {
+  display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr);
+  font-family: var(--wb-font);
+}
+.wb-slotgrid--1 { grid-template-columns: 1fr; }
+.wb-slotgrid--2 { grid-template-columns: repeat(2, 1fr); }
+.wb-slotgrid--3 { grid-template-columns: repeat(3, 1fr); }
+.wb-slotgrid--4 { grid-template-columns: repeat(4, 1fr); }
+.wb-slotgrid--5 { grid-template-columns: repeat(5, 1fr); }
+.wb-slotgrid--6 { grid-template-columns: repeat(6, 1fr); }
+/* A cell is only a drop target; the dashed slot shows only while the cell holds no
+   item — `:not(:has(*))` is robust to stray whitespace in the markup (unlike `:empty`).
+   Same dashed weight (--wb-border-strong) as the other drop affordances (§9, §23). */
+.wb-slotgrid__cell {
+  display: flex; min-height: 62px;
+  border: 1.5px dashed transparent; border-radius: var(--wb-radius-sm);
+}
+.wb-slotgrid__cell:not(:has(*)) { border-color: var(--wb-border-strong); background: var(--wb-surface-2); }
+.wb-slotgrid__cell.is-over { border-color: var(--wb-fg-subtle); background: var(--wb-surface-2); }
+.wb-slotgrid__cell.is-over .wb-slotgrid__item { outline: 2px dashed var(--wb-fg-subtle); outline-offset: 2px; }  /* swap hint */
+/* The draggable card fills its slot. */
+.wb-slotgrid__item {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px;
+  padding: 11px 13px; cursor: grab; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm); box-shadow: var(--wb-shadow-sm);
+}
+.wb-slotgrid__item:active { cursor: grabbing; }
+.wb-slotgrid__item.is-dragging { opacity: .4; }

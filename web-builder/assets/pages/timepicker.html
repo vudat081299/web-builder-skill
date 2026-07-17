@@ -50,14 +50,14 @@
   </div>
 
   <div class="doc-block">
-    <h4>Bấm để mở (field + popover)</h4>
-    <p class="doc-block__desc">Cùng pattern như calendar: ô nhập + nút icon đồng hồ mở <code>.wb-popover</code> chứa time picker. Giờ chọn
-    điền vào ô (<code>data-picker-out</code>); popover <b>không</b> tự đóng để còn chỉnh cả giờ lẫn phút.</p>
+    <h4>Gõ hoặc chọn (field + popover)</h4>
+    <p class="doc-block__desc">Cùng pattern như calendar: ô nhập <b>gõ được</b> (tự định dạng <code>HH:MM</code> qua <code>data-mask="time"</code>) <b>hoặc</b> bấm icon đồng hồ mở
+    <code>.wb-popover</code> chứa time picker. Giờ chọn điền vào ô (<code>data-picker-out</code>); popover <b>không</b> tự đóng để còn chỉnh cả giờ lẫn phút.</p>
     <div class="demo">
       <div class="demo__stage">
         <span class="wb-popover wb-popover--bottom">
           <span class="wb-input-group" style="width:176px">
-            <input class="wb-input" data-picker-out readonly value="09:30" aria-label="Giờ đã chọn" />
+            <input class="wb-input" data-picker-out data-mask="time" inputmode="numeric" placeholder="HH:MM" value="09:30" aria-label="Giờ (gõ hoặc chọn)" />
             <button type="button" class="wb-input-group__btn" data-pop-toggle aria-label="Mở bộ chọn giờ"><span class="wb-ico wb-ico--sm">schedule</span></button>
           </span>
           <div class="wb-popover__panel">
@@ -72,7 +72,7 @@
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-popover wb-popover--bottom"&gt;
   &lt;span class="wb-input-group"&gt;
-    &lt;input class="wb-input" data-picker-out readonly value="09:30" /&gt;
+    &lt;input class="wb-input" data-picker-out data-mask="time" placeholder="HH:MM" value="09:30" /&gt;
     &lt;button class="wb-input-group__btn" data-pop-toggle&gt;&lt;span class="wb-ico wb-ico--sm"&gt;schedule&lt;/span&gt;&lt;/button&gt;
   &lt;/span&gt;
   &lt;div class="wb-popover__panel"&gt;

@@ -89,6 +89,7 @@ for the look (see `integration.md`).
 | Nested categories (drag to reorder / reparent) | **Tree** | [Tree](#tree) |
 | Reorder a flat list or grid of cards (drag) | **Sortable** | [Sortable](#sortable-list--grid) |
 | Reorder rows inside a data table (drag) | **Sortable table** (`--sortable`) | [Sortable](#sortable-list--grid) |
+| Place items in a **fixed grid/list**, keep empty slots between them (drag → any slot, swap) | **Slot grid** (`.wb-slotgrid`) | [Slot grid](#slot-grid) |
 | Arrange in a row/column, align (top/center/bottom, left/right), wrap, equal widths | **Grid / Layout** utilities | [Layout](#grid--layout) |
 | Pin a bar / card / button to the top or bottom edge on scroll | **Sticky** (`.wb-sticky`) | [Sticky](#sticky) |
 | A bounded scroll region (long list / wide row) with a theme-aware bar | **Scroll** (`.wb-scroll-y` / `-x`) | [Scroll areas](#scroll-areas) |
@@ -563,8 +564,10 @@ chip (`.is-selected`), today is a neutral ring (`.is-today`), and a range is a s
 between two solid endpoints (`.is-range-start` / `.is-range-end`); `.is-muted` = adjacent month, `.is-disabled`
 = blocked. Web Builder ships only the *look*; the month maths + selection is a behaviour engine
 (react-day-picker, or the small driver the docs ship — it emits a bubbling `wb-cal-input` event). Host inline,
-or in `.wb-popover` with an `.wb-input-group` **trigger field** for a click-to-open date field (the docs glue
-writes the pick into `[data-picker-out]` and closes on a complete pick). `data-value="dd/mm/yyyy"` seeds a
+or in `.wb-popover` with an `.wb-input-group` **trigger field** that you can **type into OR pick from**: give the
+field `data-mask="date"` so typing formats to `dd/mm/yyyy`, and field + picker stay in **two-way sync** (the docs
+glue writes a pick into `[data-picker-out]`, closes on a complete pick, and seeds the picker from the field on
+open). `data-value="dd/mm/yyyy"` seeds a
 date, or `"dd/mm/yyyy – dd/mm/yyyy"` a range. Cell size is one knob: `--wb-cal-cell`.
 
 ```html
@@ -586,8 +589,9 @@ minute column of `__opt` buttons split by a `__sep` (`:`); add `--ampm` (`data-a
 period column (24-hour by default). The selected option is a solid neutral chip (`.is-selected`) — the same
 tier-1 contrast as the calendar. Each column pairs with `.wb-scroll-y` for the theme-aware scrollbar; minute
 spacing is `data-minute-step` (default 1). The docs ship a small driver (emits a bubbling `wb-time-input`);
-host inline or in `.wb-popover` (it stays open across column picks). Put a `.wb-calendar` beside a
-`.wb-timepicker` in a `.wb-cluster` for a **datetime** picker. Height is one knob: `--wb-timepicker-h`.
+host inline or in `.wb-popover` (it stays open across column picks). As a field it is **type-or-pick** too — add
+`data-mask="time"` to the `[data-picker-out]` input so typing formats to `HH:MM`, kept in sync with the columns.
+Put a `.wb-calendar` beside a `.wb-timepicker` in a `.wb-cluster` for a **datetime** picker. Height is one knob: `--wb-timepicker-h`.
 
 ```html
 <div class="wb-timepicker" data-timepicker data-value="09:30" data-minute-step="5">
@@ -1123,7 +1127,9 @@ for the tooltip look.
 Flat drag-to-reorder (one level — use **Tree** for nesting). `.wb-sortable` (list) or
 `.wb-sortable--grid` (card grid) with `data-sortable`; each `.wb-sortable__item`
 (`draggable="true"`) holds a `.wb-grip` + `.wb-sortable__label` (+ `__meta`). While
-dragging, the JS inserts a dashed `.wb-sortable__ph` at the drop position.
+dragging, the JS inserts a dashed `.wb-sortable__ph` at the drop position. In `--grid`
+the grip sits at the card's **top-left** (aligned with the text); add `--no-grip` to
+hide the grip and drag the whole row/card instead.
 
 ```html
 <div class="wb-sortable" data-sortable>
@@ -1139,6 +1145,25 @@ App: **dnd-kit** (`@dnd-kit/sortable`); keep the `wb-sortable*` classes.
 **Sortable table rows:** add `--sortable` to a `.wb-table`, give each `<tr>` a `.wb-row-grip`
 cell (holding `.wb-grip`) + `draggable="true"`, and `data-sortable-rows` on the `<tbody>`. While
 dragging, the JS inserts a dashed `.wb-row-ph` row at the drop position. App → dnd-kit over the rows.
+
+## Slot grid
+
+A **fixed** grid of cells where each item keeps its exact slot and empty cells stay empty
+— so you can leave gaps between items (unlike `.wb-sortable--grid`, which reflows and closes
+gaps). `.wb-slotgrid` with `data-slotgrid`; lock the column count with `--1`…`--6` (`--1` = a
+fixed-slot list). Each `.wb-slotgrid__cell` is one slot (dashed while empty); a
+`.wb-slotgrid__item` (`draggable="true"`) is the card inside. Drag an item onto any cell to
+move it; dropping on an occupied cell **swaps** the two.
+
+```html
+<div class="wb-slotgrid wb-slotgrid--4" data-slotgrid>
+  <div class="wb-slotgrid__cell">
+    <div class="wb-slotgrid__item" draggable="true">…</div>
+  </div>
+  <div class="wb-slotgrid__cell"></div>   <!-- empty slot, kept -->
+</div>
+```
+App: **dnd-kit** with `rectSwappingStrategy`; keep the `wb-slotgrid*` classes.
 
 ## Icons
 
