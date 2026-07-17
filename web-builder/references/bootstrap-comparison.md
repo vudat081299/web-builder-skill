@@ -35,7 +35,8 @@ Tailwind note below).
 | Spinners | ✅ `wb-spinner` | on buttons + `.is-loading` |
 | Toasts | ✅ `wb-toast` / `wb-toaster` | behaviour → sonner |
 | Tooltips | ✅ `wb-tooltip` | pure-CSS bubble |
-| Forms (controls, select, checks, range, input-group, validation) | ✅ full | + a **custom colour picker** + **preset colour swatches** + colour input, file dropzone, **switch locked** state — beyond Bootstrap |
+| Forms (controls, select, checks, range, input-group, validation) | ✅ full | + a **custom colour picker** + **preset colour swatches**, **masked inputs** (format-as-you-type via `data-mask`), a **clickable affix button** (`wb-input-group__btn` — password reveal / clear), file dropzone, **switch locked** state — beyond Bootstrap |
+| Datepicker / Timepicker | ✅ `wb-calendar` / `wb-timepicker` | **added** — Bootstrap 5 ships *neither* (native input or a 3rd-party plugin); calendar does single date + `--range`, time picker is iOS-style scroll columns |
 | Floating labels | ❌ not used | we use a top `wb-label` (clearer for dense forms; a deliberate call, not a gap) |
 | Layout (12-col grid, breakpoints, gutters) | 🟡 by design | flex-first utilities instead — **with full flex alignment** (justify / align / self / grow); no 12-col scaffold. See below & design-principles §17 |
 | Flex/align utilities (justify-content, align-items, align-self, flex-fill) | ✅ | on `.wb-cluster` / `.wb-stack` (`--start/end/center/between/around/evenly`, `--top/middle/bottom/baseline`) + `.wb-grow` / `.wb-self--*` |
@@ -44,7 +45,10 @@ Tailwind note below).
 charts (line/bars/combo/donut/sparkline + budget), category **tree** (drag reorder/reparent), **sortable**
 list/grid/rows, **receipt** (hoá đơn — torn-paper slip), tinted category capsules, social-login buttons,
 a **steps/stepper** (`wb-steps` — wizard · timeline; Bootstrap has none), a **media object** (`wb-media` —
-figure + body; Bootstrap 5 dropped its `.media`), and the live **Config** token playground.
+figure + body; Bootstrap 5 dropped its `.media`), a **calendar / date-range picker** (`wb-calendar`) and a
+**time picker** (`wb-timepicker`) — Bootstrap 5 ships *neither* (it points at the native
+`<input type="date/time">` or a third-party plugin), plus **masked inputs** (format-as-you-type), and the
+live **Config** token playground.
 
 ## The popup family — do we have it?
 

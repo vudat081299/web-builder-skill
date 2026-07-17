@@ -710,7 +710,8 @@
 
 /* Input group — prefix/suffix addons (e.g. ₫, %, .00). */
 .wb-input-group { display: flex; align-items: stretch; }
-.wb-input-group > .wb-input, .wb-input-group > .wb-input-group__addon { border-radius: 0; }
+.wb-input-group > .wb-input, .wb-input-group > .wb-input-group__addon,
+.wb-input-group > .wb-input-group__btn { border-radius: 0; }
 .wb-input-group > *:not(:last-child) { border-right-width: 0; }
 .wb-input-group > *:first-child { border-top-left-radius: var(--wb-radius-sm); border-bottom-left-radius: var(--wb-radius-sm); }
 .wb-input-group > *:last-child  { border-top-right-radius: var(--wb-radius-sm); border-bottom-right-radius: var(--wb-radius-sm); }
@@ -718,6 +719,17 @@
   display: inline-flex; align-items: center; padding: 0 12px; font-size: 14px; white-space: nowrap;
   color: var(--wb-fg-muted); background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border-strong);
 }
+/* Clickable affix — a button-flavoured addon: reveal a password, clear a field, toggle a unit.
+   Shares the addon's box; adds pointer feedback + a focus ring (the :focus rule below lifts it). */
+.wb-input-group__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: none;
+  padding: 0 11px; font-family: inherit; font-size: 14px; cursor: pointer;
+  color: var(--wb-fg-muted); background: var(--wb-surface-2);
+  border: var(--wb-bw) solid var(--wb-border-strong);
+  transition: background .13s ease, color .13s ease;
+}
+.wb-input-group__btn:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-input-group__btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
 /* Focus: lift the focused control above its siblings so its ring isn't overpainted by the
    next addon, and carry the focus colour onto the shared edge. Non-last children drop their
    right border (the collapse rule above), so that edge is drawn by the neighbour's left border
@@ -2366,3 +2378,119 @@
 .wb-media__body   { flex: 1 1 auto; min-width: 0; }
 .wb-media__title  { font-size: 14.5px; font-weight: 650; color: var(--wb-fg); margin: 0 0 2px; }
 .wb-media__text   { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
+
+/* =============================================================================
+   46. CALENDAR  (a month grid for picking a date — or a date range)
+   -----------------------------------------------------------------------------
+   A date picker's panel: a month header (‹ title ›), a weekday row, and a 6×7 day
+   grid (weekday cells + day cells share one grid). Selection is TIER-1 CONTRAST,
+   never colour — the chosen day is a solid neutral chip (same idiom as
+   .wb-steps__marker / .wb-avatar--solid), today is a neutral ring, and a range is a
+   soft-grey band between two solid endpoints. Add --range for range mode. Look only;
+   the month maths + click logic is a behaviour engine (react-day-picker, or the small
+   driver the docs ship). Host inline, or in .wb-popover for a trigger→popup (pair with
+   an .wb-input-group trigger field). The grid has NO gap so an in-range band reads
+   continuous; empty neighbours give a single selected chip its air. Cell size is one
+   knob: --wb-cal-cell.
+     <div class="wb-calendar" data-calendar>
+       <div class="wb-calendar__head">
+         <button class="wb-calendar__nav" data-cal-prev><span class="wb-ico">chevron_left</span></button>
+         <span class="wb-calendar__title"></span>
+         <button class="wb-calendar__nav" data-cal-next><span class="wb-ico">chevron_right</span></button>
+       </div>
+       <div class="wb-calendar__grid"></div>   <!-- weekdays + days injected by JS -->
+     </div>
+   -------------------------------------------------------------------------- */
+.wb-calendar {
+  --wb-cal-cell: 36px;
+  width: max-content; font-family: var(--wb-font);
+  display: flex; flex-direction: column; gap: 10px; padding: 12px;
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+}
+.wb-calendar__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.wb-calendar__title {
+  font-size: 13.5px; font-weight: 650; color: var(--wb-fg); font-variant-numeric: tabular-nums;
+}
+.wb-calendar__nav {
+  flex: none; width: 28px; height: 28px; padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--wb-fg-muted); background: none;
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm);
+  transition: background .13s ease, color .13s ease;
+}
+.wb-calendar__nav:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-calendar__nav .wb-ico { font-size: 18px; }
+.wb-calendar__grid { display: grid; grid-template-columns: repeat(7, var(--wb-cal-cell)); }
+.wb-calendar__wd {
+  height: 26px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; letter-spacing: .03em; color: var(--wb-fg-subtle);
+}
+.wb-calendar__day {
+  height: var(--wb-cal-cell); padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-variant-numeric: tabular-nums; color: var(--wb-fg);
+  background: none; border: var(--wb-bw) solid transparent; border-radius: var(--wb-radius-sm);
+  transition: background .1s ease, color .1s ease;
+}
+.wb-calendar__day:hover { background: var(--wb-surface-hover); }
+.wb-calendar__day.is-muted    { color: var(--wb-fg-subtle); }        /* adjacent month */
+.wb-calendar__day.is-disabled { color: var(--wb-fg-subtle); opacity: .45; cursor: not-allowed; pointer-events: none; }
+/* Today — a neutral ring (contrast, not colour). */
+.wb-calendar__day.is-today { border-color: var(--wb-border-strong); font-weight: 700; }
+/* In-range middle — a soft-grey continuous band (square, so consecutive cells join). */
+.wb-calendar__day.is-in-range { background: var(--wb-surface-2); border-radius: 0; }
+/* Selected day / range endpoints — a solid neutral chip; auto-flips on dark. */
+.wb-calendar__day.is-selected,
+.wb-calendar__day.is-range-start,
+.wb-calendar__day.is-range-end {
+  background: var(--wb-gray-900); color: var(--wb-white); font-weight: 650; border-color: transparent;
+}
+.dark .wb-calendar__day.is-selected,
+.dark .wb-calendar__day.is-range-start,
+.dark .wb-calendar__day.is-range-end { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+/* Endpoints round only their OUTER edge so they merge into the band. */
+.wb-calendar__day.is-range-start { border-radius: var(--wb-radius-sm) 0 0 var(--wb-radius-sm); }
+.wb-calendar__day.is-range-end   { border-radius: 0 var(--wb-radius-sm) var(--wb-radius-sm) 0; }
+.wb-calendar__day.is-range-start.is-range-end { border-radius: var(--wb-radius-sm); }   /* a 1-day range = a full chip */
+/* Hosted in a popover: the panel already supplies the card, so drop the calendar's own. */
+.wb-popover__panel > .wb-calendar { padding: 0; background: none; border: 0; box-shadow: none; }
+
+/* =============================================================================
+   47. TIME PICKER  (scroll columns hour : minute — no popup, just pick a value)
+   -----------------------------------------------------------------------------
+   Pick a time from scrollable columns (iOS-style): an hour column and a minute
+   column (add --ampm for a 12-hour AM/PM period column; 24-hour by default). The
+   selected option is a solid neutral chip (tier-1 contrast, never colour), matching
+   the calendar. Columns reuse the themed scrollbar — pair each column with
+   .wb-scroll-y. Look only; the option lists + selection are wired by a small driver
+   (the docs ship one). Host inline, or in .wb-popover for a trigger→popup. Height is
+   one knob: --wb-timepicker-h.
+     <div class="wb-timepicker" data-timepicker>
+       <div class="wb-timepicker__col wb-scroll-y" data-tp="hour"></div>
+       <span class="wb-timepicker__sep">:</span>
+       <div class="wb-timepicker__col wb-scroll-y" data-tp="minute"></div>
+     </div>
+   -------------------------------------------------------------------------- */
+.wb-timepicker {
+  --wb-timepicker-h: 176px;
+  display: flex; gap: 6px; padding: 10px; font-family: var(--wb-font);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+}
+.wb-timepicker__col {
+  height: var(--wb-timepicker-h); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px; padding-right: 4px;
+}
+.wb-timepicker__opt {
+  flex: none; min-width: 46px; padding: 7px 12px; cursor: pointer; text-align: center;
+  font-size: 13px; font-variant-numeric: tabular-nums; color: var(--wb-fg);
+  background: none; border: var(--wb-bw) solid transparent; border-radius: var(--wb-radius-sm);
+  transition: background .1s ease, color .1s ease;
+}
+.wb-timepicker__opt:hover { background: var(--wb-surface-hover); }
+.wb-timepicker__opt.is-selected { background: var(--wb-gray-900); color: var(--wb-white); font-weight: 650; }
+.dark .wb-timepicker__opt.is-selected { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-timepicker__sep { align-self: center; padding: 0 2px; font-size: 15px; font-weight: 700; color: var(--wb-fg-subtle); }
+/* Hosted in a popover: drop the picker's own card chrome. */
+.wb-popover__panel > .wb-timepicker { padding: 0; background: none; border: 0; box-shadow: none; }

@@ -2,7 +2,9 @@
   <p class="doc-eyebrow">Nhập liệu</p>
   <h2>Text input</h2>
   <p>Ô nhập trung tính; màu duy nhất là trạng thái lỗi (đỏ). Gói trong <code>.wb-field</code> (label + control +
-  help/error). Ghép <b>prefix / suffix</b> bằng <code>.wb-input-group</code> — addon là chữ (₫, %, https://) hoặc icon.</p>
+  help/error). Ghép <b>prefix / suffix</b> bằng <code>.wb-input-group</code> — addon là chữ (₫, %, https://), icon, hoặc một
+  <b>nút bấm</b> <code>.wb-input-group__btn</code> (hiện/ẩn mật khẩu…). Muốn <b>định dạng khi gõ</b> (ngày, giờ, số thẻ) xem mục cuối.
+  Chọn màu đã chuyển sang <b>Bộ chọn → Bộ chọn màu</b>.</p>
 </div>
 
 <section class="doc-sec">
@@ -96,88 +98,75 @@
   </div>
 
   <div class="doc-block">
-    <h4>Bảng màu — <code>wb-swatches</code></h4>
-    <p class="doc-block__desc">Picker tối giản, thuần CSS: một lưới ô màu <b>preset</b> để chọn từ — giữ lựa chọn trong các hue đã duyệt (đúng
-    thang màu), thay vì mở hộp chọn màu của hệ điều hành. Đặt hue mỗi ô bằng <code>--wb-swatch-color</code>; ô đang chọn thêm
-    <code>.is-selected</code> (viền nhấn theo màu chữ, đọc rõ trên mọi hue). Biến thể <code>--round</code> (tròn) · <code>--sm</code> (nhỏ).
-    Cần màu tự do thì dùng <code>.wb-colorpicker</code> bên dưới.</p>
+    <h4>Mật khẩu — hiện/ẩn (<code>input-group__btn</code>)</h4>
+    <p class="doc-block__desc">Một <b>nút bấm</b> trong input-group: <code>.wb-input-group__btn</code> có icon con mắt, bấm để lật
+    <code>type="password" ⇄ "text"</code>. Cùng cách này dùng cho nút xoá nhanh (×) hay đổi đơn vị.</p>
     <div class="demo">
       <div class="demo__stage">
-        <div class="wb-stack">
-          <div class="wb-swatches" role="group" aria-label="Chọn màu danh mục">
-            <button type="button" class="wb-swatch is-selected" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm" aria-pressed="true"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-3)" aria-label="Hổ phách"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-5)" aria-label="Xanh dương"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-7)" aria-label="Xanh lơ"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-gray-400)" aria-label="Xám"></button>
-          </div>
-          <div class="wb-swatches wb-swatches--round wb-swatches--sm" role="group" aria-label="Chọn màu (tròn, nhỏ)">
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"></button>
-            <button type="button" class="wb-swatch is-selected" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két" aria-pressed="true"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
+        <div class="wb-field" style="max-width:380px">
+          <label class="wb-label">Mật khẩu</label>
+          <div class="wb-input-group">
+            <input class="wb-input" type="password" value="s3cret-pass" aria-label="Mật khẩu" />
+            <button type="button" class="wb-input-group__btn" data-reveal aria-label="Hiện/ẩn mật khẩu" aria-pressed="false"><span class="wb-ico wb-ico--sm">visibility</span></button>
           </div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-swatches" role="group" aria-label="Chọn màu"&gt;
-  &lt;button type="button" class="wb-swatch is-selected"
-          style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"&gt;&lt;/button&gt;
-  &lt;button type="button" class="wb-swatch"
-          style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Teal"&gt;&lt;/button&gt;
-  &lt;!-- … --&gt;
-&lt;/div&gt;
-
-&lt;!-- tròn + nhỏ --&gt;
-&lt;div class="wb-swatches wb-swatches--round wb-swatches--sm"&gt;…&lt;/div&gt;</code></pre></div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-input-group"&gt;
+  &lt;input class="wb-input" type="password" value="s3cret-pass" /&gt;
+  &lt;button class="wb-input-group__btn" data-reveal aria-pressed="false"&gt;
+    &lt;span class="wb-ico wb-ico--sm"&gt;visibility&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
     </div>
   </div>
 
   <div class="doc-block">
-    <h4>Bộ chọn màu — <code>wb-colorpicker</code></h4>
-    <p class="doc-block__desc">Panel custom <b>thay hẳn hộp thoại màu của hệ điều hành</b> (hộp màu mặc định của trình duyệt) — tối giản, đúng tông:
-    vùng <b>SV</b> (đậm/sáng) + thanh <b>hue</b> cầu vồng + ô nhập <b>hex</b> + hàng <b>preset</b> (tái dùng <code>wb-swatches</code>). Thư viện lo <i>giao diện</i>;
-    phần kéo-chọn + quy đổi HSV do một handler nhỏ đảm nhiệm (bản docs này có sẵn) hoặc một lib headless. Kéo thử vùng màu / thanh hue, gõ hex, hay bấm preset:</p>
+    <h4>Định dạng khi gõ (mask)</h4>
+    <p class="doc-block__desc">Không mở popup — vẫn <b>gõ tay</b>, nhưng mỗi ký tự tự chèn dấu phân cách: ngày <code>dd/mm/yyyy</code>,
+    giờ <code>HH:MM</code>, ngày-giờ, số thẻ <code>0000 0000 0000 0000</code>, khoảng ngày. Đặt qua <code>data-mask</code>
+    (<code>date · time · datetime · card · daterange</code>). Thử gõ vào các ô — chỉ nhận chữ số, dấu tự hiện:</p>
     <div class="demo">
       <div class="demo__stage">
-        <div class="wb-colorpicker" data-colorpicker>
-          <div class="wb-colorpicker__area"><span class="wb-colorpicker__thumb"></span></div>
-          <div class="wb-colorpicker__hue"><span class="wb-colorpicker__thumb"></span></div>
-          <div class="wb-colorpicker__foot">
-            <span class="wb-colorpicker__preview"></span>
+        <div class="wb-stack" style="max-width:420px">
+          <div class="wb-field">
+            <label class="wb-label">Ngày <span class="wb-label__opt">dd/mm/yyyy</span></label>
+            <input class="wb-input" data-mask="date" inputmode="numeric" placeholder="dd/mm/yyyy" value="14072026" aria-label="Ngày" />
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Giờ <span class="wb-label__opt">HH:MM</span></label>
+            <input class="wb-input" data-mask="time" inputmode="numeric" placeholder="HH:MM" value="0930" aria-label="Giờ" />
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Ngày &amp; giờ <span class="wb-label__opt">dd/mm/yyyy HH:MM</span></label>
+            <input class="wb-input" data-mask="datetime" inputmode="numeric" placeholder="dd/mm/yyyy HH:MM" aria-label="Ngày và giờ" />
+          </div>
+          <div class="wb-field">
+            <label class="wb-label">Số thẻ ngân hàng</label>
             <div class="wb-input-group">
-              <span class="wb-input-group__addon">#</span>
-              <input class="wb-input" data-cp-hex value="6366F1" spellcheck="false" aria-label="Mã màu hex" />
+              <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">credit_card</span></span>
+              <input class="wb-input" data-mask="card" inputmode="numeric" placeholder="0000 0000 0000 0000" value="4111111111111111" aria-label="Số thẻ" />
             </div>
           </div>
-          <div class="wb-swatches wb-swatches--sm" role="group" aria-label="Màu gợi ý">
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-1)" aria-label="Chàm"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-2)" aria-label="Xanh mòng két"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-3)" aria-label="Hổ phách"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-4)" aria-label="Hồng"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-5)" aria-label="Xanh dương"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-6)" aria-label="Tím"></button>
-            <button type="button" class="wb-swatch" style="--wb-swatch-color:var(--wb-chart-8)" aria-label="Xanh lá mạ"></button>
+          <div class="wb-field">
+            <label class="wb-label">Khoảng ngày <span class="wb-label__opt">dd/mm/yyyy – dd/mm/yyyy</span></label>
+            <input class="wb-input" data-mask="daterange" inputmode="numeric" placeholder="dd/mm/yyyy – dd/mm/yyyy" aria-label="Khoảng ngày" />
           </div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-colorpicker"&gt;
-  &lt;div class="wb-colorpicker__area"&gt;&lt;span class="wb-colorpicker__thumb"&gt;&lt;/span&gt;&lt;/div&gt;
-  &lt;div class="wb-colorpicker__hue"&gt;&lt;span class="wb-colorpicker__thumb"&gt;&lt;/span&gt;&lt;/div&gt;
-  &lt;div class="wb-colorpicker__foot"&gt;
-    &lt;span class="wb-colorpicker__preview"&gt;&lt;/span&gt;
-    &lt;div class="wb-input-group"&gt;
-      &lt;span class="wb-input-group__addon"&gt;#&lt;/span&gt;
-      &lt;input class="wb-input" value="6366F1" /&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="wb-swatches wb-swatches--sm"&gt;…&lt;/div&gt;   &lt;!-- preset --&gt;
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- ngày: gõ 14072026 → 14/07/2026 --&gt;
+&lt;input class="wb-input" data-mask="date" inputmode="numeric" placeholder="dd/mm/yyyy" /&gt;
+
+&lt;!-- giờ · ngày-giờ · khoảng ngày --&gt;
+&lt;input class="wb-input" data-mask="time"      inputmode="numeric" /&gt;
+&lt;input class="wb-input" data-mask="datetime"  inputmode="numeric" /&gt;
+&lt;input class="wb-input" data-mask="daterange" inputmode="numeric" /&gt;
+
+&lt;!-- số thẻ: 4111 1111 1111 1111 --&gt;
+&lt;div class="wb-input-group"&gt;
+  &lt;span class="wb-input-group__addon"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;credit_card&lt;/span&gt;&lt;/span&gt;
+  &lt;input class="wb-input" data-mask="card" inputmode="numeric" /&gt;
 &lt;/div&gt;
-&lt;!-- Kéo/hex do JS lo (xem integration.md). Bọc trong .wb-popover cho pattern bấm-để-mở. --&gt;</code></pre></div>
+&lt;!-- Format do JS lo; app thật nên dùng imask/cleave (xem integration.md) --&gt;</code></pre></div>
     </div>
   </div>
 </section>

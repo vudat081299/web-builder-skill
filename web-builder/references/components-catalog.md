@@ -47,10 +47,14 @@ for the look (see `integration.md`).
 | A data-entry form (add/edit transaction, settings) | **Form controls** | [Forms](#form-controls) |
 | A money input, a category picker, a yes/no setting | input-group / select / switch | [Forms](#form-controls) |
 | A multi-line notes / code field with a clean resize handle | **Textarea** (`.wb-textarea` + `-wrap`) | [Forms](#form-controls) |
+| Type a date / time / card no. that auto-formats as you type | **Masked input** (`data-mask`) | [Forms](#form-controls) |
+| A password field with a show/hide eye toggle | **Affix button** (`.wb-input-group__btn`) | [Forms](#form-controls) |
 | A slider for a budget cap / threshold | **Range** | [Range](#range--slider) |
 | Attach a statement / receipt (button or drop area) | **File / dropzone** | [File](#file--upload) |
 | Pick a category / label colour from a preset palette | **Swatches** (`.wb-swatches`) | [Swatches](#colour-swatches) |
 | Pick any colour with a nice custom UI (SV + hue + hex) | **Colour picker** (`.wb-colorpicker`) | [Colour picker](#colour-picker) |
+| Pick a date, or a date range, from a month grid | **Calendar** (`.wb-calendar`) | [Calendar](#calendar) |
+| Pick a time (hour : minute, 12/24h) | **Time picker** (`.wb-timepicker`) | [Time picker](#time-picker) |
 | A settings / accounts list (one item per row) | **List group** | [List group](#list-group) |
 | A content container / section with header + body | **Card** | [Card](#card) |
 | A row with a leading icon/number + title + text (rank, feature, setting) | **Media object** (`.wb-media`) | [Card](#card) |
@@ -399,7 +403,9 @@ LABELS:   .wb-label (+ .wb-label__opt for "(tùy chọn)")
 HELP:     .wb-help (muted) · .wb-error (red)
 INVALID:  add the STATE class .is-invalid to the control (.wb-input.is-invalid …) +
           aria-invalid="true", then show .wb-error. (State = .is-*, not a --modifier.)
-GROUP:    .wb-input-group with .wb-input-group__addon for PREFIX or SUFFIX (₫, %, https://, an icon)
+GROUP:    .wb-input-group with .wb-input-group__addon (PREFIX/SUFFIX text/icon) OR .wb-input-group__btn (a
+          CLICKABLE affix — reveal password, clear ×, unit toggle)
+MASK:     add data-mask="date|time|datetime|card|daterange" to a .wb-input to format WHILE typing (no popup)
 ```
 
 ```html
@@ -464,6 +470,25 @@ focusable / keyboard-operable / form-correct, no extra markup): a box / circle w
 filled solid on check (white tick / dot, auto-inverts on dark). Border width is a knob (`--wb-check-bw`)
 and the corner follows the radius tokens, so both track Config (incl. the **sharp** preset). Radio stays round.
 
+**Masked input & the affix button.** For formatting **while typing** (no popup — the value reformats on every
+keystroke) add `data-mask` to a `.wb-input`: `date` (`dd/mm/yyyy`), `time` (`HH:MM`), `datetime`, `card`
+(`0000 0000 0000 0000`), `daterange` (`dd/mm/yyyy – dd/mm/yyyy`). The docs ship a tiny driver (`initMask` —
+strips to digits then re-inserts the fixed separators, caret at end); in an app use a real mask lib
+(imask / cleave.js) for caret-safe mid-string edits — Web Builder owns only the look. A
+**`.wb-input-group__btn`** is a *clickable* addon (button-flavoured `__addon`, sharing its box): a password
+show/hide eye (`[data-reveal]` flips `type` + swaps the icon), a clear ×, a unit toggle.
+
+```html
+<!-- format while typing: 14072026 → 14/07/2026 -->
+<input class="wb-input" data-mask="date" inputmode="numeric" placeholder="dd/mm/yyyy" />
+
+<!-- password + a reveal button (clickable affix) -->
+<div class="wb-input-group">
+  <input class="wb-input" type="password" value="s3cret" />
+  <button class="wb-input-group__btn" data-reveal aria-pressed="false"><span class="wb-ico wb-ico--sm">visibility</span></button>
+</div>
+```
+
 ---
 
 ## Range / Slider
@@ -523,6 +548,50 @@ free-colour picking — no OS dialog anywhere.
   </div>
   <div class="wb-swatches wb-swatches--sm">…</div>   <!-- presets -->
 </div>
+```
+
+## Calendar
+
+`.wb-calendar` is a month grid for picking a **date** — or a **date range** (add `--range` / `data-range`). It
+composes a header (`__head` with a `__title` + two `__nav` prev/next buttons), a weekday row, and a 6×7
+`__grid` of `__day` buttons. Selection is **tier-1 contrast, not colour**: the chosen day is a solid neutral
+chip (`.is-selected`), today is a neutral ring (`.is-today`), and a range is a soft-grey band (`.is-in-range`)
+between two solid endpoints (`.is-range-start` / `.is-range-end`); `.is-muted` = adjacent month, `.is-disabled`
+= blocked. Web Builder ships only the *look*; the month maths + selection is a behaviour engine
+(react-day-picker, or the small driver the docs ship — it emits a bubbling `wb-cal-input` event). Host inline,
+or in `.wb-popover` with an `.wb-input-group` **trigger field** for a click-to-open date field (the docs glue
+writes the pick into `[data-picker-out]` and closes on a complete pick). `data-value="dd/mm/yyyy"` seeds a
+date, or `"dd/mm/yyyy – dd/mm/yyyy"` a range. Cell size is one knob: `--wb-cal-cell`.
+
+```html
+<div class="wb-calendar" data-calendar data-value="14/07/2026">
+  <div class="wb-calendar__head">
+    <button class="wb-calendar__nav" data-cal-prev><span class="wb-ico">chevron_left</span></button>
+    <span class="wb-calendar__title"></span>
+    <button class="wb-calendar__nav" data-cal-next><span class="wb-ico">chevron_right</span></button>
+  </div>
+  <div class="wb-calendar__grid"></div>   <!-- weekdays + days injected by JS -->
+</div>
+<!-- range: add data-range (+ a "start – end" data-value); date field: wrap in .wb-popover + .wb-input-group -->
+```
+
+## Time picker
+
+`.wb-timepicker` picks a time from **scroll columns** (iOS-style), not a popup calendar: an hour column and a
+minute column of `__opt` buttons split by a `__sep` (`:`); add `--ampm` (`data-ampm`) for a 12-hour AM/PM
+period column (24-hour by default). The selected option is a solid neutral chip (`.is-selected`) — the same
+tier-1 contrast as the calendar. Each column pairs with `.wb-scroll-y` for the theme-aware scrollbar; minute
+spacing is `data-minute-step` (default 1). The docs ship a small driver (emits a bubbling `wb-time-input`);
+host inline or in `.wb-popover` (it stays open across column picks). Put a `.wb-calendar` beside a
+`.wb-timepicker` in a `.wb-cluster` for a **datetime** picker. Height is one knob: `--wb-timepicker-h`.
+
+```html
+<div class="wb-timepicker" data-timepicker data-value="09:30" data-minute-step="5">
+  <div class="wb-timepicker__col wb-scroll-y" data-tp="hour"></div>
+  <span class="wb-timepicker__sep">:</span>
+  <div class="wb-timepicker__col wb-scroll-y" data-tp="minute"></div>
+</div>
+<!-- 12-hour: add data-ampm + a third column data-tp="period" -->
 ```
 
 ## File / Upload

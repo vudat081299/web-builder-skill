@@ -42,6 +42,11 @@ button, a file-picker button, a progress bar. Never turn a **large** surface —
 a whole chart — into a big black block: at that size the high contrast is harsh and tiring to read. Large
 surfaces stay neutral through grey and outline instead.
 
+A **picker's selection** rides this same idiom: a chosen calendar day or time option (`.is-selected`) is a
+solid neutral chip (small = fine), a date **range** is the *soft* neutral band (`.is-in-range`), today is a
+neutral **ring** — never a bright hue. Selecting a value is a *choice*, not a status, so it stays tier 1
+(contrast), exactly like a category tag stays grey. Only real status (paid / overdue / due-soon) earns colour.
+
 **Demos are neutral-first.** When a component has both a neutral and a coloured form, place the grey /
 neutral example *before* the coloured one — a grey chart to the left of a coloured chart, a plain alert before
 a toned alert. The reader meets the tier-1 default first and sees colour as the exception, exactly as the

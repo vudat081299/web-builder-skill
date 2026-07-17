@@ -37,6 +37,11 @@ const NAV = [
     { id: "range",    label: "Range / Slider" },
     { id: "file",     label: "File / Upload" },
   ]},
+  { group: "Bộ chọn", items: [
+    { id: "calendar",    label: "Lịch (calendar)" },
+    { id: "timepicker",  label: "Chọn giờ (time)" },
+    { id: "colorpicker", label: "Bộ chọn màu" },
+  ]},
   { group: "Hiển thị dữ liệu", items: [
     { id: "card",     label: "Card" },
     { id: "receipt",  label: "Hoá đơn (receipt)" },
@@ -139,6 +144,10 @@ function initPage(root) {
   root.querySelectorAll("[data-sortable-rows]").forEach(initSortableTable);
   root.querySelectorAll("[data-range-filter]").forEach(initRangeFilter);
   root.querySelectorAll("[data-colorpicker]").forEach(initColorPicker);
+  root.querySelectorAll("[data-calendar]").forEach(initCalendar);
+  root.querySelectorAll("[data-timepicker]").forEach(initTimePicker);
+  root.querySelectorAll("[data-mask]").forEach(initMask);
+  root.querySelectorAll("[data-reveal]").forEach(initReveal);
 }
 
 /* ---- Range filter — dual slider ⇄ min/max inputs ⇄ plain-language summary -----
@@ -265,6 +274,186 @@ function initColorPicker(el) {
   el._cpSet = (val, silent) => { const c = parseColor(val); if (!c) return; h = c.h; s = c.s; v = c.v; render(silent); };
   render();
   ready = true;
+}
+
+/* ---- Date / time pickers — a month grid + scroll-column time, kept minimal -------
+   Docs-only wiring; in an app use a headless date lib (react-day-picker) or your own
+   handlers — Web Builder ships only the look. Both emit a bubbling CustomEvent
+   ({ text, complete }) and expose an imperative setter; the popover-field glue below
+   writes the value into a trigger field. --------------------------------------------- */
+function calPad(n) { return String(n).padStart(2, "0"); }
+
+function initCalendar(el) {
+  const grid  = el.querySelector(".wb-calendar__grid");
+  const title = el.querySelector(".wb-calendar__title");
+  if (!grid || !title) return;
+  const isRange = el.hasAttribute("data-range");
+  const WD = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];             // Monday-first
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const same = (a, b) => !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  const fmt  = (d) => calPad(d.getDate()) + "/" + calPad(d.getMonth() + 1) + "/" + d.getFullYear();
+  const parse = (s) => { const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec((s || "").trim()); return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null; };
+  const parseVal = (s) => { const p = (s || "").split(/\s*[–-]\s*/); return { a: parse(p[0]), b: p[1] ? parse(p[1]) : null }; };
+
+  const seed = parseVal(el.dataset.value);  // data-value = "dd/mm/yyyy" or, for a range, "dd/mm/yyyy – dd/mm/yyyy"
+  let sel = seed.a;                         // single date, or the range's start
+  let end = isRange ? seed.b : null;        // range end
+  if (end && end < sel) { const t = sel; sel = end; end = t; }   // normalize a reversed seed
+  let view = new Date((sel || today).getFullYear(), (sel || today).getMonth(), 1);
+
+  function emit(complete) {
+    const text = !sel ? "" : isRange ? fmt(sel) + (end ? " – " + fmt(end) : "") : fmt(sel);
+    el.dispatchEvent(new CustomEvent("wb-cal-input", { bubbles: true, detail: { text, complete } }));
+  }
+  /* Rebuild the day buttons for the current month — only on load + month nav. */
+  function layout() {
+    title.textContent = "Tháng " + (view.getMonth() + 1) + ", " + view.getFullYear();
+    let html = WD.map((d) => '<span class="wb-calendar__wd">' + d + "</span>").join("");
+    const offset = (new Date(view.getFullYear(), view.getMonth(), 1).getDay() + 6) % 7;   // Monday = 0
+    const start  = new Date(view.getFullYear(), view.getMonth(), 1 - offset);
+    for (let i = 0; i < 42; i++) {                                   // 6 weeks × 7 days
+      const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      html += '<button type="button" class="wb-calendar__day" data-day="' + d.getTime() + '">' + d.getDate() + "</button>";
+    }
+    grid.innerHTML = html;
+    paint();
+  }
+  /* Update ONLY the state classes on the existing buttons — a day pick doesn't rebuild
+     the grid, so the click target stays in the DOM. (If it were detached mid-click, the
+     delegated popover handler would lose the panel and slam a hosting popover shut —
+     which would break a range pick that needs a second click.) */
+  function paint() {
+    grid.querySelectorAll(".wb-calendar__day").forEach((btn) => {
+      const d = new Date(+btn.dataset.day);
+      const inRange = isRange && sel && end;
+      btn.classList.toggle("is-muted", d.getMonth() !== view.getMonth());
+      btn.classList.toggle("is-today", same(d, today));
+      btn.classList.toggle("is-range-start", inRange && same(d, sel));
+      btn.classList.toggle("is-range-end",   inRange && same(d, end));
+      btn.classList.toggle("is-in-range",    inRange && d > sel && d < end);
+      btn.classList.toggle("is-selected",    !inRange && same(d, sel));
+    });
+  }
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest(".wb-calendar__day");
+    if (!btn) return;
+    const d = new Date(+btn.dataset.day);
+    if (!isRange) { sel = d; paint(); emit(true); return; }
+    if (!sel || end) { sel = d; end = null; paint(); emit(false); }  // start a fresh range
+    else { if (d < sel) { end = sel; sel = d; } else { end = d; } paint(); emit(true); }   // close it
+  });
+  el.querySelectorAll("[data-cal-prev]").forEach((b) => b.addEventListener("click", () => { view.setMonth(view.getMonth() - 1); layout(); }));
+  el.querySelectorAll("[data-cal-next]").forEach((b) => b.addEventListener("click", () => { view.setMonth(view.getMonth() + 1); layout(); }));
+  el._calSet = (v) => { const s = parseVal(v); sel = s.a; end = isRange ? s.b : null; if (end && end < sel) { const t = sel; sel = end; end = t; } if (sel) view = new Date(sel.getFullYear(), sel.getMonth(), 1); layout(); };
+  layout();
+}
+
+function initTimePicker(el) {
+  const cols = [...el.querySelectorAll("[data-tp]")];
+  if (!cols.length) return;
+  const ampm  = el.hasAttribute("data-ampm");
+  const mStep = Math.max(1, parseInt(el.dataset.minuteStep || "1", 10) || 1);
+  const seq = (a, b, s) => { const r = []; for (let i = a; i <= b; i += (s || 1)) r.push(i); return r; };
+  const state = { hour: 9, minute: 0, period: "AM" };
+  const listFor  = (u) => u === "hour" ? (ampm ? seq(1, 12) : seq(0, 23)) : u === "minute" ? seq(0, 59, mStep) : ["AM", "PM"];
+  const labelFor = (u, v) => u === "period" ? v : calPad(v);
+  const text = () => ampm
+    ? calPad(state.hour) + ":" + calPad(state.minute) + " " + state.period
+    : calPad(state.hour) + ":" + calPad(state.minute);
+  const load = (v) => {
+    const m = /^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i.exec((v || "").trim());
+    if (!m) return;
+    const h = +m[1], mer = m[3] && m[3].toUpperCase();
+    let min = Math.min(59, Math.max(0, +m[2]));
+    if (mStep > 1) { min = Math.round(min / mStep) * mStep; if (min > 59) min -= mStep; }   // snap onto the step grid
+    state.minute = min;
+    if (ampm) { state.period = mer || (h < 12 ? "AM" : "PM"); state.hour = ((h + 11) % 12) + 1; }
+    else state.hour = mer ? (h % 12) + (mer === "PM" ? 12 : 0) : h;   // tolerate a meridiem on a 24-hour value
+  };
+  function paint(col, u) {
+    col.querySelectorAll(".wb-timepicker__opt").forEach((o) => o.classList.toggle("is-selected", String(state[u]) === o.dataset.v));
+    center(col);
+  }
+  /* Scroll the selected option to the column's middle. Skipped while the column has no height
+     (e.g. inside a closed popover) — the IntersectionObserver below re-centres on first reveal. */
+  function center(col) {
+    const o = col.querySelector(".wb-timepicker__opt.is-selected");
+    if (o && col.clientHeight) col.scrollTop += o.getBoundingClientRect().top - col.getBoundingClientRect().top - col.clientHeight / 2 + o.offsetHeight / 2;
+  }
+  load(el.dataset.value);
+  cols.forEach((col) => {
+    const u = col.dataset.tp;
+    col.innerHTML = listFor(u).map((v) => '<button type="button" class="wb-timepicker__opt" data-v="' + v + '">' + labelFor(u, v) + "</button>").join("");
+    col.addEventListener("click", (e) => {
+      const o = e.target.closest(".wb-timepicker__opt");
+      if (!o) return;
+      state[u] = u === "period" ? o.dataset.v : +o.dataset.v;
+      paint(col, u);
+      el.dispatchEvent(new CustomEvent("wb-time-input", { bubbles: true, detail: { text: text(), complete: true } }));
+    });
+    paint(col, u);
+  });
+  /* A picker seeded inside a CLOSED popover has 0-height columns at init, so the initial centre
+     can't land (nothing to scroll). The popover-open handler calls _tpCenter once the panel is
+     shown — reading rects there forces layout, so the selected option lands centred. */
+  el._tpCenter = () => cols.forEach(center);
+  el._timeSet = (v) => { load(v); cols.forEach((c) => paint(c, c.dataset.tp)); };
+}
+
+/* Docs demo glue: a calendar / time picker hosted in a .wb-popover writes its value
+   into the trigger's [data-picker-out] field; a COMPLETED date pick closes the popover
+   (time stays open so both columns can be set). An app owns this — the parts just emit. */
+function pickerToField(e) {
+  const pop = e.target.closest(".wb-popover");
+  if (!pop) return;
+  const out = pop.querySelector("[data-picker-out]");
+  if (out) { if (out.matches("input, textarea")) out.value = e.detail.text; else out.textContent = e.detail.text; }
+  if (e.type === "wb-cal-input" && e.detail.complete) setTimeout(() => pop.classList.remove("is-open"), 140);
+}
+document.addEventListener("wb-cal-input", pickerToField);
+document.addEventListener("wb-time-input", pickerToField);
+
+/* ---- Masked inputs — format WHILE typing (no popup), docs-only driver -------------
+   data-mask="date|time|datetime|card|daterange": strip to digits, then re-insert the
+   fixed separators; the caret rides the end (fine for append typing). In an app use a
+   real mask lib (imask / cleave.js) for caret-safe mid-string edits — Web Builder owns
+   only the look. A [data-reveal] button flips a password field's visibility. ---------- */
+const MASKS = {
+  date:      { groups: [2, 2, 4],          seps: ["/", "/"] },
+  time:      { groups: [2, 2],             seps: [":"] },
+  datetime:  { groups: [2, 2, 4, 2, 2],    seps: ["/", "/", " ", ":"] },
+  card:      { groups: [4, 4, 4, 4],       seps: [" ", " ", " "] },
+  daterange: { groups: [2, 2, 4, 2, 2, 4], seps: ["/", "/", " – ", "/", "/"] },
+};
+function applyMask(spec, raw) {
+  const max = spec.groups.reduce((a, b) => a + b, 0);
+  const d = raw.replace(/\D/g, "").slice(0, max);
+  let out = "", i = 0;
+  for (let g = 0; g < spec.groups.length && i < d.length; g++) {
+    if (g > 0) out += spec.seps[g - 1];
+    out += d.slice(i, i + spec.groups[g]);
+    i += spec.groups[g];
+  }
+  return out;
+}
+function initMask(el) {
+  const spec = MASKS[el.dataset.mask];
+  if (!spec) return;
+  const run = () => { el.value = applyMask(spec, el.value); };
+  el.addEventListener("input", run);
+  run();                                   // format any value the markup ships with
+}
+function initReveal(btn) {
+  const group = btn.closest(".wb-input-group");
+  const input = group && group.querySelector(".wb-input");
+  const ico   = btn.querySelector(".wb-ico");
+  if (!input) return;
+  btn.addEventListener("click", () => {
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    if (ico) ico.textContent = show ? "visibility_off" : "visibility";
+    btn.setAttribute("aria-pressed", String(show));
+  });
 }
 
 /* ---- Sortable: flat drag-to-reorder for a list OR grid, with a dashed slot -
@@ -585,7 +774,13 @@ document.addEventListener("click", (e) => {
                  (popPanel && !popClose && p === popPanel.closest(".wb-popover"));
     if (!keep) p.classList.remove("is-open");
   });
-  if (popToggle) { popToggle.closest(".wb-popover").classList.toggle("is-open"); return; }
+  if (popToggle) {
+    const pop = popToggle.closest(".wb-popover");
+    const opened = pop.classList.toggle("is-open");
+    /* Now that the panel is shown, centre any scroll-column time picker on its selection. */
+    if (opened) pop.querySelectorAll("[data-timepicker]").forEach((tp) => tp._tpCenter && tp._tpCenter());
+    return;
+  }
   if (popPanel) return;   // a click inside the card (not ×) — leave it open
 
   /* Collapse: toggle the nearest show/hide region. */

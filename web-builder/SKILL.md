@@ -68,7 +68,7 @@ tag, number, border, row tint, card, chart), not just capsules. Classification (
 
 ## Current scope
 
-Coverage maps to the **eight intent-groups** in the docs sidebar (this is the map; the exhaustive
+Coverage maps to the **nine intent-groups** in the docs sidebar (this is the map; the exhaustive
 roster with every modifier + copy-paste markup lives in `components-catalog.md` — **that's the single
 source of truth**, kept in sync per-component, so it never drifts here):
 
@@ -77,9 +77,9 @@ source of truth**, kept in sync per-component, so it never drifts here):
   with full row/column **alignment** + `.wb-self--*` per-item + `.wb-grow` — they're the base every component composes on),
   **sticky** (`.wb-sticky` / `--bottom` — pin a bar/card to an edge on scroll), **scroll** (`.wb-scroll-y`/`-x` themed overflow regions + `.wb-scrollbars` — theme any scrollbar incl. the whole-page viewport), and a live **Config** playground that edits tokens and exports a `.md`.
 - **Hành động** — buttons (incl. button-group, social-login with brand logos), dropdown / menu.
-- **Nhập liệu** — text input (prefix/suffix + icon addons), select, textarea (themed scrollbar both axes + a custom round-capped resize handle via `.wb-textarea-wrap`; `--code` for no-wrap horizontal scroll), checkbox/radio, switch
-  (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone,
-  **colour** — a preset **swatch palette** (`.wb-swatches`, pick from approved hues), a custom **colour picker** (`.wb-colorpicker` — SV area · hue · hex · presets; replaces the OS dialog); validation via the `.is-invalid` state.
+- **Nhập liệu** — text input (prefix/suffix + icon addons; a **clickable affix button** `.wb-input-group__btn` for password show/hide, clear ×; **masked inputs** that format *while typing* via `data-mask` — date · time · datetime · card · daterange, no popup), select, textarea (themed scrollbar both axes + a custom round-capped resize handle via `.wb-textarea-wrap`; `--code` for no-wrap horizontal scroll), checkbox/radio, switch
+  (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band), file + dropzone; validation via the `.is-invalid` state.
+- **Bộ chọn** — **calendar** (`.wb-calendar` — month grid; single date or `--range` date-range; selection = tier-1 neutral chip, today = neutral ring, range = soft band), **time picker** (`.wb-timepicker` — iOS-style scroll columns hour : minute, `--ampm` for 12-hour), and the **colour** pickers: a preset **swatch palette** (`.wb-swatches`, pick from approved hues) + a custom **colour picker** (`.wb-colorpicker` — SV · hue · hex · presets; replaces the OS dialog). All host inline or in `.wb-popover` for a trigger→popup (calendar/time pair with an `.wb-input-group` field); behaviour (grid maths, drag, mask) is a tiny driver in docs, a headless lib in an app.
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
   stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **media object**
