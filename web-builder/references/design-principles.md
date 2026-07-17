@@ -151,7 +151,8 @@ range and pill included — so one setting (Config → *Kiểu góc → Vuông s
 Checkbox/radio are drawn on the native input (`appearance:none`, keeping a11y) with a token border-width knob
 (`--wb-check-bw`). Use **dashed** borders as an affordance —
 "empty / droppable / optional / add-new" (`.wb-card--dashed`, `.wb-divider--dashed`, the
-sortable `.wb-sortable__ph`); dashed reads as "not final", which helps users parse the UI fast.
+sortable `.wb-sortable__ph`, a `.wb-cap--dashed` add/draft chip, a `.wb-steps__item--dashed` tentative
+step); dashed reads as "not final", which helps users parse the UI fast.
 
 ## 10. Icons come from an icon font — do not hand-draw them
 

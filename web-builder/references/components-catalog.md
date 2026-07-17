@@ -193,7 +193,7 @@ The `__foot` can hold a delta, a plain caption, or a capsule (e.g. a danger caps
 modifier) is soft grey — the most common case.
 
 ```
-FILL:  (default soft grey) · --solid · --outline · --elevated
+FILL:  (default soft grey) · --solid · --outline · --elevated · --dashed (optional / add-new)
 TONE:  (default neutral)   · --success · --danger · --warning · --info
 COLOUR:--tinted + style="--wb-cap-color:#hex"   (custom category hue, like tags)
 SIZE:  (default) · --sm · --lg
@@ -205,6 +205,7 @@ DOT:   add <span class="wb-cap__dot"></span> as first child for a status dot
 - **Status that should stay calm** → tone, soft (default fill): `wb-cap wb-cap--success`.
 - **Status that must shout** (overdue, failed) → tone + solid: `wb-cap wb-cap--danger wb-cap--solid`.
 - **A neutral chip that needs to pop off a busy surface** → `wb-cap wb-cap--elevated`.
+- **An "add / draft / optional" chip** (dashed = not final, §9) → `wb-cap wb-cap--dashed` (composes with a tone).
 
 ```html
 <!-- category (neutral, tier 1) -->
@@ -221,6 +222,9 @@ DOT:   add <span class="wb-cap__dot"></span> as first child for a status dot
 
 <!-- coloured category chip (classification only — pass one variable) -->
 <span class="wb-cap wb-cap--tinted" style="--wb-cap-color:#4f46e5"><span class="wb-cap__dot"></span> Ăn uống</span>
+
+<!-- dashed = optional / draft / add-new (composes with a tone) -->
+<button class="wb-cap wb-cap--dashed">+ Thêm nhãn</button>
 ```
 
 Status → tone mapping (keep it consistent across the app):
@@ -825,9 +829,10 @@ In the docs wrap in `[data-tabs]` with `data-tab`/`data-panel` for the JS switch
 `.wb-steps` > `.wb-steps__item` (each = `.wb-steps__marker` + `.wb-steps__content` with `__title`/`__desc`).
 Vertical with a connector rail by default; `--horizontal` = wizard row, `--dot` = slim timeline. Per-item
 state: `.is-done` (put `<span class="wb-ico">check</span>` in the marker), `.is-active` (neutral ring),
-`.is-todo` (muted outline). Markers are tier-1 high-contrast (like `.wb-avatar--solid`) — contrast, not
-colour. `.wb-steps__note` = a dashed annotation pill on a step. Switching steps is app logic; the classes
-only style the look.
+`.is-todo` (muted outline). Per-item `.wb-steps__item--dashed` = a **tentative / optional** step (dashed
+number marker + dashed rail; §9 "not final"). Markers are tier-1 high-contrast (like `.wb-avatar--solid`) —
+contrast, not colour. `.wb-steps__note` = a dashed annotation pill on a step. Switching steps is app logic;
+the classes only style the look.
 
 ```html
 <ol class="wb-steps">
@@ -844,7 +849,7 @@ only style the look.
     <div class="wb-steps__content"><p class="wb-steps__title">Xác nhận</p></div>
   </li>
 </ol>
-<!-- --horizontal (wizard) · --dot (timeline) -->
+<!-- --horizontal (wizard) · --dot (timeline) · item --dashed (tentative/optional step) -->
 ```
 
 ## Tooltip

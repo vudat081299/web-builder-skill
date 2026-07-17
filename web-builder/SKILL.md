@@ -83,14 +83,14 @@ source of truth**, kept in sync per-component, so it never drifts here):
 - **Bộ chọn** — **calendar** (`.wb-calendar` — month grid; single date or `--range` date-range; selection = tier-1 neutral chip, today = neutral ring, range = soft band), **time picker** (`.wb-timepicker` — iOS-style scroll columns hour : minute, `--ampm` for 12-hour), and the **colour** pickers: a preset **swatch palette** (`.wb-swatches`, pick from approved hues) + a custom **colour picker** (`.wb-colorpicker` — SV · hue · hex · presets; replaces the OS dialog). All host inline or in `.wb-popover` for a trigger→popup (calendar/time pair with an `.wb-input-group` field); behaviour (grid maths, drag, mask) is a tiny driver in docs, a headless lib in an app.
 - **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
-  stat/KPI cards, capsules/badges (incl. `--tinted` category hue), tags, avatar, **media object**
+  stat/KPI cards, capsules/badges (incl. `--tinted` category hue + `--dashed` optional/add-new), tags, avatar, **media object**
   (`.wb-media` — a leading figure + title/text body: ranked rows, feature lists; pairs with card), **receipt**
   (hoá đơn — a torn-paper slip; **4 edge styles** scallop (default) / `--wave` / `--zigzag` / `--dashed`, plus `--bottom`/`--flat`, `__barcode`; bill · transfer · voucher templates), and **charts** — line/area,
   income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps.
 - **Phản hồi** — alert, toast, progress (+ indeterminate/loading), skeleton, empty state.
 - **Lớp phủ (Overlay)** — modal/dialog, drawer/offcanvas (backdrop options on `.wb-overlay`: `--blur` /
   `--clear`, or `--pass` = **non-modal**, page below stays usable), tooltip, **popover** (click-toggled card w/ arrow + × — richer than tooltip, not a menu).
-- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**), nav / menu, sidenav (app rail), tabs, **steps/stepper** (`.wb-steps` — numbered or `--dot`; vertical timeline + `--horizontal` wizard; `.is-todo`/`.is-active`/`.is-done` states), breadcrumb, pagination.
+- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**), nav / menu, sidenav (app rail), tabs, **steps/stepper** (`.wb-steps` — numbered or `--dot`; vertical timeline + `--horizontal` wizard; `.is-todo`/`.is-active`/`.is-done` states + per-item `--dashed` tentative/optional step), breadcrumb, pagination.
 - **Đóng/mở (Disclosure)** — accordion (`<details>` FAQ) and **collapse** (one standalone show/hide region).
 - **Cấu trúc** — drag-and-drop **tree** (reorder + reparent) and a flat **sortable** list/grid/rows.
 

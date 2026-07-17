@@ -26,6 +26,30 @@
   </div>
 
   <div class="doc-block">
+    <h4>Nét đứt — tuỳ chọn / nháp / thêm-mới (<code>--dashed</code>)</h4>
+    <p class="doc-block__desc">Viền gạch đứt đọc là <b>“chưa chốt”</b> (đúng idiom §9) — hợp cho chip <b>thêm-mới</b>,
+    <b>nháp</b>, hay tuỳ chọn. Trung tính mặc định; ghép được với tone để viền theo màu status, như <code>--outline</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <button type="button" class="wb-cap wb-cap--dashed">+ Thêm nhãn</button>
+          <span class="wb-cap wb-cap--dashed">Nháp</span>
+          <span class="wb-cap wb-cap--dashed"><span class="wb-cap__dot"></span> Chưa gán</span>
+          <span class="wb-cap wb-cap--dashed wb-cap--success">Tạm duyệt</span>
+          <span class="wb-cap wb-cap--dashed wb-cap--warning">Chờ bổ sung</span>
+          <span class="wb-cap wb-cap--dashed wb-cap--tinted" style="--wb-cap-color:#4f46e5">Danh mục mới</span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- thêm-mới / tuỳ chọn (trung tính) --&gt;
+&lt;button class="wb-cap wb-cap--dashed"&gt;+ Thêm nhãn&lt;/button&gt;
+&lt;span class="wb-cap wb-cap--dashed"&gt;Nháp&lt;/span&gt;
+
+&lt;!-- ghép tone: viền gạch đứt theo màu status --&gt;
+&lt;span class="wb-cap wb-cap--dashed wb-cap--success"&gt;Tạm duyệt&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
     <h4>Semantic — soft (tầng 3) và solid (tầng 2)</h4>
     <p class="doc-block__desc">Thêm tone; mặc định là bản soft mờ. Thêm <code>--solid</code> để thành bản đặc, nhấn mạnh.</p>
     <div class="demo demo--plain">

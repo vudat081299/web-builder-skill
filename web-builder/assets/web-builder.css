@@ -321,6 +321,16 @@
 .wb-cap--tinted.wb-cap--outline { background: transparent; border-color: var(--wb-cap-color, var(--wb-gray-400)); }
 .wb-cap--tinted.wb-cap--solid   { background: var(--wb-cap-color, var(--wb-gray-700)); color: #fff; border-color: transparent; }
 
+/* --- FILL: dashed (an "optional / draft / add-new" chip — dashed reads as "not final", §9) ----
+   Border only (bg transparent, dashed strong border); text stays the base/tone colour so it
+   composes with a tone the same way --outline does (the tone rules above set the text). */
+.wb-cap--dashed { background: transparent; border-style: dashed; border-color: var(--wb-border-strong); }
+.wb-cap--success.wb-cap--dashed { border-color: var(--wb-success); }
+.wb-cap--danger.wb-cap--dashed  { border-color: var(--wb-danger);  }
+.wb-cap--warning.wb-cap--dashed { border-color: var(--wb-warning); }
+.wb-cap--info.wb-cap--dashed    { border-color: var(--wb-info);    }
+.wb-cap--tinted.wb-cap--dashed  { background: transparent; border-color: var(--wb-cap-color, var(--wb-gray-400)); }
+
 /* Size modifiers. */
 .wb-cap--sm { padding: 1px 8px;  font-size: 11px; gap: 5px; }
 .wb-cap--lg { padding: 5px 13px; font-size: 13px; }
@@ -2347,6 +2357,16 @@
 .wb-steps__item.is-active .wb-steps__marker {
   box-shadow: 0 0 0 3px var(--wb-surface), 0 0 0 5px var(--wb-border-strong);
 }
+/* --dashed (per item): a tentative / optional step — dashed number marker + dashed rail
+   ("not final", §9). Self-contained (outline look), so it reads right with or without .is-todo. */
+.wb-steps__item--dashed .wb-steps__marker {
+  background: transparent; color: var(--wb-fg-subtle);
+  border-style: dashed; border-color: var(--wb-border-strong);
+}
+.dark .wb-steps__item--dashed .wb-steps__marker { background: transparent; color: var(--wb-fg-subtle); }
+/* Rail below a dashed step: a dashed line (a repeating gradient, so the 1px rail box is unchanged). */
+.wb-steps__item--dashed::before { background: repeating-linear-gradient(var(--wb-border-strong) 0 4px, transparent 4px 7px); }
+.wb-steps--horizontal .wb-steps__item--dashed::before { background: repeating-linear-gradient(to right, var(--wb-border-strong) 0 4px, transparent 4px 7px); }
 /* --dot: small dots instead of numbers (a plain timeline). */
 .wb-steps--dot { --wb-steps-size: 12px; }
 .wb-steps--dot .wb-steps__marker { font-size: 0; }
