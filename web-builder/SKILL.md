@@ -117,8 +117,8 @@ a capsule) — **no left-accent bars** on components (a documented non-default v
 form validation is a **state**, `.is-invalid` (not `--invalid`); border width is one knob (`--wb-bw`);
 lean on **dashed** borders for "empty / droppable / optional". On **dark**, shadows flip to a soft
 **light** lift (a black shadow is invisible on a dark canvas) — build with `--wb-shadow-*` and it's
-automatic. Scroll regions get a thin **theme-aware scrollbar + tail room** (`.wb-scroll-y`, and the
-built-in table/menu) so the last item scrolls clear and the bar doesn't clash. **Disabled** and **locked**
+automatic. Scroll regions get a thin **theme-aware scrollbar + tail room** (`.wb-scroll-y`/`-x`, the
+built-in table/menu, and `.wb-scrollbars` to theme any bar incl. the whole-page viewport) so the last item scrolls clear and the bar doesn't clash. **Disabled** and **locked**
 are distinct states: *disabled* reads inert (dim neutral track, `not-allowed`); *locked* keeps the real
 on/off value but puts a lock **beside** the control that **shakes** when a blocked change is attempted —
 **never overlay** a lock on the control itself. A dismiss **×** (`.wb-close`) always sits **top-right**

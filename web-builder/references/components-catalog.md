@@ -87,6 +87,8 @@ for the look (see `integration.md`).
 | Reorder rows inside a data table (drag) | **Sortable table** (`--sortable`) | [Sortable](#sortable-list--grid) |
 | Arrange in a row/column, align (top/center/bottom, left/right), wrap, equal widths | **Grid / Layout** utilities | [Layout](#grid--layout) |
 | Pin a bar / card / button to the top or bottom edge on scroll | **Sticky** (`.wb-sticky`) | [Sticky](#sticky) |
+| A bounded scroll region (long list / wide row) with a theme-aware bar | **Scroll** (`.wb-scroll-y` / `-x`) | [Scroll areas](#scroll-areas) |
+| Theme the whole-page (viewport) scrollbar | **`.wb-scrollbars`** on `<html>` | [Scroll areas](#scroll-areas) |
 | A UI icon (chevron, close, drag, search…) | **Icon** (`.wb-ico`) | [Icons](#icons) |
 | Fine-tune tokens live + export a `.md` | **Config** (docs playground) | [Config](#config--tweak) |
 
@@ -444,6 +446,18 @@ GROUP:    .wb-input-group with .wb-input-group__addon for PREFIX or SUFFIX (₫,
 
 Money fields: use `inputmode="numeric"`, right sentinel `₫` as an addon, and format the
 display value with the app's locale (`1.280.000`).
+
+**Textarea:** `.wb-textarea` shares the input tokens; its scrollbar is theme-aware on both axes (§27). Wrap it
+in `.wb-textarea-wrap` to swap the OS resizer grip for a clean, round-capped **diagonal handle** (colour
+`--wb-border-strong`, tracks the theme, no fuzzy corner) — resize still works. Add `--code` (`white-space:pre`)
+for a no-wrap field that scrolls horizontally. See the Textarea page.
+
+```html
+<div class="wb-textarea-wrap">
+  <textarea class="wb-textarea" placeholder="Ghi chú…"></textarea>
+</div>
+<div class="wb-textarea-wrap"><textarea class="wb-textarea wb-textarea--code">…</textarea></div>
+```
 
 **Checkbox & radio** are drawn on the native input itself (`appearance:none` — the input stays
 focusable / keyboard-operable / form-correct, no extra markup): a box / circle with a **bold ink border**,
@@ -1119,15 +1133,21 @@ each pinning until the next pushes it up).
 
 ## Scroll areas
 
-`.wb-scroll-y` — put on any `overflow-y` region (a bounded list, a category picker, a side panel). It
-gives a **thin, theme-aware scrollbar** (transparent track + neutral-border thumb, so no bright OS bar
-clashing on dark or reading as a divider) and **`scroll-padding` tail room**; add `--pad` for extra
-bottom space so the last item scrolls clear of the edge (easier to read/tap/select). The built-in table
-body (`.wb-table-scroll`) and dropdown `.wb-menu` already carry the themed scrollbar. Scale the tail
-to the case — a short menu needs little, a long list wants more.
+**Regions:** `.wb-scroll-y` (any `overflow-y` region — a bounded list, category picker, side panel) and
+`.wb-scroll-x` (an `overflow-x` region — a wide card row / table). Both give a **thin, theme-aware
+scrollbar** (transparent track + neutral-border thumb, so no bright OS bar clashing on dark or reading as a
+divider); `.wb-scroll-y` also adds **`scroll-padding` tail room** — add `--pad` for extra bottom space so the
+last item scrolls clear of the edge (easier to read/tap/select).
+
+**Bar-only:** `.wb-scrollbars` themes an element's scrollbar **without** touching its overflow — put it on
+`<html class="wb-scrollbars">` for a theme-aware **viewport (whole-page)** bar, or on any element that already
+scrolls. Textareas and the built-in table body (`.wb-table-scroll`) + dropdown `.wb-menu` carry the theming
+automatically. Scale the tail to the case — a short menu needs little, a long list wants more.
 
 ```html
 <div class="wb-scroll-y wb-scroll-y--pad" style="max-height:320px"> … danh mục dài … </div>
+<div class="wb-scroll-x"> … hàng thẻ rộng … </div>
+<html class="wb-scrollbars">   <!-- theme the whole-page (viewport) scrollbar -->
 ```
 
 ## Config / Tweak

@@ -21,6 +21,7 @@ const NAV = [
     { id: "border",     label: "Border & bo góc" },
     { id: "layout",     label: "Grid / Layout" },
     { id: "sticky",     label: "Sticky" },
+    { id: "scroll",     label: "Scroll / thanh cuộn" },
     { id: "config",     label: "Config / Tweak" },
   ]},
   { group: "Hành động", items: [
