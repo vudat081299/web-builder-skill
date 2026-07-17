@@ -93,16 +93,16 @@ the look, Tailwind for one-off spacing); off Tailwind, the built-ins are enough 
 
 - **Bootstrap** groups its left nav by **technical layer**: *Getting started · Customize · Layout · Content
   · Forms · Components · Helpers · Utilities · Extend*. Layout and Utilities are first-class top sections.
-- **Web Builder** groups by **user intent / job-to-be-done**: *Nền tảng (foundation) · Hành động (actions) ·
-  Nhập liệu (input) · Hiển thị dữ liệu (data) · Phản hồi (feedback) · Điều hướng (navigation) · Biểu đồ
-  (charts) · Cấu trúc (structure)*. A builder thinks "I need to show data" → **Hiển thị dữ liệu**, not
-  "is this a Component or a Utility?".
+- **Web Builder** groups by **user intent / job-to-be-done**: *Nền tảng (foundation) · Bố cục & tiện ích
+  (layout & utilities) · Hành động (actions) · Nhập liệu (input) · Hiển thị dữ liệu (data, incl. charts) ·
+  Phản hồi (feedback) · Lớp phủ (overlays) · Điều hướng (navigation) · Đóng/mở (disclosure) · Cấu trúc
+  (structure)*. A builder thinks "I need to show data" → **Hiển thị dữ liệu**, not "is this a Component or a Utility?".
 
 Both open with a foundation section (Bootstrap: Getting started/Customize; Web Builder: Nền tảng — colour
-ladder, tokens, typography, **and the flex-first layout utilities**). The difference from Bootstrap: Web
-Builder keeps layout as a small utility set *inside* that foundation rather than as a separate 12-column
-grid section — consistent with the layout decision above. **Cấu trúc** then holds only the structural
-pieces: the drag-and-drop tree + sortable.
+ladder, tokens, typography, border). The flex-first **layout utilities** sit in their own foundation-tier
+group **Bố cục & tiện ích** (grid/cluster/stack + sticky/scroll/divider) — a small utility set, not a
+separate 12-column grid section, consistent with the layout decision above. **Cấu trúc** then holds only
+the structural pieces: the drag-and-drop tree + sortable.
 
 ## Honest pros / cons
 

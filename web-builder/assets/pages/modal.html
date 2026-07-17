@@ -1,5 +1,5 @@
 <div class="doc-page-head">
-  <p class="doc-eyebrow">Phản hồi</p>
+  <p class="doc-eyebrow">Lớp phủ (Overlay)</p>
   <h2>Modal / Dialog</h2>
   <p><code>.wb-overlay</code> làm mờ nền (bật bằng <code>.is-open</code>), bên trong là <code>.wb-modal</code>.
   Ở app dùng <b>Radix Dialog</b> cho focus-trap/portal; các class này lo phần nhìn.</p>
@@ -20,7 +20,7 @@
               <h4 class="wb-modal__title">Thêm giao dịch</h4>
               <p class="wb-modal__sub">Ghi nhận một khoản thu hoặc chi.</p>
             </div>
-            <button class="wb-close" aria-label="Đóng">×</button>
+            <button class="wb-close" aria-label="Đóng"></button>
           </div>
           <div class="wb-modal__body">
             <div class="wb-field"><label class="wb-label">Nội dung</label><input class="wb-input" placeholder="VD: Ăn trưa" /></div>
@@ -37,7 +37,7 @@
   &lt;div class="wb-modal"&gt;
     &lt;div class="wb-modal__head"&gt;
       &lt;div&gt;&lt;h4 class="wb-modal__title"&gt;Thêm giao dịch&lt;/h4&gt;&lt;/div&gt;
-      &lt;button class="wb-close" data-modal-close&gt;×&lt;/button&gt;
+      &lt;button class="wb-close" data-modal-close&gt;&lt;/button&gt;
     &lt;/div&gt;
     &lt;div class="wb-modal__body"&gt;…&lt;/div&gt;
     &lt;div class="wb-modal__foot"&gt;
@@ -81,7 +81,7 @@
         <h4 class="wb-modal__title">Thêm giao dịch</h4>
         <p class="wb-modal__sub">Ghi nhận một khoản thu hoặc chi.</p>
       </div>
-      <button class="wb-close" data-modal-close aria-label="Đóng">×</button>
+      <button class="wb-close" data-modal-close aria-label="Đóng"></button>
     </div>
     <div class="wb-modal__body">
       <div class="wb-stack">
