@@ -227,8 +227,8 @@ Both are "you can't change this now", but they say different things and look dif
   on/off colour), `cursor: not-allowed`. It doesn't claim to hold a meaningful value.
 - **Locked** (`--locked`) = *has a real value you're not allowed to change* (gated by plan, role, a
   prerequisite). Keep showing the true on/off state, and put a small lock **beside** the control (low
-  opacity, brighter on hover). When the user tries to change it, the lock snaps to amber and **shakes**
-  for ~0.4s, then settles — feedback exactly when they act, no permanent "LOCKED" clutter.
+  opacity, brighter on hover). When the user tries to change it, the lock snaps to full-opacity neutral
+  (`--wb-fg`) and **shakes** for ~0.4s, then settles — feedback exactly when they act, no permanent "LOCKED" clutter.
 
 **Never overlay a lock on the control itself** (e.g. on a switch thumb) — it's cramped and ugly at
 16–20px; the earlier thumb-glyph approach was dropped for this. Keep the lock a sibling so layout can

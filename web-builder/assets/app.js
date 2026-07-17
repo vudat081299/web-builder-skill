@@ -19,10 +19,13 @@ const NAV = [
     { id: "typography", label: "Typography" },
     { id: "fonts",      label: "Fonts" },
     { id: "border",     label: "Border & bo góc" },
+    { id: "config",     label: "Config / Tweak" },
+  ]},
+  { group: "Bố cục & tiện ích", items: [
     { id: "layout",     label: "Grid / Layout" },
     { id: "sticky",     label: "Sticky" },
     { id: "scroll",     label: "Scroll / thanh cuộn" },
-    { id: "config",     label: "Config / Tweak" },
+    { id: "divider",    label: "Divider" },
   ]},
   { group: "Hành động", items: [
     { id: "buttons",  label: "Buttons" },
@@ -52,15 +55,18 @@ const NAV = [
     { id: "capsules", label: "Capsules / Badges" },
     { id: "tags",     label: "Tags (#)" },
     { id: "avatar",   label: "Avatar" },
+    { id: "charts",   label: "Charts" },
   ]},
   { group: "Phản hồi", items: [
     { id: "alert",    label: "Alert / Banner" },
     { id: "toast",    label: "Toast" },
-    { id: "modal",    label: "Modal / Dialog" },
-    { id: "drawer",   label: "Drawer / Offcanvas" },
     { id: "progress", label: "Progress" },
     { id: "skeleton", label: "Skeleton" },
     { id: "empty",    label: "Empty state" },
+  ]},
+  { group: "Lớp phủ (Overlay)", items: [
+    { id: "modal",    label: "Modal / Dialog" },
+    { id: "drawer",   label: "Drawer / Offcanvas" },
     { id: "tooltip",  label: "Tooltip" },
     { id: "popover",  label: "Popover" },
   ]},
@@ -71,12 +77,10 @@ const NAV = [
     { id: "steps",      label: "Steps / Stepper" },
     { id: "breadcrumb", label: "Breadcrumb" },
     { id: "pagination", label: "Pagination" },
+  ]},
+  { group: "Đóng/mở (Disclosure)", items: [
     { id: "accordion",  label: "Accordion" },
     { id: "collapse",   label: "Collapse" },
-    { id: "divider",    label: "Divider" },
-  ]},
-  { group: "Biểu đồ", items: [
-    { id: "charts", label: "Charts" },
   ]},
   { group: "Cấu trúc", items: [
     { id: "tree",     label: "Tree danh mục" },
