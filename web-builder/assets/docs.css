@@ -136,16 +136,15 @@ html::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 }
 .theme-btn:hover { border-color: var(--wb-border-strong); }
 
-/* Hamburger to hide/show the whole sidebar (real "menu" icon). */
+/* Toggle to hide/show the whole sidebar — a panel icon (left_panel_open/close),
+   rendered as a .wb-ico ligature and swapped by app.js to match the current state
+   (clearer than a plain hamburger, which reads as "open a menu", not "toggle panel"). */
 .doc-side-toggle {
   flex: none; width: 34px; height: 34px; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm);
   background: var(--wb-surface); color: var(--wb-fg);
-  font-family: var(--wb-icon-font); font-size: 22px; line-height: 1;
-  font-variation-settings: "wght" var(--wb-ico-weight), "opsz" 24;
 }
-.doc-side-toggle::before { content: "\e5d2"; }   /* menu */
 .doc-side-toggle:hover { border-color: var(--wb-border-strong); }
 .doc-shell.is-side-hidden .doc-side { display: none; }
 

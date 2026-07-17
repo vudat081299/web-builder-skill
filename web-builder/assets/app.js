@@ -535,9 +535,14 @@ document.addEventListener("click", (e) => {
     groupTog.setAttribute("aria-expanded", String(!collapsed));
     return;
   }
-  /* BOC: hide / show the whole sidebar. */
+  /* BOC: hide / show the whole sidebar; the panel icon follows the state. */
   const sideTog = e.target.closest("[data-side-toggle]");
-  if (sideTog) { document.querySelector(".doc-shell").classList.toggle("is-side-hidden"); return; }
+  if (sideTog) {
+    const hidden = document.querySelector(".doc-shell").classList.toggle("is-side-hidden");
+    const ico = sideTog.querySelector(".wb-ico");
+    if (ico) ico.textContent = hidden ? "left_panel_open" : "left_panel_close";
+    return;
+  }
 
   /* Config: open the tweak drawer from an in-page button. */
   const cfgOpen = e.target.closest("[data-config-open]");
