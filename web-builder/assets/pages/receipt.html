@@ -101,7 +101,9 @@
   <div class="doc-block">
     <h4>Chỉnh vết lõm — <code>--wb-receipt-d</code> &amp; <code>--wb-receipt-gap</code></h4>
     <p class="doc-block__desc">Hai biến điều khiển hình học: <code>--wb-receipt-d</code> = <b>đường kính</b> mỗi vết lõm (độ sâu = một nửa số đó),
-    <code>--wb-receipt-gap</code> = <b>đoạn phẳng</b> giữa hai vết. Chu kỳ lặp = <code>d + gap</code>, tự lặp kín chiều rộng nên không cần đếm số vết.
+    <code>--wb-receipt-gap</code> = <b>đoạn phẳng</b> giữa hai vết. Chu kỳ danh định = <code>d + gap</code>, nhưng cạnh dùng
+    <code>mask-repeat:round</code> nên <b>luôn khớp đúng số nguyên vết lõm và căn giữa</b> — không bao giờ bị cụt nửa vết ở đầu/cuối
+    (đoạn phẳng co giãn nhẹ quanh <code>gap</code> để vừa khít). Không cần đếm số vết.
     Mặc định là <code>d 12</code> / <code>gap 6</code> (như các mẫu ở trên). Đặt ngay trên <code>.wb-receipt</code> để đổi cho cả tờ — ví dụ nhỏ &amp; dày vs to &amp; thưa:</p>
     <div class="demo">
       <div class="demo__stage">

@@ -664,9 +664,10 @@ flat gap (a ticket-stub / stamp-perf look; real transparent cuts via `mask`, not
 (a tear-off: a dashed rule across the body with a half-circle notch cut into BOTH side edges at its ends —
 real transparent cuts, so it shows the background through; place a blank band in the content at the tear).
 Tune the geometry knobs on `.wb-receipt`: `--wb-receipt-d` (notch diameter; depth = d/2) and
-`--wb-receipt-gap` (flat gap between notches) for the top/bottom edge — repeat period = d + gap, tiled
-responsively (no fixed notch count); plus `--wb-receipt-side-d` (side-notch diameter) and `--wb-receipt-tear`
-(tear position, length or %) for `--ticket`.
+`--wb-receipt-gap` (flat gap between notches) for the top/bottom edge — nominal period = d + gap, but the
+row uses `mask-repeat:round`, so it always fits a **whole number of notches, centred** (the gap flexes a hair
+so there's never a clipped half-notch at either end); plus `--wb-receipt-side-d` (side-notch diameter) and
+`--wb-receipt-tear` (tear position, length or %) for `--ticket`.
 
 ```html
 <div class="wb-receipt">

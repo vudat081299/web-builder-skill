@@ -1946,9 +1946,10 @@
    Two knobs (any CSS length) — this is where you change the look:
      --wb-receipt-d    = D, one notch's diameter (how wide each half-circle is)
      --wb-receipt-gap  = G, the flat gap between two neighbouring notches
-   Derived from those: radius/depth = D/2, repeat period = D + G. Notches tile
-   with repeat-x to the paper's width — never hard-coded — so it's responsive; a
-   partial notch at the far end just gets clipped, which is fine.
+   Derived from those: radius/depth = D/2, nominal period = D + G. The notch row
+   uses mask-repeat:round, so the browser always fits a WHOLE number of notches
+   across the width and spreads them symmetrically (centred — never a clipped
+   half-notch at one end); the flat gap flexes a hair around G to make them fit.
    Edge styles (pick one): (default) scallop · --wave (bigger, sparser notches)
    · --dashed (flat coupon edge with a dashed perforation line, no cut).
    Modifiers: --flat (no shadow) · --bottom (notch only the bottom, flat top)
@@ -1981,11 +1982,12 @@
   /* A solid middle band, then a row of half-circle CUTS at the top & bottom edge.
      Each tile is one period (D+G) wide; the notch — a transparent disc of radius
      r=D/2 centred on the tile — carves a semicircle into the edge, leaving G/2 of
-     flat paper on either side → notches spaced by a flat gap G, tiled to any width. */
+     flat paper on either side. mask-repeat:round tiles a WHOLE number of notches
+     across the width, centred (gap flexes a touch around G — never a half-notch). */
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-r)) no-repeat,
-    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x,
-    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x;
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat;
   -webkit-mask: var(--wb-receipt-mask);
           mask: var(--wb-receipt-mask);
 }
@@ -1994,7 +1996,7 @@
   padding-block: 20px calc(20px + var(--wb-receipt-r));
   --wb-receipt-mask:
     linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--wb-receipt-r)) no-repeat,
-    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x;
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat;
 }
 
 /* --- Alternate edges — pick one ------------------------------------------- */
@@ -2032,8 +2034,8 @@
      body; then the top & bottom scallop rows are `add`ed back on. `subtract` is
      source∖destination, hence this order (not "discs on top"). */
   --wb-receipt-mask:
-    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x,
-    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) repeat-x,
+    radial-gradient(var(--wb-receipt-r) at 50% 0,    #0000 98%, #000 100%) 0 0    / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat,
+    radial-gradient(var(--wb-receipt-r) at 50% 100%, #0000 98%, #000 100%) 0 100% / var(--wb-receipt-period) var(--wb-receipt-r) round no-repeat,
     linear-gradient(#000 0 0) 0 50% / 100% calc(100% - 2 * var(--wb-receipt-r)) no-repeat,
     radial-gradient(var(--wb-receipt-side-r) at 0    var(--wb-receipt-tear), #000 98%, #0000 100%) no-repeat,
     radial-gradient(var(--wb-receipt-side-r) at 100% var(--wb-receipt-tear), #000 98%, #0000 100%) no-repeat;
