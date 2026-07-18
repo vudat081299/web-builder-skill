@@ -396,14 +396,91 @@ a { color: inherit; }
 }
 @media (max-width: 640px) { .doc-search-trigger__label, .doc-search-trigger__kbd { display: none; } }
 
-/* Anchor the dialog near the top; the .wb-overlay + .wb-modal shell is reused as-is. */
+/* Command-palette dialog: anchored near the top, built on the .wb-overlay + .wb-modal
+   shell. A search bar, a scrolling list of hits, and a keyboard-hint footer. */
 .doc-search.wb-overlay { align-items: flex-start; }
-.doc-search__box { width: min(560px, 92vw); margin-top: 10vh; padding: 0; overflow: hidden; }
-.doc-search__bar {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 14px; border-bottom: var(--wb-bw) solid var(--wb-border);
+.doc-search__box {
+  width: min(600px, 94vw); margin-top: 9vh; padding: 0; overflow: hidden;
+  display: flex; flex-direction: column; max-height: 78vh;
 }
-.doc-search__bar .wb-input-group { flex: 1; }
-.doc-search__results { max-height: 56vh; overflow: auto; padding: 8px; }
-.doc-search__hint { margin: 0; padding: 24px 12px; text-align: center; color: var(--wb-fg-muted); font-size: 13px; }
-.doc-search__hl { background: var(--wb-surface-hover); color: var(--wb-fg); font-weight: 650; border-radius: 3px; padding: 0 1px; }
+
+/* --- Search bar (borderless input + leading icon + close) --- */
+.doc-search__bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 14px 14px 18px; border-bottom: var(--wb-bw) solid var(--wb-border);
+}
+.doc-search__bar-ico { font-size: 22px; color: var(--wb-fg-muted); flex: none; }
+.doc-search__input {
+  flex: 1; min-width: 0; border: 0; background: none; padding: 0; margin: 0;
+  font: inherit; font-size: 16px; color: var(--wb-fg); outline: none;
+}
+.doc-search__input::placeholder { color: var(--wb-fg-subtle); }
+/* strip the native search clear/decoration if a UA still shows it */
+.doc-search__input::-webkit-search-cancel-button { display: none; }
+
+/* --- Results list --- */
+.doc-search__results { flex: 1; overflow: auto; padding: 6px; min-height: 96px; }
+
+.doc-search__hit {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 9px 10px; border-radius: var(--wb-radius);
+  text-decoration: none; color: var(--wb-fg); cursor: pointer;
+  scroll-margin: 8px;
+}
+.doc-search__hit:hover,
+.doc-search__hit.is-active { background: var(--wb-surface-hover); }
+/* leading page-icon tile — a consistent anchor for the ragged text to the right */
+.doc-search__hit-ico {
+  flex: none; width: 32px; height: 32px; border-radius: var(--wb-radius-sm);
+  display: grid; place-items: center; margin-top: 1px;
+  background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
+  color: var(--wb-fg-muted); font-size: 18px;
+}
+.doc-search__hit.is-active .doc-search__hit-ico { border-color: var(--wb-border-strong); color: var(--wb-fg); }
+.doc-search__hit-main { flex: 1; min-width: 0; }
+.doc-search__hit-titlerow { display: flex; align-items: baseline; gap: 8px; }
+.doc-search__hit-title {
+  flex: 0 1 auto; min-width: 0; font-weight: 600; font-size: 14px; color: var(--wb-fg);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;   /* long titles ellipsis, never wrap */
+}
+.doc-search__hit-group { flex: none; font-size: 11.5px; color: var(--wb-fg-subtle); }
+.doc-search__hit-enter {
+  flex: none; margin-left: auto; align-self: center; font-size: 11px; line-height: 1;
+  padding: 3px 6px; color: var(--wb-fg-muted);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px;
+  opacity: 0; transition: opacity .1s ease;
+}
+.doc-search__hit.is-active .doc-search__hit-enter { opacity: 1; }
+.doc-search__hit-snip {
+  margin-top: 2px; font-size: 12.5px; line-height: 1.5; color: var(--wb-fg-muted);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+/* Match highlight — monochrome (bold + underline), so it reads on every row bg
+   including the active/hover tint, without spending colour (design-principles §1).
+   `background:none` kills the UA <mark> yellow, which would break the colour ladder. */
+.doc-search__hl {
+  background: none; font-weight: 700; color: var(--wb-fg);
+  border-bottom: 2px solid var(--wb-border-strong);
+}
+
+/* --- Empty / hint state --- */
+.doc-search__hint {
+  margin: 0; padding: 40px 20px; text-align: center; color: var(--wb-fg-muted); font-size: 13px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.doc-search__hint .wb-ico { font-size: 30px; color: var(--wb-fg-subtle); }
+.doc-search__hint b { color: var(--wb-fg); font-weight: 600; }
+
+/* --- Footer: keyboard legend + result count --- */
+.doc-search__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 9px 14px; border-top: var(--wb-bw) solid var(--wb-border);
+  background: var(--wb-surface-2); color: var(--wb-fg-subtle); font-size: 11.5px;
+}
+.doc-search__legend { display: flex; align-items: center; }
+.doc-search__foot kbd {
+  font-family: var(--wb-font); font-size: 10.5px; line-height: 1; padding: 3px 5px; margin: 0 1px;
+  color: var(--wb-fg-muted); background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: 4px;
+}
+.doc-search__count { flex: none; white-space: nowrap; }
+@media (max-width: 520px) { .doc-search__legend { display: none; } }

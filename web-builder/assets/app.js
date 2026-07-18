@@ -1216,9 +1216,13 @@ function cycleTheme() {
 themeMQ.addEventListener("change", () => { if (themeMode() === "system") applyTheme("system"); });
 
 /* ---- Search: full-text over every page (docs-only). The index is built lazily on
-   first open and cached; matching is a simple case-insensitive substring for now
-   (label first, then body). A hit links straight to its page. -------------------- */
+   first open and cached; matching is a case-insensitive substring (label first,
+   then body). A command-palette dialog: ↑/↓ move the highlighted row, ↵ opens it. */
 let SEARCH_INDEX = null, searchBuilding = null;
+let searchHits = [], searchActive = 0;                 // current results + highlighted row
+const GROUP_OF = {};                                   // page id → its NAV group label
+NAV.forEach((g) => g.items.forEach((it) => { GROUP_OF[it.id] = g.group; }));
+
 function sEsc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function pageText(html) {
   const d = document.createElement("div");
@@ -1237,37 +1241,62 @@ function buildSearchIndex() {
   )).then((idx) => { SEARCH_INDEX = idx; renderSearch(document.getElementById("searchInput").value); });
 }
 function searchSnippet(text, i, len) {
-  if (i < 0) return sEsc(text.slice(0, 90)) + (text.length > 90 ? "…" : "");
-  const start = Math.max(0, i - 34);
+  if (i < 0) return sEsc(text.slice(0, 120)) + (text.length > 120 ? "…" : "");
+  const start = Math.max(0, i - 40);
   return (start > 0 ? "…" : "") + sEsc(text.slice(start, i)) +
     '<mark class="doc-search__hl">' + sEsc(text.slice(i, i + len)) + "</mark>" +
-    sEsc(text.slice(i + len, i + len + 52)) + (text.length > i + len + 52 ? "…" : "");
+    sEsc(text.slice(i + len, i + len + 96)) + (text.length > i + len + 96 ? "…" : "");
 }
+function searchHint(icon, html) {
+  return '<p class="doc-search__hint"><span class="wb-ico" aria-hidden="true">' + icon + "</span><span>" + html + "</span></p>";
+}
+function setSearchCount(txt) { const c = document.getElementById("searchCount"); if (c) c.textContent = txt || ""; }
 function renderSearch(q) {
   const box = document.getElementById("searchResults");
   q = (q || "").trim();
-  if (!SEARCH_INDEX) { box.innerHTML = '<p class="doc-search__hint">Đang lập chỉ mục…</p>'; return; }
-  if (!q) { box.innerHTML = '<p class="doc-search__hint">Gõ để tìm trong tiêu đề và nội dung mọi trang.</p>'; return; }
-  const ql = q.toLowerCase(), hits = [];
+  searchHits = []; searchActive = 0;
+  if (!SEARCH_INDEX) { box.innerHTML = searchHint("hourglass_empty", "Đang lập chỉ mục…"); setSearchCount(""); return; }
+  if (!q) { box.innerHTML = searchHint("search", "Gõ để tìm trong <b>tiêu đề</b> và <b>nội dung</b> mọi trang."); setSearchCount(""); return; }
+  const ql = q.toLowerCase();
   for (const p of SEARCH_INDEX) {
     const inLabel = p.label.toLowerCase().includes(ql);
     const i = p.text.toLowerCase().indexOf(ql);
-    if (inLabel || i >= 0) hits.push({ p, i, inLabel });
+    if (inLabel || i >= 0) searchHits.push({ p, i, inLabel });
   }
-  hits.sort((a, b) => (b.inLabel - a.inLabel) || (a.i - b.i));
-  if (!hits.length) { box.innerHTML = '<p class="doc-search__hint">Không thấy kết quả cho “' + sEsc(q) + '”.</p>'; return; }
-  box.innerHTML = '<div class="wb-list">' + hits.map(({ p, i }) =>
-    '<a class="wb-list__item wb-list__item--link" href="#/' + p.id + '" data-search-go>' +
-      '<span class="wb-list__title">' + sEsc(p.label) + "</span>" +
-      '<span class="wb-list__sub">' + searchSnippet(p.text, i, q.length) + "</span>" +
-    "</a>").join("") + "</div>";
+  searchHits.sort((a, b) => (b.inLabel - a.inLabel) || (a.i - b.i));
+  if (!searchHits.length) { box.innerHTML = searchHint("search_off", "Không thấy kết quả cho “<b>" + sEsc(q) + "</b>”."); setSearchCount("0 kết quả"); return; }
+  box.innerHTML = searchHits.map(({ p, i }, idx) =>
+    '<a class="doc-search__hit' + (idx === 0 ? " is-active" : "") + '" href="#/' + p.id + '" role="option" data-search-go data-idx="' + idx + '"' + (idx === 0 ? ' aria-selected="true"' : "") + ">" +
+      '<span class="wb-ico doc-search__hit-ico" aria-hidden="true">description</span>' +
+      '<span class="doc-search__hit-main">' +
+        '<span class="doc-search__hit-titlerow">' +
+          '<span class="doc-search__hit-title">' + sEsc(p.label) + "</span>" +
+          '<span class="doc-search__hit-group">' + sEsc(GROUP_OF[p.id] || "") + "</span>" +
+          '<span class="doc-search__hit-enter" aria-hidden="true">↵</span>' +
+        "</span>" +
+        '<span class="doc-search__hit-snip">' + searchSnippet(p.text, i, q.length) + "</span>" +
+      "</span>" +
+    "</a>").join("");
+  setSearchCount(searchHits.length + " kết quả");
+}
+function searchRows() { return document.querySelectorAll("#searchResults .doc-search__hit"); }
+function setActiveHit(idx, scroll) {
+  const rows = searchRows();
+  if (!rows.length) return;
+  searchActive = (idx + rows.length) % rows.length;    // wrap top ⇄ bottom
+  rows.forEach((r, k) => {
+    const on = k === searchActive;
+    r.classList.toggle("is-active", on);
+    if (on) { r.setAttribute("aria-selected", "true"); if (scroll) r.scrollIntoView({ block: "nearest" }); }
+    else r.removeAttribute("aria-selected");
+  });
 }
 function openSearch() {
   document.getElementById("searchModal").classList.add("is-open");
   buildSearchIndex();
   const inp = document.getElementById("searchInput");
   renderSearch(inp.value);
-  setTimeout(() => inp.focus(), 30);
+  setTimeout(() => { inp.focus(); inp.select(); }, 30);
 }
 function closeSearch() { document.getElementById("searchModal").classList.remove("is-open"); }
 
@@ -1281,10 +1310,24 @@ document.getElementById("themeBtn").addEventListener("click", cycleTheme);
 document.addEventListener("click", (e) => {
   if (e.target.closest(".wb-theme-toggle")) setTheme(root.classList.contains("dark") ? "light" : "dark");
 });
-/* Search: button + ⌘K / "/" to open, Esc to close; clicking a hit navigates + closes. */
+/* Search: button + ⌘K / "/" to open, Esc to close; ↑/↓ move, ↵ opens; click navigates. */
 document.getElementById("searchBtn").addEventListener("click", openSearch);
-document.getElementById("searchInput").addEventListener("input", (e) => renderSearch(e.target.value));
-document.getElementById("searchResults").addEventListener("click", (e) => { if (e.target.closest("[data-search-go]")) closeSearch(); });
+const searchInputEl = document.getElementById("searchInput");
+searchInputEl.addEventListener("input", (e) => renderSearch(e.target.value));
+searchInputEl.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowDown") { e.preventDefault(); setActiveHit(searchActive + 1, true); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); setActiveHit(searchActive - 1, true); }
+  else if (e.key === "Enter") {
+    const row = searchRows()[searchActive];
+    if (row) { e.preventDefault(); location.hash = row.getAttribute("href"); closeSearch(); }
+  }
+});
+const searchResultsEl = document.getElementById("searchResults");
+searchResultsEl.addEventListener("click", (e) => { if (e.target.closest("[data-search-go]")) closeSearch(); });
+searchResultsEl.addEventListener("mousemove", (e) => {
+  const hit = e.target.closest(".doc-search__hit");   // keep keyboard + mouse selection in sync
+  if (hit && hit.dataset.idx && +hit.dataset.idx !== searchActive) setActiveHit(+hit.dataset.idx, false);
+});
 document.addEventListener("keydown", (e) => {
   if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) { e.preventDefault(); openSearch(); }
   else if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName) && !(document.activeElement && document.activeElement.isContentEditable)) { e.preventDefault(); openSearch(); }
