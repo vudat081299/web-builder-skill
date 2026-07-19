@@ -17,6 +17,13 @@ boundary). `README.md` = project map; `web-builder/SKILL.md` = how to build UI w
 North star: **reuse** — assemble web UI from approved `wb-*` parts, and fold anything genuinely new back into
 the skill (the sync steps below), so the skill keeps compounding in quality.
 
+**Docs = the human-readable superset of the repo.** The skill is the *product*, but the **docs** — this file,
+`README.md`, `web-builder/references/*.md`, the docs-site, and code comments — are where a **person** finds
+*everything true of the repo*: skill **+** code **+** tooling (the `/wb-change` workflow and how it triggers,
+the hooks, the numbered design principles §1–22, the deliberate trade-offs). If a fact lives only in code or
+tooling and a human can't find it in the docs, that's a gap to close — not to leave implicit. So a repo change
+isn't done when the code works; it's done when the docs a human would read still tell the whole, true story.
+
 ## Working here
 
 - **Use the web-builder skill. Don't invent styling** — assemble from `wb-*` classes + tokens

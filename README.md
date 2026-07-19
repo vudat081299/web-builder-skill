@@ -78,7 +78,8 @@ A component is **one change across six places** — if they drift, the skill sta
    scope group (*Nền tảng · … · Cấu trúc*), or note a new capability on a family already listed. Miss it and
    the next AI trusts SKILL.md's scope and assumes the part isn't there.
 6. **If relevant** — a new convention → `design-principles.md`; needs an app behaviour engine (Radix,
-   dnd-kit, sonner…) → a row in `integration.md`; a Bootstrap-coverage note → `bootstrap-comparison.md`.
+   dnd-kit, sonner…) → a row in `integration.md`; a Bootstrap-coverage note → `bootstrap-comparison.md`;
+   a **user-visible** new/changed part → an entry in `web-builder/CHANGELOG.md` (else the shipped changelog rots).
 
 Then verify route ↔ page parity (they must match, no orphans):
 
@@ -87,7 +88,20 @@ diff <(grep -oE 'id: "[a-z0-9-]+"' web-builder/assets/app.js | sed -E 's/id: "(.
      <(ls web-builder/assets/pages | sed 's/\.html$//' | sort -u) && echo "OK: routes == pages"
 ```
 
-> An AI working in this repo gets the same rule automatically from `CLAUDE.md`.
+### Prompting Claude in this repo — do I invoke a skill?
+
+**No manual invocation needed.** When you ask Claude (Code) to add or change a component, `/wb-change`
+**auto-triggers** because your prompt matches its description ("thêm component", "add primitive", "đổi token",
+"restructure", "sửa wb-*"…). You *can* also type `/wb-change` explicitly, but you don't have to. Everything
+around it is automatic too:
+
+- `CLAUDE.md` is loaded **every turn**, so the AI always knows the rules even without any skill.
+- Two `.claude/` **hooks** run on their own: a nudge injecting the 6-place checklist the moment `web-builder.css`
+  is edited, and a commit/push **gate** that runs `validate-sync.sh` and blocks on drift.
+
+So the flow is: *describe the change in plain language* → the skill + hooks engage → the 6-place sync + guardrails
+follow. (Just "use the library to build UI" does **not** trigger `/wb-change` — that's the separate `web-builder`
+skill; `/wb-change` is only for changing the library itself.)
 
 ## Conventions (the short list)
 
@@ -96,5 +110,25 @@ White-black-grey first; colour only for real status/meaning; **tokens over magic
 equivalent); on dark, shadows flip to a soft **light** lift; a dismiss **×** sits **top-right**; **no
 left-accent bars**; icons come from an icon font (never hand-drawn). Layout stays a small flex/grid utility
 set — **not** a Bootstrap-style 12-column foundation — a *minimalism* choice, and self-sufficient (no
-Tailwind required). Full, numbered rules:
-[`web-builder/references/design-principles.md`](web-builder/references/design-principles.md).
+Tailwind required). Full, numbered rules (§1–§22, human-readable):
+[`web-builder/references/design-principles.md`](web-builder/references/design-principles.md) — this is the
+canonical, numbered home of the design thinking (when a note references "§N", it means a rule there).
+
+## Deliberate trade-offs & deferred decisions
+
+Recorded on purpose, so a future reader (or AI) understands these were **chosen**, not overlooked — don't
+"rediscover" them as bugs. Revisit only if the stated reason stops holding.
+
+- **The shipped CSS is one ~176 KB file, no tree-shaking.** *Kept.* Zero-build, one-`<link>` drop-in is the
+  whole point; per-consumer size is the fair price. A consumer who cares can delete unused numbered sections
+  (each is self-contained) or minify. Splitting into modules would reintroduce the build step the library
+  exists to avoid.
+- **The CSS `@import`s Material Symbols from Google Fonts (one external request).** *Kept, documented.* Docs
+  and most apps are online-first; a self-host path for offline/air-gapped/privacy is written up in
+  `integration.md` ("Offline / privacy"). Not removed by default so the drop-in stays literally one line.
+- **`web-builder.skill` (the packaged artifact) is built manually — gitignored, no build script, no
+  source↔artifact check.** *Deferred.* The source (`web-builder/`) is the truth; the `.skill` is a zip
+  snapshot repackaged on demand. A build+verify pipeline is low ROI against the maintenance surface it adds;
+  revisit if packaging ever needs to be automated/released on a cadence.
+- **`CLAUDE.md` doesn't cross-link `/wb-change` to a manual step-by-step for non–Claude-Code humans.**
+  *Deferred (minor).* The "Adding a primitive" section above + the trigger note already cover the manual flow.
