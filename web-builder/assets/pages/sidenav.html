@@ -37,7 +37,7 @@
     <p class="doc-block__desc">Navbar (§<a href="#/navbar">Navbar</a>) trên cùng + sidebar bên trái + vùng nội dung — ba primitive lắp thành khung một app tài chính.</p>
     <div class="demo">
       <div class="demo__stage" style="padding:0">
-        <div style="height:340px;display:flex;flex-direction:column">
+        <div class="wb-stack" style="height:340px;--wb-stack-gap:0">
           <div class="wb-navbar">
             <a class="wb-navbar__brand"><span class="wb-navbar__mark">C</span> Ledger</a>
             <span class="wb-navbar__spacer"></span>
@@ -46,7 +46,7 @@
               <span class="wb-avatar wb-avatar--sm">DV</span>
             </div>
           </div>
-          <div style="display:flex;flex:1;min-height:0">
+          <div class="wb-cluster wb-cluster--nowrap" style="flex:1;min-height:0;gap:0;align-items:stretch">
             <nav class="wb-sidenav wb-scroll-y" style="width:210px">
               <div class="wb-sidenav__section">Tổng quan</div>
               <a class="wb-sidenav__link is-active"><span class="wb-ico">dashboard</span> Bảng điều khiển</a>
@@ -72,10 +72,13 @@
           </div>
         </div>
       </div>
-      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-navbar"&gt; … &lt;/div&gt;
-&lt;div style="display:flex"&gt;                &lt;!-- khung shell: sidebar + nội dung --&gt;
-  &lt;nav class="wb-sidenav wb-scroll-y"&gt; … &lt;/nav&gt;
-  &lt;main&gt; … nội dung … &lt;/main&gt;
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-stack" style="--wb-stack-gap:0"&gt;         &lt;!-- navbar xếp trên thân --&gt;
+  &lt;div class="wb-navbar"&gt; … &lt;/div&gt;
+  &lt;div class="wb-cluster wb-cluster--nowrap"           &lt;!-- sidebar + nội dung, cao bằng nhau --&gt;
+       style="gap:0;align-items:stretch"&gt;
+    &lt;nav class="wb-sidenav wb-scroll-y"&gt; … &lt;/nav&gt;
+    &lt;main class="wb-grow"&gt; … nội dung … &lt;/main&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</code></pre></div>
     </div>
   </div>

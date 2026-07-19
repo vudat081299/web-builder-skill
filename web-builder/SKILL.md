@@ -38,6 +38,12 @@ use), but the primitives are general-purpose: use it for any minimalist web buil
    `assets/pages/<id>.html`, register it in `app.js` (the `NAV` list), and record it in the
    catalog. Then reuse it forever.
 
+**Building a whole page, not just one part?** Start from the **Composing a page — recipes** section at the top
+of `components-catalog.md`: it gives the app-shell skeleton (navbar · sidenav · container · footer) and named
+recipes (dashboard · records list · form · auth · settings) so you assemble the right *set* of parts, then
+fill each region with the single-component snippets. Page-level rhythm (container width, order, neutral-first
+at page scale) is spelled out there too — so you never re-decide page layout by hand.
+
 If you find yourself picking a hex value or a pixel padding by hand, stop — there is
 almost certainly a token or class for it.
 
@@ -48,10 +54,11 @@ almost certainly a token or class for it.
 | `assets/web-builder.css` | The library: design tokens + components (self-contained, no build). **The only file that ships to the app.** | You need class names / token names, or are adding a component |
 | `assets/pages/<id>.html` | Living docs, **one small file per primitive** (buttons, tables, tags, input, select, charts, config, layout…). | You want the exact markup for one component — open just that file, not a monolith |
 | `assets/index.html` + `app.js` + `docs.css` | The docs **shell** (reused by every page): tree sidebar, hash router that loads one page at a time, theme toggle, copy, and the dual light/dark preview. | You're changing the docs site itself (nav, routing, chrome) — not a component |
-| `references/components-catalog.md` | "Building X → use Y, here's the snippet" lookup | **Start here** for any build task |
+| `references/components-catalog.md` | "Building X → use Y, here's the snippet" lookup **+ a *Composing a page* recipe section** (app-shell skeleton + dashboard / list / form / auth recipes) for whole screens | **Start here** for any build task — one part *or* a whole page |
 | `references/design-principles.md` | The colour ladder, neutral shadow rule, number/typography/font rules | Building something new or making an aesthetic call |
 | `references/integration.md` | How the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example) | Wiring the library into a real app |
 | `references/bootstrap-comparison.md` | Coverage vs Bootstrap 5.3 (what we have / skip / do differently), the popup set, the layout-foundation decision, and BOC structure | Deciding whether to add a component, or "do we have X?" |
+| `references/docs-site.md` | How the docs **site** is built — SPA architecture (index.html shell + app.js `NAV`/router + docs.css chrome), the page-grammar skeleton, the docs-chrome class inventory, and the Config/search/dual-preview/theme features | Rebuilding or extending the docs site itself (not a component). The docs **never ship**, but the skill stays self-sufficient to recreate them at the same quality |
 
 ## The colour ladder (summary — full version in design-principles.md)
 
@@ -135,6 +142,12 @@ and the checkbox tick traces the same shape) — not a literal `✓`. Brand/prov
 login) are the **one** allowed colour exception — the rest of the button stays neutral. Watch the
 dark-mode `:where()` rule (design-principles §6) so tones don't grey out. When asked for a new component, build it in the same system and add it to the
 library (new `wb-*` classes + a `pages/<id>.html` demo + an `app.js` `NAV` entry + a catalog entry).
+
+**Three more conventions round out the taste** (full text in design-principles §19–21): write **Vietnamese-first
+copy** (labels/statuses are data — swap freely; keep one number/date locale per screen); hold an **a11y
+baseline** (icon-only controls get `aria-label`, invalid fields set `aria-invalid` beside `.is-invalid`, build
+on native inputs so keyboard + roles come free); and let everything **collapse gracefully on mobile** (grids
+reflow, `.wb-cluster` / breadcrumb wrap, the navbar folds to ☰ via a container query — no breakpoint bookkeeping).
 
 ## Working with the user
 

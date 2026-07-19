@@ -160,7 +160,12 @@ substitute your framework's equivalent, or a native element):
 | `.wb-grid` / `.wb-cluster` / `.wb-stack` / `.wb-container` / `.wb-ratio` (layout) | use as-is (self-sufficient) — or swap for Tailwind `flex`/`grid`/`aspect-*` if you already run Tailwind |
 | charts (`wb-chart*`, `wb-bars`, combo, donut, `wb-spark`) | **Recharts**, fed the `--wb-chart-*` tokens (combo bar+line → `ComposedChart`); for a grey/one-hue chart put `.wb-chart-scheme--mono`/`--blue` + `.wb-chart-ramp--N` (N = series count) on the wrapper so Recharts reads an evenly-spread ramp; keep `wb-chart__tip` for the tooltip look. **Horizontal ranked bars** need no lib — they're just `.wb-progress` rows |
 | `wb-navbar` / `wb-nav` / `wb-sidenav` (app-shell navigation) | plain markup + classes; drive `.is-active` from your **router** (React Router `NavLink`), and wire the mobile menu/collapse toggle in app JS |
-| card, alert, stat, table, **list group**, **button group**, capsule, tag, avatar, **receipt** (hoá đơn), progress, breadcrumb, pagination, skeleton, empty, divider, buttons, inputs (incl. the native **colour** input), tabs | no JS engine — plain markup + classes |
+| `wb-popover` (click-toggled card + arrow + ×) | Radix **Popover** or **Floating UI** for anchor positioning + outside-click dismiss; keep the `wb-popover__*` look. Richer than a tooltip, not a menu |
+| `wb-collapse` (one standalone show/hide region) | Radix **Collapsible** (or a `grid-template-rows` 0fr→1fr height transition) — distinct from `wb-accordion`, which is native `<details>` |
+| `wb-toolbar` (rich-text / markdown format bar) | a rich-text engine — **TipTap** or **Lexical** — owns the editor + selection state; keep `wb-toolbar` for the bar's look. `--attached` fuses it onto a textarea |
+| `wb-steps` / `wb-stepper` | plain markup + classes; drive `.is-active` / `.is-done` / `.is-todo` from your wizard/route state — no library |
+| `wb-filterbar` (search + field dropdown + removable tokens) | the field dropdown can use Radix **Popover/DropdownMenu**; the `wb-filter-token` ×-to-remove is a plain click handler. Keep the classes |
+| card, alert, stat, table, **list group**, **button group**, capsule, tag, avatar, **receipt** (hoá đơn), **media object**, progress, breadcrumb, pagination, **pager** (+ `wb-kbd`; `[`/`]` = a tiny guarded key handler, no lib), **footer**, **sticky**, **scroll areas**, skeleton, empty, divider, buttons, inputs (incl. the native **colour** input) | no JS engine — plain markup + classes |
 
 Rule of thumb: if it opens/closes, traps focus, or needs keyboard nav → **the behaviour engine owns
 behaviour, Web Builder owns pixels**. Static/display components are just classes. The docs site uses a tiny

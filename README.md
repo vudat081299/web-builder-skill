@@ -23,17 +23,18 @@ leaves the shipped skill better and coherent.
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **40+ pages**, light/dark, browsable. Ships `web-builder.css`, the one file the real app consumes. |
+| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **55 pages**, light/dark, browsable. Ships `web-builder.css`, the one file the real app consumes. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`web-builder.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
 
 **1 · Skill** — the AI-facing knowledge:
 - `SKILL.md` — entry point: the one rule ("don't invent styling"), the colour ladder, current scope, house conventions.
-- `references/components-catalog.md` — "building X → use Y, here's the snippet" lookup (**start here** for a build task).
+- `references/components-catalog.md` — "building X → use Y, here's the snippet" lookup + a **Composing a page** recipe section (app-shell skeleton + dashboard/list/form/auth recipes) for whole screens (**start here** for a build task).
 - `references/design-principles.md` — the colour ladder, token discipline, dogfooding, layout stance, and every convention, numbered.
 - `references/integration.md` — how the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example).
 - `references/bootstrap-comparison.md` — coverage vs Bootstrap 5.3 (what we have / skip / do differently), for "do we need component X?" calls.
+- `references/docs-site.md` — how the docs **site** is built (SPA shell + `app.js` NAV/router + `docs.css` chrome, the page-grammar skeleton, the Config/search/dual-preview features), so the skill can rebuild the docs. Docs are instrumentation and **never ship**.
 
 **2 · Docs** — the living gallery in `web-builder/assets/`:
 - `web-builder.css` — **the library** (design tokens + all `wb-*` components). **The only file that ships to the app.**
@@ -69,8 +70,9 @@ A component is **one change across six places** — if they drift, the skill sta
    use the library's own layout utilities (`.wb-cluster` / `.wb-stack` / `.wb-grid`), not inline flex.
 3. **Nav** — add `{ id: "<id>", label: "…" }` to the right group in the `NAV` array in
    `web-builder/assets/app.js`. `NAV` is the single source of truth for the sidebar **and** the router.
-   Groups are by user intent: *Nền tảng · Hành động · Nhập liệu · Hiển thị dữ liệu · Phản hồi · Điều hướng
-   · Biểu đồ · Cấu trúc*.
+   Groups are by user intent (11 in order): *Nền tảng · Bố cục & tiện ích · Hành động · Nhập liệu · Bộ chọn
+   · Hiển thị dữ liệu · Phản hồi · Lớp phủ · Điều hướng · Đóng/mở · Cấu trúc* (charts lives under *Hiển thị
+   dữ liệu*, not its own group).
 4. **Catalog** — add a section + a "Quick decision guide" row to `web-builder/references/components-catalog.md`.
 5. **Skill** — update `web-builder/SKILL.md`, the AI's first read: add the component to the right per-intent
    scope group (*Nền tảng · … · Cấu trúc*), or note a new capability on a family already listed. Miss it and

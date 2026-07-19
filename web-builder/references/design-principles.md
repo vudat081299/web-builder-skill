@@ -301,3 +301,44 @@ Hairlines are `var(--wb-bw)`, pills are `var(--wb-radius-pill)`, radii / shadows
 from `--wb-*`. If you're typing a hex, a `999px`, or a bare `1px solid`, check for the token first. The
 one sanctioned piece of pure **decoration** is the tag `--notch` (a luggage-tag notch + punch-hole) — it's
 opt-in, never a default; everything else earns its pixels by carrying meaning or structure.
+
+## 19. Accessibility baseline
+
+Style must not cost semantics. The floor every component holds to:
+
+- **Icon-only controls carry an `aria-label`** (a close ×, a ghost-icon button, a search button) — the glyph is
+  a picture, not a name. A text button doesn't need one.
+- **Build on native elements** so keyboard + roles come free: checkbox/radio/switch are a real `<input>` with
+  `appearance:none` (never a `<div>` faking a control), a select is a real `<select>`, an accordion is
+  `<details>`. This is why the library draws *on* the input instead of replacing it.
+- **Validation is announced, not just coloured:** an invalid field sets `aria-invalid="true"` alongside
+  `.is-invalid` (§11) — the red border is the visual half, the attribute is the assistive half.
+- **Overlays/dialogs/search** carry the right `role` + `aria-*` and are driven by a behaviour engine that owns
+  the focus trap and keyboard nav (§8) — the `wb-*` classes must never fight it (no `tabindex` traps, no
+  `outline:none` without a replacement focus ring). Respect `prefers-reduced-motion` for anything that animates
+  (the divider ray already does).
+
+The rule: if removing the styling would leave a usable, operable control, the styling is correct; if it
+leaves an unlabelled or unreachable one, fix the markup, not the CSS.
+
+## 20. Copy & locale — Vietnamese-first, and copy is data
+
+The library is written **Vietnamese-first**: labels and statuses in every snippet are real Vietnamese ("Lưu
+giao dịch", "Quá hạn", "Ngân sách"), because the flagship use is a Vietnamese finance app. Treat copy as
+**data, not style** — swap it freely for any language without touching a class. What must stay consistent on a
+screen is **format, not language**: money uses the app's locale format (`1.234.567 ₫`, a non-breaking space
+before `₫`, per §3), dates/times use one locale, and numeric columns keep `tabular-nums` (`.wb-num`). Don't mix
+`1,234.56` and `1.234,56` on the same page.
+
+## 21. Responsive — graceful collapse, not breakpoint bookkeeping
+
+Components degrade on narrow screens **on their own**, without a breakpoint-grid to manage (§17). The habits:
+
+- **Reflow, don't scroll:** `.wb-grid--auto/-2/-3` drop to fewer/one column, `.wb-cluster` wraps, a long
+  `wb-breadcrumb` wraps to a new line — content stays readable instead of overflowing sideways.
+- **Fold, don't cram:** the navbar tucks its menu into a `☰` `wb-navbar__toggle` via a **container query** (the
+  bar reacts to its own width, not the viewport), and the docs sidebar becomes an off-canvas drawer under
+  ~900px. The pager stacks under ~460px.
+- **Design the small screen as the default collapse**, not a special case bolted on. Prefer intrinsic
+  behaviour (`flex-wrap`, `auto-fit` grids, container queries) over hard `@media` breakpoints; reach for a
+  media/container query only when reflow genuinely can't express the change.

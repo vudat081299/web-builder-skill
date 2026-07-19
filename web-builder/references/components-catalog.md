@@ -103,6 +103,71 @@ for the look (see `integration.md`).
 
 ---
 
+## Composing a page — recipes
+
+The decision guide above picks **one part**. This section picks the **set** for a whole screen — the missing
+"how do I start a page from nothing" step. Same rule as always: **compose approved parts, don't design.** Reach
+for a recipe, drop in the app shell, fill the content region with the parts each recipe names, then style
+nothing by hand.
+
+### The app shell (every page sits in this)
+
+Almost every app screen is: a top **navbar**, a body that is a **sidenav** rail beside a scrolling content
+**container**, and a **footer** — with a **pager** at the foot of long content. Layout is the utilities
+(`wb-stack` vertical, `wb-cluster` horizontal), never inline `display:flex`.
+
+```html
+<div class="wb-stack" style="--wb-stack-gap:0; min-height:100vh">
+  <div class="wb-navbar"> … brand · nav · actions (theme toggle) … </div>
+
+  <div class="wb-cluster wb-cluster--nowrap" style="gap:0; align-items:stretch; flex:1; min-height:0">
+    <nav class="wb-sidenav wb-scroll-y" style="width:230px"> … app rail … </nav>
+
+    <main class="wb-grow wb-scrollbars" style="overflow:auto">
+      <div class="wb-container">           <!-- --narrow for forms · --wide for wide tables -->
+        …  page content (a recipe below)  …
+        <nav class="wb-pager"> … prev · next … </nav>
+      </div>
+    </main>
+  </div>
+
+  <div class="wb-footer"> … brand · link columns · copyright … </div>
+</div>
+```
+
+A public/marketing page drops the sidenav: just `wb-navbar` + a `wb-container` of sections + `wb-footer`.
+
+### Named recipes — content for the container
+
+| Screen | = these parts, in this order | Key sections |
+|---|---|---|
+| **Dashboard / home** | a `wb-stat-grid` KPI row → one or two **chart** cards (`wb-card` wrapping a chart) → a recent-**transactions table** (hero pattern) | [Stat](#stat--kpi-cards) · [Charts](#charts) · [Tables](#tables) |
+| **Records / transactions list** | a **filter bar** on top → the **transactions table** (`--sticky` header for long lists) → **pagination** (page through rows) or **pager** (page through the view) | [Filter bar](#filter-bar) · [Tables](#tables) · [Pagination](#pagination) |
+| **Add / edit form** | fields in a `wb-stack` inside a `wb-card` (label + control per row, `--narrow` container) → a **sticky** action bar (`wb-sticky--bottom`) holding Save / Cancel `wb-btn`s | [Forms](#form-controls) · [Sticky](#sticky) |
+| **Detail / record view** | a `wb-cluster--between` page-head (title + actions) → a `wb-grid--2` of `wb-card`s (summary + meta) → a **media/list** of line items, or a **receipt** for a single bill | [Card](#card) · [Receipt](#receipt) · [List group](#list-group) |
+| **Auth / login** | a **narrow, centred** `wb-container--narrow` (no sidenav) → a `wb-card` → a `wb-stack` of inputs + a primary `wb-btn` → a **social-login** stack | [Forms](#form-controls) · [Buttons](#buttons) |
+| **Settings** | a **sidenav** (or **tabs**) of sections → each section a `wb-stack` of `wb-list` rows / labelled controls (a `wb-switch` per toggle) | [Sidebar](#sidebar-side-nav) · [List group](#list-group) · [Forms](#form-controls) |
+| **Empty / first-run** | an **empty state** centred in the container (icon + line + a primary action) until data exists | [Empty](#empty-state) |
+
+### Page rhythm (the taste, so you don't re-decide it)
+
+- **Width:** default `wb-container` for most pages; `--narrow` for forms / reading / auth; `--wide` only for
+  data-dense tables that need the room. One container per content region — don't nest.
+- **Order:** lead with the **summary** (KPIs / balance), then the **detail** (table / list), then secondary
+  cards. Put the loudest number highest.
+- **Neutral-first still holds at page scale:** a screen is mostly white-black-grey; colour appears only on the
+  few status cells/among the KPIs that carry meaning (design-principles §1). A dashboard is *not* a colour
+  parade.
+- **Spacing is the utilities' gap**, not margins you hand-pick: sections are `wb-stack` (a vertical gap),
+  card rows are `wb-grid` / `wb-cluster`. If a gap feels wrong, change the `--wb-stack-gap` / cluster gap, not
+  a one-off margin.
+- **One divider tone, one icon scale, one shadow scale** across the whole page — all from tokens.
+
+> Adding a genuinely new page pattern? Fold it back here as a recipe (same spirit as folding a new component
+> into the library) so the next build reuses it instead of re-deriving it.
+
+---
+
 ## Buttons
 
 `.wb-btn` + optional fill + tone + size. Default (no modifier) is the **neutral primary**
