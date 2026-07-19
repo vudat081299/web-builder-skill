@@ -25,7 +25,7 @@ phần semantic.
 Sửa một component = đồng bộ tối đa **6 nơi**:
 1. `web-builder/assets/web-builder.css` — rule `.wb-*` (token, **không** hex/px thô: hairline `var(--wb-bw)`, pill `var(--wb-radius-pill)`).
 2. `web-builder/assets/pages/<id>.html` — demo, **markup-only** (KHÔNG `<style>`; layout bằng `wb-cluster/stack/grid`).
-3. `web-builder/assets/app.js` — `{ id, label }` vào đúng nhóm `NAV` (Nền tảng · Hành động · Nhập liệu · Hiển thị dữ liệu · Phản hồi · Điều hướng · Biểu đồ · Cấu trúc).
+3. `web-builder/assets/app.js` — `{ id, label }` vào đúng **nhóm intent** trong mảng `NAV`. Chính `NAV` là source-of-truth của danh sách nhóm — **đừng chép cứng danh sách nhóm ra prose** (nó trôi lệch: từng có bản 8 nhóm kèm "Biểu đồ" ma). Danh sách 11 nhóm đầy đủ: xem `SKILL.md` "Current scope".
 4. `web-builder/references/components-catalog.md` — section + 1 dòng "Quick decision guide".
 5. `web-builder/SKILL.md` — thêm vào đúng nhóm scope (AI's first read).
 6. Nếu liên quan: `design-principles.md` (convention mới) · `integration.md` (cần behaviour engine) · `bootstrap-comparison.md` (coverage).
