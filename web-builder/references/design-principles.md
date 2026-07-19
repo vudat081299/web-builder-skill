@@ -343,18 +343,23 @@ Components degrade on narrow screens **on their own**, without a breakpoint-grid
   behaviour (`flex-wrap`, `auto-fit` grids, container queries) over hard `@media` breakpoints; reach for a
   media/container query only when reflow genuinely can't express the change.
 
-## 22. Demo density — one sample covers many cases when nothing new is written
+## 22. Demo density — one code block per pattern; a stage holds many specimens
 
-A demo page shows the **most cases in the fewest samples**. When a variation needs **no new markup or class**
-beyond the default — it's the same component behaving differently because of its *content or context* (a
-breadcrumb that wraps when the trail is long, a table that scrolls when it has many rows, a `.wb-cluster` that
-reflows when given more chips) — **fold it into an existing sample**: make that one sample longer/richer, or
-place a second sample right beside the first. **Don't** open a new `doc-sec`/`doc-block` with its own heading
-and prose to explain a behaviour the component already has for free — that's length, not information, and it
-reads as if the behaviour needed configuring when it didn't.
+A demo page shows the **most cases in the fewest samples**. The demo unit is `demo__stage` (live) +
+`demo__code` (copy-paste) — but they are **not 1:1**: one `demo__stage` may hold **several UI specimens**, and
+one `demo__code` shows the **pattern once**.
 
-Spend a **new** sample only when the variation *earns* it — something the reader must **write differently**: a
-modifier class (`--striped`, `--compact`, `--range`), a different structure, or a genuinely different use.
-Litmus test: *would the copy-paste snippet change?* If no, it's the same sample (just fuller); if yes, it's a
-new one. This is the demo-authoring face of §16 — don't hand-roll, and don't over-narrate, what the primitive
-gives you by default.
+When a variation needs **no new markup or class** — it's the same component differing only by *content, length,
+or context* (a breadcrumb with more levels, a table with more rows, a `.wb-cluster` given more chips) — put the
+extra specimen in the **same stage** and **do not add a second code block**. Show the pattern once; a comment
+carries the "and so on" (`<!-- thêm cấp = lặp <a> + __sep -->`). Opening a **second `.demo` card**, or a new
+`doc-sec`/`doc-block` with its own heading and prose, just to re-print near-identical code is **length, not
+information** — it reads as if the behaviour needed configuring when the component already does it for free.
+(This is exactly the trap the breadcrumb page fell into and was fixed: two cards + two identical-pattern
+snippets → one card, two specimens in one stage, one snippet.)
+
+Spend a **new** code block / sample only when the reader must **write differently**: a modifier
+(`--striped`, `--compact`, `--range`), a different structure, or a genuinely different use. **Litmus: would the
+copy-paste snippet change?** No → same sample, one `demo__code`, extra specimens share the stage. Yes → a new
+one. This is the demo-authoring face of §16 — don't hand-roll, and don't re-print, what the primitive gives you
+by default.

@@ -14,6 +14,7 @@
 const NAV = [
   { group: "Nền tảng", items: [
     { id: "overview",   label: "Tổng quan" },
+    { id: "recipes",    label: "Dựng trang (recipes)" },
     { id: "color",      label: "Triết lý màu" },
     { id: "tokens",     label: "Design tokens" },
     { id: "typography", label: "Typography" },

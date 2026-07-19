@@ -53,7 +53,7 @@
   <div class="wb-grid wb-grid--auto" style="--wb-grid-min:210px;margin-top:8px">
     <div class="nav-card">
       <p class="nav-card__t">Nền tảng</p>
-      <p class="nav-card__d"><a href="#/color">Triết lý màu</a> · <a href="#/tokens">Tokens</a> · <a href="#/typography">Typography</a> · <a href="#/fonts">Fonts</a> · <a href="#/border">Border</a> · <a href="#/config">Config / Tweak</a></p>
+      <p class="nav-card__d"><a href="#/recipes">Dựng trang (recipes)</a> · <a href="#/color">Triết lý màu</a> · <a href="#/tokens">Tokens</a> · <a href="#/typography">Typography</a> · <a href="#/fonts">Fonts</a> · <a href="#/border">Border</a> · <a href="#/config">Config / Tweak</a></p>
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Bố cục &amp; tiện ích</p>
@@ -65,7 +65,7 @@
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Nhập liệu</p>
-      <p class="nav-card__d"><a href="#/input">Input</a> (prefix/suffix), <a href="#/select">select</a>, <a href="#/textarea">textarea</a>, <a href="#/choice">checkbox/radio</a>, <a href="#/switch">switch</a>, <a href="#/range">range</a>, <a href="#/file">file</a></p>
+      <p class="nav-card__d"><a href="#/input">Input</a> (prefix/suffix), <a href="#/select">select</a>, <a href="#/textarea">textarea</a>, <a href="#/richtext">rich text</a>, <a href="#/choice">checkbox/radio</a>, <a href="#/switch">switch</a>, <a href="#/range">range</a>, <a href="#/file">file</a></p>
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Bộ chọn</p>
@@ -85,7 +85,7 @@
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Điều hướng</p>
-      <p class="nav-card__d"><a href="#/navbar">Navbar</a> · <a href="#/sidenav">Sidebar</a> · <a href="#/tabs">Tabs</a> · <a href="#/steps">Steps / Stepper</a> · <a href="#/breadcrumb">Breadcrumb</a> · <a href="#/pagination">Pagination</a></p>
+      <p class="nav-card__d"><a href="#/navbar">Navbar</a> · <a href="#/sidenav">Sidebar</a> · <a href="#/tabs">Tabs</a> · <a href="#/steps">Steps / Stepper</a> · <a href="#/breadcrumb">Breadcrumb</a> · <a href="#/pagination">Pagination</a> · <a href="#/footer">Footer &amp; chuyển trang</a></p>
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Đóng/mở (Disclosure)</p>
@@ -93,7 +93,7 @@
     </div>
     <div class="nav-card">
       <p class="nav-card__t">Cấu trúc</p>
-      <p class="nav-card__d"><a href="#/tree">Tree danh mục</a> · <a href="#/sortable">List/Grid/Bảng kéo–thả</a></p>
+      <p class="nav-card__d"><a href="#/tree">Tree danh mục</a> · <a href="#/sortable">List/Grid/Bảng kéo–thả</a> · <a href="#/slotgrid">Lưới ô cố định</a></p>
     </div>
   </div>
 </section>
@@ -215,6 +215,17 @@
       <p class="nav-card__t">Đặt tên nhất quán</p>
       <p class="nav-card__d"><code>wb-block__element--modifier</code> cho cấu trúc; trạng thái runtime là <code>.is-*</code>
       (<code>.is-open</code>, <code>.is-active</code>, cả <code>.is-invalid</code> khi validate).</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">A11y là mặc định</p>
+      <p class="nav-card__d">Nút chỉ-icon có <code>aria-label</code>; field lỗi đặt <code>aria-invalid</code> cạnh
+      <code>.is-invalid</code>; dựng trên input/select/<code>&lt;details&gt;</code> native để bàn phím + role có sẵn.
+      Behaviour engine giữ focus-trap.</p>
+    </div>
+    <div class="nav-card">
+      <p class="nav-card__t">Responsive tự co</p>
+      <p class="nav-card__d">Hẹp thì <b>reflow, không cuộn ngang</b>: grid rớt cột, cluster/breadcrumb wrap, navbar
+      gập vào ☰ (container query), pager xếp dọc. Màn nhỏ là mặc định, không phải ngoại lệ.</p>
     </div>
   </div>
   <p class="doc-sec__desc" style="margin-top:18px">Xem trực tiếp: <a href="#/color">Triết lý màu</a> ·

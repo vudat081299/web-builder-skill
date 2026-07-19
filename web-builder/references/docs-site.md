@@ -113,6 +113,10 @@ copyable code). Fill this in:
   is picked up by a delegated click handler in `app.js` (copies the `<code>` text) — no per-page JS.
 - Use library layout primitives inside the stage (`.wb-stack`, `.wb-cluster`, `.wb-grid`), **never** inline
   `display:flex`.
+- **Demo density (design-principles §22):** `demo__stage` and `demo__code` are **not 1:1** — a stage may hold
+  **several specimens** (a short + a long breadcrumb) under a **single** `demo__code`. Emit one code block per
+  *pattern*; only add a second when the copy-paste snippet genuinely differs (a modifier, a different
+  structure). Don't spin up a second `.demo` card to re-print near-identical code.
 - Demo variants: `demo--plain` (alias, same look) and `demo--pop` (drops `overflow:hidden` so a popover/menu
   can escape the box — used on overlay pages).
 - For a capsule/badge specimen row, `cap-row` + `cap-row__label` gives a labelled row of chips.

@@ -44,10 +44,11 @@ câu ngắn TRƯỚC khi code.** Rõ thì đi tiếp (đừng hỏi thừa).
 **3 · Implement.** CSS trước (token, không magic number) — hook PostToolUse tự nhắc checklist 6 nơi ngay khi
 bạn chạm `web-builder.css`. Rồi demo page → NAV → catalog → SKILL.md → (docs phụ nếu cần). Layout demo bằng
 utility; chrome dùng chung đặt trong `docs.css`, **không** `<style>` trong page.
-**Demo density (design-principles §22):** gộp nhiều case vào **1 sample** khi biến thể *không phải viết thêm*
-markup/class so với mặc định (vd đường dẫn dài = breadcrumb nhiều mục tự wrap → để 2 sample cạnh nhau, **đừng**
-mở mục mới + prose thừa). Chỉ tách sample/section mới khi snippet copy **thực sự đổi** (modifier `--striped`,
-cấu trúc khác, dùng khác). Litmus: *snippet có đổi không?* — không thì cùng một sample.
+**Demo density (design-principles §22):** `demo__stage` và `demo__code` **không 1:1**. Biến thể *không phải viết
+thêm* markup/class (cùng component, chỉ khác nội dung/độ dài — vd breadcrumb nhiều cấp tự wrap) → nhét specimen
+vào **cùng 1 `demo__stage`** và **1 `demo__code`** (pattern in 1 lần, comment lo phần "…"); **đừng** đẻ thêm
+`.demo` card / mục mới để in lại code y hệt. Chỉ tách code block/sample mới khi snippet copy **thực sự đổi**
+(modifier `--striped`, cấu trúc khác, dùng khác). Litmus: *snippet có đổi không?* — không thì chung 1 card.
 
 **4 · Check lỗi — sửa tiếp, KHÔNG xoá làm lại.** `bash .claude/hooks/validate-sync.sh` (routes==pages ·
 không `<style>` lạc · `node --check app.js`). Lỗi → quay lại bước 3 sửa **đúng chỗ đó**, giữ phần đã đúng.
