@@ -342,3 +342,19 @@ Components degrade on narrow screens **on their own**, without a breakpoint-grid
 - **Design the small screen as the default collapse**, not a special case bolted on. Prefer intrinsic
   behaviour (`flex-wrap`, `auto-fit` grids, container queries) over hard `@media` breakpoints; reach for a
   media/container query only when reflow genuinely can't express the change.
+
+## 22. Demo density — one sample covers many cases when nothing new is written
+
+A demo page shows the **most cases in the fewest samples**. When a variation needs **no new markup or class**
+beyond the default — it's the same component behaving differently because of its *content or context* (a
+breadcrumb that wraps when the trail is long, a table that scrolls when it has many rows, a `.wb-cluster` that
+reflows when given more chips) — **fold it into an existing sample**: make that one sample longer/richer, or
+place a second sample right beside the first. **Don't** open a new `doc-sec`/`doc-block` with its own heading
+and prose to explain a behaviour the component already has for free — that's length, not information, and it
+reads as if the behaviour needed configuring when it didn't.
+
+Spend a **new** sample only when the variation *earns* it — something the reader must **write differently**: a
+modifier class (`--striped`, `--compact`, `--range`), a different structure, or a genuinely different use.
+Litmus test: *would the copy-paste snippet change?* If no, it's the same sample (just fuller); if yes, it's a
+new one. This is the demo-authoring face of §16 — don't hand-roll, and don't over-narrate, what the primitive
+gives you by default.

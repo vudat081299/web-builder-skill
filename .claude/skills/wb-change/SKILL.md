@@ -28,7 +28,7 @@ Sửa một component = đồng bộ tối đa **6 nơi**:
 3. `web-builder/assets/app.js` — `{ id, label }` vào đúng **nhóm intent** trong mảng `NAV`. Chính `NAV` là source-of-truth của danh sách nhóm — **đừng chép cứng danh sách nhóm ra prose** (nó trôi lệch: từng có bản 8 nhóm kèm "Biểu đồ" ma). Danh sách 11 nhóm đầy đủ: xem `SKILL.md` "Current scope".
 4. `web-builder/references/components-catalog.md` — section + 1 dòng "Quick decision guide".
 5. `web-builder/SKILL.md` — thêm vào đúng nhóm scope (AI's first read).
-6. Nếu liên quan: `design-principles.md` (convention mới) · `integration.md` (cần behaviour engine) · `bootstrap-comparison.md` (coverage).
+6. Nếu liên quan: `design-principles.md` (convention mới) · `integration.md` (cần behaviour engine) · `bootstrap-comparison.md` (coverage) · `CHANGELOG.md` (part **user-visible** mới/đổi — kẻo changelog ship bị mục).
 
 ## Các bước (đúng flow đã chốt)
 
@@ -44,6 +44,10 @@ câu ngắn TRƯỚC khi code.** Rõ thì đi tiếp (đừng hỏi thừa).
 **3 · Implement.** CSS trước (token, không magic number) — hook PostToolUse tự nhắc checklist 6 nơi ngay khi
 bạn chạm `web-builder.css`. Rồi demo page → NAV → catalog → SKILL.md → (docs phụ nếu cần). Layout demo bằng
 utility; chrome dùng chung đặt trong `docs.css`, **không** `<style>` trong page.
+**Demo density (design-principles §22):** gộp nhiều case vào **1 sample** khi biến thể *không phải viết thêm*
+markup/class so với mặc định (vd đường dẫn dài = breadcrumb nhiều mục tự wrap → để 2 sample cạnh nhau, **đừng**
+mở mục mới + prose thừa). Chỉ tách sample/section mới khi snippet copy **thực sự đổi** (modifier `--striped`,
+cấu trúc khác, dùng khác). Litmus: *snippet có đổi không?* — không thì cùng một sample.
 
 **4 · Check lỗi — sửa tiếp, KHÔNG xoá làm lại.** `bash .claude/hooks/validate-sync.sh` (routes==pages ·
 không `<style>` lạc · `node --check app.js`). Lỗi → quay lại bước 3 sửa **đúng chỗ đó**, giữ phần đã đúng.

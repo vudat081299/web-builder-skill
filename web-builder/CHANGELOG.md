@@ -17,8 +17,8 @@ can tell whether a part it needs already exists. Newest first.
   screen from nothing" layer.
 - **`references/docs-site.md`** — the docs-site architecture (NAV/router, page grammar, docs-chrome inventory,
   Config/search/dual-preview), so the skill is self-sufficient to reconstruct the docs.
-- **Design principles §19–21** — accessibility baseline, Vietnamese-first copy/locale, responsive
-  graceful-collapse.
+- **Design principles §19–22** — accessibility baseline, Vietnamese-first copy/locale, responsive
+  graceful-collapse, and demo-density (fold a free variation into one sample instead of a new section).
 - **Navigation primitives** — `wb-footer` (brand + link columns + copyright; `--slim`) and `wb-pager`
   (prev/next page links, `[`/`]` shortcuts) + `wb-kbd` keycap.
 - **Receipt** (`wb-receipt`) — `--ticket` variant (dashed tear + half-circle side cuts), scallop/`--wave`/

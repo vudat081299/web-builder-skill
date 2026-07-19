@@ -51,12 +51,14 @@ workflow lives in the skill/hooks (loaded on demand), not here — this file sta
    doesn't list it, the next AI trusts its scope and assumes the part doesn't exist — exactly the miss that
    put this line here.
 6. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
-   engine), `bootstrap-comparison.md` (coverage note).
+   engine), `bootstrap-comparison.md` (coverage note), `CHANGELOG.md` (a **user-visible** new/changed part —
+   the shipped changelog rots if you skip it).
 
 If these drift, the skill misleads the next AI. Verify with `.claude/hooks/validate-sync.sh` — it validates
 both the **docs site** (routes == pages · no per-page `<style>` · `app.js` parses) **and the skill
-deliverable** (SKILL.md frontmatter + trigger description · every `references/*.md` exists · the catalog
-never documents a class the CSS lacks · `web-builder.css` braces balanced). The commit gate runs it for you.
+deliverable** (SKILL.md frontmatter + trigger description · SKILL.md scope names every `NAV` group · every
+`references/*.md` exists · the catalog never documents a class the CSS lacks · `web-builder.css` braces
+balanced). The commit gate runs it for you.
 
 ## Conventions to keep
 
