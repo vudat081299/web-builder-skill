@@ -4,11 +4,13 @@ These are the rules that keep every screen looking like one product. Follow them
 whenever you build or extend a component. They exist so the user does **not** have
 to re-review basic aesthetic decisions on every page — the decisions are made here.
 
-**Numbered + mapped.** Each rule is a `## N.` heading — cite it anywhere in the repo as **"§N"**. A
-human-facing summary keyed by the *same* §N lives on the docs-site **overview** page ("Tư duy thiết kế" +
-its "§1 → §N" map), so the two are joined by §N and traceable both ways. `validate-sync.sh` **CHECK 11**
-enforces it: every "§N" cited across the repo must resolve to a heading here, and the overview index must
-cover §1…§N — so a renamed/added/deleted rule can't silently drift from its docs.
+**Numbered + mapped.** Each rule is a `## N.` heading — cite it anywhere in the repo as **"§N"**. The
+human-facing rendering keyed by the *same* §N lives on the docs **site**: the **overview** page carries a
+compact "§1 → §N" index, and the dedicated **principles** page (`pages/principles.html`) renders every §N
+*in full* (collapsible), so a person reads the whole thing on the site — never bounced to this raw file
+(that's §23). `validate-sync.sh` **CHECK 11** enforces it: every "§N" cited across the repo must resolve to a
+heading here, the overview must index §1…§N, **and** the principles page must render §1…§N — so a
+renamed/added/deleted rule can't silently drift from its docs.
 
 > **What ships is the skill.** These principles serve the shipped artifact (`web-builder.css` + `SKILL.md` +
 > references); the docs are only where we review them. A change that makes a demo look nice but the *shipped
@@ -369,3 +371,30 @@ Spend a **new** code block / sample only when the reader must **write differentl
 copy-paste snippet change?** No → same sample, one `demo__code`, extra specimens share the stage. Yes → a new
 one. This is the demo-authoring face of §16 — don't hand-roll, and don't re-print, what the primitive gives you
 by default.
+
+## 23. The docs site is self-contained — render, don't defer to a raw file
+
+Two documentation surfaces, two opposite rules. **AI-facing** docs — `SKILL.md` + `references/*.md` — are
+deliberately *layered*: a lean entry that points deeper (SKILL.md → the catalog → this file). That deferral is
+the token-efficiency design — an AI reads only what it needs — and it is correct; do not "fix" it by inlining
+everything into SKILL.md. **Human-facing** docs — the docs *site* (`pages/*.html`) — are the opposite: a person
+browsing a page must find the whole story **there**, not be bounced out to a raw `.md` file in the repo (which,
+on the live site, is a dead end they can't open).
+
+So a docs-site page must be **self-contained for the topic it covers**. Never write "read the full version in
+`X.md`" / "the complete roster is in `X.md`" as a *substitute for content* — that is the incomplete-docs trap
+(the one that once left the overview's §-map a teaser pointing at this file). If length is the worry, that is
+exactly what disclosure primitives are for: put the full content in a `<details>` / accordion or a dedicated
+page and link **in-site** — as the §1–§23 rendering now lives on `pages/principles.html` (full, collapsible)
+with the overview keeping only a compact §-index that links to it. Cross-linking to another **in-site page** is
+navigation, not deferral; sending a human to a raw reference file for content the site chose to cover is the
+anti-pattern.
+
+A reference `.md` may still be **named** as the AI-facing twin ("the same rules, for an AI, at
+`design-principles.md`") — that's context, not a punt. And genuinely out-of-scope detail is a legitimate
+pointer: behaviour that lives in the app (§8) rightly says "see `integration.md`", because the *look* — the
+page's actual job — is already complete. **The test:** after deleting every "see `X.md`", is the page still
+complete on its own topic? Yes → the pointer was context. No → you deferred content; render it in-site.
+
+`validate-sync.sh` backs this: CHECK 11 requires the full §1…§N rendering on `pages/principles.html` (not just
+the index), and an advisory flags any page that defers completeness to a `.md`.

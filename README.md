@@ -23,7 +23,7 @@ leaves the shipped skill better and coherent.
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **55 pages**, light/dark, browsable. Ships `web-builder.css`, the one file the real app consumes. |
+| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **58 pages**, light/dark, browsable (incl. `#/principles` rendering §1–23 in full and `#/tooling` for serve/verify/hooks). Ships `web-builder.css`, the one file the real app consumes. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`web-builder.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
@@ -100,8 +100,10 @@ bash .claude/hooks/validate-sync.sh    # exit 0 = OK · exit 2 + a "BLOCK ·" re
 It validates **both halves**. Docs site: routes == pages · pages are markup-only (no `<style>`) · `app.js`
 parses. Shipped skill: `SKILL.md` frontmatter + trigger length · `SKILL.md` scope names every `NAV` group ·
 every `references/*.md` exists · the catalog never documents a `wb-*` class the CSS lacks · `web-builder.css`
-braces balance · every **"§N"** cited anywhere resolves to a real design principle *and* the overview page
-indexes them all. A failing check prints a `BLOCK ·` line saying exactly what drifted.
+braces balance · every **"§N"** cited anywhere resolves to a real design principle, the overview page indexes
+them all, **and** `pages/principles.html` renders every §N in full (the docs site stays self-contained — §23;
+an advisory also flags any page that punts content to a raw `.md`). A failing check prints a `BLOCK ·` line
+saying exactly what drifted.
 
 ### Prompting Claude in this repo — do I invoke a skill?
 
@@ -125,7 +127,8 @@ White-black-grey first; colour only for real status/meaning; **tokens over magic
 equivalent); on dark, shadows flip to a soft **light** lift; a dismiss **×** sits **top-right**; **no
 left-accent bars**; icons come from an icon font (never hand-drawn). Layout stays a small flex/grid utility
 set — **not** a Bootstrap-style 12-column foundation — a *minimalism* choice, and self-sufficient (no
-Tailwind required). Full, numbered rules (§1–§22, human-readable):
+Tailwind required). Full, numbered rules (§1–§23, human-readable — also rendered in full on the docs site at
+`#/principles`):
 [`web-builder/references/design-principles.md`](web-builder/references/design-principles.md) — this is the
 canonical, numbered home of the design thinking (when a note references "§N", it means a rule there).
 
@@ -145,5 +148,6 @@ Recorded on purpose, so a future reader (or AI) understands these were **chosen*
   source↔artifact check.** *Deferred.* The source (`web-builder/`) is the truth; the `.skill` is a zip
   snapshot repackaged on demand. A build+verify pipeline is low ROI against the maintenance surface it adds;
   revisit if packaging ever needs to be automated/released on a cadence.
-- **`CLAUDE.md` doesn't cross-link `/wb-change` to a manual step-by-step for non–Claude-Code humans.**
-  *Deferred (minor).* The "Adding a primitive" section above + the trigger note already cover the manual flow.
+- **`CLAUDE.md` doesn't inline a manual `/wb-change` step-by-step for non–Claude-Code humans.**
+  *Deferred (minor).* The "Adding a primitive" section above, the trigger note, and the docs-site `#/tooling`
+  + overview workflow pages already lay out the manual flow, the hooks, and the verify checks for a human.

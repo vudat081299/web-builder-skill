@@ -49,7 +49,8 @@
 <section class="doc-sec">
   <h3>Có gì trong hộp</h3>
   <p class="doc-sec__desc">Các primitive cơ bản mà hầu như web nào cũng cần — thống nhất một ngôn ngữ hình ảnh.
-  Roster đầy đủ (mọi modifier + markup copy-paste) ở <code>components-catalog.md</code>.</p>
+  Mỗi part có <b>trang riêng</b> với markup copy-paste đầy đủ — chọn ở sidebar hoặc bấm bên dưới. Bản tra cứu phẳng
+  cho AI ở <code>components-catalog.md</code>.</p>
   <div class="wb-grid wb-grid--auto" style="--wb-grid-min:210px;margin-top:8px">
     <div class="nav-card">
       <p class="nav-card__t">Nền tảng</p>
@@ -159,9 +160,11 @@
 
 <section class="doc-sec">
   <h3>Tư duy thiết kế</h3>
-  <p class="doc-sec__desc">Những quyết định thẩm mỹ đã chốt sẵn, để không phải review lại trên từng trang. Mỗi
-  thẻ dưới đây gắn <b>§N</b> — chính là số hiệu nguyên tắc trong <code>references/design-principles.md</code>
-  (nguồn đầy đủ). <b>Bản đồ toàn bộ §1→§22</b> ở cuối mục này, nên bất cứ trang nào nhắc "§N" đều tra được ngay tại đây.</p>
+  <p class="doc-sec__desc">Những quyết định thẩm mỹ đã chốt sẵn, để không phải review lại trên từng trang. Vài
+  thẻ dưới đây là <b>nguyên tắc nổi bật</b>; <b>bản đầy đủ §1→§23 đọc ngay trên site</b> ở trang
+  <a href="#/principles">Nguyên tắc thiết kế</a> (mỗi § một accordion mở/gập). Mỗi § mang số hiệu <b>§N</b> —
+  bất cứ trang nào nhắc "§N" đều nhảy về đó tra được. Bản song song cho AI là
+  <code>references/design-principles.md</code> (cùng §N, giữ khớp qua guardrail).</p>
 
   <div class="doc-block">
     <h4>§1 · Thang màu — 3 tầng chi tiêu màu</h4>
@@ -230,9 +233,9 @@
     </div>
   </div>
   <div class="doc-block" style="margin-top:26px">
-    <h4>Bản đồ nguyên tắc — §1 → §22</h4>
-    <p class="doc-block__desc">Tra nhanh "§N là gì". Các thẻ trên chỉ kể chi tiết vài §; đây là toàn bộ, đọc bản
-    đầy đủ ở <code>references/design-principles.md</code> (mỗi mục là một <code>## N.</code>).</p>
+    <h4>Bản đồ nguyên tắc — §1 → §23</h4>
+    <p class="doc-block__desc">Index gọn "§N là gì" để nhảy nhanh. Bản <b>đầy đủ từng §</b> (mở/gập được) nằm
+    ngay trên site ở trang <a href="#/principles">Nguyên tắc thiết kế (§1–§23)</a> — không phải mở file ngoài.</p>
     <p class="doc-block__desc" style="line-height:2">
       <b>§1</b> thang màu · <b>§2</b> bóng trung tính (dark lật sáng) · <b>§3</b> số liệu tài chính (căn phải, tabular) ·
       <b>§4</b> typography &amp; mật độ · <b>§5</b> elevation &amp; bo góc · <b>§6</b> theming (mọi màu từ token) ·
@@ -241,7 +244,8 @@
       <b>§12</b> màu biểu đồ · <b>§13</b> scroll (bar theme + chừa đuôi) · <b>§14</b> disabled ≠ locked ·
       <b>§15</b> × góc phải-trên · <b>§16</b> docs dogfood · <b>§17</b> layout utility nhỏ (không 12-cột) ·
       <b>§18</b> token &gt; magic number · <b>§19</b> a11y mặc định · <b>§20</b> copy/locale VN-first ·
-      <b>§21</b> responsive tự co · <b>§22</b> demo density (1 code / pattern).
+      <b>§21</b> responsive tự co · <b>§22</b> demo density (1 code / pattern) ·
+      <b>§23</b> docs site tự chứa (render, đừng đẩy ra .md).
     </p>
   </div>
 

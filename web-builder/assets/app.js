@@ -15,12 +15,14 @@ const NAV = [
   { group: "Nền tảng", items: [
     { id: "overview",   label: "Tổng quan" },
     { id: "recipes",    label: "Dựng trang (recipes)" },
+    { id: "principles", label: "Nguyên tắc (§1–§23)" },
     { id: "color",      label: "Triết lý màu" },
     { id: "tokens",     label: "Design tokens" },
     { id: "typography", label: "Typography" },
     { id: "fonts",      label: "Fonts & icon" },
     { id: "border",     label: "Border & bo góc" },
     { id: "config",     label: "Config / Tweak" },
+    { id: "tooling",    label: "Tooling (verify · hook)" },
   ]},
   { group: "Bố cục & tiện ích", items: [
     { id: "layout",     label: "Grid / Layout" },

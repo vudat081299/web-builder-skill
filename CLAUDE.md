@@ -20,9 +20,14 @@ the skill (the sync steps below), so the skill keeps compounding in quality.
 **Docs = the human-readable superset of the repo.** The skill is the *product*, but the **docs** — this file,
 `README.md`, `web-builder/references/*.md`, the docs-site, and code comments — are where a **person** finds
 *everything true of the repo*: skill **+** code **+** tooling (the `/wb-change` workflow and how it triggers,
-the hooks, the numbered design principles §1–22, the deliberate trade-offs). If a fact lives only in code or
+the hooks, the numbered design principles §1–23, the deliberate trade-offs). If a fact lives only in code or
 tooling and a human can't find it in the docs, that's a gap to close — not to leave implicit. So a repo change
 isn't done when the code works; it's done when the docs a human would read still tell the whole, true story.
+And the docs **site** must be **self-contained** (§23): a `pages/*.html` renders its content **in-site** (for
+length use a `<details>`/accordion or a dedicated page — e.g. `principles.html` renders §1–23 in full,
+`tooling.html` covers serve/verify/hooks), never a teaser punting a human to a raw `.md`. (The AI-facing
+`SKILL.md → references/*.md` layering stays — that's token thrift, not a gap. `validate-sync.sh` CHECK 11(c) +
+CHECK 12 enforce this.)
 
 ## Working here
 

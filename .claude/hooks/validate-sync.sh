@@ -163,13 +163,25 @@ if [ -f "$SKILL" ]; then
   fi
 fi
 
-# --- CHECK 11 (hard): every "§N" reference resolves; overview.html indexes all of them
+# For each principle N in $1 (realset, nl-separated) absent from the candidate set $2, emit " §N".
+# Shared by CHECK 11(b) overview-index and (c) principles-render so the two coverage checks can't drift.
+missing_secs() {
+  local real="$1" cand="$2" out="" n
+  for n in $real; do
+    printf '%s\n' "$cand" | grep -qx "$n" || out="$out §$n"
+  done
+  printf '%s' "$out"
+}
+
+# --- CHECK 11 (hard): every "§N" resolves; overview indexes them; principles renders them in full
 # The docs sprinkle "§N" (design-principle N) across many pages, but nothing resolves them.
 # design-principles.md's `## N.` headings are the source of truth. Enforce: (a) no §N cited
 # anywhere points past/outside that set (caught a stale §27 once); (b) overview.html carries a
-# COMPLETE in-site §-index (§1…§max) so a human/AI reading the site can map any §N → its rule.
+# COMPLETE in-site §-index (§1…§max); (c) principles.html RENDERS every §1…§max in full (not just the
+# index) — the human-facing docs stay self-contained on the site (§23), never a teaser to a raw .md.
 DP="web-builder/references/design-principles.md"
 OV="$A/pages/overview.html"
+PR="$A/pages/principles.html"
 if [ -f "$DP" ] && [ -f "$OV" ]; then
   realset="$(grep -oE '^## [0-9]+\.' "$DP" | grep -oE '[0-9]+' | sort -un)"
   maxp="$(printf '%s\n' "$realset" | tail -1)"
@@ -188,15 +200,39 @@ if [ -f "$DP" ] && [ -f "$OV" ]; then
   # Extract overview's §-set the same robust way as (a) — avoids multibyte/trailing-char grep traps
   # and the §1-vs-§10 ambiguity.
   ov_set="$(grep -oE '§[0-9]+' "$OV" | grep -oE '[0-9]+' | sort -un)"
-  miss_idx=""
-  for n in $realset; do
-    printf '%s\n' "$ov_set" | grep -qx "$n" || miss_idx="$miss_idx §$n"
-  done
+  miss_idx="$(missing_secs "$realset" "$ov_set")"
   if [ -n "$miss_idx" ]; then
     { echo "BLOCK · overview.html '§1 → §N' map is missing principle(s) (add them so every §N resolves in-site):"
       echo "   $miss_idx"; } >&2
     fail=1
   fi
+  # (c) principles.html must RENDER every principle §1…§max in full (not merely index it) — §23.
+  if [ ! -f "$PR" ]; then
+    { echo "BLOCK · pages/principles.html is missing — the full in-site §1…§${maxp} rendering (§23) must exist."; } >&2
+    fail=1
+  else
+    pr_set="$(grep -oE '§[0-9]+' "$PR" | grep -oE '[0-9]+' | sort -un)"
+    miss_full="$(missing_secs "$realset" "$pr_set")"
+    if [ -n "$miss_full" ]; then
+      { echo "BLOCK · principles.html does not render principle(s) in full (docs site is self-contained — §23):"
+        echo "   $miss_full"; } >&2
+      fail=1
+    fi
+  fi
+fi
+
+# --- CHECK 12 (advisory): a docs-site page must not DEFER its content to a raw reference .md (§23) ----
+# The human-facing site is self-contained; "read the full version in X.md" is the incomplete-docs trap.
+# Precise + phrasing-based: a completeness word next to a `.md` filename on ONE line. Legit §8 behaviour
+# pointers ("… xem integration.md") carry no completeness word → spared; naming a .md as the AI-facing twin
+# keeps its distance from "đầy đủ" → spared. The two meta pages that must QUOTE the anti-pattern to explain it
+# — principles.html (§23) and tooling.html (this very check) — are excluded (CHECK 11c already hard-guarantees
+# principles renders in full). Advisory: prints only on a match, never blocks — the hard guarantee is CHECK 11(c).
+defer="$(grep -HnoE '(đầy đủ|roster|full version|complete roster).{0,80}\.md' "$A"/pages/*.html 2>/dev/null \
+          | grep -vE '/(principles|tooling)\.html:' || true)"
+if [ -n "$defer" ]; then
+  { echo "note · page(s) may defer content to a raw .md — docs site should be self-contained (§23): render in-site, or use an accordion / a dedicated page and link in-site:"
+    printf '%s\n' "$defer" | head -15 | sed 's/^/    /'; } >&2
 fi
 
 if [ "$fail" -ne 0 ]; then
@@ -208,6 +244,6 @@ fi
 # Quiet as a hook (stdout is piped); informative when run by hand in a terminal.
 if [ -t 1 ]; then
   n="$(printf '%s\n' "$routes" | grep -c .)"
-  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes §1..§${maxp:-?} coherent."
+  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes & principles renders §1..§${maxp:-?} coherent."
 fi
 exit 0

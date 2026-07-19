@@ -29,6 +29,7 @@ Sửa một component = đồng bộ tối đa **6 nơi**:
 4. `web-builder/references/components-catalog.md` — section + 1 dòng "Quick decision guide".
 5. `web-builder/SKILL.md` — thêm vào đúng nhóm scope (AI's first read).
 6. Nếu liên quan: `design-principles.md` (convention mới) · `integration.md` (cần behaviour engine) · `bootstrap-comparison.md` (coverage) · `CHANGELOG.md` (part **user-visible** mới/đổi — kẻo changelog ship bị mục).
+   Thêm **nguyên tắc §N mới** vào `design-principles.md` ⇒ phải render §N **đầy đủ** trên `pages/principles.html` **và** thêm §N vào index của `overview.html` (§23; CHECK 11b+11c chặn commit nếu thiếu).
 
 ## Các bước (đúng flow đã chốt)
 
@@ -65,7 +66,10 @@ chỗ đang làm theo cách cũ mà **nay thay được** bằng component vừa
 **7 · Review code.** Chạy `/code-review` trên diff.
 
 **8 · Review docs liên đới.** Đối chiếu 6 nơi có nhất quán không (catalog ↔ SKILL.md ↔ CSS ↔ comparison).
-Giao **subagent** đọc chéo, trả danh sách lệch → sửa.
+Giao **subagent** đọc chéo, trả danh sách lệch → sửa. Và soi **docs site tự chứa (§23)**: không trang
+`pages/*.html` nào được đẩy nội dung ra một `.md` thô ("đọc bản đầy đủ ở X.md") — render in-site, dùng
+accordion / trang riêng và link in-site (CHECK 12 nhắc; hai bề mặt AI vs người là khác nhau — layering trong
+`SKILL.md → references/*.md` thì giữ nguyên).
 
 **9 · Guardrails (bộ tiêu chuẩn, tự chạy khi commit).** `validate-sync.sh` (cũng là PreToolUse gate) kiểm
 **cả docs lẫn skill deliverable**: docs (routes==pages · page markup-only · `app.js` parse) + **skill**
