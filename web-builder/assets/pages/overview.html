@@ -159,12 +159,12 @@
 
 <section class="doc-sec">
   <h3>Tư duy thiết kế</h3>
-  <p class="doc-sec__desc">Những quyết định thẩm mỹ đã chốt sẵn, để không phải review lại trên từng trang. Đây
-  chỉ là <b>bản tóm tắt</b>; bộ nguyên tắc <b>đầy đủ, đánh số §1 · §2 · …</b> nằm trong file
-  <code>references/design-principles.md</code> — khi tài liệu nhắc "§N" (vd §22 = <i>Demo density</i>) là trỏ tới đó.</p>
+  <p class="doc-sec__desc">Những quyết định thẩm mỹ đã chốt sẵn, để không phải review lại trên từng trang. Mỗi
+  thẻ dưới đây gắn <b>§N</b> — chính là số hiệu nguyên tắc trong <code>references/design-principles.md</code>
+  (nguồn đầy đủ). <b>Bản đồ toàn bộ §1→§22</b> ở cuối mục này, nên bất cứ trang nào nhắc "§N" đều tra được ngay tại đây.</p>
 
   <div class="doc-block">
-    <h4>Thang màu — 3 tầng chi tiêu màu</h4>
+    <h4>§1 · Thang màu — 3 tầng chi tiêu màu</h4>
     <p class="doc-block__desc">Không rắc màu; chọn tầng thấp nhất đủ dùng. Hai tầng màu cưỡi được lên <b>bất kỳ</b>
     component (capsule, tag, số, viền, nền hàng, card, chart) — không riêng capsule.</p>
     <div class="tier">
@@ -188,47 +188,63 @@
 
   <div class="wb-grid wb-grid--auto" style="--wb-grid-min:240px;margin-top:26px">
     <div class="nav-card">
-      <p class="nav-card__t">Bóng trung tính · dark lật sáng</p>
+      <p class="nav-card__t">§2 · Bóng trung tính · dark lật sáng</p>
       <p class="nav-card__d">Nền sáng: bóng mực xám nhạt + hairline + chữ gần đen. Nền tối: bóng thành <b>vệt sáng nhẹ</b>
       (bóng đen tàng hình trên nền tối). Dựng bằng token là tự đúng cả hai theme.</p>
     </div>
     <div class="nav-card">
-      <p class="nav-card__t">Layout = bộ utility nhỏ</p>
+      <p class="nav-card__t">§17 · Layout = bộ utility nhỏ</p>
       <p class="nav-card__d"><code>cluster</code>/<code>stack</code>/<code>grid</code>/<code>container</code>/<code>ratio</code> —
       <b>không</b> phải lưới 12 cột. Đủ cho trang thật, ít thứ để học và để dùng sai; vẫn đủ căn chỉnh justify/align.</p>
     </div>
     <div class="nav-card">
-      <p class="nav-card__t">Icon từ icon font</p>
+      <p class="nav-card__t">§10 · Icon từ icon font</p>
       <p class="nav-card__d">Material Symbols, <code>&lt;span class="wb-ico"&gt;name&lt;/span&gt;</code> (weight ~600 cho sắc nét) —
       <b>không</b> vẽ tay SVG/CSS. Emoji (📁 🧾) khi thật sự là pictogram.</p>
     </div>
     <div class="nav-card">
-      <p class="nav-card__t">Viền: outline + nền nhạt</p>
+      <p class="nav-card__t">§9 · Viền: outline + nền nhạt</p>
       <p class="nav-card__d">Tone = viền kín cùng hue + nền soft (kiểu capsule), áp cho alert/toast/note. <b>Không</b> dùng thanh
       viền trái. Dashed = “trống / thả được / tuỳ chọn / thêm mới”.</p>
     </div>
     <div class="nav-card">
-      <p class="nav-card__t">× luôn ở góc phải-trên</p>
+      <p class="nav-card__t">§15 · × luôn ở góc phải-trên</p>
       <p class="nav-card__d">Mọi nút đóng (<code>.wb-close</code>) của alert/toast/modal/drawer nằm góc phải-trên — không trôi
       xuống giữa hàng.</p>
     </div>
     <div class="nav-card">
-      <p class="nav-card__t">Đặt tên nhất quán</p>
+      <p class="nav-card__t">§11 · Đặt tên nhất quán</p>
       <p class="nav-card__d"><code>wb-block__element--modifier</code> cho cấu trúc; trạng thái runtime là <code>.is-*</code>
       (<code>.is-open</code>, <code>.is-active</code>, cả <code>.is-invalid</code> khi validate).</p>
     </div>
     <div class="nav-card">
-      <p class="nav-card__t">A11y là mặc định</p>
+      <p class="nav-card__t">§19 · A11y là mặc định</p>
       <p class="nav-card__d">Nút chỉ-icon có <code>aria-label</code>; field lỗi đặt <code>aria-invalid</code> cạnh
       <code>.is-invalid</code>; dựng trên input/select/<code>&lt;details&gt;</code> native để bàn phím + role có sẵn.
       Behaviour engine giữ focus-trap.</p>
     </div>
     <div class="nav-card">
-      <p class="nav-card__t">Responsive tự co</p>
+      <p class="nav-card__t">§21 · Responsive tự co</p>
       <p class="nav-card__d">Hẹp thì <b>reflow, không cuộn ngang</b>: grid rớt cột, cluster/breadcrumb wrap, navbar
       gập vào ☰ (container query), pager xếp dọc. Màn nhỏ là mặc định, không phải ngoại lệ.</p>
     </div>
   </div>
+  <div class="doc-block" style="margin-top:26px">
+    <h4>Bản đồ nguyên tắc — §1 → §22</h4>
+    <p class="doc-block__desc">Tra nhanh "§N là gì". Các thẻ trên chỉ kể chi tiết vài §; đây là toàn bộ, đọc bản
+    đầy đủ ở <code>references/design-principles.md</code> (mỗi mục là một <code>## N.</code>).</p>
+    <p class="doc-block__desc" style="line-height:2">
+      <b>§1</b> thang màu · <b>§2</b> bóng trung tính (dark lật sáng) · <b>§3</b> số liệu tài chính (căn phải, tabular) ·
+      <b>§4</b> typography &amp; mật độ · <b>§5</b> elevation &amp; bo góc · <b>§6</b> theming (mọi màu từ token) ·
+      <b>§7</b> khi thiếu → dựng đúng tinh thần · <b>§8</b> style ở đây, behaviour ở app ·
+      <b>§9</b> viền outline (không thanh trái) · <b>§10</b> icon từ icon-font · <b>§11</b> đặt tên + <code>.is-*</code> ·
+      <b>§12</b> màu biểu đồ · <b>§13</b> scroll (bar theme + chừa đuôi) · <b>§14</b> disabled ≠ locked ·
+      <b>§15</b> × góc phải-trên · <b>§16</b> docs dogfood · <b>§17</b> layout utility nhỏ (không 12-cột) ·
+      <b>§18</b> token &gt; magic number · <b>§19</b> a11y mặc định · <b>§20</b> copy/locale VN-first ·
+      <b>§21</b> responsive tự co · <b>§22</b> demo density (1 code / pattern).
+    </p>
+  </div>
+
   <p class="doc-sec__desc" style="margin-top:18px">Xem trực tiếp: <a href="#/color">Triết lý màu</a> ·
   <a href="#/tokens">Design tokens</a> · <a href="#/border">Border &amp; bo góc</a> · <a href="#/config">Config playground</a>.</p>
 </section>

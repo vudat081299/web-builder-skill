@@ -4,6 +4,12 @@ These are the rules that keep every screen looking like one product. Follow them
 whenever you build or extend a component. They exist so the user does **not** have
 to re-review basic aesthetic decisions on every page — the decisions are made here.
 
+**Numbered + mapped.** Each rule is a `## N.` heading — cite it anywhere in the repo as **"§N"**. A
+human-facing summary keyed by the *same* §N lives on the docs-site **overview** page ("Tư duy thiết kế" +
+its "§1 → §N" map), so the two are joined by §N and traceable both ways. `validate-sync.sh` **CHECK 11**
+enforces it: every "§N" cited across the repo must resolve to a heading here, and the overview index must
+cover §1…§N — so a renamed/added/deleted rule can't silently drift from its docs.
+
 > **What ships is the skill.** These principles serve the shipped artifact (`web-builder.css` + `SKILL.md` +
 > references); the docs are only where we review them. A change that makes a demo look nice but the *shipped
 > component* worse — or that drifts the CSS from what SKILL.md/the catalog promise — has failed, no matter how

@@ -544,7 +544,7 @@ TEMPLATED: .wb-input-tpl > per-part .wb-input-tpl__seg inputs + inked .wb-input-
 Money fields: use `inputmode="numeric"`, right sentinel `₫` as an addon, and format the
 display value with the app's locale (`1.280.000`).
 
-**Textarea:** `.wb-textarea` shares the input tokens; its scrollbar is theme-aware on both axes (§27). Wrap it
+**Textarea:** `.wb-textarea` shares the input tokens; its scrollbar is theme-aware on both axes (§13). Wrap it
 in `.wb-textarea-wrap` to swap the OS resizer grip for a clean, round-capped **diagonal handle** (colour
 `--wb-border-strong`, tracks the theme, no fuzzy corner) — resize still works. Add `--code` (`white-space:pre`)
 for a no-wrap field that scrolls horizontally. See the Textarea page.

@@ -88,6 +88,21 @@ diff <(grep -oE 'id: "[a-z0-9-]+"' web-builder/assets/app.js | sed -E 's/id: "(.
      <(ls web-builder/assets/pages | sed 's/\.html$//' | sort -u) && echo "OK: routes == pages"
 ```
 
+### Verify (the guardrails)
+
+One command runs every deterministic check — you rarely need it by hand (the commit/push gate runs it for you),
+but here it is:
+
+```bash
+bash .claude/hooks/validate-sync.sh    # exit 0 = OK · exit 2 + a "BLOCK ·" reason = drift to fix
+```
+
+It validates **both halves**. Docs site: routes == pages · pages are markup-only (no `<style>`) · `app.js`
+parses. Shipped skill: `SKILL.md` frontmatter + trigger length · `SKILL.md` scope names every `NAV` group ·
+every `references/*.md` exists · the catalog never documents a `wb-*` class the CSS lacks · `web-builder.css`
+braces balance · every **"§N"** cited anywhere resolves to a real design principle *and* the overview page
+indexes them all. A failing check prints a `BLOCK ·` line saying exactly what drifted.
+
 ### Prompting Claude in this repo — do I invoke a skill?
 
 **No manual invocation needed.** When you ask Claude (Code) to add or change a component, `/wb-change`

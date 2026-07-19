@@ -163,6 +163,42 @@ if [ -f "$SKILL" ]; then
   fi
 fi
 
+# --- CHECK 11 (hard): every "§N" reference resolves; overview.html indexes all of them
+# The docs sprinkle "§N" (design-principle N) across many pages, but nothing resolves them.
+# design-principles.md's `## N.` headings are the source of truth. Enforce: (a) no §N cited
+# anywhere points past/outside that set (caught a stale §27 once); (b) overview.html carries a
+# COMPLETE in-site §-index (§1…§max) so a human/AI reading the site can map any §N → its rule.
+DP="web-builder/references/design-principles.md"
+OV="$A/pages/overview.html"
+if [ -f "$DP" ] && [ -f "$OV" ]; then
+  realset="$(grep -oE '^## [0-9]+\.' "$DP" | grep -oE '[0-9]+' | sort -un)"
+  maxp="$(printf '%s\n' "$realset" | tail -1)"
+  # (a) dangling references — a §N with no matching principle
+  dangling=""
+  while IFS= read -r n; do
+    [ -z "$n" ] && continue
+    printf '%s\n' "$realset" | grep -qx "$n" || dangling="$dangling §$n"
+  done < <(grep -rhoE '§[0-9]+' "$A"/pages/*.html web-builder/references/*.md "$SKILL" README.md CLAUDE.md 2>/dev/null | grep -oE '[0-9]+' | sort -un)
+  if [ -n "$dangling" ]; then
+    { echo "BLOCK · dangling design-principle reference(s) — no such §N in design-principles.md (max §${maxp}):"
+      echo "   $dangling"; } >&2
+    fail=1
+  fi
+  # (b) overview.html must index every principle §1…§max (keep the in-site §-map complete).
+  # Extract overview's §-set the same robust way as (a) — avoids multibyte/trailing-char grep traps
+  # and the §1-vs-§10 ambiguity.
+  ov_set="$(grep -oE '§[0-9]+' "$OV" | grep -oE '[0-9]+' | sort -un)"
+  miss_idx=""
+  for n in $realset; do
+    printf '%s\n' "$ov_set" | grep -qx "$n" || miss_idx="$miss_idx §$n"
+  done
+  if [ -n "$miss_idx" ]; then
+    { echo "BLOCK · overview.html '§1 → §N' map is missing principle(s) (add them so every §N resolves in-site):"
+      echo "   $miss_idx"; } >&2
+    fail=1
+  fi
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "" >&2
   echo "^ Fix the BLOCK item(s) and keep editing (don't restart). Guardrail: .claude/hooks/validate-sync.sh" >&2
@@ -172,6 +208,6 @@ fi
 # Quiet as a hook (stdout is piped); informative when run by hand in a terminal.
 if [ -t 1 ]; then
   n="$(printf '%s\n' "$routes" | grep -c .)"
-  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups coherent."
+  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes §1..§${maxp:-?} coherent."
 fi
 exit 0
