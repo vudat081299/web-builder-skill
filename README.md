@@ -23,7 +23,7 @@ leaves the shipped skill better and coherent.
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **58 pages**, light/dark, browsable (incl. `#/principles` rendering §1–23 in full and `#/tooling` for serve/verify/hooks). Ships `web-builder.css`, the one file the real app consumes. |
+| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **59 pages**, light/dark, browsable (incl. `#/principles` rendering §1–23 in full, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css`, the one file the real app consumes. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`web-builder.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
@@ -101,9 +101,9 @@ It validates **both halves**. Docs site: routes == pages · pages are markup-onl
 parses. Shipped skill: `SKILL.md` frontmatter + trigger length · `SKILL.md` scope names every `NAV` group ·
 every `references/*.md` exists · the catalog never documents a `wb-*` class the CSS lacks · `web-builder.css`
 braces balance · every **"§N"** cited anywhere resolves to a real design principle, the overview page indexes
-them all, **and** `pages/principles.html` renders every §N in full (the docs site stays self-contained — §23;
-an advisory also flags any page that punts content to a raw `.md`). A failing check prints a `BLOCK ·` line
-saying exactly what drifted.
+them all, **and** `pages/principles.html` renders every §N in full · every README trade-off **`T#`** is mirrored
+on `pages/decisions.html` (the docs site stays self-contained — §23; an advisory also flags any page that punts
+content to a raw `.md`). A failing check prints a `BLOCK ·` line saying exactly what drifted.
 
 ### Prompting Claude in this repo — do I invoke a skill?
 
@@ -135,19 +135,34 @@ canonical, numbered home of the design thinking (when a note references "§N", i
 ## Deliberate trade-offs & deferred decisions
 
 Recorded on purpose, so a future reader (or AI) understands these were **chosen**, not overlooked — don't
-"rediscover" them as bugs. Revisit only if the stated reason stops holding.
+"rediscover" them as bugs. Revisit only if the stated reason stops holding. Each is tagged **T#** and mirrored
+in full on the docs site at `#/decisions`; `validate-sync.sh` **CHECK 13** blocks a commit if a `T#` defined
+here isn't rendered there, so this list can't silently go missing from the site again (§23 self-contained docs).
 
-- **The shipped CSS is one ~176 KB file, no tree-shaking.** *Kept.* Zero-build, one-`<link>` drop-in is the
+- **T1 · The shipped CSS is one ~176 KB file, no tree-shaking.** *Kept.* Zero-build, one-`<link>` drop-in is the
   whole point; per-consumer size is the fair price. A consumer who cares can delete unused numbered sections
   (each is self-contained) or minify. Splitting into modules would reintroduce the build step the library
   exists to avoid.
-- **The CSS `@import`s Material Symbols from Google Fonts (one external request).** *Kept, documented.* Docs
+- **T2 · The CSS `@import`s Material Symbols from Google Fonts (one external request).** *Kept, documented.* Docs
   and most apps are online-first; a self-host path for offline/air-gapped/privacy is written up in
   `integration.md` ("Offline / privacy"). Not removed by default so the drop-in stays literally one line.
-- **`web-builder.skill` (the packaged artifact) is built manually — gitignored, no build script, no
+- **T3 · `web-builder.skill` (the packaged artifact) is built manually — gitignored, no build script, no
   source↔artifact check.** *Deferred.* The source (`web-builder/`) is the truth; the `.skill` is a zip
   snapshot repackaged on demand. A build+verify pipeline is low ROI against the maintenance surface it adds;
   revisit if packaging ever needs to be automated/released on a cadence.
-- **`CLAUDE.md` doesn't inline a manual `/wb-change` step-by-step for non–Claude-Code humans.**
+- **T4 · `CLAUDE.md` doesn't inline a manual `/wb-change` step-by-step for non–Claude-Code humans.**
   *Deferred (minor).* The "Adding a primitive" section above, the trigger note, and the docs-site `#/tooling`
   + overview workflow pages already lay out the manual flow, the hooks, and the verify checks for a human.
+- **T5 · A read-only locator (`.claude/tools/wb.sh`) exists, but no automated §18 / coherence *gate*.**
+  *Chosen.* `wb locate <class>` does `/wb-change` step 1's "grep → `Read` offset/limit clusters + blast-radius"
+  dance in shell, so discovery (and everyday dogfooding) costs fewer tokens. It only *prints* the `Read`
+  commands — it never edits or judges, so it cannot block or mislead. We deliberately did **not** turn §18
+  (token-over-magic-number) or a "6-place coherence" completeness check into a commit gate: tested against the
+  real CSS, both were far too noisy to gate on. §18 raw-hex: **26** hits under a loose rule, **8** under a
+  value-match rule — almost all legitimate (mask-alpha `#000`/`#0000`, the colour-picker hue wheel,
+  `var(--x, #hex)` fallbacks, chart-schemes whose literal value coincidentally equals a token). "Class used but
+  undefined": **81** hits, ~all false (design tokens like `--wb-border`, prose like `/wb-change`, BEM examples
+  inside `<code>`). Telling apart a magic-number from a necessary raw value needs *semantic* judgment; a noisy
+  gate only trains you to ignore it. Trade-off: §18 and 6-place coherence stay **model/human eyeball** checks
+  (`/wb-change` steps 8–9), not mechanical guarantees — revisit only if raw-hex abuse actually appears, or if a
+  low-noise base-vs-modifier split ever makes a coherence *advisory* (never a gate) worth its upkeep.

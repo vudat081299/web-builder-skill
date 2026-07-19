@@ -235,6 +235,35 @@ if [ -n "$defer" ]; then
     printf '%s\n' "$defer" | head -15 | sed 's/^/    /'; } >&2
 fi
 
+# --- CHECK 13 (hard): every README trade-off "T#" is rendered on the decisions docs page (§23) ----
+# README § "Deliberate trade-offs" is the human source, but a reader who only browses the docs SITE was
+# missing the whole list — nothing enforced the mirror (the gap that put this check here). So, exactly like
+# the §N system (CHECK 11c renders every principle), enforce both directions between README and the dedicated
+# pages/decisions.html: (a) every T# defined in README is rendered on the page; (b) no stale T# on the page
+# that README no longer defines. decisions.html existing as a route is already guaranteed by CHECK 1.
+DEC="$A/pages/decisions.html"
+if [ -f README.md ] && [ -f "$DEC" ]; then
+  rd_t="$(grep -oE '\*\*T[0-9]+ ' README.md | grep -oE 'T[0-9]+' | sort -u)"   # bold-lead bullets **T# ·
+  dec_t="$(grep -oE 'T[0-9]+' "$DEC" | sort -u)"
+  miss_t=""; for t in $rd_t; do printf '%s\n' "$dec_t" | grep -qx "$t" || miss_t="$miss_t $t"; done
+  stale_t=""; for t in $dec_t; do printf '%s\n' "$rd_t" | grep -qx "$t" || stale_t="$stale_t $t"; done
+  if [ -n "$miss_t" ]; then
+    { echo "BLOCK · decisions.html is missing README trade-off(s) — the docs site must mirror them in full (§23):"
+      echo "   $miss_t"
+      echo "   Render each on web-builder/assets/pages/decisions.html (README § Deliberate trade-offs is the source)."; } >&2
+    fail=1
+  fi
+  if [ -n "$stale_t" ]; then
+    { echo "BLOCK · decisions.html renders trade-off tag(s) README no longer defines (stale mirror):"
+      echo "   $stale_t"
+      echo "   Remove them from decisions.html, or restore the matching **T# ·** bullet in README."; } >&2
+    fail=1
+  fi
+elif [ -f README.md ] && grep -qE '\*\*T[0-9]+ ' README.md; then
+  { echo "BLOCK · README defines trade-off T#(s) but pages/decisions.html is missing — the site can't mirror them (§23)."; } >&2
+  fail=1
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "" >&2
   echo "^ Fix the BLOCK item(s) and keep editing (don't restart). Guardrail: .claude/hooks/validate-sync.sh" >&2
@@ -244,6 +273,6 @@ fi
 # Quiet as a hook (stdout is piped); informative when run by hand in a terminal.
 if [ -t 1 ]; then
   n="$(printf '%s\n' "$routes" | grep -c .)"
-  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes & principles renders §1..§${maxp:-?} coherent."
+  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes & principles renders §1..§${maxp:-?} + README trade-offs (T#) mirrored on #/decisions coherent."
 fi
 exit 0

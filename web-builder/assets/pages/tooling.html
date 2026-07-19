@@ -52,7 +52,7 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
   </div>
 
   <div class="doc-block">
-    <h4>Nửa docs site — CHECK 1 → 5, 12</h4>
+    <h4>Nửa docs site — CHECK 1 → 5, 12–13</h4>
     <table class="wb-table wb-table--bordered">
       <thead><tr><th style="width:74px">CHECK</th><th>Bảo đảm điều gì</th><th style="width:96px">Loại</th></tr></thead>
       <tbody>
@@ -62,6 +62,7 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
         <tr><td><b>4</b></td><td>Hex thô tô component trong inline <code>style</code> → khuyên dùng token / <code>--wb-*-color</code>. (Chỉ chạy khi gọi tay ở terminal.)</td><td><span class="wb-cap">nhắc</span></td></tr>
         <tr><td><b>5</b></td><td>Cascade 6 nơi: <code>web-builder.css</code> đổi mà chưa stage demo / NAV / catalog / SKILL.md.</td><td><span class="wb-cap">nhắc</span></td></tr>
         <tr><td><b>12</b></td><td>Trang docs-site <b>không đẩy nội dung</b> ra một <code>.md</code> thô ("đọc bản đầy đủ ở X.md") — site phải tự chứa (§23). Nhắc khi thấy từ "đầy đủ" cạnh một tên <code>.md</code>.</td><td><span class="wb-cap">nhắc</span></td></tr>
+        <tr><td><b>13</b></td><td>Mọi trade-off <b>T#</b> trong <code>README</code> § <i>Deliberate trade-offs</i> phải được render trên <code>pages/decisions.html</code> (<a href="#/decisions">#/decisions</a>) — hai chiều: README thêm T# mà site thiếu <b>→ chặn</b>; site còn T# mà README đã bỏ <b>→ chặn</b>. Để danh sách đánh đổi không lặng lẽ biến mất khỏi site (§23).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -83,7 +84,35 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
 </section>
 
 <section class="doc-sec">
-  <h3>3 · Hai hook — gác tự động</h3>
+  <h3>3 · <code>wb.sh</code> — locator (tiết kiệm token lúc discover)</h3>
+  <p class="doc-sec__desc"><a href="#/overview">/wb-change</a> bước 1 <b>dạy</b> một kỷ luật: đừng đọc cả
+  <code>web-builder.css</code> (~2900 dòng ≈ 40k token) — hãy <code>grep</code> tên class, gom các dòng <b>rải
+  rác</b> (token ở <code>:root</code> · khối chính · <code>.dark</code> override · component khác tái dùng) thành
+  cụm, rồi <code>Read</code> từng cụm bằng <code>offset/limit</code>. <code>wb.sh</code> làm hộ phần cơ học đó: in
+  sẵn <b>đúng lệnh <code>Read</code></b> cho từng cụm + một bản đồ <b>blast-radius</b> (5 nơi sync còn lại có nhắc
+  class đó), nên discover và dogfood đỡ tốn token. Nó <b>chỉ in</b> — không sửa, không phán đúng/sai — nên
+  <b>không thể chặn hay nói sai</b> (khác các auto-check §18/coherence mà repo cố tình <b>không</b> làm gate — lý
+  do + số liệu ở trang <a href="#/decisions">Quyết định &amp; đánh đổi</a>, mục T5).</p>
+  <div class="demo">
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>bash .claude/tools/wb.sh locate wb-input   # → cụm Read offset/limit + blast-radius
+bash .claude/tools/wb.sh classes           # base wb-* mà CSS định nghĩa (--all để gồm --modifier)
+
+# ví dụ output:
+# ── wb-input · 52 hit(s) in web-builder.css → Read these cluster(s):
+#   Read web-builder/assets/web-builder.css offset=752 limit=100   # lines 755–848
+#   ...
+# ── Blast radius: pages/input.html (105x) · components-catalog.md (31x) · SKILL.md · app.js</code></pre></div>
+  </div>
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">search</span>
+    <div>Read-only, <b>không ship</b> — ở <code>.claude/tools/wb.sh</code>, cùng hạng <code>validate-sync.sh</code>.
+    Chỉnh độ gom cụm bằng biến môi trường <code>WB_GAP</code> (gộp hit cách ≤N dòng, mặc định 8) và
+    <code>WB_PAD</code> (đệm quanh cụm, mặc định 3).</div>
+  </div>
+</section>
+
+<section class="doc-sec">
+  <h3>4 · Hai hook — gác tự động</h3>
   <p class="doc-sec__desc">Hook được wire trong <code>.claude/settings.json</code>, chạy trên máy bạn nên không phải
   nhớ. Một hook <b>nhắc</b> lúc sửa, một hook <b>chặn</b> lúc commit.</p>
   <div class="wb-grid wb-grid--2" style="margin-top:6px">
@@ -120,7 +149,7 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
 </section>
 
 <section class="doc-sec">
-  <h3>4 · <code>/wb-change</code> — sợi chỉ nối tất cả</h3>
+  <h3>5 · <code>/wb-change</code> — sợi chỉ nối tất cả</h3>
   <p class="doc-sec__desc">Không phải gọi skill bằng tay. Khi bạn tả một thay đổi component bằng lời thường,
   <code>/wb-change</code> <b>tự trigger</b> (khớp mô tả: "thêm component", "đổi token", "restructure", "sửa
   wb-*"…) → 6-place sync + guardrails theo sau. <code>CLAUDE.md</code> nạp <b>mỗi turn</b> nên AI luôn biết luật;
@@ -135,15 +164,29 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
 </section>
 
 <section class="doc-sec">
+  <h3>Quyết định tooling — vì sao có locator, vì sao KHÔNG auto-gate</h3>
+  <p class="doc-sec__desc">Các quyết định về tooling — <b>vì sao có</b> <code>wb.sh</code> locator, và <b>vì sao cố
+  tình KHÔNG</b> biến §18 (magic-number) hay coherence "6 nơi" thành gate (thử trên CSS thật đều <b>quá nhiễu</b>:
+  26 / 8 / 81 hit gần như đều hợp lệ) — nằm gọn ở trang <a href="#/decisions">Quyết định &amp; đánh đổi</a>,
+  mục <b>T5</b>, cùng mọi đánh đổi khác của repo. Gom về <b>một nơi</b> (single-source) cho khỏi lệch.</p>
+  <div class="doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">rule</span>
+    <div>Nguyên tắc rút ra: <b>chỉ tự động hoá khi tín hiệu sạch</b>. Một guardrail báo oan còn tệ hơn không có —
+    nó tập cho người bỏ qua. Đầy đủ số liệu ở <a href="#/decisions">#/decisions</a>.</div>
+  </div>
+</section>
+
+<section class="doc-sec">
   <h3>Bản đồ file tooling — để tìm &amp; wire</h3>
   <p class="doc-sec__desc">Toàn bộ đồ nghề, kèm đường dẫn thật, cho người muốn đọc/chỉnh trực tiếp.</p>
   <table class="wb-table wb-table--bordered">
     <thead><tr><th>File</th><th>Là gì</th></tr></thead>
     <tbody>
       <tr><td><code>.claude/settings.json</code></td><td>Wire hai hook (matcher + timeout).</td></tr>
-      <tr><td><code>.claude/hooks/validate-sync.sh</code></td><td>Bộ 11 check (docs + skill). Chạy tay hoặc do hook gọi.</td></tr>
+      <tr><td><code>.claude/hooks/validate-sync.sh</code></td><td>Bộ 13 check (docs + skill). Chạy tay hoặc do hook gọi.</td></tr>
       <tr><td><code>.claude/hooks/pre-commit-gate.sh</code></td><td>PreToolUse: cổng chặn <code>git commit</code>/<code>push</code>.</td></tr>
       <tr><td><code>.claude/hooks/wb-sync-reminder.sh</code></td><td>PostToolUse: nhắc checklist 6 nơi khi sửa CSS.</td></tr>
+      <tr><td><code>.claude/tools/wb.sh</code></td><td>Locator read-only: <code>locate &lt;class&gt;</code> → cụm <code>Read</code> + blast-radius; <code>classes</code> liệt kê wb-*.</td></tr>
       <tr><td><code>.claude/skills/wb-change/SKILL.md</code></td><td>Quy trình thêm/sửa component (10 bước / 4 phase).</td></tr>
       <tr><td><code>web-builder/assets/serve.py</code></td><td>Dev server no-store cho docs.</td></tr>
       <tr><td><code>.claude/launch.json</code></td><td>Cấu hình server preview (tên + cổng) cho Browser pane.</td></tr>

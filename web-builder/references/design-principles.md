@@ -397,4 +397,5 @@ page's actual job — is already complete. **The test:** after deleting every "s
 complete on its own topic? Yes → the pointer was context. No → you deferred content; render it in-site.
 
 `validate-sync.sh` backs this: CHECK 11 requires the full §1…§N rendering on `pages/principles.html` (not just
-the index), and an advisory flags any page that defers completeness to a `.md`.
+the index); CHECK 13 requires every README trade-off `T#` to be mirrored on the dedicated `pages/decisions.html`
+(the same pattern, a second instance); and an advisory flags any page that defers completeness to a `.md`.

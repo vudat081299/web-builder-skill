@@ -25,9 +25,10 @@ tooling and a human can't find it in the docs, that's a gap to close — not to 
 isn't done when the code works; it's done when the docs a human would read still tell the whole, true story.
 And the docs **site** must be **self-contained** (§23): a `pages/*.html` renders its content **in-site** (for
 length use a `<details>`/accordion or a dedicated page — e.g. `principles.html` renders §1–23 in full,
-`tooling.html` covers serve/verify/hooks), never a teaser punting a human to a raw `.md`. (The AI-facing
-`SKILL.md → references/*.md` layering stays — that's token thrift, not a gap. `validate-sync.sh` CHECK 11(c) +
-CHECK 12 enforce this.)
+`tooling.html` covers serve/verify/hooks, `decisions.html` mirrors the README trade-offs (each tagged `T#`)),
+never a teaser punting a human to a raw `.md`. (The AI-facing `SKILL.md → references/*.md` layering stays —
+that's token thrift, not a gap. `validate-sync.sh` CHECK 11(c), 12 + 13 enforce this — 13 blocks a commit if a
+README `T#` isn't rendered on `#/decisions`.)
 
 ## Working here
 
@@ -46,7 +47,10 @@ A component/token change touches many files, so run **`/wb-change`** — it orch
 (discover → plan → confirm → implement → sync the 6 places below → verify in the browser → `/code-review`
 → commit + push), pushing heavy reads to subagents to save tokens. Two hooks in `.claude/` back it up:
 a **PostToolUse** nudge injects the 6-place checklist the moment you edit `web-builder.css`, and a
-**PreToolUse** gate blocks `git commit`/`git push` when `.claude/hooks/validate-sync.sh` fails. The full
+**PreToolUse** gate blocks `git commit`/`git push` when `.claude/hooks/validate-sync.sh` fails. For discovery,
+a read-only helper `.claude/tools/wb.sh locate <class>` prints ready-to-run `Read` offset/limit clusters +
+a blast-radius map, so you never read the whole CSS. (Automating §18/coherence as a *gate* was tried and
+dropped — too noisy on the real CSS; they stay eyeball checks. See README § *Deliberate trade-offs*.) The full
 workflow lives in the skill/hooks (loaded on demand), not here — this file stays a lean pointer.
 
 ## Adding or changing a component — sync ALL of these in one change

@@ -23,6 +23,7 @@ const NAV = [
     { id: "border",     label: "Border & bo góc" },
     { id: "config",     label: "Config / Tweak" },
     { id: "tooling",    label: "Tooling (verify · hook)" },
+    { id: "decisions",  label: "Quyết định & đánh đổi" },
   ]},
   { group: "Bố cục & tiện ích", items: [
     { id: "layout",     label: "Grid / Layout" },

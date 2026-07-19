@@ -439,7 +439,7 @@
     <div class="wb-grid wb-grid--auto" style="--wb-grid-min:200px;margin-top:8px">
       <div class="nav-card">
         <p class="nav-card__t">web-builder.css</p>
-        <p class="nav-card__d">~2600 dòng ≈ <b>~38k token</b> nếu đọc full.</p>
+        <p class="nav-card__d">~2900 dòng ≈ <b>~40k token</b> nếu đọc full.</p>
       </div>
       <div class="nav-card">
         <p class="nav-card__t">app.js · catalog</p>
@@ -478,10 +478,12 @@
         </div>
       </li>
     </ol>
-    <p class="doc-block__desc" style="margin-top:12px"><code>grep</code> tìm <b>mọi</b> lần xuất hiện nên bất chấp
-    component dài hay rải rác; cửa sổ cố định ±N dòng thì sẽ <b>sót rule</b>. <code>receipt</code> đọc ~2k token
-    thay vì 38k (thắng ~20×); <code>input</code> rải rác đọc ~3 cụm ~300 dòng (vẫn thắng ~8×). Việc đọc rộng thì
-    đẩy cho <b>subagent</b> — 38k đó nằm trong context riêng của nó, chỉ bản tóm tắt trở về luồng chính.</p>
+    <p class="doc-block__desc" style="margin-top:12px"><b><code>.claude/tools/wb.sh locate &lt;class&gt;</code> làm hộ
+    cả 3 bước trên</b> — in sẵn lệnh <code>Read</code> theo cụm + bản đồ blast-radius (xem <a href="#/tooling">Tooling</a>
+    §3). <code>grep</code> tìm <b>mọi</b> lần xuất hiện nên bất chấp component dài hay rải rác; cửa sổ cố định ±N
+    dòng thì sẽ <b>sót rule</b>. <code>receipt</code> đọc ~2k token thay vì 40k (thắng ~20×); <code>input</code> rải
+    rác đọc ~3 cụm ~300 dòng (vẫn thắng ~8×). Việc đọc rộng thì đẩy cho <b>subagent</b> — 40k đó nằm trong context
+    riêng của nó, chỉ bản tóm tắt trở về luồng chính.</p>
   </div>
 
   <div class="doc-note">
