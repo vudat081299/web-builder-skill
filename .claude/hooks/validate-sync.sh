@@ -141,6 +141,28 @@ if [ "$opens" != "$closes" ]; then
   fail=1
 fi
 
+# --- CHECK 10 (hard): SKILL.md 'Current scope' names every app.js NAV group ----
+# The intent-group list is the classic drift victim: hand-copied into prose it goes
+# stale (README + /wb-change both grew a phantom "Biểu đồ" group that NAV never had).
+# NAV in app.js is the source of truth; the SHIPPING SKILL.md is the copy the next AI
+# trusts, so enforce that one against NAV. Each NAV group label must appear as a bold
+# scope header `**<label>**` (parentheticals incl., e.g. `**Lớp phủ (Overlay)**`).
+# Other prose (README, /wb-change, CLAUDE.md) may abbreviate — don't repeat the list;
+# point at NAV. (Lesson banked in /wb-change SKILL.md step 3.)
+if [ -f "$SKILL" ]; then
+  miss_groups=""
+  while IFS= read -r g; do
+    [ -z "$g" ] && continue
+    grep -qF "**$g**" "$SKILL" || miss_groups="${miss_groups}    ${g}"$'\n'
+  done < <(grep -oE 'group: "[^"]+"' "$A/app.js" | sed -E 's/group: "(.*)"/\1/')
+  if [ -n "$miss_groups" ]; then
+    { echo "BLOCK · SKILL.md 'Current scope' is missing NAV group(s) from app.js (group list drifted):"
+      printf '%s' "$miss_groups"
+      echo "    NAV (app.js) is the source of truth — add each as a bold header **<label>** or fix the rename."; } >&2
+    fail=1
+  fi
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "" >&2
   echo "^ Fix the BLOCK item(s) and keep editing (don't restart). Guardrail: .claude/hooks/validate-sync.sh" >&2
@@ -150,6 +172,6 @@ fi
 # Quiet as a hook (stdout is piped); informative when run by hand in a terminal.
 if [ -t 1 ]; then
   n="$(printf '%s\n' "$routes" | grep -c .)"
-  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces coherent."
+  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups coherent."
 fi
 exit 0

@@ -9,6 +9,11 @@ the demo stage + code block, the dual preview, the config drawer, the search dia
 specimens). If the library gains a primitive that covers a piece of chrome, the chrome is deleted and the page
 dogfoods the primitive instead.
 
+> **This doc is a best-effort, hand-kept snapshot** of `app.js` / `docs.css`. Unlike the component catalog
+> (which `validate-sync.sh` checks against the CSS), nothing machine-validates this doc — so if the docs
+> source changes, **re-sync it by hand**. It captures the *design* of the docs app (architecture, page grammar,
+> chrome roster), enough to rebuild an equivalent — not a line-for-line mirror of the current code.
+
 ---
 
 ## 1. Architecture — one single-page app, three files

@@ -171,6 +171,22 @@ Rule of thumb: if it opens/closes, traps focus, or needs keyboard nav → **the 
 behaviour, Web Builder owns pixels**. Static/display components are just classes. The docs site uses a tiny
 vanilla toggle for demos only — don't port that toggle into a real app.
 
+## Offline / privacy: the one external request
+
+`web-builder.css` is otherwise fully standalone, with **one** exception: the top of the file `@import`s the
+**Material Symbols** icon font from Google Fonts (`fonts.googleapis.com`). So every app shipping the CSS makes
+one request to Google on load. Fine for most web apps, but be aware:
+
+- **Offline / air-gapped** builds show empty icon slots until (if ever) the font loads.
+- **Privacy-strict** contexts may not want a Google request on every page.
+- It's a small **render-time external dependency** — a footnote on the "zero-dependency drop-in" ideal.
+
+To make it truly standalone, **self-host the icon font**: download the Material Symbols `woff2`, serve it from
+your app, drop the `@import`, and add a local `@font-face` (keep the family name `Material Symbols Rounded`) —
+or point `--wb-icon-font` at a set you already ship (a subset, or `lucide`). Everything else in the CSS is
+token-only and needs no network. (The docs site is deliberately online-first — design-principles §10 — but that
+reasoning is about the docs, not your app.)
+
 ## What to change in your repo (your call — nothing is destructive)
 
 **Do:**

@@ -47,6 +47,11 @@ at page scale) is spelled out there too — so you never re-decide page layout b
 If you find yourself picking a hex value or a pixel padding by hand, stop — there is
 almost certainly a token or class for it.
 
+**Closing the loop.** If you're using this skill inside another app and you build a part in the same spirit
+(neutral-first, tokenised, `wb-*`-prefixed), it isn't a one-off — capture it (the markup + which tokens it
+uses) and contribute it **back upstream** to `web-builder-skill`, so the library keeps compounding instead of
+each app re-deriving the same piece. New to the shipped set since you last looked? See `CHANGELOG.md`.
+
 ## What's in the box
 
 | File | What it is | Read when |
