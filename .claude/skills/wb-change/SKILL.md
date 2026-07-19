@@ -34,7 +34,8 @@ Sửa một component = đồng bộ tối đa **6 nơi**:
 
 **1 · Discover + khả thi.** Đọc `references/components-catalog.md` + `design-principles.md` trước — có thể đã
 tồn tại (reuse) hoặc ghép được từ primitive sẵn có (vd list mới = `wb-list`+`wb-card`). Việc đọc rộng →
-**subagent Explore** ("X đã có chưa · ghép từ gì · đụng nơi nào"), giữ context chính gọn.
+**subagent Explore** ("X đã có chưa · ghép từ gì · đụng nơi nào"), giữ context chính gọn. Cần soi CSS hiện có
+→ đọc **theo cụm** (grep tên class → `offset/limit`), **không** Read full `web-builder.css` (xem *Token discipline*).
 
 **2 · Plan + confirm.** Nêu gọn: đổi component/token nào · chạm nơi nào trong 6 · ghép từ primitive nào ·
 tier màu (design-principles §1 — phân loại = xám, chỉ *status* mới có màu). **Có điểm mơ hồ → hỏi user 1–2
@@ -72,5 +73,14 @@ không có · `web-builder.css` cân ngoặc). Rồi soi bằng mắt: color-lad
 
 ## Token discipline (mục tiêu tối ưu)
 - Đọc rộng (discover · verify nhiều trang · review docs chéo) → **subagent**, không kéo cả file vào luồng chính.
+- **Không đọc full `web-builder.css`** (2600+ dòng ≈ ~38k token). Đọc **theo cụm**:
+  1. `grep -n 'wb-<comp>' web-builder.css` → ra *toàn bộ* dòng của component. Rule nằm **rải rác**: token trong
+     `:root` · khối chính · `.dark`/`:where()` override · chỗ component khác tái dùng nó (receipt tái dùng card).
+  2. Gom các dòng liền nhau thành **cụm**.
+  3. `Read` từng cụm bằng `offset/limit` (+vài dòng đệm) — **không** đọc một cửa sổ cố định ±N dòng.
+  grep không giới hạn độ dài nên **bất chấp component dài hay rải rác**; cửa sổ cố định thì sẽ **sót rule**.
+  Ví dụ: `receipt` liền khối ~145 dòng → 1 lát ~2k token (thắng 20×); `input`/`card`/`chart` rải gần cả file →
+  ~3 cụm ~300 dòng (vẫn thắng ~8×). Lát đọc lỡ sót? Không ship lỗi âm thầm — bước 4 (validate-sync) + bước 5
+  (verify sáng/tối) làm demo page vỡ ngay; worst case là đọc lại.
 - **Không** nhét quy trình vào `CLAUDE.md` (resident mỗi turn) — nó nằm ở skill này, nạp khi cần.
 - Để **hook** lo đếm/đối chiếu deterministic (miễn phí token); model chỉ làm phần cần suy nghĩ.

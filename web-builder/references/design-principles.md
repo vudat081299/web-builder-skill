@@ -47,6 +47,15 @@ solid neutral chip (small = fine), a date **range** is the *soft* neutral band (
 neutral **ring** — never a bright hue. Selecting a value is a *choice*, not a status, so it stays tier 1
 (contrast), exactly like a category tag stays grey. Only real status (paid / overdue / due-soon) earns colour.
 
+**Single-colour parts pick from the neutral ladder.** A part that is one flat grey — a divider, a progress
+track, a muted icon, a tick mark, a scroll thumb — defaults to one of the four **neutral-ladder** tokens
+(`--wb-neutral-weak` / `--wb-neutral` / `--wb-neutral-strong` / `--wb-neutral-ink` = xám *nhẹ / vừa / đậm /
+đen*), never a hand-picked grey. Choose the weight by how loud the mark must be; the ladder auto-flips in dark.
+This is the rule that stops one page from drawing three dividers in three different greys. A part that *also*
+carries status (a progress bar that can go red / amber / green) keeps the tier-2 semantic colour on top — the
+neutral ladder is only its tier-1 default. Likewise icon **size** comes from one scale — the `.wb-ico--xs…--xl`
+steps (16 / 18 / 20 / 24 / 32, tokens `--wb-ico-*`) — not an ad-hoc `font-size`.
+
 **Demos are neutral-first.** When a component has both a neutral and a coloured form, place the grey /
 neutral example *before* the coloured one — a grey chart to the left of a coloured chart, a plain alert before
 a toned alert. The reader meets the tier-1 default first and sees colour as the exception, exactly as the

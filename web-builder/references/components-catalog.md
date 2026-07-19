@@ -47,9 +47,10 @@ for the look (see `integration.md`).
 | A data-entry form (add/edit transaction, settings) | **Form controls** | [Forms](#form-controls) |
 | A money input, a category picker, a yes/no setting | input-group / select / switch | [Forms](#form-controls) |
 | A multi-line notes / code field with a clean resize handle | **Textarea** (`.wb-textarea` + `-wrap`) | [Forms](#form-controls) |
-| Type a date / time / card no. that auto-formats as you type | **Masked input** (`data-mask`) | [Forms](#form-controls) |
+| Type a date / time / card no. that auto-formats as you type | **Masked input** (`data-mask`) or **templated** (`.wb-input-tpl`) | [Forms](#form-controls) |
 | A password field with a show/hide eye toggle | **Affix button** (`.wb-input-group__btn`) | [Forms](#form-controls) |
-| A slider for a budget cap / threshold | **Range** | [Range](#range--slider) |
+| A bold/italic/heading toolbar over a markdown textarea | **Format toolbar** (`.wb-toolbar`) | [Format toolbar](#format-toolbar-rich-text) |
+| A slider for a budget cap / threshold (+ tick marks) | **Range** (`.wb-range-ticks`) | [Range](#range--slider) |
 | Attach a statement / receipt (button or drop area) | **File / dropzone** | [File](#file--upload) |
 | Pick a category / label colour from a preset palette | **Swatches** (`.wb-swatches`) | [Swatches](#colour-swatches) |
 | Pick any colour with a nice custom UI (SV + hue + hex) | **Colour picker** (`.wb-colorpicker`) | [Colour picker](#colour-picker) |
@@ -78,10 +79,13 @@ for the look (see `integration.md`).
 | A click-toggled card (title + body + actions) anchored to a trigger | **Popover** | [Popover](#popover) |
 | The path "where am I" above a page | **Breadcrumb** | [Breadcrumb](#breadcrumb) |
 | Page through a long list/table | **Pagination** | [Pagination](#pagination) |
+| Prev / next **page** links at the foot of a page (with `[` `]` shortcuts) | **Pager** (`.wb-pager`) | [Pager](#pager--footer) |
+| The **site footer** (brand · link columns · copyright) | **Footer** (`.wb-footer`) | [Footer](#pager--footer) |
+| A keyboard-key hint chip (e.g. `⌘K`, `[`) | **Keycap** (`.wb-kbd`) | [Pager](#pager--footer) |
 | A person / initials / member group | **Avatar** | [Avatar](#avatar) |
 | Collapsible FAQ / sections (grouped) | **Accordion** | [Accordion](#accordion) |
 | One standalone show/hide region (read-more, optional form section) | **Collapse** | [Collapse](#collapse) |
-| A visual separator (solid / dashed / dotted / fade / tone / **ray** / labelled) | **Divider** | [Divider](#divider) |
+| A visual separator (solid / dotted / dashed / long-dash / fade / **ray** / labelled / vertical) | **Divider** | [Divider](#divider) |
 | Border widths / radii / dashed / outline-tone conventions | **Border** | [Border](#border--radius) |
 | A spending line, income-vs-expense bars, **combo bar+line**, category donut, sparkline | **Charts** | [Charts](#charts) |
 | Ranking many categories (top spend / top debt) | **Charts** — horizontal ranked bars | [Charts](#charts) |
@@ -107,7 +111,7 @@ for the look (see `integration.md`).
 ```
 FILL:  (default solid neutral) · --secondary · --outline · --ghost
 TONE:  --danger · --success        (only meaningful actions: delete, confirm payment)
-SIZE:  (default) · --sm · --lg      SHAPE: --icon (square) · --block (full width)
+SIZE:  (default) · --sm · --lg      SHAPE: --icon (square) · --round (pill / circle when +--icon) · --block (full width)
 STATE: disabled attr / .is-disabled · .is-loading (+ a <span class="wb-spinner">)
 ```
 
@@ -126,6 +130,16 @@ side — pair primary with a ghost/secondary.
 
 Icon-only buttons **must** have `aria-label`. The spinner inherits the button's text
 colour, so it works on any variant.
+
+**Reveal-on-hover icon button** — `--ghost` + `--icon`: no background/border at rest, a grey
+chip appears only on hover (toolbar, row actions, close ×). Square by default; add `--round`
+for a **circle**. `--round` also pills a text button. (Same family the footer `__social` uses.)
+
+```html
+<button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+<button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Đóng"><span class="wb-ico wb-ico--sm">close</span></button>
+<button class="wb-btn wb-btn--round">Theo dõi</button>   <!-- pill -->
+```
 
 **Social login** — reuse `.wb-btn` + a brand logo `<svg>` on the left, usually `--block` (full
 width) in a `.wb-stack`. Apple = neutral primary `wb-btn` (black bg / white logo via
@@ -410,7 +424,14 @@ INVALID:  add the STATE class .is-invalid to the control (.wb-input.is-invalid �
           aria-invalid="true", then show .wb-error. (State = .is-*, not a --modifier.)
 GROUP:    .wb-input-group with .wb-input-group__addon (PREFIX/SUFFIX text/icon) OR .wb-input-group__btn (a
           CLICKABLE affix — reveal password, clear ×, unit toggle)
+SEAMLESS: --seamless on .wb-input (no outline, transparent — melts into the page) OR on .wb-input-group
+          (ONE outline round the row, addons carry no fill/divider — just spacing)
 MASK:     add data-mask="date|time|datetime|card|daterange" to a .wb-input to format WHILE typing (no popup)
+TEMPLATED: .wb-input-tpl > per-part .wb-input-tpl__seg inputs + inked .wb-input-tpl__sep separators — the
+          " / : – " are REAL characters (not placeholder), segments are left-aligned, show a grey placeholder
+          & auto-advance; tapping the field (a separator / the padding) focuses the first segment when empty
+          else the last non-empty one; within-date "/" · ":" stay tight, a between-cluster "–" (date range) takes
+          .wb-input-tpl__sep--gap for a space each side; the date/time entry (.wb-input-tpl__seg--y = 4-digit year)
 ```
 
 ```html
@@ -472,8 +493,13 @@ for a no-wrap field that scrolls horizontally. See the Textarea page.
 
 **Checkbox & radio** are drawn on the native input itself (`appearance:none` — the input stays
 focusable / keyboard-operable / form-correct, no extra markup): a box / circle with a **bold ink border**,
-filled solid on check (white tick / dot, auto-inverts on dark). Border width is a knob (`--wb-check-bw`)
-and the corner follows the radius tokens, so both track Config (incl. the **sharp** preset). Radio stays round.
+filled solid on check (white tick / dot, auto-inverts on dark). The **tick** traces the Material `check`
+glyph (same shape as the stepper's done-mark). Border width is a knob (`--wb-check-bw`)
+and the corner follows the radius tokens, so both track Config (incl. the **sharp** preset). Radio stays round
+and offers **three fills** when selected: default (ink circle + white dot) · `--ring` (white interior + ink
+outline + ink centre dot, classic) · `--solid` (full ink, no dot). Both support **`--locked`** — keeps the
+real value but blocks changes, showing a `lock` **beside** the control (`.wb-check__lock`) that shakes on a
+denied click (wired by the delegated handler, same idiom as the switch) — distinct from `disabled` (inert).
 
 **Masked input & the affix button.** For formatting **while typing** (no popup — the value reformats on every
 keystroke) add `data-mask` to a `.wb-input`: `date` (`dd/mm/yyyy`), `time` (`HH:MM`), `datetime`, `card`
@@ -500,6 +526,10 @@ show/hide eye (`[data-reveal]` flips `type` + swaps the icon), a clear ×, a uni
 
 `.wb-range` — themed track + `--wb-fg` thumb (native `accent-color` can't theme per mode). `--sm`
 for a thinner bar; `disabled` mutes. For a FILLED track set an inline gradient from the current value.
+**Tick marks:** wrap in `.wb-range-ticks` and add a `__marks` row (evenly-spaced `<span>`s) + optional
+`__labels` row — discrete levels under the track (marks use the neutral ladder); set a matching `step` so
+the thumb snaps mark-to-mark. Each `__labels` span centres on its mark by default; `.wb-range-ticks--labels-left`
+sits the text to the LEFT of the mark (right-aligned), `--labels-right` to the RIGHT (left-aligned).
 **Dual-handle** `.wb-range-dual` picks a MIN + MAX band (two stacked inputs `data-h="min"/"max"` + a
 `--a`/`--b` fill) — pair with min/max boxes + a summary as `.wb-range-filter` (the amount/price filter;
 see [Filter bar](#filter-bar)). App: Radix **Slider** for keyboard robustness; keep the classes.
@@ -515,6 +545,30 @@ see [Filter bar](#filter-bar)). App: Radix **Slider** for keyboard robustness; k
   <input class="wb-range-dual__input" data-h="min" type="range" min="0" max="10000000" value="2000000" />
   <input class="wb-range-dual__input" data-h="max" type="range" min="0" max="10000000" value="7000000" />
 </div>
+```
+
+## Format toolbar (rich text)
+
+A horizontal **`.wb-toolbar`** of icon/label buttons for a markdown editor: `__group` clusters + `__sep`
+dividers; `.wb-toolbar__btn` (add `--text` for the Aa/H1/H2 label buttons), pressed = `.is-active` (tier-1
+solid). Add `--attached` to fuse it onto the top edge of the `.wb-textarea` it controls. Format vocabulary:
+`data-cmd="normal|h1|h2|bold|italic|underline|strike|highlight|clear"`; the highlight-colour button opens a
+`.wb-swatches` dropdown and shows the current colour in a `.wb-toolbar__swatch`. Wire it to the textarea with
+`data-formatbar="<textarea id>"` — the docs driver wraps the selection in markdown tokens (`**`, `*`, `~~`,
+`==`, `<u>`, heading prefixes); an app swaps in a real editor (TipTap / Lexical) and keeps the classes.
+
+```html
+<div class="wb-toolbar wb-toolbar--attached" data-formatbar="note" role="toolbar">
+  <div class="wb-toolbar__group">
+    <button class="wb-toolbar__btn wb-toolbar__btn--text" data-cmd="h1">H1</button> …
+  </div>
+  <span class="wb-toolbar__sep"></span>
+  <button class="wb-toolbar__btn" data-cmd="bold"><span class="wb-ico">format_bold</span></button>
+  <button class="wb-toolbar__btn" data-cmd="clear"><span class="wb-ico">format_clear</span></button>
+</div>
+<!-- reuse the FULL textarea component — .wb-textarea-wrap draws the custom resize grip;
+     .wb-toolbar--attached fuses onto .wb-textarea-wrap > .wb-textarea just as well -->
+<div class="wb-textarea-wrap"><textarea class="wb-textarea" id="note">…markdown…</textarea></div>
 ```
 
 ## Colour swatches
@@ -688,15 +742,27 @@ The shadow lives on the wrapper by design — a mask would clip a shadow set on 
 
 ## Dropdown / Menu
 
-`.wb-dropdown` wraps a trigger + `.wb-dropdown__menu`; toggle `.is-open`. `.wb-menu`
+`.wb-dropdown` wraps a trigger + `.wb-dropdown__menu`; toggle `.is-open`. The trigger caret is a
+`.wb-dropdown__caret` `expand_more` chevron ("v") that flips up when open — never a literal `▾`. `.wb-menu`
 is the floating panel (also standalone). Items: `.wb-menu__item` (+ `--danger`), optional
-`.wb-menu__ico` / `.wb-menu__kbd`, `.wb-menu__label`, `.wb-menu__sep`.
+`.wb-menu__ico` / `.wb-menu__kbd`, `.wb-menu__label`, `.wb-menu__sep`. **Expandable row:** wrap an item +
+its nested list in `.wb-menu__group`; the item gets `--expand` + a right-aligned `.wb-menu__caret`, the list
+is `.wb-menu__sub` > `.wb-menu__sub-inner`; toggle `.is-open` on the group (clicking it opens the sub, keeps
+the dropdown open).
 
 ```html
 <div class="wb-dropdown">
-  <button class="wb-btn wb-btn--secondary" data-dd-toggle>Thao tác ▾</button>
+  <button class="wb-btn wb-btn--secondary" data-dd-toggle>Thao tác
+    <span class="wb-ico wb-ico--sm wb-dropdown__caret">expand_more</span></button>
   <div class="wb-dropdown__menu"><div class="wb-menu">
-    <button class="wb-menu__item"><span class="wb-menu__ico">✎</span> Sửa</button>
+    <button class="wb-menu__item"><span class="wb-menu__ico"><span class="wb-ico wb-ico--xs">edit</span></span> Sửa</button>
+    <div class="wb-menu__group">
+      <button class="wb-menu__item wb-menu__item--expand" data-menu-expand aria-expanded="false">Xuất
+        <span class="wb-ico wb-ico--xs wb-menu__caret">expand_more</span></button>
+      <div class="wb-menu__sub"><div class="wb-menu__sub-inner">
+        <button class="wb-menu__item">CSV</button><button class="wb-menu__item">PDF</button>
+      </div></div>
+    </div>
     <div class="wb-menu__sep"></div>
     <button class="wb-menu__item wb-menu__item--danger">Xoá</button>
   </div></div>
@@ -707,7 +773,8 @@ App: Radix DropdownMenu for focus/keyboard/portal; keep `wb-menu*` for the look.
 ## Alert / Banner
 
 Inline message block. `.wb-alert` + tone `--info|--success|--warning|--danger` (soft tint +
-full outline in the tone colour — no left-accent bar). Parts: `__icon`, `__body` > `__title` +
+full outline in the tone colour — no left-accent bar). Add `--plain` to **drop the outline** (soft fill
+only — a flat banner); rides on any tone. Parts: `__icon`, `__body` > `__title` +
 `__msg`, optional `.wb-close` (the `__body` flexes to fill, so the × always sits **top-right**).
 
 ```html
@@ -780,14 +847,21 @@ overlay (the shared modal JS works: `data-modal-open` / `-close`, click scrim to
 `.wb-navbar` = the top app bar: `__brand` (+ `__mark` square logo), a `.wb-nav` of links, `__spacer`
 (pushes the rest right), `__actions`. `--sticky` pins it. `.wb-nav` is the standalone **menu** primitive —
 `.wb-nav__link` (+ `.is-active` / `.is-disabled`, optional `.wb-ico`); `--vertical` stacks it, `--underline`
-gives a page-tab look. Active is a plain highlight (no left bar). Wire `.is-active` to the router; mobile
-menu toggling is the app's job. A **`.wb-theme-toggle`** icon button (two glyphs: `dark_mode` moon +
+gives a page-tab look. Active is a plain highlight (no left bar). Wire `.is-active` to the router. A
+**`.wb-theme-toggle`** icon button (two glyphs: `dark_mode` moon +
 `light_mode` sun) swaps automatically with root `.dark` — the app only flips `.dark` (next-themes / one line of JS).
+
+**Responsive (built in):** the bar is a **container** — when it gets too narrow it collapses on its OWN width
+(not the viewport, so it works in any column). Add class `.wb-navbar__menu` to the `.wb-nav` and a leading
+`.wb-navbar__toggle` button (`data-navbar-toggle`, a `menu` ☰ icon): below ~640px the inline links hide, the
+hamburger shows, and the links drop into a panel toggled by `.is-open` (the docs driver / your app wires the
+class). No more overlapping controls on a phone.
 
 ```html
 <div class="wb-navbar">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle aria-label="Menu"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand"><span class="wb-navbar__mark">L</span> Ledger</a>
-  <nav class="wb-nav">
+  <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link is-active">Tổng quan</a>
     <a class="wb-nav__link">Giao dịch</a>
   </nav>
@@ -921,6 +995,49 @@ for the last (current) crumb.
 </nav>
 ```
 
+## Pager & Footer
+
+Two page-chrome primitives (+ a `.wb-kbd` keycap). **Pager** ≠ Pagination: pagination pages
+through *rows*; the **pager** links to the prev/next **page** at the foot of the current one.
+
+**`.wb-pager`** — a 2-column grid: `.wb-pager__link--prev` (col 1) + `--next` (col 2). Each link is
+`justify-content: space-between` so the **`.wb-pager__arrow` (a plain chevron — no box/border) sits at the
+card's OUTER edge** (prev → far left, next → far right) and the `.wb-pager__text` hugs the centre-facing edge
+— the card reads full end-to-end instead of leaving one big gap. Text = `__dir` eyebrow (uppercase label + `.wb-kbd` hint) +
+`__title` (page name) + optional `__meta` (the target's section/short desc, fills the card). Prev text is
+right-aligned, next left-aligned (mirror). Only one side present ⇒ it keeps its column (prev left / next
+right). Add `data-pager` + `data-pager-prev`/`data-pager-next` and a tiny driver binds **`[` / `]`** to
+their `href` (guarded so typing in a field never fires). Collapses to one column under ~460px (container query).
+
+**`.wb-kbd`** — a monospace keycap chip (heavier bottom edge) for shortcut hints; use anywhere.
+
+**`.wb-footer`** — full-width band (hairline top, surface fill); `__inner` centres content. `__top` holds
+`__brand` (`__mark` + `__name` + `__tagline`) and `__cols` of `__col` (`__title` + `__link`s, muted→ink on
+hover). `__bottom` = `__copy` + `__social` (reuse `.wb-btn--ghost.wb-btn--icon`; a brand mark like GitHub is an
+inline `<svg fill="currentColor">` since Material Symbols has none, `target="_blank" rel="noreferrer"`). `--slim`
+drops the columns for a one-line footer. Greyscale only — no brand colour.
+
+```html
+<nav class="wb-pager" data-pager>
+  <a class="wb-pager__link wb-pager__link--prev" data-pager-prev href="/prev">
+    <span class="wb-ico wb-pager__arrow">chevron_left</span>            <!-- chevron trơn ở mép TRÁI -->
+    <span class="wb-pager__text"><span class="wb-pager__dir">Trang trước <kbd class="wb-kbd">[</kbd></span>
+    <span class="wb-pager__title">Tên trang</span>
+    <span class="wb-pager__meta">Nhóm / mô tả</span></span></a>
+  <a class="wb-pager__link wb-pager__link--next" data-pager-next href="/next">
+    <span class="wb-pager__text"> … <span class="wb-pager__meta">…</span></span>
+    <span class="wb-ico wb-pager__arrow">chevron_right</span></a>       <!-- chevron trơn ở mép PHẢI -->
+</nav>
+
+<footer class="wb-footer"><div class="wb-footer__inner">
+  <div class="wb-footer__top"> … __brand … __cols(__col › __title + __link) … </div>
+  <div class="wb-footer__bottom"><span class="wb-footer__copy">© 2026 …</span><div class="wb-footer__social"> … </div></div>
+</div></footer>
+```
+
+App wiring: the `[`/`]` handler is one delegated `keydown` listener; skip it when `e.target` is in an
+`input/textarea/select/[contenteditable]` (see the Footer page's driver, which the docs run live).
+
 ## Avatar
 
 `.wb-avatar` (image or initials). Sizes `--sm|--lg`, shape `--square`, emphasis `--solid` (solid black avatar /
@@ -935,8 +1052,9 @@ white text, flips in dark). Stack with `.wb-avatar-group`. Give it a category hu
 
 ## Progress
 
-`.wb-progress` > `.wb-progress__bar` (set `width`). Bar tone `--success|--warning|--danger`.
-`--lg` for a chunkier bar. Ideal for "đã chi / ngân sách".
+`.wb-progress` > `.wb-progress__bar` (set `width`). Track + fill default to the **neutral ladder**
+(`--wb-neutral-weak` track, `--wb-neutral-ink` fill — auto-flips in dark). Add a status tone when the bar
+carries meaning: `--success|--warning|--danger|--info`. `--lg` for a chunkier bar. Ideal for "đã chi / ngân sách".
 
 ```html
 <div class="wb-progress"><div class="wb-progress__bar wb-progress__bar--warning" style="width:82%"></div></div>
@@ -988,18 +1106,22 @@ Need one-open-at-a-time across many sections? Use **Accordion** instead. App: Ra
 
 ## Divider
 
-`.wb-divider` (horizontal). **Styles:** `--dashed`, `--dotted`, `--fade` (dissolves at both ends).
-**Tone** (colour = status, per the ladder — plain breaks stay grey): `--success` / `--danger` /
-`--warning` / `--info` / `--strong` (ink). `--vertical` (between inline clusters), `--label`
-(centred text). `--ray` = a decorative **light-ray that sweeps along** the line on a loop (respects
-`prefers-reduced-motion`; **not** a progress bar — the full line stays visible). One colour knob
-`--wb-divider-c` colours line + ticks; `--wb-divider-ray` sets the sweep colour, `--wb-divider-ray-w` its width (default 40%).
+`.wb-divider` (horizontal) — a single flat **grey** line; it defaults to the neutral ladder and **never
+takes a status hue** (a coloured section break was noise). **Line styles:** `--dotted`, `--dashed`,
+`--long-dash` (dash + gap both longer), `--fade` (dissolves at both ends); the only weight variant is
+`--strong` (ink). `--vertical` (between inline clusters — auto-stretches to the row height), `--label`
+(centred text). `--ray` = a decorative **light-ray that sweeps along** the line on a loop, in **two neutral
+forms only** — grey line + ink streak (default), or ink line + grey-white streak (set `--wb-divider-c:
+var(--wb-neutral-ink); --wb-divider-ray: var(--wb-neutral-weak)`); respects `prefers-reduced-motion`, **not**
+a progress bar. One colour knob `--wb-divider-c` drives line + ticks + ray base; `--wb-divider-ray` the
+sweep colour, `--wb-divider-ray-w` its width (default 40%).
 
 ```html
 <hr class="wb-divider wb-divider--dashed" />
+<hr class="wb-divider wb-divider--long-dash" />
 <hr class="wb-divider wb-divider--fade" />
-<hr class="wb-divider wb-divider--success" />        <!-- tone: only for a meaningful boundary -->
-<hr class="wb-divider--ray" style="--wb-divider-ray:var(--wb-info);--wb-divider-ray-w:55%" />
+<hr class="wb-divider wb-divider--strong" />         <!-- ink emphasis (still neutral) -->
+<hr class="wb-divider--ray" />                        <!-- grey line + ink streak -->
 <div class="wb-divider--label">HOẶC</div>
 <span class="wb-divider--vertical"></span>
 ```
@@ -1175,16 +1297,30 @@ App: **dnd-kit** with `rectSwappingStrategy`; keep the `wb-slotgrid*` classes.
 ## Icons
 
 Icons are an **icon font** (Material Symbols Rounded, `@import`ed in `web-builder.css`) — never
-hand-drawn. Inline: `<span class="wb-ico">expand_more</span>` (the text is a ligature). Sizes
-`--xs|--sm|--lg|--xl`; tune globally via `--wb-ico-size` / `--wb-ico-weight` (heavier = crisper —
-the Config panel drives these). A few components inject their icon via `::before` (accordion, tree
-toggle, close ×) and stay empty in markup; a `<select>` gets its chevron from a `.wb-ico` inside
-`.wb-select-wrap`. Swap `--wb-icon-font` to use a different set (e.g. lucide) in the app.
+hand-drawn. Inline: `<span class="wb-ico">expand_more</span>` (the text is a ligature).
+
+**Size** is one scale — `--xs|--sm|--md|--xl` … the full ladder is `.wb-ico--xs` 16 · `--sm` 18 ·
+`--md` 20 (default) · `--lg` 24 · `--xl` 32 (tokens `--wb-ico-xs…--xl`). Use a step, **never an ad-hoc
+`font-size`**. **Tone** picks from the neutral ladder: `.wb-ico--faint` (xám nhẹ) · `.wb-ico--muted`
+(xám vừa) · `.wb-ico--strong` (xám đậm); default is `currentColor` (inherits the text). Tune size/weight
+globally via `--wb-ico-size` / `--wb-ico-weight` (heavier = crisper — the Config panel drives these).
+
+**Direction icons** are one chevron family (same shape, four ways): `expand_more` (down / open) ·
+`expand_less` (up) · `chevron_left` · `chevron_right`. Use these for every expand/collapse/prev/next —
+don't reach for `keyboard_arrow_*`, `arrow_drop_down`, or a literal `▾`/`›`. A few components inject their
+icon via `::before` (accordion, tree toggle, close ×) and stay empty in markup; a `<select>` gets its
+chevron from a `.wb-ico` inside `.wb-select-wrap`. Swap `--wb-icon-font` to use a different set in the app.
+
+**Close × and check ✓ are one glyph each.** Every dismiss × is the icon-font `close` — via `.wb-close`
+(panels: alert/toast/modal/drawer/popover) or `.wb-tag__x` / `.wb-filter-token__x` (chips), all empty in
+markup (glyph from `::before`). Never type a literal `×`/`✕`. Every ✓ is the icon-font `check` (stepper
+marker; the checkbox tick traces the same shape) — never a literal `✓`.
 
 ```html
 <span class="wb-ico">search</span>
-<span class="wb-ico wb-ico--sm">expand_more</span>
-<button class="wb-close" aria-label="Đóng"></button>   <!-- the × comes from ::before -->
+<span class="wb-ico wb-ico--sm">expand_more</span>            <!-- chevron "v" — also the dropdown caret -->
+<button class="wb-close" aria-label="Đóng"></button>          <!-- panel dismiss ×  (glyph from ::before) -->
+<button class="wb-tag__x" aria-label="Xoá"></button>         <!-- chip dismiss ×  (glyph from ::before) -->
 ```
 
 ## Grid / Layout

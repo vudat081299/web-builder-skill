@@ -41,6 +41,8 @@ a { color: inherit; }
   background: var(--wb-surface);
   padding: 18px 12px 56px;                                  /* tail room so the last item scrolls clear */
   overflow-y: auto; scroll-padding-block-end: 12px;
+  overscroll-behavior: contain;   /* the sidebar's scroll stays put — no chaining to (or
+                                     rubber-band reveal of) the page scrolling behind it */
 }
 /* Theme-aware scrollbars now come from the library primitive `.wb-scrollbars`
    (web-builder.css §27): the sidebar (.doc-side), the whole page (<html>) and the
@@ -376,7 +378,21 @@ a { color: inherit; }
 }
 
 @media (max-width: 900px) {
-  .doc-side { display: none; }
+  /* Sidebar → off-canvas DRAWER: slid off-screen by default, brought in by the topbar
+     toggle (.is-side-open on the shell) over a dim backdrop. Previously this was a hard
+     `display:none`, so the toggle could never reveal it on a phone — now it can. (The
+     desktop --hidden collapse is undone here; the drawer uses transform, not display.) */
+  .doc-side {
+    position: fixed; top: 0; left: 0; height: 100vh; z-index: 60;
+    width: 264px; max-width: 82vw;
+    transform: translateX(-100%); transition: transform .22s ease;
+    box-shadow: var(--wb-shadow-md);
+  }
+  .doc-shell.is-side-hidden .doc-side { display: block; }        /* undo the desktop hide on mobile */
+  .doc-shell.is-side-open .doc-side { transform: translateX(0); }
+  .doc-shell.is-side-open::before {
+    content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(0, 0, 0, .42);
+  }
   .doc-content { padding: 26px 18px 90px; }
   .doc-topbar { padding: 12px 18px; }
 }
@@ -394,7 +410,19 @@ a { color: inherit; }
   font-size: 11px; line-height: 1; padding: 3px 5px; color: var(--wb-fg-subtle);
   background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: 5px;
 }
-@media (max-width: 640px) { .doc-search-trigger__label, .doc-search-trigger__kbd { display: none; } }
+/* Phone topbar: only the essentials fit on one row, so collapse the labels.
+   Search + theme become icon-only, and the "Minimalist UI kit" badge is dropped
+   (no room) — otherwise the title wrapped to two lines and the theme pill spilled
+   off the right edge. */
+@media (max-width: 640px) {
+  .doc-search-trigger__label, .doc-search-trigger__kbd { display: none; }
+  .doc-topbar { gap: 8px; }
+  .doc-topbar h1 { white-space: nowrap; }
+  .doc-topbar .wb-cap { display: none; }
+  .doc-search-trigger { padding: 0; width: 34px; justify-content: center; }
+  .theme-btn { gap: 0; padding: 0; width: 34px; height: 34px; justify-content: center; }
+  .theme-btn #themeLabel { display: none; }
+}
 
 /* Command-palette dialog: anchored near the top, built on the .wb-overlay + .wb-modal
    shell. A search bar, a scrolling list of hits, and a keyboard-hint footer. */

@@ -168,6 +168,42 @@
   </div>
 
   <div class="doc-block">
+    <h4>Token gỡ được — có nút <code>×</code> bên phải</h4>
+    <p class="doc-block__desc">Capsule dạng <b>[ khoá : giá trị × ]</b>: một chip <b>gỡ được</b> cho bộ lọc / lựa chọn đã áp
+    dụng. Xám mặc định (phân loại — tầng 1); chỉ mượn tông <b>mềm</b> khi token là một <b>trạng thái</b>. Nút
+    <code>×</code> là icon-font <code>close</code> (chung một dấu với modal / tag). Bộ đầy đủ + ô tìm kiếm nằm ở
+    trang <a href="#/filterbar">Filter bar</a>.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-cluster">
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Danh mục</span>
+            <span class="wb-filter-token__val">Ăn uống</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc danh mục"></button>
+          </span>
+          <span class="wb-filter-token">
+            <span class="wb-filter-token__key">Số tiền</span>
+            <span class="wb-filter-token__val">200K – 2Tr</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc số tiền"></button>
+          </span>
+          <span class="wb-filter-token wb-filter-token--success">
+            <span class="wb-filter-token__key">Trạng thái</span>
+            <span class="wb-filter-token__val">Đã trả</span>
+            <button class="wb-filter-token__x" aria-label="Bỏ lọc trạng thái"></button>
+          </span>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;span class="wb-filter-token"&gt;
+  &lt;span class="wb-filter-token__key"&gt;Danh mục&lt;/span&gt;
+  &lt;span class="wb-filter-token__val"&gt;Ăn uống&lt;/span&gt;
+  &lt;button class="wb-filter-token__x" aria-label="Bỏ lọc"&gt;&lt;/button&gt;
+&lt;/span&gt;
+&lt;!-- trạng thái → mượn tông mềm --&gt;
+&lt;span class="wb-filter-token wb-filter-token--success"&gt;…&lt;/span&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
     <h4>Xem đồng thời ở Light &amp; Dark</h4>
     <p class="doc-block__desc">Cùng một bộ capsule, render ở cả hai chế độ cạnh nhau — để thấy ngay dải màu ở chế độ còn lại
     mà không cần bật đổi theme. (Neutral <code>--solid</code> cố ý đảo: đen ở light ↔ trắng ở dark; màu semantic giữ tông ở cả hai.)</p>

@@ -7,14 +7,19 @@
 
 <section class="doc-sec">
   <div class="doc-block">
-    <h4>App bar cơ bản</h4>
+    <h4>App bar cơ bản <span class="wb-cap wb-cap--sm wb-cap--outline">responsive</span></h4>
     <p class="doc-block__desc">Thương hiệu bên trái · <code>.wb-nav</code> ở giữa · <code>__spacer</code> đẩy <code>__actions</code> về phải.
-    Trong <code>__actions</code> có nút <b>đổi giao diện sáng/tối</b> (<code>.wb-theme-toggle</code>) — icon tự đổi theo chế độ (thử bấm nó).</p>
-    <div class="demo">
+    Trong <code>__actions</code> có nút <b>đổi giao diện sáng/tối</b> (<code>.wb-theme-toggle</code>). <b>Thu hẹp cửa sổ</b>
+    (hoặc xem trên điện thoại): khi thanh quá hẹp, các link tự <b>gập vào nút ☰</b> — bấm để bung menu thả xuống,
+    không còn chèn đè lên nhau. Bọc <code>.wb-nav</code> thêm <code>.wb-navbar__menu</code> và thêm nút
+    <code>.wb-navbar__toggle</code> có <code>data-navbar-toggle</code>. (Dùng <b>container query</b> — gập theo bề rộng
+    của chính thanh, nên đúng cả trong ô demo hẹp lẫn màn hình nhỏ.)</p>
+    <div class="demo demo--pop">
       <div class="demo__stage">
         <div class="wb-navbar">
+          <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle aria-label="Mở menu" aria-expanded="false"><span class="wb-ico">menu</span></button>
           <a class="wb-navbar__brand" href="#/navbar"><span class="wb-navbar__mark">C</span> Ledger</a>
-          <nav class="wb-nav">
+          <nav class="wb-nav wb-navbar__menu">
             <a class="wb-nav__link is-active" href="#/navbar">Tổng quan</a>
             <a class="wb-nav__link" href="#/navbar">Giao dịch</a>
             <a class="wb-nav__link" href="#/navbar">Ngân sách</a>
@@ -33,8 +38,11 @@
         </div>
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-navbar"&gt;
+  &lt;!-- ☰ hiện khi thanh hẹp, bung .wb-navbar__menu --&gt;
+  &lt;button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon"
+          data-navbar-toggle aria-label="Mở menu"&gt;&lt;span class="wb-ico"&gt;menu&lt;/span&gt;&lt;/button&gt;
   &lt;a class="wb-navbar__brand"&gt;&lt;span class="wb-navbar__mark"&gt;C&lt;/span&gt; Ledger&lt;/a&gt;
-  &lt;nav class="wb-nav"&gt;
+  &lt;nav class="wb-nav wb-navbar__menu"&gt;
     &lt;a class="wb-nav__link is-active"&gt;Tổng quan&lt;/a&gt;
     &lt;a class="wb-nav__link"&gt;Giao dịch&lt;/a&gt;
   &lt;/nav&gt;
@@ -52,6 +60,36 @@
 
 &lt;!-- ghim trên đầu: thêm --sticky --&gt;
 &lt;div class="wb-navbar wb-navbar--sticky"&gt; … &lt;/div&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Bản hẹp / mobile — tự gập vào ☰ <span class="wb-cap wb-cap--sm wb-cap--outline">container query</span></h4>
+    <p class="doc-block__desc">Vẫn <b>y hệt markup</b> ở trên, chỉ đặt trong khung hẹp — thanh tự nhận mình &lt; 640px nên <b>gập các link vào nút ☰</b>.
+    Bấm ☰ để bung menu thả xuống (không đè lên nội dung). Đây chính là dáng thanh trên điện thoại; bạn không cần viết lại gì.</p>
+    <div class="demo demo--pop">
+      <div class="demo__stage">
+        <div style="max-width:360px">
+          <div class="wb-navbar">
+            <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle aria-label="Mở menu" aria-expanded="false"><span class="wb-ico">menu</span></button>
+            <a class="wb-navbar__brand" href="#/navbar"><span class="wb-navbar__mark">C</span> Ledger</a>
+            <nav class="wb-nav wb-navbar__menu">
+              <a class="wb-nav__link is-active" href="#/navbar">Tổng quan</a>
+              <a class="wb-nav__link" href="#/navbar">Giao dịch</a>
+              <a class="wb-nav__link" href="#/navbar">Ngân sách</a>
+              <a class="wb-nav__link" href="#/navbar">Báo cáo</a>
+            </nav>
+            <span class="wb-navbar__spacer"></span>
+            <div class="wb-navbar__actions">
+              <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / Tối">
+                <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+                <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+              </button>
+              <span class="wb-avatar wb-avatar--sm">DV</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

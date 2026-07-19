@@ -45,6 +45,16 @@
   --wb-border:       var(--wb-gray-200);  /* hairline borders          */
   --wb-border-strong:var(--wb-gray-300);
 
+  /* Neutral tone ladder — the DEFAULT ink for single-colour, non-text parts
+     (divider, progress track, muted icon, tick marks, scroll thumb…). Four
+     weights so a page picks BY MEANING and stays consistent, instead of every
+     divider/icon inventing its own grey. Reference these; a custom colour is
+     still fine when a design genuinely needs one. Auto-flips in dark below. */
+  --wb-neutral-weak:   var(--wb-gray-200);  /* xám nhẹ  — quiet line / track / off-state */
+  --wb-neutral:        var(--wb-gray-400);  /* xám vừa  — the default visible grey       */
+  --wb-neutral-strong: var(--wb-gray-600);  /* xám đậm  — emphasis, still not full black */
+  --wb-neutral-ink:    var(--wb-fg);        /* đen      — full ink (gray-900)             */
+
   /* Elevation — soft grey shadows in light mode. */
   --wb-shadow-sm: 0 1px 2px rgba(16, 17, 18, .05), 0 1px 3px rgba(16, 17, 18, .04);
   --wb-shadow-md: 0 2px 4px rgba(16, 17, 18, .05), 0 6px 16px rgba(16, 17, 18, .08);
@@ -104,11 +114,22 @@
 
   --wb-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
                Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  /* Fixed-width face — every glyph the same width, so a templated field's "dd / mm"
+     placeholder lines up in exact character cells (no clipped letters). */
+  --wb-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+               "Liberation Mono", monospace;
 
   /* Icons — a real icon font, not hand-drawn glyphs. Size + weight are single
      knobs (the docs Config panel drives them). A touch heavy = crisp, not thin. */
   --wb-icon-font: "Material Symbols Rounded";
-  --wb-ico-size:   20px;
+  /* Size scale — ONE ladder so icons stop picking ad-hoc px. Use the utilities
+     .wb-ico--xs…--xl (they read these tokens); md is the default. */
+  --wb-ico-xs: 16px;
+  --wb-ico-sm: 18px;
+  --wb-ico-md: 20px;
+  --wb-ico-lg: 24px;
+  --wb-ico-xl: 32px;
+  --wb-ico-size:   var(--wb-ico-md);   /* default icon size (the "md" step) */
   --wb-ico-weight: 600;
   --wb-ico-fill:   0;
 
@@ -144,6 +165,13 @@
   --wb-fg-subtle:    var(--wb-gray-500);
   --wb-border:       #26262b;
   --wb-border-strong:#34343a;
+
+  /* Neutral ladder flips: on dark, "more visible" = lighter. weak→ink go
+     darkest→lightest so the four weights stay monotonic on the dark canvas. */
+  --wb-neutral-weak:   var(--wb-gray-700);
+  --wb-neutral:        var(--wb-gray-500);
+  --wb-neutral-strong: var(--wb-gray-400);
+  /* --wb-neutral-ink inherits --wb-fg (gray-50) automatically */
 
   /* On dark, a black shadow vanishes into the canvas (shadow == background). So
      elevation reads as a soft LIGHT lift — white/grey at low alpha — never
@@ -200,7 +228,8 @@
 .wb-tree__handle::before,
 .wb-grip::before,
 .wb-close::before,
-.wb-tag__x::before {
+.wb-tag__x::before,
+.wb-filter-token__x::before {
   font-family: var(--wb-icon-font);
   font-weight: normal;
   font-style: normal;
@@ -218,10 +247,17 @@
   font-size: var(--wb-ico-size);
   vertical-align: middle; user-select: none;
 }
-.wb-ico--xs { font-size: 16px; }
-.wb-ico--sm { font-size: 18px; }
-.wb-ico--lg { font-size: 24px; }
-.wb-ico--xl { font-size: 32px; }
+/* Size steps — read the --wb-ico-* scale (Config-tunable), never raw px. */
+.wb-ico--xs { font-size: var(--wb-ico-xs); }
+.wb-ico--sm { font-size: var(--wb-ico-sm); }
+.wb-ico--md { font-size: var(--wb-ico-md); }
+.wb-ico--lg { font-size: var(--wb-ico-lg); }
+.wb-ico--xl { font-size: var(--wb-ico-xl); }
+/* Tone steps — the neutral ladder, so a muted icon picks BY MEANING (not a
+   one-off colour). Default icon colour is currentColor (inherits the text). */
+.wb-ico--strong { color: var(--wb-neutral-strong); }
+.wb-ico--muted  { color: var(--wb-neutral); }
+.wb-ico--faint  { color: var(--wb-neutral-weak); }
 /* Spin utility (e.g. a "sync"/"progress_activity" icon). */
 .wb-ico--spin { animation: wb-spin .9s linear infinite; }
 
@@ -550,7 +586,7 @@
    (white-black-grey first: the primary action isn't a brand colour).
    FILL:  (default solid neutral) · --secondary · --outline · --ghost
    TONE:  --danger · --success   (only for meaningful actions: delete, confirm pay)
-   SIZE:  (default) · --sm · --lg     SHAPE: --icon (square) · --block (full width)
+   SIZE:  (default) · --sm · --lg   SHAPE: --icon (square) · --round (pill / circle when +--icon) · --block (full width)
    STATE: :disabled / .is-disabled · .is-loading (add a <span class="wb-spinner">)
    -------------------------------------------------------------------------- */
 .wb-btn {
@@ -602,6 +638,11 @@
 .wb-btn--icon { padding: 9px; }
 .wb-btn--icon.wb-btn--sm { padding: 6px; }
 .wb-btn--icon.wb-btn--lg { padding: 12px; }
+/* Round shape: pill for a text button, a perfect CIRCLE for an --icon button (its box
+   is already square). Placed after --sm/--lg so it wins the border-radius. Pair with
+   --ghost + --icon for the classic "reveal a background chip only on hover" icon button
+   (toolbar / row-action / close), square by default → circle with --round. */
+.wb-btn--round { border-radius: var(--wb-radius-pill); }
 .wb-btn--block { width: 100%; }
 
 .wb-btn:disabled, .wb-btn.is-disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
@@ -748,32 +789,156 @@
 .wb-input-group > :focus + :not(.is-invalid) { border-left-color: var(--wb-gray-500); }
 .dark .wb-input-group > :focus + :not(.is-invalid) { border-left-color: var(--wb-gray-400); }
 
+/* Seamless input — no outline; the field melts into the page (transparent fill).
+   The focus RING still shows so it stays operable. Good inside a card/toolbar where
+   the container already frames it. */
+.wb-input--seamless, .wb-textarea--seamless { background: transparent; border-color: transparent; padding-inline: 6px; }
+.wb-input--seamless:focus, .wb-textarea--seamless:focus { border-color: transparent; }
+
+/* Seamless input-group — ONE outline around the whole row; the addons/buttons carry
+   NO fill and NO divider line, they just sit inside with a little spacing (icon /
+   prefix / suffix / button share the field with the text). */
+.wb-input-group--seamless {
+  align-items: center; gap: 2px; padding: 0 6px;
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius);
+  transition: border-color .13s ease, box-shadow .13s ease;
+}
+.wb-input-group--seamless > .wb-input,
+.wb-input-group--seamless > .wb-input-group__addon,
+.wb-input-group--seamless > .wb-input-group__btn {
+  border: 0; background: transparent; border-radius: var(--wb-radius-sm);
+}
+.wb-input-group--seamless > .wb-input { padding-inline: 4px; }
+/* Affix button melts in too: a compact SQUARE hit area (equal padding), so its hover fill
+   is a tidy rounded-square — never a stretched capsule/ellipse. Ghost (no fill) until hover. */
+.wb-input-group--seamless > .wb-input-group__btn { padding: 6px; line-height: 0; }
+.wb-input-group--seamless > .wb-input-group__btn:hover { background: var(--wb-surface-hover); }
+.wb-input-group--seamless:focus-within { border-color: var(--wb-gray-500); box-shadow: 0 0 0 3px var(--wb-ring); }
+.dark .wb-input-group--seamless:focus-within { border-color: var(--wb-gray-400); }
+.wb-input-group--seamless > .wb-input:focus { box-shadow: none; }   /* group shows focus, not the inner input */
+.wb-input-group--seamless.is-invalid { border-color: var(--wb-danger); }
+
+/* Templated field — the separators are REAL inked characters ("dd/mm/yyyy"),
+   each segment its own tiny input so the unfilled parts show a GREY placeholder
+   while the "/" · ":" · "–" stay inked, tight against the segments (no spaces). Looks
+   like one .wb-input; a tiny driver (app.js) auto-advances segment→segment as each fills. */
+.wb-input-tpl {
+  display: inline-flex; align-items: center; width: auto; max-width: 100%;
+  font-family: var(--wb-font-mono); font-size: 14px; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius); padding: 9px 12px; line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .13s ease, box-shadow .13s ease;
+}
+.wb-input-tpl:focus-within { border-color: var(--wb-gray-500); box-shadow: 0 0 0 3px var(--wb-ring); }
+.dark .wb-input-tpl:focus-within { border-color: var(--wb-gray-400); }
+.wb-input-tpl.is-invalid { border-color: var(--wb-danger); }
+.wb-input-tpl__seg {
+  border: 0; background: transparent; padding: 1px 1px; margin: 0; font: inherit; color: var(--wb-fg);
+  text-align: left; outline: none; -webkit-appearance: none; appearance: none; width: 2.2ch;
+}
+.wb-input-tpl__seg--y { width: 4.2ch; }   /* yyyy */
+.wb-input-tpl__seg::placeholder { color: var(--wb-fg-subtle); }
+.wb-input-tpl__seg:focus { background: var(--wb-surface-hover); border-radius: 4px; }
+.wb-input-tpl__sep { color: var(--wb-fg); padding: 0; user-select: none; }   /* inked separator, tight (no spaces) */
+/* --gap: breathing room on both sides — for a separator BETWEEN two clusters (the "–"
+   in a date-range dd/mm/yyyy – dd/mm/yyyy), where a real space each side reads better
+   than the tight within-date "/" · ":". */
+.wb-input-tpl__sep--gap { padding-inline: 0.55ch; }
+
+/* -----------------------------------------------------------------------------
+   FORMAT TOOLBAR  (rich-text / markdown format bar for a textarea)
+   -----------------------------------------------------------------------------
+   A horizontal row of icon/label buttons in groups (Aa · H1 · H2 · bold · italic ·
+   underline · strike · highlight · colour · clear). A button toggles .is-active
+   (pressed = tier-1 solid neutral); __sep divides groups. Pairs above a .wb-textarea;
+   the behaviour (wrap the selection in markdown tokens) is a tiny driver in app.js. */
+.wb-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 2px;
+  padding: 4px; font-family: var(--wb-font);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border-strong);
+  border-radius: var(--wb-input-radius);
+}
+/* Sit flush on top of a textarea it controls (share the seam). */
+.wb-toolbar--attached { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.wb-toolbar--attached + .wb-textarea,
+.wb-toolbar--attached + .wb-textarea-wrap > .wb-textarea { border-top-left-radius: 0; border-top-right-radius: 0; border-top: 0; }
+.wb-toolbar__group { display: inline-flex; align-items: center; gap: 2px; }
+.wb-toolbar__sep { align-self: stretch; width: var(--wb-bw); margin: 3px 4px; background: var(--wb-neutral-weak); }
+.wb-toolbar__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  min-width: 30px; height: 30px; padding: 0 7px; flex: none;
+  border: 0; border-radius: var(--wb-radius-sm); background: transparent; color: var(--wb-fg-muted);
+  font: inherit; font-size: 14px; line-height: 1; cursor: pointer;
+  transition: background .12s ease, color .12s ease;
+}
+.wb-toolbar__btn--text { font-weight: 700; }                 /* Aa · H1 · H2 label buttons */
+.wb-toolbar__btn .wb-ico { font-size: var(--wb-ico-sm); }
+.wb-toolbar__btn:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-toolbar__btn.is-active { background: var(--wb-fg); color: var(--wb-surface); }   /* pressed = tier-1 solid */
+.wb-toolbar__btn:disabled { opacity: .45; cursor: not-allowed; }
+.wb-toolbar__btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+/* Highlight-colour button — a swatch chip of the current colour under a small caret. */
+.wb-toolbar__swatch { width: 15px; height: 15px; border-radius: 4px; background: var(--wb-hl-color, #fde68a); box-shadow: inset 0 0 0 var(--wb-bw) rgba(0,0,0,.15); }
+
 /* Checkbox & radio — neutral accent, native for accessibility. */
 /* Checkbox & radio — drawn on the native input itself (appearance:none keeps it
    focusable, clickable and form-correct, no extra markup). Border width is a knob
    (--wb-check-bw, so the box can be bolder) and the corner follows the radius tokens,
    so both track the Config panel. Checked = solid ink, which auto-flips on dark. */
 .wb-check, .wb-radio { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; color: var(--wb-fg); cursor: pointer; }
-.wb-check input, .wb-radio input {
+/* .wb-tree__check rides these same rules so a tree checkbox is the ONE unified control
+   size (--wb-check-size), not a tiny native box — see §Tree. */
+.wb-check input, .wb-radio input, .wb-tree__check {
   appearance: none; -webkit-appearance: none; box-sizing: border-box; flex: none; margin: 0; cursor: pointer;
   width: var(--wb-check-size); height: var(--wb-check-size);
   border: var(--wb-check-bw) solid var(--wb-fg); background: var(--wb-surface);
   background-repeat: no-repeat; background-position: center;
   transition: background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
 }
-.wb-check input { border-radius: var(--wb-check-radius); }
+.wb-check input, .wb-tree__check { border-radius: var(--wb-check-radius); }
 .wb-radio input { border-radius: 50%; }
-.wb-check input:checked, .wb-radio input:checked { background-color: var(--wb-fg); border-color: var(--wb-fg); }
-.wb-check input:checked {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+.wb-check input:checked, .wb-radio input:checked, .wb-tree__check:checked { background-color: var(--wb-fg); border-color: var(--wb-fg); }
+.wb-check input:checked, .wb-tree__check:checked {
+  /* Tick traces the Material "check" glyph (same shape stepper/steps use), so a
+     ticked box and a done step read as one checkmark. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19.5 6.5'/%3E%3C/svg%3E");
   background-size: 76% 76%;
 }
 .wb-radio input:checked { background-image: radial-gradient(circle at center, var(--wb-surface) 0 30%, transparent 34%); }
-.wb-check input:focus-visible, .wb-radio input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
-.wb-check input:disabled, .wb-radio input:disabled { opacity: .45; cursor: not-allowed; }
+.wb-check input:focus-visible, .wb-radio input:focus-visible, .wb-tree__check:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+.wb-check input:disabled, .wb-radio input:disabled, .wb-tree__check:disabled { opacity: .45; cursor: not-allowed; }
 /* Dark: box turns white, so the tick flips to dark ink (SVG colour is baked in). */
-.dark .wb-check input:checked {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+.dark .wb-check input:checked, .dark .wb-tree__check:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19.5 6.5'/%3E%3C/svg%3E");
+}
+
+/* Radio — the circle can read three ways when selected (all auto-flip in dark):
+   • (default)  ink-filled circle with a white centre dot
+   • --ring     classic: white interior + ink outline + ink centre dot (white gap)
+   • --solid    fully filled ink circle, no dot. */
+.wb-radio--ring input:checked {
+  background-color: var(--wb-surface);
+  background-image: radial-gradient(circle at center, var(--wb-fg) 0 30%, transparent 34%);
+}
+.wb-radio--solid input:checked { background-image: none; }
+
+/* Locked (--locked) — same idiom as the switch: keeps the real checked value but
+   can't be changed; a small lock sits BESIDE the control and shakes when a change
+   is attempted (wired by the delegated handler in app.js). Distinct from :disabled
+   (which reads inert). Works on .wb-check and .wb-radio. */
+.wb-check__lock {
+  flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px;
+  font-family: var(--wb-icon-font); font-size: 15px; font-weight: normal; line-height: 1;
+  text-transform: none;   /* keep the "lock" ligature intact under an uppercase ancestor */
+  color: var(--wb-fg-subtle); opacity: .5; cursor: not-allowed;
+  transition: opacity .15s ease, color .15s ease, transform .12s ease;
+}
+.wb-check--locked, .wb-radio--locked { cursor: default; }
+.wb-check--locked:hover .wb-check__lock, .wb-radio--locked:hover .wb-check__lock { opacity: 1; }
+.wb-check--locked.is-denied .wb-check__lock, .wb-radio--locked.is-denied .wb-check__lock {
+  opacity: 1; color: var(--wb-fg); animation: wb-lock-shake .4s ease;
 }
 
 /* Switch / toggle. */
@@ -895,6 +1060,10 @@
 .wb-dropdown__menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 50; display: none; }
 .wb-dropdown__menu--right { left: auto; right: 0; }
 .wb-dropdown.is-open > .wb-dropdown__menu { display: block; }
+/* Trigger caret — the chevron "v" (Material expand_more); flips up when open.
+   One family with select/accordion/collapse — never a literal ▾. */
+.wb-dropdown__caret { transition: transform .2s ease; margin-left: 2px; margin-right: -2px; }
+.wb-dropdown.is-open .wb-dropdown__caret { transform: rotate(180deg); }
 
 .wb-menu {
   min-width: 208px; padding: 6px; font-family: var(--wb-font);
@@ -919,6 +1088,16 @@
 .wb-menu__kbd { margin-left: auto; font-size: 11px; color: var(--wb-fg-subtle);
   font-family: "SF Mono", ui-monospace, monospace; }
 .wb-menu__sep { height: 1px; background: var(--wb-border); margin: 6px 4px; }
+/* Expandable row — a menu item that opens/closes a nested sub-list. Toggle
+   .is-open on the wrapping .wb-menu__group; the "v" caret (expand_more) rotates and
+   the sub grows with the 0fr→1fr grid trick (same as .wb-collapse — smooth, no JS
+   height maths). Clicking it toggles the sub instead of closing the dropdown. */
+.wb-menu__caret { margin-left: auto; color: var(--wb-fg-subtle); transition: transform .2s ease; }
+.wb-menu__group.is-open > .wb-menu__item--expand .wb-menu__caret { transform: rotate(180deg); }
+.wb-menu__sub { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .22s ease; }
+.wb-menu__group.is-open > .wb-menu__sub { grid-template-rows: 1fr; }
+.wb-menu__sub-inner { overflow: hidden; min-height: 0; }
+.wb-menu__sub .wb-menu__item { padding-left: 34px; }   /* indent nested items under their parent */
 
 /* -----------------------------------------------------------------------------
    9. ALERT / BANNER
@@ -937,11 +1116,18 @@
 .wb-alert__body  { min-width: 0; flex: 1 1 auto; }   /* grows so a close × is pushed to the far right */
 .wb-alert__title { font-weight: 650; margin: 0 0 2px; }
 .wb-alert__msg   { color: var(--wb-fg-muted); margin: 0; }
+/* Title only (no description): centre the icon against the single line instead of
+   top-aligning it — top-align only reads right when a second line follows. */
+.wb-alert:not(:has(.wb-alert__msg)) { align-items: center; }
+.wb-alert:not(:has(.wb-alert__msg)) .wb-alert__title { margin-bottom: 0; }
 /* Tone = soft background + an outline mixed toward the tone (calmer than full saturation). */
 .wb-alert--info    { border-color: color-mix(in srgb, var(--wb-info) 55%, var(--wb-border));    background: var(--wb-info-soft); }
 .wb-alert--success { border-color: color-mix(in srgb, var(--wb-success) 55%, var(--wb-border)); background: var(--wb-success-soft); }
 .wb-alert--warning { border-color: color-mix(in srgb, var(--wb-warning) 55%, var(--wb-border)); background: var(--wb-warning-soft); }
 .wb-alert--danger  { border-color: color-mix(in srgb, var(--wb-danger) 55%, var(--wb-border));  background: var(--wb-danger-soft); }
+/* No outline — just the soft fill (a flat banner). Rides on any tone; must come
+   after the tone rules so it wins the border on a combined class. */
+.wb-alert--plain { border-color: transparent; }
 .wb-alert--info    .wb-alert__icon { color: var(--wb-info-text); }
 .wb-alert--success .wb-alert__icon { color: var(--wb-success-text); }
 .wb-alert--warning .wb-alert__icon { color: var(--wb-warning-text); }
@@ -1005,6 +1191,10 @@
 .wb-toast__body  { min-width: 0; flex: 1 1 auto; }   /* grows so the close × sits top-right */
 .wb-toast__title { font-weight: 650; margin: 0 0 1px; }
 .wb-toast__msg   { color: var(--wb-fg-muted); margin: 0; }
+/* Title only: centre the disc against the single line (see .wb-alert above). */
+.wb-toast:not(:has(.wb-toast__msg)) { align-items: center; }
+.wb-toast:not(:has(.wb-toast__msg)) .wb-toast__icon  { margin-top: 0; }
+.wb-toast:not(:has(.wb-toast__msg)) .wb-toast__title { margin-bottom: 0; }
 .wb-toast--success .wb-toast__icon { background: var(--wb-success-soft); color: var(--wb-success-text); }
 .wb-toast--warning .wb-toast__icon { background: var(--wb-warning-soft); color: var(--wb-warning-text); }
 .wb-toast--danger  .wb-toast__icon { background: var(--wb-danger-soft);  color: var(--wb-danger-text); }
@@ -1120,14 +1310,14 @@
 /* -----------------------------------------------------------------------------
    17. PROGRESS  (bar — also used for budget "đã chi / ngân sách")
    -------------------------------------------------------------------------- */
-.wb-progress { height: 8px; border-radius: var(--wb-radius-pill); overflow: hidden; background: var(--wb-gray-200); }
-.dark .wb-progress { background: var(--wb-gray-700); }
-.wb-progress__bar { height: 100%; border-radius: var(--wb-radius-pill); background: var(--wb-gray-900); transition: width .3s ease; }
-/* :where() so the dark neutral bar doesn't out-rank the --success/--warning/--danger tones. */
-.dark :where(.wb-progress__bar) { background: var(--wb-gray-100); }
+/* Track + fill default to the neutral ladder (auto-flips in dark, so no
+   separate .dark rules needed). Status variants ride on top — tier-2 solid. */
+.wb-progress { height: 8px; border-radius: var(--wb-radius-pill); overflow: hidden; background: var(--wb-neutral-weak); }
+.wb-progress__bar { height: 100%; border-radius: var(--wb-radius-pill); background: var(--wb-neutral-ink); transition: width .3s ease; }
 .wb-progress__bar--success { background: var(--wb-success); }
 .wb-progress__bar--warning { background: var(--wb-warning); }
 .wb-progress__bar--danger  { background: var(--wb-danger); }
+.wb-progress__bar--info    { background: var(--wb-info); }
 .wb-progress--lg { height: 12px; }
 /* Loading — a determinate bar that is still working: the __bar shows the real %, and a
    skeleton-like sheen sweeps ACROSS THE FILLED part only (0 → the bar's width, never the empty
@@ -1174,32 +1364,36 @@
 /* -----------------------------------------------------------------------------
    19. DIVIDER
    -------------------------------------------------------------------------- */
-/* One colour knob (--wb-divider-c) drives the line, label ticks, and ray base, so tone
-   modifiers work on every shape. */
-.wb-divider { --wb-divider-c: var(--wb-border);
+/* One colour knob (--wb-divider-c) drives the line, label ticks, and ray base.
+   A divider is a single flat grey — it defaults to the NEUTRAL LADDER and never
+   spends a hue (a status colour on a section break was noise, so it's gone);
+   the only weight variant is --strong (ink) for a firmer break. */
+.wb-divider { --wb-divider-c: var(--wb-neutral-weak);
   border: 0; border-top: var(--wb-bw) solid var(--wb-divider-c); margin: 16px 0; }
-.wb-divider--dashed { border-top-style: dashed; }
 .wb-divider--dotted { border-top-style: dotted; }
-
-/* Tone — a divider spends colour only to mark a real boundary (status). Colour ladder tiers 2–3;
-   a plain section break stays neutral grey. */
-.wb-divider--success { --wb-divider-c: var(--wb-success); }
-.wb-divider--danger  { --wb-divider-c: var(--wb-danger); }
-.wb-divider--warning { --wb-divider-c: var(--wb-warning); }
-.wb-divider--info    { --wb-divider-c: var(--wb-info); }
-.wb-divider--strong  { --wb-divider-c: var(--wb-fg); }
+.wb-divider--dashed { border-top-style: dashed; }
+/* Long-dash — dash + gap both longer than the browser's default dashed border.
+   A border can't tune dash length, so paint the line as a repeating gradient. */
+.wb-divider--long-dash {
+  border-top: 0; height: var(--wb-bw);
+  background: repeating-linear-gradient(90deg, var(--wb-divider-c) 0 14px, transparent 14px 24px);
+}
+.wb-divider--strong  { --wb-divider-c: var(--wb-neutral-ink); }   /* ink emphasis (still neutral) */
 
 /* Fade — the rule dissolves at both ends (a soft section break). */
 .wb-divider--fade { border-top-color: transparent;
   border-image: linear-gradient(90deg, transparent, var(--wb-divider-c), transparent) 1; }
 
-.wb-divider--vertical { border-top: 0; border-left: var(--wb-bw) solid var(--wb-divider-c);
+/* --vertical / --label are used STANDALONE (no .wb-divider base), so --wb-divider-c
+   is unset there — fall back to the neutral ladder or the shorthand is invalid and
+   the line vanishes (this is why the vertical rule never showed). */
+.wb-divider--vertical { border-top: 0; border-left: var(--wb-bw) solid var(--wb-divider-c, var(--wb-neutral-weak));
   width: 0; align-self: stretch; margin: 0 12px; }
 
 .wb-divider--label { display: flex; align-items: center; gap: 12px; border: 0; margin: 18px 0;
   font-size: 12px; color: var(--wb-fg-subtle); font-family: var(--wb-font); }
 .wb-divider--label::before, .wb-divider--label::after { content: ""; flex: 1;
-  border-top: var(--wb-bw) solid var(--wb-divider-c); }
+  border-top: var(--wb-bw) solid var(--wb-divider-c, var(--wb-neutral-weak)); }
 
 /* Ray — a highlight sweeps ALONG the rule. Decoration only: the full line stays visible and the
    segment just travels across on a loop — it does NOT fill/empty like a progress bar. Override the
@@ -1289,20 +1483,20 @@
 .wb-tree__ico   { flex: none; font-size: 14px; line-height: 1; }
 .wb-tree__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wb-tree__meta  { margin-left: auto; color: var(--wb-fg-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
-.wb-tree__check { margin: 0 2px 0 0; accent-color: var(--wb-gray-900); }
-.dark .wb-tree__check { accent-color: var(--wb-gray-100); }
+.wb-tree__check { margin: 0 2px 0 0; }   /* box style + size come from the unified checkbox rules (§10) */
 
 /* Row actions (add / edit / …). Two modes:
      • default        reveal on hover or keyboard focus (keeps the tree calm)
      • --actions-shown always visible (touch, or a management screen where
                        add/edit is the primary job) — put it on .wb-tree. */
-.wb-tree__actions { display: inline-flex; gap: 2px; opacity: 0; transition: opacity .12s ease; }
+/* Hidden with display:none (not opacity) so the actions take NO space when absent — the
+   __meta/label then flows to the far right, and only shifts left when the button appears. */
+.wb-tree__actions { display: none; gap: 2px; margin-left: auto; }
 .wb-tree__row:hover .wb-tree__actions,
 .wb-tree__row:focus-within .wb-tree__actions,
-.wb-tree--actions-shown .wb-tree__actions { opacity: 1; }
-/* when __meta is present it already pushed right; actions sit after it. If no __meta,
-   push actions right: */
-.wb-tree__row > .wb-tree__actions:not(:last-child) { margin-left: auto; }
+.wb-tree--actions-shown .wb-tree__actions { display: inline-flex; }
+/* If a __meta already pushed itself right, the actions sit snug after it (no double auto). */
+.wb-tree__meta ~ .wb-tree__actions { margin-left: 0; }
 
 /* --- VARIANT: chevron on the RIGHT (toggle sits at the end of the row) ------
    Expanded points up, collapsed points down — a "disclosure on the right" look. */
@@ -1681,6 +1875,23 @@
 .wb-range--sm { height: 3px; }
 .wb-range--sm::-webkit-slider-thumb { width: 14px; height: 14px; }
 .wb-range--sm::-moz-range-thumb     { width: 14px; height: 14px; }
+
+/* Slider WITH TICK MARKS — a wrapper that lays evenly-spaced marks (and optional
+   labels) under the track. The rows are inset by half the thumb (9px) so each mark
+   sits under the thumb's travel; pair the input with a matching `step` so the handle
+   snaps mark-to-mark. Marks are the neutral ladder (single-colour part). */
+.wb-range-ticks .wb-range { margin-bottom: 0; }
+.wb-range-ticks__marks,
+.wb-range-ticks__labels { display: flex; justify-content: space-between; padding-inline: 9px; }
+.wb-range-ticks__marks { margin-top: -1px; }
+.wb-range-ticks__marks > span { width: var(--wb-bw); height: 7px; background: var(--wb-neutral); border-radius: var(--wb-bw); }
+.wb-range-ticks__labels { margin-top: 5px; font-size: 11px; color: var(--wb-fg-muted); font-variant-numeric: tabular-nums; }
+/* Each label is a zero-width anchor sitting on its mark; how its text lands on that point
+   is a knob. Default = centred on the tick. `--labels-left`  = text sits to the LEFT of
+   the tick (right-aligned to it); `--labels-right` = text sits to the RIGHT (left-aligned). */
+.wb-range-ticks__labels > span { display: flex; justify-content: center; width: 0; white-space: nowrap; }
+.wb-range-ticks--labels-left  .wb-range-ticks__labels > span { justify-content: flex-end; }
+.wb-range-ticks--labels-right .wb-range-ticks__labels > span { justify-content: flex-start; }
 
 /* Dual-handle — pick a MIN + MAX band (the standard price / amount filter). Two native
    range inputs are stacked so each thumb keeps native keyboard support; the coloured fill
@@ -2104,8 +2315,31 @@
   background: var(--wb-surface);
   border-bottom: var(--wb-bw) solid var(--wb-border);
   font-family: var(--wb-font);
+  position: relative;            /* anchor the collapsed menu dropdown */
+  container-type: inline-size;   /* collapse by OWN width, not the viewport */
 }
 .wb-navbar--sticky { position: sticky; top: 0; z-index: 30; }
+/* Hamburger toggle — hidden until the bar is too narrow for inline links. */
+.wb-navbar__toggle { display: none; }
+/* When the bar itself gets narrow: hide the inline links, show the hamburger, and
+   turn the nav into a dropdown panel under the bar (toggle .is-open on it). This is
+   the standard app-bar collapse — no overlap, links tuck into a menu. */
+@container (max-width: 640px) {
+  .wb-navbar__toggle { display: inline-flex; order: -1; }   /* leads the row */
+  /* Links tuck into a COMPACT dropdown pinned under the ☰ (top-left), sized to its own
+     content — not a full-width sheet. `.wb-navbar .` raises specificity above `.wb-nav`
+     (align-items:center) so the links stretch + left-align like a normal menu. */
+  .wb-navbar .wb-navbar__menu {
+    position: absolute; top: calc(100% + 4px); left: 14px; right: auto; z-index: 40;
+    flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px; padding: 6px;
+    min-width: 176px; width: max-content; max-width: calc(100% - 28px);
+    background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+    border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
+  }
+  .wb-navbar .wb-navbar__menu:not(.is-open) { display: none; }
+  .wb-navbar__menu .wb-nav__link { justify-content: flex-start; padding: 8px 12px; border-radius: var(--wb-radius-sm); }
+  .wb-navbar__menu .wb-nav__link.is-active { background: var(--wb-surface-hover); }
+}
 .wb-navbar__brand {
   display: inline-flex; align-items: center; gap: 9px; flex: none;
   font-size: 15px; font-weight: 700; letter-spacing: -.01em;
@@ -2149,7 +2383,7 @@
 .wb-nav__link:hover      { color: var(--wb-fg); background: var(--wb-surface-hover); }
 .wb-nav__link.is-active  { color: var(--wb-fg); background: var(--wb-surface-hover); }
 .wb-nav__link.is-disabled { color: var(--wb-fg-subtle); pointer-events: none; }
-.wb-nav__link .wb-ico  { font-size: 19px; color: inherit; flex: none; }
+.wb-nav__link .wb-ico  { font-size: var(--wb-ico-md); color: inherit; flex: none; }
 /* Underline (page tabs) — the highlight becomes a bottom rule instead of a fill. */
 .wb-nav--underline { gap: 6px; border-bottom: var(--wb-bw) solid var(--wb-border); }
 .wb-nav--underline .wb-nav__link {
@@ -2241,7 +2475,7 @@
   width: 18px; height: 18px; flex: none; padding: 0; border: 0; border-radius: 50%;
   background: none; color: var(--wb-fg-subtle); cursor: pointer;
 }
-.wb-filter-token__x::before { content: "\00d7"; font-size: 15px; line-height: 1; }   /* × */
+.wb-filter-token__x::before { content: "\e5cd"; font-size: 14px; line-height: 1; }   /* Material "close" — one × across the whole system */
 .wb-filter-token__x:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
 
 /* Soft status tones — use ONLY when the token stands for a status filter. */
@@ -2596,8 +2830,11 @@
   border: 1.5px dashed transparent; border-radius: var(--wb-radius-sm);
 }
 .wb-slotgrid__cell:not(:has(*)) { border-color: var(--wb-border-strong); background: var(--wb-surface-2); }
-.wb-slotgrid__cell.is-over { border-color: var(--wb-fg-subtle); background: var(--wb-surface-2); }
-.wb-slotgrid__cell.is-over .wb-slotgrid__item { outline: 2px dashed var(--wb-fg-subtle); outline-offset: 2px; }  /* swap hint */
+/* Drag-over. EMPTY cell → just darken its own dashed slot (one line, stronger). FILLED cell
+   (a swap target) → restyle the card's OWN border to dashed+strong rather than stacking a
+   second outline on top of it — so you never see two frames at once. */
+.wb-slotgrid__cell.is-over:not(:has(*)) { border-color: var(--wb-fg-subtle); background: var(--wb-surface-2); }
+.wb-slotgrid__cell.is-over .wb-slotgrid__item { border-color: var(--wb-fg-subtle); border-style: dashed; }
 /* The draggable card fills its slot. */
 .wb-slotgrid__item {
   flex: 1 1 auto; min-width: 0;
@@ -2608,3 +2845,100 @@
 }
 .wb-slotgrid__item:active { cursor: grabbing; }
 .wb-slotgrid__item.is-dragging { opacity: .4; }
+
+/* -----------------------------------------------------------------------------
+   49. KEYCAP  (.wb-kbd — a small keyboard-key chip for shortcut hints)
+   -----------------------------------------------------------------------------
+   A monospace keycap with a slightly heavier bottom edge (the "3-D key" cue).
+   Use inline in menus, tooltips, the pager — anywhere you show a shortcut.
+   -------------------------------------------------------------------------- */
+.wb-kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  font-family: var(--wb-font-mono); font-size: 11px; font-weight: 600; line-height: 1;
+  color: var(--wb-fg-muted); background: var(--wb-surface-2);
+  border: var(--wb-bw) solid var(--wb-border); border-bottom-width: 2px;
+  border-radius: 5px;
+}
+
+/* -----------------------------------------------------------------------------
+   50. PAGER  (.wb-pager — prev / next page navigation for the FOOT of a page)
+   -----------------------------------------------------------------------------
+   Two cards: previous on the left, next on the right (each shows a direction
+   label + the target page's title). Add `data-pager` and the app.js driver binds
+   [ ] (and ← →) to the __link--prev / --next hrefs — only when not typing in a
+   field. Collapses to one column when the pager itself gets narrow.
+   -------------------------------------------------------------------------- */
+.wb-pager {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-top: 44px; padding-top: 22px; border-top: var(--wb-bw) solid var(--wb-border);
+  font-family: var(--wb-font); container-type: inline-size;
+}
+.wb-pager__link {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px; min-width: 0;
+  padding: 14px 16px; text-decoration: none; color: var(--wb-fg);
+  background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius);
+  transition: border-color .13s ease, background .13s ease, box-shadow .13s ease;
+}
+.wb-pager__link--prev { grid-column: 1; }
+.wb-pager__link--next { grid-column: 2; }
+.wb-pager__link:hover { border-color: var(--wb-border-strong); background: var(--wb-surface-hover); box-shadow: var(--wb-shadow-sm); }
+.wb-pager__link:focus-visible { outline: none; border-color: var(--wb-border-strong); box-shadow: 0 0 0 3px var(--wb-ring); }
+/* A plain chevron at the OUTER edge of the card (prev → far left, next → far right) —
+   no box, no border; space-between pushes the text to the centre-facing edge so the
+   card still reads full end-to-end instead of leaving one big empty gap. */
+.wb-pager__arrow {
+  flex: none; color: var(--wb-fg-subtle); font-size: var(--wb-ico-lg);
+  transition: color .13s ease;
+}
+.wb-pager__link:hover .wb-pager__arrow { color: var(--wb-fg); }
+.wb-pager__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.wb-pager__link--prev .wb-pager__text { align-items: flex-end; text-align: right; }
+.wb-pager__dir { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; color: var(--wb-fg-muted); }
+.wb-pager__title { font-weight: 600; font-size: 15px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-pager__meta { font-size: 12px; color: var(--wb-fg-subtle); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@container (max-width: 460px) {
+  .wb-pager { grid-template-columns: 1fr; }
+  .wb-pager__link--prev, .wb-pager__link--next { grid-column: 1; }
+}
+
+/* -----------------------------------------------------------------------------
+   51. FOOTER  (.wb-footer — the site footer: brand + link columns + bottom bar)
+   -----------------------------------------------------------------------------
+   A full-width band (border-top hairline, surface fill); `__inner` centres the
+   content. Links are muted → ink on hover (tier-1). `--slim` drops the columns
+   for a one-line footer. No brand colour — house greyscale.
+   -------------------------------------------------------------------------- */
+.wb-footer {
+  border-top: var(--wb-bw) solid var(--wb-border);
+  background: var(--wb-surface); color: var(--wb-fg);
+  font-family: var(--wb-font); font-size: 14px;
+}
+.wb-footer__inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 26px; }
+.wb-footer__top { display: flex; flex-wrap: wrap; gap: 30px 56px; justify-content: space-between; }
+.wb-footer__brand { display: flex; align-items: flex-start; gap: 12px; max-width: 320px; }
+.wb-footer__mark {
+  width: 30px; height: 30px; border-radius: var(--wb-radius-sm); flex: none;
+  display: grid; place-items: center; font-size: 15px; font-weight: 700;
+  background: var(--wb-gray-900); color: var(--wb-white);
+}
+.dark .wb-footer__mark { background: var(--wb-gray-100); color: var(--wb-gray-900); }
+.wb-footer__name { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.wb-footer__tagline { color: var(--wb-fg-muted); font-size: 13px; margin: 4px 0 0; line-height: 1.5; }
+.wb-footer__cols { display: flex; flex-wrap: wrap; gap: 26px 52px; }
+.wb-footer__col { display: flex; flex-direction: column; gap: 9px; min-width: 118px; }
+.wb-footer__title {
+  font-size: 12px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--wb-fg-muted); margin: 0 0 3px;
+}
+.wb-footer__link { color: var(--wb-fg-muted); text-decoration: none; font-size: 13.5px; transition: color .12s ease; }
+.wb-footer__link:hover { color: var(--wb-fg); }
+.wb-footer__bottom {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+  margin-top: 30px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border);
+}
+.wb-footer__copy { color: var(--wb-fg-subtle); font-size: 12.5px; }
+.wb-footer__social { display: flex; align-items: center; gap: 2px; }
+.wb-footer--slim .wb-footer__inner { padding: 18px 24px; }
+.wb-footer--slim .wb-footer__bottom { margin-top: 0; padding-top: 0; border-top: 0; }

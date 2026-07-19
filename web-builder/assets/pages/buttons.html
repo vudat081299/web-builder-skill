@@ -41,6 +41,7 @@
           <button class="wb-btn"><span class="wb-ico wb-ico--sm">add</span> Thêm giao dịch</button>
           <button class="wb-btn wb-btn--secondary wb-btn--icon" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
           <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Xoá"><span class="wb-ico wb-ico--sm">delete</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Đóng"><span class="wb-ico wb-ico--sm">close</span></button>
         </div>
         <div class="cap-row"><span class="cap-row__label">State</span>
           <button class="wb-btn is-loading"><span class="wb-spinner"></span> Đang lưu…</button>
@@ -49,8 +50,50 @@
       </div>
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;button class="wb-btn wb-btn--sm"&gt;Small&lt;/button&gt;
 &lt;button class="wb-btn wb-btn--icon" aria-label="Sửa"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;edit&lt;/span&gt;&lt;/button&gt;
+&lt;!-- nút × không viền (kiểu như trong popover) --&gt;
+&lt;button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Đóng"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;close&lt;/span&gt;&lt;/button&gt;
 &lt;button class="wb-btn is-loading"&gt;&lt;span class="wb-spinner"&gt;&lt;/span&gt; Đang lưu…&lt;/button&gt;
 &lt;button class="wb-btn wb-btn--secondary" disabled&gt;Disabled&lt;/button&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h4>Nút icon “ẩn nền” — nền chỉ hiện khi hover (<code>--ghost --icon</code>, thêm <code>--round</code> để tròn)</h4>
+    <p class="doc-block__desc">Lúc nghỉ chỉ có mỗi icon (không nền, không viền); <b>rê chuột vào mới hiện nền</b> chip xám. Mặc định là
+    <b>vuông bo góc</b> — thêm <code>wb-btn--round</code> để thành <b>tròn xoe</b>. Hợp cho thanh công cụ, ô hành động trong bảng,
+    nút đóng. <code>--round</code> cũng bo <b>pill</b> cho nút chữ. Nút chỉ-icon <b>bắt buộc</b> có <code>aria-label</code>.</p>
+    <div class="demo demo--plain">
+      <div class="demo__stage">
+        <div class="cap-row"><span class="cap-row__label">Vuông</span>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Nhân bản"><span class="wb-ico wb-ico--sm">content_copy</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thêm nữa"><span class="wb-ico wb-ico--sm">more_horiz</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Đóng"><span class="wb-ico wb-ico--sm">close</span></button>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Tròn</span>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Nhân bản"><span class="wb-ico wb-ico--sm">content_copy</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Thêm nữa"><span class="wb-ico wb-ico--sm">more_horiz</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Đóng"><span class="wb-ico wb-ico--sm">close</span></button>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Kích thước</span>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round wb-btn--sm" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round wb-btn--lg" aria-label="Sửa"><span class="wb-ico">edit</span></button>
+        </div>
+        <div class="cap-row"><span class="cap-row__label">Pill (chữ)</span>
+          <button class="wb-btn wb-btn--round">Theo dõi</button>
+          <button class="wb-btn wb-btn--outline wb-btn--round">Bộ lọc</button>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;!-- ẩn nền, chỉ hiện khi hover · vuông bo góc --&gt;
+&lt;button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Sửa"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;edit&lt;/span&gt;&lt;/button&gt;
+
+&lt;!-- thêm --round để tròn xoe --&gt;
+&lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-btn--round" aria-label="Đóng"&gt;&lt;span class="wb-ico wb-ico--sm"&gt;close&lt;/span&gt;&lt;/button&gt;
+
+&lt;!-- --round cũng bo pill cho nút chữ --&gt;
+&lt;button class="wb-btn wb-btn--round"&gt;Theo dõi&lt;/button&gt;</code></pre></div>
     </div>
   </div>
 

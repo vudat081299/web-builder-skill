@@ -17,7 +17,7 @@ const NAV = [
     { id: "color",      label: "Triết lý màu" },
     { id: "tokens",     label: "Design tokens" },
     { id: "typography", label: "Typography" },
-    { id: "fonts",      label: "Fonts" },
+    { id: "fonts",      label: "Fonts & icon" },
     { id: "border",     label: "Border & bo góc" },
     { id: "config",     label: "Config / Tweak" },
   ]},
@@ -35,6 +35,7 @@ const NAV = [
     { id: "input",    label: "Text input" },
     { id: "select",   label: "Select" },
     { id: "textarea", label: "Textarea" },
+    { id: "richtext", label: "Rich text (format bar)" },
     { id: "choice",   label: "Checkbox & Radio" },
     { id: "switch",   label: "Switch" },
     { id: "range",    label: "Range / Slider" },
@@ -77,6 +78,7 @@ const NAV = [
     { id: "steps",      label: "Steps / Stepper" },
     { id: "breadcrumb", label: "Breadcrumb" },
     { id: "pagination", label: "Pagination" },
+    { id: "footer",     label: "Footer & chuyển trang" },
   ]},
   { group: "Đóng/mở (Disclosure)", items: [
     { id: "accordion",  label: "Accordion" },
@@ -92,6 +94,75 @@ const NAV = [
 const ROUTES = {};
 NAV.forEach((g) => g.items.forEach((it) => (ROUTES[it.id] = it)));
 const DEFAULT_ROUTE = "overview";
+
+/* ---- Pager (prev / next) — dogfoods the .wb-pager primitive at the FOOT of every
+   page, in NAV order. The [ and ] shortcuts jump between pages (guarded so typing in
+   a field never triggers them). This IS the app.js driver an app would write. ------ */
+const PAGE_ORDER = NAV.flatMap((g) => g.items).filter((it) => !it.coming).map((it) => it.id);
+const PAGE_GROUP = {};
+NAV.forEach((g) => g.items.forEach((it) => (PAGE_GROUP[it.id] = g.group)));
+let pagerPrev = null, pagerNext = null;
+function renderPager(id) {
+  const i = PAGE_ORDER.indexOf(id);
+  const prev = i > 0 ? ROUTES[PAGE_ORDER[i - 1]] : null;
+  const next = i >= 0 && i < PAGE_ORDER.length - 1 ? ROUTES[PAGE_ORDER[i + 1]] : null;
+  pagerPrev = prev ? prev.id : null;
+  pagerNext = next ? next.id : null;
+  if (!prev && !next) return "";
+  const prevHtml = prev ? `<a class="wb-pager__link wb-pager__link--prev" data-pager-prev href="#/${prev.id}">
+      <span class="wb-ico wb-pager__arrow">chevron_left</span>
+      <span class="wb-pager__text"><span class="wb-pager__dir">Trang trước <kbd class="wb-kbd">[</kbd></span>
+      <span class="wb-pager__title">${prev.label}</span>
+      <span class="wb-pager__meta">${PAGE_GROUP[prev.id] || ""}</span></span></a>` : "";
+  const nextHtml = next ? `<a class="wb-pager__link wb-pager__link--next" data-pager-next href="#/${next.id}">
+      <span class="wb-pager__text"><span class="wb-pager__dir"><kbd class="wb-kbd">]</kbd> Trang sau</span>
+      <span class="wb-pager__title">${next.label}</span>
+      <span class="wb-pager__meta">${PAGE_GROUP[next.id] || ""}</span></span>
+      <span class="wb-ico wb-pager__arrow">chevron_right</span></a>` : "";
+  return `<nav class="wb-pager" data-pager aria-label="Chuyển trang">${prevHtml}${nextHtml}</nav>`;
+}
+function renderFooter() {
+  const REPO = "https://github.com/vudat081299/web-builder-skill";
+  return `<footer class="wb-footer">
+    <div class="wb-footer__inner">
+      <div class="wb-footer__top">
+        <div class="wb-footer__brand">
+          <span class="wb-footer__mark">W</span>
+          <div><div class="wb-footer__name">Web Builder</div>
+          <p class="wb-footer__tagline">Bộ component CSS tối giản, zero-build — một file drop-in, prefix wb-*, có dark mode, ghép được mọi stack. Là một Claude Code skill.</p></div>
+        </div>
+        <nav class="wb-footer__cols" aria-label="Liên kết footer">
+          <div class="wb-footer__col"><h4 class="wb-footer__title">Bắt đầu</h4>
+            <a class="wb-footer__link" href="#/overview">Tổng quan</a>
+            <a class="wb-footer__link" href="#/color">Triết lý màu</a>
+            <a class="wb-footer__link" href="#/tokens">Design tokens</a></div>
+          <div class="wb-footer__col"><h4 class="wb-footer__title">Dựng &amp; tuỳ biến</h4>
+            <a class="wb-footer__link" href="#/layout">Grid / Layout</a>
+            <a class="wb-footer__link" href="#/fonts">Fonts &amp; icon</a>
+            <a class="wb-footer__link" href="#/config">Config / Tweak</a></div>
+          <div class="wb-footer__col"><h4 class="wb-footer__title">Dự án</h4>
+            <a class="wb-footer__link" href="${REPO}" target="_blank" rel="noreferrer">Mã nguồn</a>
+            <a class="wb-footer__link" href="${REPO}#readme" target="_blank" rel="noreferrer">README</a>
+            <a class="wb-footer__link" href="${REPO}/issues" target="_blank" rel="noreferrer">Báo lỗi</a></div>
+        </nav>
+      </div>
+      <div class="wb-footer__bottom">
+        <span class="wb-footer__copy">© 2026 Web Builder · Minimalist UI kit · v0.6</span>
+        <div class="wb-footer__social">
+          <a class="wb-btn wb-btn--ghost wb-btn--icon" href="${REPO}" target="_blank" rel="noreferrer" aria-label="GitHub — mã nguồn dự án">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>`;
+}
+function onPagerKey(e) {
+  if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+  if (e.target && e.target.closest && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+  if ((e.key === "[") && pagerPrev) { e.preventDefault(); location.hash = "#/" + pagerPrev; }
+  else if ((e.key === "]") && pagerNext) { e.preventDefault(); location.hash = "#/" + pagerNext; }
+}
 
 /* ---- Sidebar tree — heading + dimmer items. The heading is a button that
    collapses its group; the caret sits on the RIGHT (no leading triangle). ---- */
@@ -127,6 +198,7 @@ async function loadRoute() {
     const res = await fetch("pages/" + id + ".html", { cache: "no-store" });
     if (!res.ok) throw new Error(res.status);
     view.innerHTML = await res.text();
+    view.insertAdjacentHTML("beforeend", renderPager(id));   // dogfood the pager at the foot of every page
   } catch (err) {
     view.innerHTML =
       '<div class="doc-coming"><h3>Không tải được trang</h3>' +
@@ -155,6 +227,7 @@ function initPage(root) {
   root.querySelectorAll("[data-mask]").forEach(initMask);
   root.querySelectorAll("[data-reveal]").forEach(initReveal);
   root.querySelectorAll("[data-picker-out]").forEach(initPickerField);
+  root.querySelectorAll("[data-formatbar]").forEach(initFormatbar);
 }
 
 /* ---- Range filter — dual slider ⇄ min/max inputs ⇄ plain-language summary -----
@@ -482,6 +555,47 @@ function initReveal(btn) {
   });
 }
 
+/* ---- Format toolbar (.wb-toolbar) — inserts markdown tokens into the paired
+   .wb-textarea. `data-formatbar="<textarea id>"` (or the next .wb-textarea sibling).
+   Each button carries data-cmd; wrap-tokens surround the selection, headings prefix
+   the line, clear strips tokens. Docs-only; in an app wire a real markdown editor. */
+function initFormatbar(bar) {
+  const ta = document.getElementById(bar.dataset.formatbar) ||
+    (bar.nextElementSibling && (bar.nextElementSibling.matches(".wb-textarea") ? bar.nextElementSibling
+      : bar.nextElementSibling.querySelector && bar.nextElementSibling.querySelector(".wb-textarea")));
+  if (!ta) return;
+  const WRAP = { bold: ["**", "**"], italic: ["*", "*"], underline: ["<u>", "</u>"], strike: ["~~", "~~"], highlight: ["==", "=="] };
+  const PREFIX = { h1: "# ", h2: "## ", normal: "" };
+  const wrap = (a, b) => {
+    const s = ta.selectionStart, e = ta.selectionEnd, v = ta.value;
+    ta.value = v.slice(0, s) + a + v.slice(s, e) + b + v.slice(e);
+    ta.focus(); ta.setSelectionRange(s + a.length, e + a.length);
+  };
+  const linePrefix = (p) => {
+    const s = ta.selectionStart, v = ta.value, ls = v.lastIndexOf("\n", s - 1) + 1;
+    const rest = v.slice(ls).replace(/^#{1,6}\s*/, "");
+    ta.value = v.slice(0, ls) + p + rest; ta.focus();
+  };
+  const clearFmt = () => {
+    const s = ta.selectionStart, e = ta.selectionEnd, v = ta.value, hasSel = e > s;
+    const target = hasSel ? v.slice(s, e) : v;
+    const out = target.replace(/\*\*|__|~~|==|`|\*|_|<\/?u>/g, "").replace(/^#{1,6}\s*/gm, "");
+    ta.value = hasSel ? v.slice(0, s) + out + v.slice(e) : out; ta.focus();
+  };
+  bar.addEventListener("click", (e) => {
+    const btn = e.target.closest(".wb-toolbar__btn"); if (!btn) return;
+    const cmd = btn.dataset.cmd; if (!cmd) return;
+    if (WRAP[cmd]) wrap(WRAP[cmd][0], WRAP[cmd][1]);
+    else if (cmd in PREFIX) linePrefix(PREFIX[cmd]);
+    else if (cmd === "clear") clearFmt();
+  });
+  bar.querySelectorAll(".wb-swatch").forEach((sw) => sw.addEventListener("click", () => {
+    const c = (getComputedStyle(sw).getPropertyValue("--wb-swatch-color") || sw.style.background || "").trim();
+    if (c) bar.style.setProperty("--wb-hl-color", c);
+    const dd = sw.closest(".wb-dropdown"); if (dd) dd.classList.remove("is-open");
+  }));
+}
+
 /* ---- Sortable: flat drag-to-reorder for a list OR grid, with a dashed slot -
    The placeholder (.wb-sortable__ph) shows the empty target while dragging.
    In the app use dnd-kit; keep these classes for the look. --------------- */
@@ -743,7 +857,8 @@ function renderSwatches(el) {
     ["--wb-surface", "surface"], ["--wb-canvas", "canvas"],
     ["--wb-fg", "fg"], ["--wb-fg-muted", "fg-muted"],
     ["--wb-border", "border"], ["--wb-gray-900", "gray-900"],
-    ["--wb-gray-500", "gray-500"], ["--wb-gray-200", "gray-200"],
+    ["--wb-neutral-weak", "neutral-weak"], ["--wb-neutral", "neutral"],
+    ["--wb-neutral-strong", "neutral-strong"], ["--wb-neutral-ink", "neutral-ink"],
     ["--wb-success", "success"], ["--wb-danger", "danger"],
     ["--wb-warning", "warning"], ["--wb-info", "info"],
   ];
@@ -785,6 +900,45 @@ document.addEventListener("click", (e) => {
   });
 });
 
+/* ---- Templated segmented field (.wb-input-tpl) — keep digits only, auto-advance to
+   the next segment when one fills, and jump back on Backspace in an empty segment.
+   The " / " · " : " · " – " separators are real inked spans between the inputs. ---- */
+function tplSegs(seg) { return [...seg.closest(".wb-input-tpl").querySelectorAll(".wb-input-tpl__seg")]; }
+document.addEventListener("input", (e) => {
+  const seg = e.target.closest && e.target.closest(".wb-input-tpl__seg");
+  if (!seg) return;
+  seg.value = seg.value.replace(/\D/g, "").slice(0, seg.maxLength);
+  if (seg.value.length >= seg.maxLength) {
+    const segs = tplSegs(seg);
+    const next = segs[segs.indexOf(seg) + 1];
+    if (next) { next.focus(); next.select && next.select(); }
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Backspace") return;
+  const seg = e.target.closest && e.target.closest(".wb-input-tpl__seg");
+  if (!seg || seg.value) return;
+  const segs = tplSegs(seg);
+  const prev = segs[segs.indexOf(seg) - 1];
+  if (prev) { e.preventDefault(); prev.focus(); prev.setSelectionRange(prev.value.length, prev.value.length); }
+});
+/* Tap the field on a separator / the padding (not a specific segment) → route focus to
+   the FIRST segment when the whole field is empty, else the LAST non-empty one (caret at
+   its end), so a click lands where you'd resume instead of on dead space. Clicking a
+   specific segment is left alone. */
+document.addEventListener("mousedown", (e) => {
+  const field = e.target.closest && e.target.closest(".wb-input-tpl");
+  if (!field || (e.target.closest && e.target.closest(".wb-input-tpl__seg"))) return;
+  const segs = [...field.querySelectorAll(".wb-input-tpl__seg")];
+  if (!segs.length) return;
+  e.preventDefault();                                   // don't blur onto the dead padding
+  let target = segs[0];                                 // all empty → first
+  for (let i = segs.length - 1; i >= 0; i--) { if (segs[i].value) { target = segs[i]; break; } }
+  target.focus();
+  const end = target.value.length;
+  target.setSelectionRange && target.setSelectionRange(end, end);
+});
+
 /* ---- Interactive demos (delegated, so injected pages just work) ----------- */
 document.addEventListener("click", (e) => {
   /* BOC: collapse/expand a sidebar group (heading button, caret on the right). */
@@ -794,22 +948,37 @@ document.addEventListener("click", (e) => {
     groupTog.setAttribute("aria-expanded", String(!collapsed));
     return;
   }
-  /* BOC: hide / show the whole sidebar; the panel icon follows the state. */
+  /* Sidebar toggle. On DESKTOP it collapses the panel (.is-side-hidden). On a small
+     screen the panel is an off-canvas drawer, so the toggle OPENS it (.is-side-open)
+     over a backdrop instead — otherwise a phone could never reveal the menu. */
   const sideTog = e.target.closest("[data-side-toggle]");
   if (sideTog) {
-    const hidden = document.querySelector(".doc-shell").classList.toggle("is-side-hidden");
+    const shell = document.querySelector(".doc-shell");
     const ico = sideTog.querySelector(".wb-ico");
-    if (ico) ico.textContent = hidden ? "menu" : "menu_open";
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      const open = shell.classList.toggle("is-side-open");
+      if (ico) ico.textContent = open ? "menu_open" : "menu";
+    } else {
+      const hidden = shell.classList.toggle("is-side-hidden");
+      if (ico) ico.textContent = hidden ? "menu" : "menu_open";
+    }
     return;
+  }
+  /* Close the mobile drawer when a nav link is picked or the backdrop is tapped. */
+  const shellOpen = document.querySelector(".doc-shell.is-side-open");
+  if (shellOpen && (e.target.closest(".doc-tree__link") || !e.target.closest(".doc-side"))) {
+    shellOpen.classList.remove("is-side-open");
+    const stIco = document.querySelector("[data-side-toggle] .wb-ico");
+    if (stIco) stIco.textContent = "menu";
   }
 
   /* Config: open the tweak drawer from an in-page button. */
   const cfgOpen = e.target.closest("[data-config-open]");
   if (cfgOpen) { document.getElementById("configDrawer").classList.add("is-open"); return; }
 
-  /* Locked switch: block the flip and shake the lock ("can't change this"), then let it
-     settle. The input stays enabled, so we cancel the toggle here. */
-  const lockedSw = e.target.closest(".wb-switch--locked");
+  /* Locked switch / checkbox / radio: block the change and shake the lock ("can't change
+     this"), then let it settle. The input stays enabled, so we cancel the toggle here. */
+  const lockedSw = e.target.closest(".wb-switch--locked, .wb-check--locked, .wb-radio--locked");
   if (lockedSw) {
     e.preventDefault();                 // cancel the checkbox toggle
     lockedSw.classList.remove("is-denied");
@@ -823,6 +992,25 @@ document.addEventListener("click", (e) => {
   /* Tree: expand / collapse a node (works for every tree, draggable or not). */
   const treeTog = e.target.closest(".wb-tree__toggle");
   if (treeTog) { treeTog.closest(".wb-tree__node").classList.toggle("is-collapsed"); return; }
+
+  /* Expandable menu row: toggle its nested sub-list open/closed. Handled BEFORE the
+     dropdown-close below so the dropdown stays open while the sub expands. */
+  const menuExp = e.target.closest(".wb-menu__item--expand");
+  if (menuExp) {
+    const grp = menuExp.closest(".wb-menu__group");
+    if (grp) { grp.classList.toggle("is-open"); menuExp.setAttribute("aria-expanded", String(grp.classList.contains("is-open"))); return; }
+  }
+
+  /* Responsive app-bar: the hamburger toggles the collapsed nav dropdown; picking a
+     link inside it closes the menu again. */
+  const nbTog = e.target.closest("[data-navbar-toggle]");
+  if (nbTog) {
+    const menu = nbTog.closest(".wb-navbar") && nbTog.closest(".wb-navbar").querySelector(".wb-navbar__menu");
+    if (menu) { nbTog.setAttribute("aria-expanded", String(menu.classList.toggle("is-open"))); }
+    return;
+  }
+  const nbLink = e.target.closest(".wb-navbar__menu .wb-nav__link");
+  if (nbLink) { const m = nbLink.closest(".wb-navbar__menu"); if (m) m.classList.remove("is-open"); }
 
   /* Dropdown: toggle nearest .wb-dropdown; close others. */
   const ddToggle = e.target.closest("[data-dd-toggle]");
@@ -1305,6 +1493,10 @@ renderNav();
 applyTheme(themeMode());
 applyThemeLabel();
 initConfig();
+/* Site footer (dogfoods .wb-footer) rendered once; [ / ] jump prev/next page. */
+const docFooterEl = document.getElementById("docfooter");
+if (docFooterEl) docFooterEl.innerHTML = renderFooter();
+document.addEventListener("keydown", onPagerKey);
 document.getElementById("themeBtn").addEventListener("click", cycleTheme);
 /* Any .wb-theme-toggle inside a demo (e.g. the navbar's) flips light ⇄ dark. */
 document.addEventListener("click", (e) => {
