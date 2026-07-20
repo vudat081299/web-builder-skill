@@ -1,6 +1,6 @@
 <div class="doc-page-head">
   <p class="doc-eyebrow">Nền tảng</p>
-  <h2>Nguyên tắc thiết kế (§1 → §23)</h2>
+  <h2>Nguyên tắc thiết kế (§1 → §24)</h2>
   <p>Những quyết định thẩm mỹ đã <b>chốt sẵn</b>, để không phải review lại trên từng trang. Mỗi nguyên tắc mang
   một số hiệu <b>§N</b> — bất cứ đâu trong repo nhắc "§N" là trỏ về đúng mục ở đây. Đây là <b>bản đầy đủ, đọc
   ngay trên site</b> (không phải bản tóm tắt): mỗi § là một mục mở/gập bằng <a href="#/accordion">accordion</a>,
@@ -439,7 +439,7 @@
         "đọc bản đầy đủ ở <code>X.md</code>" / "roster đầy đủ ở <code>X.md</code>" như một <i>thứ thay cho nội
         dung</i> — đó là bẫy docs-thiếu (chính cái từng làm bản đồ §N của overview thành một teaser trỏ về file này).
         Lo trang dài? Đó là việc của primitive ẩn/hiện: bỏ nội dung đầy đủ vào <code>&lt;details&gt;</code>/accordion
-        hoặc một trang riêng và link <b>in-site</b> — như §1–§23 giờ nằm đầy đủ (gập được) ở chính trang này, còn
+        hoặc một trang riêng và link <b>in-site</b> — như §1–§24 giờ nằm đầy đủ (gập được) ở chính trang này, còn
         overview chỉ giữ index gọn trỏ tới. Link sang một <b>trang in-site khác</b> là điều hướng, không phải
         deferral; đẩy người đọc ra một file reference thô để lấy nội dung mà site đã nhận phụ trách mới là anti-pattern.</p>
         <p>Vẫn được phép <b>nêu tên</b> một <code>.md</code> như bản song song cho AI ("cùng luật, cho AI, ở
@@ -451,6 +451,50 @@
         index); CHECK 13 buộc mọi trade-off <code>T#</code> ở README được mirror lên trang riêng
         <a href="#/decisions">decisions</a> (cùng pattern, một thể hiện thứ hai); và một advisory cảnh báo trang
         nào đẩy phần "đầy đủ" ra một <code>.md</code>. Xem <a href="#/tooling">Tooling</a>.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§24 · Góc lồng nhau phải đồng tâm — bán kính trong = bán kính ngoài − gap</summary>
+      <div class="wb-accordion__body">
+        <p>Khi một element bo góc nằm <b>bên trong</b> một element bo góc khác, hai góc nên <b>chung một tâm</b> để
+        hai đường cong song song và khe hở nhìn <b>đều</b> quanh viền. Luật:</p>
+        <p class="doc-block__desc" style="font-size:14px"><b>bán kính trong = bán kính ngoài − gap</b> &nbsp;(gap =
+        padding/khoảng hở giữa hai mép tại đúng góc đó).</p>
+        <p>Để bán kính trong <i>bằng</i> ngoài thì góc trong <b>phình</b> ra — cong quá gắt so với chỗ nó ngồi. Chạy
+        cả hai chiều: ngoài 12px + padding 8px → trong <code>12 − 8 = 4px</code>; một ô trong bán kính 8px cần chừa
+        4px quanh nó → ngoài <code>8 + 4 = 12px</code> (đúng nút <b>W</b> ở docs: mark 8px, gap 4px → nút cần 12px,
+        không phải 6px).</p>
+        <p><b>Áp dụng khi — và khi bỏ qua.</b> Đây là quy tắc <b>có điều kiện</b>, không phải "child nào cũng chép
+        parent". Chỉ áp khi góc child thật sự <i>cặp</i> với góc parent: (a) child <b>có góc bo nhìn thấy</b>;
+        (b) <b>nằm sát một góc parent</b> với <b>gap nhỏ, đều</b> ở hai cạnh gặp nhau; (c) <b>nằm trong</b> khung bo;
+        (d) bán kính child là <b>trang trí</b>, cùng kiểu góc với parent. <b>Bỏ qua</b> khi:</p>
+        <ul>
+          <li><b>Bán kính ngữ nghĩa</b> — pill (<code>--wb-radius-pill</code>, = height/2) hay tròn (avatar, 50%).
+          Bán kính do <b>hình</b> quyết định, ép concentric là <b>phá hình</b> → giữ nguyên (capsule, tag, avatar được miễn).</li>
+          <li><b>Xa góc parent</b> — child canh giữa, padding lớn, row giữa list. Hai góc không cặp nhau → cho child
+          bán kính riêng hợp lý.</li>
+          <li><b>Full-bleed (gap = 0)</b> — media dán sát mép card: <code>ngoài − 0 = ngoài</code> → <b>bằng đúng</b>
+          parent (ca suy biến, không phải "trừ gap").</li>
+          <li><b>Chỉ chạm 1 cạnh</b> — child full-width inset trục kia (thanh, row): góc phía mép theo parent (hoặc
+          vuông giữa list), góc còn lại không phải của parent → xét <b>từng góc</b>, không một bán kính chung.</li>
+          <li><b>Cố ý tràn / để vuông</b> — child nhô khỏi khung, hoặc góc trong giữ vuông để tương phản. Không phải ca concentric.</li>
+        </ul>
+        <p class="doc-block__desc" style="margin:0 0 6px">Quy tắc nhớ: bán kính <b>suy ra</b> (chọn cho đẹp) thì
+        theo công thức; bán kính <b>ngữ nghĩa</b> (pill/tròn, do hình) thì miễn. Khi đã đủ điều kiện, cơ chế:</p>
+        <ul>
+          <li><b>Là gap, không phải chiều cao.</b> Cái quyết định là khoảng inset, <b>từng góc</b> — góc trên-trái
+          dùng gap trên + trái, có thể khác phải/dưới. Con canh giữa dọc thì gap dọc = <code>(h_ngoài − h_trong)/2</code>;
+          dạng theo chiều cao <code>r = R − (h_ngoài − h_trong)/2</code> chỉ đúng khi inset ngang bằng đúng nó.</li>
+          <li><b>Chặn ở 0.</b> Nếu <code>ngoài − gap ≤ 0</code> (padding lớn hơn bán kính ngoài) thì góc trong
+          <b>vuông</b> (bán kính <code>0</code>) — không âm, và không "kế thừa bán kính ngoài".</li>
+          <li><b>Suy ra, đừng canh mắt.</b> Bằng token: <code>border-radius: calc(var(--wb-radius) - var(--gap))</code>
+          ở element trong — đổi token bán kính hay padding thì cặp góc vẫn tự đồng tâm.</li>
+        </ul>
+        <p>Đây là mặt "góc" của §5 (elevation &amp; bo góc) và §18 (token, không magic number): bán kính trong là giá
+        trị <b>suy ra</b> — viết <code>ngoài − gap</code>, đừng đặt một hằng số thứ hai canh tay rồi lệch khi chỉnh
+        lại bán kính/padding. (Native đang tới — iOS "concentric corners", CSS <code>corner-shape</code> — nhưng khi
+        chưa phổ biến thì cứ tính.)</p>
       </div>
     </details>
 

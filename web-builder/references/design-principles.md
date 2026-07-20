@@ -385,7 +385,7 @@ So a docs-site page must be **self-contained for the topic it covers**. Never wr
 `X.md`" / "the complete roster is in `X.md`" as a *substitute for content* — that is the incomplete-docs trap
 (the one that once left the overview's §-map a teaser pointing at this file). If length is the worry, that is
 exactly what disclosure primitives are for: put the full content in a `<details>` / accordion or a dedicated
-page and link **in-site** — as the §1–§23 rendering now lives on `pages/principles.html` (full, collapsible)
+page and link **in-site** — as the §1–§24 rendering now lives on `pages/principles.html` (full, collapsible)
 with the overview keeping only a compact §-index that links to it. Cross-linking to another **in-site page** is
 navigation, not deferral; sending a human to a raw reference file for content the site chose to cover is the
 anti-pattern.
@@ -399,3 +399,50 @@ complete on its own topic? Yes → the pointer was context. No → you deferred 
 `validate-sync.sh` backs this: CHECK 11 requires the full §1…§N rendering on `pages/principles.html` (not just
 the index); CHECK 13 requires every README trade-off `T#` to be mirrored on the dedicated `pages/decisions.html`
 (the same pattern, a second instance); and an advisory flags any page that defers completeness to a `.md`.
+
+## 24. Nested corners are concentric — inner radius = outer radius − gap
+
+When a rounded element sits **inside** another rounded element, their corners should share the **same centre**,
+so the two curves stay parallel and the gap between them looks even the whole way around. The rule:
+
+> **inner radius = outer radius − gap**  (gap = the padding/inset between the two edges at that corner).
+
+Give the inner element the *same* radius as the outer and its corner visibly **bulges** — the curve is too
+tight for where it sits. Worked both directions: a 12px outer with 8px of padding wants a `12 − 8 = 4px` inner
+radius; and an inner tile with an 8px radius that must nest with 4px of space around it wants a `8 + 4 = 12px`
+outer (exactly the docs' W-brand button — an 8px mark, 4px gap → the button needs 12px, not the 6px it had).
+
+**When it applies — and when to skip.** This is a **conditional** rule, not "every child copies its parent". Apply
+it only when the child's corner genuinely *pairs* with the parent's: (a) the child has a **visible rounded corner**;
+(b) it sits **near a parent corner** with a **small, even gap** on the two sides meeting there; (c) it's **nested**
+inside the frame; and (d) its radius is **decorative** (chosen for looks), same corner style as the parent. **Skip
+it** when:
+
+- **Semantic radius** — a **pill** (`--wb-radius-pill`, = height/2) or a **circle** (avatar, 50%). The radius is set
+  by the *shape*, not the parent; shrinking it to be concentric destroys the shape. Leave it — capsules, tags,
+  round avatars are exempt.
+- **Far from the corner** — a centred child, generous padding, a mid-list row. The two corners never pair up, so no
+  bulge is visible; give the child whatever radius suits it on its own.
+- **Full-bleed (gap = 0)** — media flush to a card edge: `outer − 0 = outer`, so it **matches** the parent radius
+  exactly (a degenerate case, not "shrink by the gap").
+- **Touches one edge only** — a full-width child inset on the other axis (a bar, a row): its edge corners follow the
+  parent (or go square mid-list), the other corners aren't the parent's — reason **per corner**, not one radius.
+- **Deliberate overflow / square-by-intent** — a child that pokes past the frame, or a square inner kept for
+  contrast. Not a concentric case.
+
+Rule of thumb: a **derived** radius (chosen for harmony) follows the formula; a **semantic** one (pill / circle,
+dictated by shape) is exempt. Then the mechanics:
+
+- **It's the gap, not the height.** The inset is what matters, **per corner** — the top-left corner uses the
+  top + left gap, which may differ from the right/bottom. A vertically-centred child has a vertical gap of
+  `(h_outer − h_inner) / 2`; the tidy height form `r = R − (h_outer − h_inner)/2` only holds when the
+  horizontal inset happens to equal that. Don't reach for the height difference when the two paddings differ.
+- **Clamp at 0.** If `outer − gap ≤ 0` (the padding is larger than the outer radius), the inner corner is
+  **square** (radius `0`) — never a negative value, and never "inherit the outer radius".
+- **Derive it, don't eyeball it.** With tokens: `border-radius: calc(var(--wb-radius) - var(--gap))` on the
+  inner element keeps the pair concentric automatically when either the radius token or the padding changes.
+
+This is the corner face of §5 (elevation & rounding) and §18 (token, not magic number): the inner radius is a
+**derived** value — express it as `outer − gap`, not a second hand-picked constant that silently drifts when
+the outer radius or the padding is re-tuned. (Native help is arriving — iOS "concentric corners", and CSS
+`corner-shape` — but until it's ubiquitous, compute it.)
