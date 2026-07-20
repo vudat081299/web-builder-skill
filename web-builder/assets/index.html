@@ -27,42 +27,46 @@
 <body>
   <div class="doc-shell">
 
-    <!-- ============================ SIDEBAR (tree) ======================= -->
-    <aside class="doc-side wb-scrollbars">
-      <div class="doc-brand">
-        <div class="doc-brand__mark">W</div>
-        <div>
-          <div class="doc-brand__name">Web Builder</div>
-          <div class="doc-brand__ver">v0.6 · design system</div>
-        </div>
+    <!-- ===================== TOPBAR (full-width, on top) ================= -->
+    <!-- Brand doubles as the sidebar toggle: click the W to collapse/expand the
+         sidebar. The topbar spans the whole width, so the sidebar never eats it. -->
+    <header class="doc-topbar">
+      <button class="doc-brand" data-side-toggle aria-label="Web Builder — ẩn/hiện thanh bên" aria-expanded="true">
+        <span class="doc-brand__mark">W</span>
+        <span class="doc-brand__text">
+          <span class="doc-brand__name">Web Builder</span>
+          <span class="doc-brand__ver">v0.6 · design system</span>
+        </span>
+      </button>
+      <span class="wb-cap wb-cap--outline wb-cap--sm doc-topbar__cap">Minimalist UI kit</span>
+      <div class="spacer"></div>
+      <button class="doc-search-trigger" id="searchBtn" aria-label="Tìm kiếm" title="Tìm kiếm — Ctrl/⌘K">
+        <span class="wb-ico wb-ico--sm">search</span>
+        <span class="doc-search-trigger__label">Tìm kiếm</span>
+        <kbd class="doc-search-trigger__kbd">⌘K</kbd>
+      </button>
+      <button class="doc-icon-btn" id="configBtn" aria-label="Tinh chỉnh (Config)" title="Tinh chỉnh">
+        <span class="wb-ico">tune</span>
+      </button>
+      <button class="theme-btn" id="themeBtn" title="Giao diện: Tự động → Sáng → Tối" aria-label="Đổi giao diện">
+        <span id="themeIcon">◐</span> <span id="themeLabel">Tự động</span>
+      </button>
+    </header>
+
+    <!-- ================= BODY: sidebar (left) + main (right) ============= -->
+    <div class="doc-body">
+      <!-- Sidebar: section switcher (dropdown) on top, then the section's tree. -->
+      <aside class="doc-side wb-scrollbars">
+        <div class="doc-secswitch-wrap" id="secswitch"><!-- section switcher, rendered by app.js --></div>
+        <nav class="doc-tree" id="nav"><!-- rendered by app.js per section --></nav>
+      </aside>
+
+      <div class="doc-main">
+        <!-- Each page (pages/<id>.html) is loaded here by the router. -->
+        <main class="doc-content" id="view"></main>
+        <!-- Site footer (dogfoods .wb-footer), rendered once by app.js. -->
+        <div id="docfooter"></div>
       </div>
-      <nav class="doc-tree" id="nav"><!-- rendered by app.js from NAV --></nav>
-    </aside>
-
-    <!-- ============================= MAIN ================================ -->
-    <div class="doc-main">
-      <header class="doc-topbar">
-        <button class="doc-side-toggle" data-side-toggle aria-label="Ẩn/hiện menu"><span class="wb-ico">menu_open</span></button>
-        <h1>Web Builder</h1>
-        <span class="wb-cap wb-cap--outline wb-cap--sm">Minimalist UI kit</span>
-        <div class="spacer"></div>
-        <button class="doc-search-trigger" id="searchBtn" aria-label="Tìm kiếm" title="Tìm kiếm — Ctrl/⌘K">
-          <span class="wb-ico wb-ico--sm">search</span>
-          <span class="doc-search-trigger__label">Tìm kiếm</span>
-          <kbd class="doc-search-trigger__kbd">⌘K</kbd>
-        </button>
-        <button class="doc-icon-btn" id="configBtn" aria-label="Tinh chỉnh (Config)" title="Tinh chỉnh">
-          <span class="wb-ico">tune</span>
-        </button>
-        <button class="theme-btn" id="themeBtn" title="Giao diện: Tự động → Sáng → Tối" aria-label="Đổi giao diện">
-          <span id="themeIcon">◐</span> <span id="themeLabel">Tự động</span>
-        </button>
-      </header>
-
-      <!-- Each page (pages/<id>.html) is loaded here by the router. -->
-      <main class="doc-content" id="view"></main>
-      <!-- Site footer (dogfoods .wb-footer), rendered once by app.js. -->
-      <div id="docfooter"></div>
     </div>
 
   </div>

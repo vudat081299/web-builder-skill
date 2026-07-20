@@ -4,8 +4,8 @@
     {
       "name": "web-builder-docs",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["/Users/vudat081299/Documents/github/web-builder-skill/web-builder/assets/serve.py", "8777"],
-      "cwd": "/Users/vudat081299/Documents/github/web-builder-skill/web-builder/assets",
+      "runtimeArgs": ["serve.py", "8777"],
+      "cwd": "web-builder/assets",
       "port": 8777
     }
   ]

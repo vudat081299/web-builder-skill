@@ -23,7 +23,7 @@ leaves the shipped skill better and coherent.
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **59 pages**, light/dark, browsable (incl. `#/principles` rendering §1–23 in full, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css`, the one file the real app consumes. |
+| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **63 pages**, light/dark, browsable (incl. `#/principles` rendering §1–24 in full, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css`, the one file the real app consumes. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`web-builder.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
@@ -34,12 +34,12 @@ leaves the shipped skill better and coherent.
 - `references/design-principles.md` — the colour ladder, token discipline, dogfooding, layout stance, and every convention, numbered.
 - `references/integration.md` — how the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example).
 - `references/bootstrap-comparison.md` — coverage vs Bootstrap 5.3 (what we have / skip / do differently), for "do we need component X?" calls.
-- `references/docs-site.md` — how the docs **site** is built (SPA shell + `app.js` NAV/router + `docs.css` chrome, the page-grammar skeleton, the Config/search/dual-preview features), so the skill can rebuild the docs. Docs are instrumentation and **never ship**.
+- `references/docs-site.md` — how the docs **site** is built (SPA shell + `app.js` `SECTIONS`/router + `docs.css` chrome, the page-grammar skeleton, the Config/search/dual-preview features), so the skill can rebuild the docs. Docs are instrumentation and **never ship**.
 
 **2 · Docs** — the living gallery in `web-builder/assets/`:
 - `web-builder.css` — **the library** (design tokens + all `wb-*` components). **The only file that ships to the app.**
 - `index.html` + `app.js` + `docs.css` — the docs **shell** (hash router, sidebar tree, theme toggle, config drawer). Docs chrome — **never ships**.
-- `pages/<id>.html` — one small, markup-only page per component/foundation (one per `NAV` route — kept in parity; see the self-check below).
+- `pages/<id>.html` — one small, markup-only page per component/foundation (one per `SECTIONS` route — kept in parity; see the self-check below).
 - `serve.py` — a `no-store` dev server so a normal reload shows edits.
 
 **3 · Code documentation** — no separate manual needed: every component page renders its own copy-paste
@@ -68,11 +68,13 @@ A component is **one change across six places** — if they drift, the skill sta
 2. **Demo page** — create `web-builder/assets/pages/<id>.html`. Markup only (no `<html>`/shell). Copy the
    `doc-page-head` → `doc-sec` → `doc-block` → `demo` / `demo__code` structure from an existing page, and
    use the library's own layout utilities (`.wb-cluster` / `.wb-stack` / `.wb-grid`), not inline flex.
-3. **Nav** — add `{ id: "<id>", label: "…" }` to the right group in the `NAV` array in
-   `web-builder/assets/app.js`. `NAV` is the single source of truth for the sidebar **and** the router.
-   Groups are by user intent (11 in order): *Nền tảng · Bố cục & tiện ích · Hành động · Nhập liệu · Bộ chọn
-   · Hiển thị dữ liệu · Phản hồi · Lớp phủ · Điều hướng · Đóng/mở · Cấu trúc* (charts lives under *Hiển thị
-   dữ liệu*, not its own group).
+3. **Nav** — add `{ id: "<id>", label: "…" }` to the right **section** in the `SECTIONS` model in
+   `web-builder/assets/app.js` (the single source of truth for the section switcher, the sidebar **and** the
+   router). Three sections: **Thiết kế** (foundations) · **Thành phần** (components) · **Dự án & Skill**
+   (meta). A new *component* goes under the right intent `group` in the `components` section (10, in order):
+   *Bố cục & tiện ích · Hành động · Nhập liệu · Bộ chọn · Hiển thị dữ liệu · Phản hồi · Lớp phủ · Điều hướng
+   · Đóng/mở · Cấu trúc* (charts lives under *Hiển thị dữ liệu*, not its own group); a foundation/meta page
+   goes in the flat `items` of the `design` / `project` section.
 4. **Catalog** — add a section + a "Quick decision guide" row to `web-builder/references/components-catalog.md`.
 5. **Skill** — update `web-builder/SKILL.md`, the AI's first read: add the component to the right per-intent
    scope group (*Nền tảng · … · Cấu trúc*), or note a new capability on a family already listed. Miss it and
@@ -98,7 +100,7 @@ bash .claude/hooks/validate-sync.sh    # exit 0 = OK · exit 2 + a "BLOCK ·" re
 ```
 
 It validates **both halves**. Docs site: routes == pages · pages are markup-only (no `<style>`) · `app.js`
-parses. Shipped skill: `SKILL.md` frontmatter + trigger length · `SKILL.md` scope names every `NAV` group ·
+parses. Shipped skill: `SKILL.md` frontmatter + trigger length · `SKILL.md` scope names every component `group` ·
 every `references/*.md` exists · the catalog never documents a `wb-*` class the CSS lacks · `web-builder.css`
 braces balance · every **"§N"** cited anywhere resolves to a real design principle, the overview page indexes
 them all, **and** `pages/principles.html` renders every §N in full · every README trade-off **`T#`** is mirrored
@@ -127,7 +129,7 @@ White-black-grey first; colour only for real status/meaning; **tokens over magic
 equivalent); on dark, shadows flip to a soft **light** lift; a dismiss **×** sits **top-right**; **no
 left-accent bars**; icons come from an icon font (never hand-drawn). Layout stays a small flex/grid utility
 set — **not** a Bootstrap-style 12-column foundation — a *minimalism* choice, and self-sufficient (no
-Tailwind required). Full, numbered rules (§1–§23, human-readable — also rendered in full on the docs site at
+Tailwind required). Full, numbered rules (§1–§24, human-readable — also rendered in full on the docs site at
 `#/principles`):
 [`web-builder/references/design-principles.md`](web-builder/references/design-principles.md) — this is the
 canonical, numbered home of the design thinking (when a note references "§N", it means a rule there).

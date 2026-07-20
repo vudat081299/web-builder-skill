@@ -19,6 +19,7 @@ html, body { margin: 0; }
   --wb-demo-bw: 1px;
   --wb-demo-shadow: var(--wb-shadow-sm);
   --wb-doc-divider: var(--wb-border);
+  --doc-nav-h: 58px;   /* topbar height — the sidebar sticks just below it */
 }
 body {
   font-family: var(--wb-font);
@@ -29,17 +30,20 @@ body {
 }
 a { color: inherit; }
 
-.doc-shell { display: flex; min-height: 100vh; }
+/* Shell = a full-width topbar stacked OVER a [sidebar | main] row, so the topbar
+   always spans the whole width and the sidebar never shrinks it. */
+.doc-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.doc-body  { display: flex; flex: 1 1 auto; min-height: 0; }
 
 /* -----------------------------------------------------------------------------
    Sidebar — the tree (grouped, collapsible)
    -------------------------------------------------------------------------- */
 .doc-side {
-  position: sticky; top: 0; align-self: flex-start;
-  width: 252px; height: 100vh; flex: none;
+  position: sticky; top: var(--doc-nav-h); align-self: flex-start;
+  width: 252px; height: calc(100vh - var(--doc-nav-h)); flex: none;
   border-right: var(--wb-bw) solid var(--wb-border);   /* the ONE divider — on the right */
   background: var(--wb-surface);
-  padding: 18px 12px 56px;                                  /* tail room so the last item scrolls clear */
+  padding: 14px 12px 56px;                                  /* tail room so the last item scrolls clear */
   overflow-y: auto; scroll-padding-block-end: 12px;
   overscroll-behavior: contain;   /* the sidebar's scroll stays put — no chaining to (or
                                      rubber-band reveal of) the page scrolling behind it */
@@ -49,14 +53,27 @@ a { color: inherit; }
    Config drawer body carry the class in index.html, so this file no longer re-declares
    the bar — it dogfoods the shipped utility instead of duplicating it. */
 
-.doc-brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; }
+/* Brand lives in the topbar now and doubles as the sidebar toggle (click the W).
+   §24 concentric radius: the W tile has radius --brand-mark-r and sits --brand-gap
+   from the button's top/left/bottom edges, so the hover button's OWN radius is the
+   DERIVED outer = mark-r + gap — not a hand-picked constant (it used to be 6px, which
+   let the 8px W corner bulge past the button on hover). */
+.doc-brand {
+  display: inline-flex; align-items: center; gap: 10px; flex: none;
+  --brand-mark-r: 8px; --brand-gap: 4px;
+  padding: var(--brand-gap) 8px var(--brand-gap) var(--brand-gap);
+  border: 0; background: none; cursor: pointer; font: inherit; color: inherit;
+  border-radius: calc(var(--brand-mark-r) + var(--brand-gap));
+}
+.doc-brand:hover { background: var(--wb-surface-hover); }
 .doc-brand__mark {
-  width: 30px; height: 30px; border-radius: 8px; flex: none;
+  width: 30px; height: 30px; border-radius: var(--brand-mark-r); flex: none;
   background: var(--wb-gray-900); color: var(--wb-white);
   display: grid; place-items: center; font-weight: 700; font-size: 15px;
 }
 .dark .doc-brand__mark { background: var(--wb-gray-100); color: var(--wb-gray-900); }
-.doc-brand__name { font-weight: 650; font-size: 15px; }
+.doc-brand__text { display: flex; flex-direction: column; line-height: 1.2; text-align: left; }
+.doc-brand__name { font-weight: 650; font-size: 14px; }
 .doc-brand__ver  { font-size: 11px; color: var(--wb-fg-muted); }
 
 .doc-tree { display: flex; flex-direction: column; }
@@ -84,6 +101,9 @@ a { color: inherit; }
 .doc-tree__group.is-collapsed .doc-tree__items { display: none; }
 /* Items: dimmer (secondary) + indented; selection is a plain highlight. */
 .doc-tree__items { display: flex; flex-direction: column; gap: 1px; padding-left: 10px; }
+/* A flat section (design / project) renders one headingless group — no left indent. */
+.doc-tree__group--flat { margin-top: 2px; }
+.doc-tree__group--flat .doc-tree__items { padding-left: 2px; }
 .doc-tree__link {
   display: flex; align-items: center; gap: 8px; text-decoration: none;
   font-size: 13.5px; color: var(--wb-fg-muted);
@@ -104,13 +124,13 @@ a { color: inherit; }
    -------------------------------------------------------------------------- */
 .doc-main { flex: 1 1 auto; min-width: 0; }
 .doc-topbar {
-  position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 14px; padding: 14px 32px;
+  position: sticky; top: 0; z-index: 30;
+  min-height: var(--doc-nav-h); box-sizing: border-box;
+  display: flex; align-items: center; gap: 14px; padding: 0 20px;
   background: color-mix(in srgb, var(--wb-canvas) 82%, transparent);
   backdrop-filter: saturate(1.1) blur(8px);
   border-bottom: var(--wb-bw) solid var(--wb-border);
 }
-.doc-topbar h1 { font-size: 15px; margin: 0; font-weight: 600; }
 .doc-topbar .spacer { margin-left: auto; }
 .theme-btn {
   display: inline-flex; align-items: center; gap: 8px;
@@ -121,16 +141,28 @@ a { color: inherit; }
 }
 .theme-btn:hover { border-color: var(--wb-border-strong); }
 
-/* Toggle to hide/show the whole sidebar — a panel icon (left_panel_open/close),
-   rendered as a .wb-ico ligature and swapped by app.js to match the current state
-   (clearer than a plain hamburger, which reads as "open a menu", not "toggle panel"). */
-.doc-side-toggle {
-  flex: none; width: 34px; height: 34px; cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm);
-  background: var(--wb-surface); color: var(--wb-fg);
+/* Section switcher — the dropdown at the top of the sidebar (dogfoods .wb-dropdown
+   + .wb-menu). Full-width trigger; the popup menu spans the sidebar width. */
+.doc-secswitch-wrap {
+  padding: 0 2px 12px; margin-bottom: 8px;
+  border-bottom: var(--wb-bw) solid var(--wb-border);
 }
-.doc-side-toggle:hover { border-color: var(--wb-border-strong); }
+.doc-secswitch { display: block; }
+.doc-secswitch__btn {
+  display: flex; align-items: center; gap: 9px; width: 100%;
+  font: inherit; font-size: 13.5px; font-weight: 600; color: var(--wb-fg);
+  padding: 8px 10px; cursor: pointer; text-align: left;
+  border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm);
+  background: var(--wb-surface);
+}
+.doc-secswitch__btn:hover { border-color: var(--wb-border-strong); background: var(--wb-surface-hover); }
+.doc-secswitch__ico { font-size: 18px; color: var(--wb-fg-muted); }
+.doc-secswitch__label { flex: 1; }
+.doc-secswitch .wb-dropdown__caret { color: var(--wb-fg-subtle); transition: transform .15s ease; }
+.doc-secswitch.is-open .wb-dropdown__caret { transform: rotate(180deg); }
+.doc-secswitch .wb-dropdown__menu { width: 100%; }
+
+/* The W-brand toggle hides the whole sidebar on desktop; main reflows to full width. */
 .doc-shell.is-side-hidden .doc-side { display: none; }
 
 .doc-content { max-width: 980px; margin: 0 auto; padding: 36px 32px 120px; }
@@ -394,7 +426,7 @@ a { color: inherit; }
     content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(0, 0, 0, .42);
   }
   .doc-content { padding: 26px 18px 90px; }
-  .doc-topbar { padding: 12px 18px; }
+  .doc-topbar { padding: 0 14px; }
 }
 
 /* ---- Topbar search trigger + full-text search dialog (docs-only) ---------- */
@@ -417,7 +449,7 @@ a { color: inherit; }
 @media (max-width: 640px) {
   .doc-search-trigger__label, .doc-search-trigger__kbd { display: none; }
   .doc-topbar { gap: 8px; }
-  .doc-topbar h1 { white-space: nowrap; }
+  .doc-brand__text { display: none; }          /* phones: keep just the W toggle */
   .doc-topbar .wb-cap { display: none; }
   .doc-search-trigger { padding: 0; width: 34px; justify-content: center; }
   .theme-btn { gap: 0; padding: 0; width: 34px; height: 34px; justify-content: center; }

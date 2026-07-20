@@ -1,7 +1,8 @@
 /* =============================================================================
    Web Builder docs — shared shell (defined ONCE, reused by every page)
    -----------------------------------------------------------------------------
-   • Renders the tree sidebar from NAV (group heading = primary line, items dimmer).
+   • Renders the tree sidebar per SECTION (a switcher dropdown swaps sections;
+     group heading = primary line, items dimmer).
    • Hash router: #/<id> loads pages/<id>.html into the main column, so each
      group shows in isolation (pick "Tables" → only tables render).
    • Theme toggle, code-copy, token swatches, sticky-table fill, dual light/dark
@@ -10,106 +11,138 @@
    Serve the folder (fetch needs http) — e.g. `python3 -m http.server`.
    ========================================================================== */
 
-/* ---- Navigation model — the single source of truth for the sidebar tree --- */
-const NAV = [
-  { group: "Nền tảng", items: [
+/* ---- Navigation model — SECTIONS. Each section is its OWN sidebar tree, switched
+   by the dropdown at the top of the sidebar. Only the `components` section carries
+   grouped `group:` headings — those labels are the SKILL.md "Current scope" list
+   that validate-sync CHECK 10 guards, so keep them verbatim. `design` / `project`
+   are flat `items:` lists (no `group:` → not scope-checked). --------------------- */
+const SECTIONS = [
+  { id: "design", title: "Thiết kế", icon: "format_paint", items: [
     { id: "overview",   label: "Tổng quan" },
     { id: "recipes",    label: "Dựng trang (recipes)" },
-    { id: "principles", label: "Nguyên tắc (§1–§23)" },
+    { id: "principles", label: "Nguyên tắc (§1–§24)" },
     { id: "color",      label: "Triết lý màu" },
     { id: "tokens",     label: "Design tokens" },
     { id: "typography", label: "Typography" },
     { id: "fonts",      label: "Fonts & icon" },
     { id: "border",     label: "Border & bo góc" },
     { id: "config",     label: "Config / Tweak" },
-    { id: "tooling",    label: "Tooling (verify · hook)" },
-    { id: "decisions",  label: "Quyết định & đánh đổi" },
   ]},
-  { group: "Bố cục & tiện ích", items: [
-    { id: "layout",     label: "Grid / Layout" },
-    { id: "sticky",     label: "Sticky" },
-    { id: "scroll",     label: "Scroll / thanh cuộn" },
-    { id: "divider",    label: "Divider" },
+  { id: "components", title: "Thành phần", icon: "widgets", groups: [
+    { group: "Bố cục & tiện ích", items: [
+      { id: "layout",     label: "Grid / Layout" },
+      { id: "sticky",     label: "Sticky" },
+      { id: "scroll",     label: "Scroll / thanh cuộn" },
+      { id: "divider",    label: "Divider" },
+    ]},
+    { group: "Hành động", items: [
+      { id: "buttons",  label: "Buttons" },
+      { id: "dropdown", label: "Dropdown / Menu" },
+    ]},
+    { group: "Nhập liệu", items: [
+      { id: "input",    label: "Text input" },
+      { id: "select",   label: "Select" },
+      { id: "textarea", label: "Textarea" },
+      { id: "richtext", label: "Rich text (format bar)" },
+      { id: "choice",   label: "Checkbox & Radio" },
+      { id: "switch",   label: "Switch" },
+      { id: "range",    label: "Range / Slider" },
+      { id: "file",     label: "File / Upload" },
+    ]},
+    { group: "Bộ chọn", items: [
+      { id: "calendar",    label: "Lịch (calendar)" },
+      { id: "timepicker",  label: "Chọn giờ (time)" },
+      { id: "colorpicker", label: "Bộ chọn màu" },
+    ]},
+    { group: "Hiển thị dữ liệu", items: [
+      { id: "card",     label: "Card" },
+      { id: "receipt",  label: "Hoá đơn (receipt)" },
+      { id: "tables",   label: "Tables" },
+      { id: "filterbar",label: "Filter bar" },
+      { id: "list",     label: "List group" },
+      { id: "stats",    label: "Stat / KPI cards" },
+      { id: "capsules", label: "Capsules / Badges" },
+      { id: "tags",     label: "Tags (#)" },
+      { id: "avatar",   label: "Avatar" },
+      { id: "charts",   label: "Charts" },
+    ]},
+    { group: "Phản hồi", items: [
+      { id: "alert",    label: "Alert / Banner" },
+      { id: "toast",    label: "Toast" },
+      { id: "progress", label: "Progress" },
+      { id: "skeleton", label: "Skeleton" },
+      { id: "empty",    label: "Empty state" },
+    ]},
+    { group: "Lớp phủ (Overlay)", items: [
+      { id: "modal",    label: "Modal / Dialog" },
+      { id: "drawer",   label: "Drawer / Offcanvas" },
+      { id: "tooltip",  label: "Tooltip" },
+      { id: "popover",  label: "Popover" },
+    ]},
+    { group: "Điều hướng", items: [
+      { id: "navbar",     label: "Navbar & menu" },
+      { id: "sidenav",    label: "Sidebar (side-nav)" },
+      { id: "tabs",       label: "Tabs" },
+      { id: "steps",      label: "Steps / Stepper" },
+      { id: "breadcrumb", label: "Breadcrumb" },
+      { id: "pagination", label: "Pagination" },
+      { id: "footer",     label: "Footer & chuyển trang" },
+    ]},
+    { group: "Đóng/mở (Disclosure)", items: [
+      { id: "accordion",  label: "Accordion" },
+      { id: "collapse",   label: "Collapse" },
+    ]},
+    { group: "Cấu trúc", items: [
+      { id: "tree",     label: "Tree danh mục" },
+      { id: "sortable", label: "List / Grid kéo–thả" },
+      { id: "slotgrid", label: "Lưới ô cố định" },
+    ]},
   ]},
-  { group: "Hành động", items: [
-    { id: "buttons",  label: "Buttons" },
-    { id: "dropdown", label: "Dropdown / Menu" },
-  ]},
-  { group: "Nhập liệu", items: [
-    { id: "input",    label: "Text input" },
-    { id: "select",   label: "Select" },
-    { id: "textarea", label: "Textarea" },
-    { id: "richtext", label: "Rich text (format bar)" },
-    { id: "choice",   label: "Checkbox & Radio" },
-    { id: "switch",   label: "Switch" },
-    { id: "range",    label: "Range / Slider" },
-    { id: "file",     label: "File / Upload" },
-  ]},
-  { group: "Bộ chọn", items: [
-    { id: "calendar",    label: "Lịch (calendar)" },
-    { id: "timepicker",  label: "Chọn giờ (time)" },
-    { id: "colorpicker", label: "Bộ chọn màu" },
-  ]},
-  { group: "Hiển thị dữ liệu", items: [
-    { id: "card",     label: "Card" },
-    { id: "receipt",  label: "Hoá đơn (receipt)" },
-    { id: "tables",   label: "Tables" },
-    { id: "filterbar",label: "Filter bar" },
-    { id: "list",     label: "List group" },
-    { id: "stats",    label: "Stat / KPI cards" },
-    { id: "capsules", label: "Capsules / Badges" },
-    { id: "tags",     label: "Tags (#)" },
-    { id: "avatar",   label: "Avatar" },
-    { id: "charts",   label: "Charts" },
-  ]},
-  { group: "Phản hồi", items: [
-    { id: "alert",    label: "Alert / Banner" },
-    { id: "toast",    label: "Toast" },
-    { id: "progress", label: "Progress" },
-    { id: "skeleton", label: "Skeleton" },
-    { id: "empty",    label: "Empty state" },
-  ]},
-  { group: "Lớp phủ (Overlay)", items: [
-    { id: "modal",    label: "Modal / Dialog" },
-    { id: "drawer",   label: "Drawer / Offcanvas" },
-    { id: "tooltip",  label: "Tooltip" },
-    { id: "popover",  label: "Popover" },
-  ]},
-  { group: "Điều hướng", items: [
-    { id: "navbar",     label: "Navbar & menu" },
-    { id: "sidenav",    label: "Sidebar (side-nav)" },
-    { id: "tabs",       label: "Tabs" },
-    { id: "steps",      label: "Steps / Stepper" },
-    { id: "breadcrumb", label: "Breadcrumb" },
-    { id: "pagination", label: "Pagination" },
-    { id: "footer",     label: "Footer & chuyển trang" },
-  ]},
-  { group: "Đóng/mở (Disclosure)", items: [
-    { id: "accordion",  label: "Accordion" },
-    { id: "collapse",   label: "Collapse" },
-  ]},
-  { group: "Cấu trúc", items: [
-    { id: "tree",     label: "Tree danh mục" },
-    { id: "sortable", label: "List / Grid kéo–thả" },
-    { id: "slotgrid", label: "Lưới ô cố định" },
+  { id: "project", title: "Dự án & Skill", icon: "deployed_code", items: [
+    { id: "skill",     label: "Sản phẩm & skill" },
+    { id: "workflow",  label: "Workflow (/wb-change)" },
+    { id: "onefile",   label: "Một file CSS · token" },
+    { id: "ai-repo",   label: "AI làm gì với repo" },
+    { id: "tooling",   label: "Tooling (verify · hook)" },
+    { id: "decisions", label: "Quyết định & đánh đổi" },
   ]},
 ];
 
+/* Normalize a section to [{group, items}] (a flat section → one headingless group),
+   plus flatten helpers used by the router / search / pager. */
+function groupsOf(s) { return s.groups || [{ group: "", items: s.items || [] }]; }
+function itemsOf(s) { return groupsOf(s).flatMap((g) => g.items).filter((it) => !it.coming); }
+
 const ROUTES = {};
-NAV.forEach((g) => g.items.forEach((it) => (ROUTES[it.id] = it)));
+const SECTION_OF = {};        // page id → section id
+const SECTION_FIRST = {};     // section id → its first page id (where the switcher lands)
+SECTIONS.forEach((s) => {
+  const items = itemsOf(s);
+  SECTION_FIRST[s.id] = items[0] ? items[0].id : "";
+  items.forEach((it) => { ROUTES[it.id] = it; SECTION_OF[it.id] = s.id; });
+});
 const DEFAULT_ROUTE = "overview";
 
+/* page id → group label (or the section label when the section is flat) — used for
+   the search-result + pager meta line. */
+const GROUP_OF = {};
+SECTIONS.forEach((s) => groupsOf(s).forEach((g) =>
+  g.items.forEach((it) => { GROUP_OF[it.id] = g.group || s.title; })));
+
 /* ---- Pager (prev / next) — dogfoods the .wb-pager primitive at the FOOT of every
-   page, in NAV order. The [ and ] shortcuts jump between pages (guarded so typing in
-   a field never triggers them). This IS the app.js driver an app would write. ------ */
-const PAGE_ORDER = NAV.flatMap((g) => g.items).filter((it) => !it.coming).map((it) => it.id);
-const PAGE_GROUP = {};
-NAV.forEach((g) => g.items.forEach((it) => (PAGE_GROUP[it.id] = g.group)));
+   page, in the CURRENT SECTION's order (cross-section jumps go through the switcher).
+   The [ and ] shortcuts jump between pages (guarded so typing in a field never
+   triggers them). This IS the app.js driver an app would write. ------------------- */
+function sectionOrder(id) {
+  const sec = SECTIONS.find((s) => s.id === SECTION_OF[id]);
+  return sec ? itemsOf(sec).map((it) => it.id) : [];
+}
 let pagerPrev = null, pagerNext = null;
 function renderPager(id) {
-  const i = PAGE_ORDER.indexOf(id);
-  const prev = i > 0 ? ROUTES[PAGE_ORDER[i - 1]] : null;
-  const next = i >= 0 && i < PAGE_ORDER.length - 1 ? ROUTES[PAGE_ORDER[i + 1]] : null;
+  const order = sectionOrder(id);
+  const i = order.indexOf(id);
+  const prev = i > 0 ? ROUTES[order[i - 1]] : null;
+  const next = i >= 0 && i < order.length - 1 ? ROUTES[order[i + 1]] : null;
   pagerPrev = prev ? prev.id : null;
   pagerNext = next ? next.id : null;
   if (!prev && !next) return "";
@@ -117,11 +150,11 @@ function renderPager(id) {
       <span class="wb-ico wb-pager__arrow">chevron_left</span>
       <span class="wb-pager__text"><span class="wb-pager__dir">Trang trước <kbd class="wb-kbd">[</kbd></span>
       <span class="wb-pager__title">${prev.label}</span>
-      <span class="wb-pager__meta">${PAGE_GROUP[prev.id] || ""}</span></span></a>` : "";
+      <span class="wb-pager__meta">${GROUP_OF[prev.id] || ""}</span></span></a>` : "";
   const nextHtml = next ? `<a class="wb-pager__link wb-pager__link--next" data-pager-next href="#/${next.id}">
       <span class="wb-pager__text"><span class="wb-pager__dir"><kbd class="wb-kbd">]</kbd> Trang sau</span>
       <span class="wb-pager__title">${next.label}</span>
-      <span class="wb-pager__meta">${PAGE_GROUP[next.id] || ""}</span></span>
+      <span class="wb-pager__meta">${GROUP_OF[next.id] || ""}</span></span>
       <span class="wb-ico wb-pager__arrow">chevron_right</span></a>` : "";
   return `<nav class="wb-pager" data-pager aria-label="Chuyển trang">${prevHtml}${nextHtml}</nav>`;
 }
@@ -168,15 +201,42 @@ function onPagerKey(e) {
   else if ((e.key === "]") && pagerNext) { e.preventDefault(); location.hash = "#/" + pagerNext; }
 }
 
-/* ---- Sidebar tree — heading + dimmer items. The heading is a button that
-   collapses its group; the caret sits on the RIGHT (no leading triangle). ---- */
-function renderNav() {
+/* ---- Section switcher — the dropdown at the top of the sidebar. Dogfoods
+   .wb-dropdown + .wb-menu; picking a section navigates to its first page and the
+   router (loadRoute) swaps the tree + relabels this button. ------------------- */
+function renderSecSwitch(activeId) {
+  const wrap = document.getElementById("secswitch");
+  if (!wrap) return;
+  const active = SECTIONS.find((s) => s.id === activeId) || SECTIONS[0];
+  wrap.innerHTML =
+    '<div class="wb-dropdown doc-secswitch">' +
+      '<button class="doc-secswitch__btn" data-dd-toggle aria-haspopup="menu" aria-label="Đổi khu vực tài liệu">' +
+        '<span class="wb-ico doc-secswitch__ico" aria-hidden="true">' + active.icon + '</span>' +
+        '<span class="doc-secswitch__label">' + active.title + '</span>' +
+        '<span class="wb-ico wb-dropdown__caret" aria-hidden="true">expand_more</span>' +
+      '</button>' +
+      '<div class="wb-dropdown__menu"><div class="wb-menu">' +
+        SECTIONS.map((s) =>
+          '<a class="wb-menu__item' + (s.id === active.id ? ' is-active' : '') +
+            '" href="#/' + SECTION_FIRST[s.id] + '" data-sec="' + s.id + '">' +
+            '<span class="wb-menu__ico"><span class="wb-ico wb-ico--xs" aria-hidden="true">' + s.icon + '</span></span> ' +
+            s.title +
+          '</a>').join("") +
+      '</div></div>' +
+    '</div>';
+}
+
+/* ---- Sidebar tree for ONE section — heading + dimmer items. The heading is a
+   button that collapses its group; the caret sits on the RIGHT (no leading
+   triangle). A flat section (design/project) renders one headingless group. ---- */
+function renderNav(sectionId) {
+  const section = SECTIONS.find((s) => s.id === sectionId) || SECTIONS[0];
   const nav = document.getElementById("nav");
-  nav.innerHTML = NAV.map((g) => `
-    <div class="doc-tree__group">
-      <button class="doc-tree__head" data-group-toggle aria-expanded="true">
+  nav.innerHTML = groupsOf(section).map((g) => `
+    <div class="doc-tree__group${g.group ? "" : " doc-tree__group--flat"}">
+      ${g.group ? `<button class="doc-tree__head" data-group-toggle aria-expanded="true">
         <span>${g.group}</span><span class="doc-tree__caret" aria-hidden="true"></span>
-      </button>
+      </button>` : ""}
       <div class="doc-tree__items">
         ${g.items.map((it) => it.coming
           ? `<span class="doc-tree__link is-coming">${it.label}<span class="doc-tree__badge">soon</span></span>`
@@ -187,6 +247,7 @@ function renderNav() {
 }
 
 /* ---- Router --------------------------------------------------------------- */
+let currentSection = null;                 // which section's tree is mounted right now
 async function loadRoute() {
   const id = location.hash.replace(/^#\/?/, "") || DEFAULT_ROUTE;
   const route = ROUTES[id];
@@ -194,6 +255,13 @@ async function loadRoute() {
 
   if (!route || route.coming) { location.hash = "#/" + DEFAULT_ROUTE; return; }
 
+  /* Entered a page in a different section → swap the switcher label + the tree. */
+  const sec = SECTION_OF[id];
+  if (sec !== currentSection) {
+    currentSection = sec;
+    renderSecSwitch(sec);
+    renderNav(sec);
+  }
   document.querySelectorAll(".doc-tree__link").forEach((a) =>
     a.classList.toggle("is-active", a.dataset.id === id));
   document.title = route.label + " · Web Builder";
@@ -958,22 +1026,19 @@ document.addEventListener("click", (e) => {
   const sideTog = e.target.closest("[data-side-toggle]");
   if (sideTog) {
     const shell = document.querySelector(".doc-shell");
-    const ico = sideTog.querySelector(".wb-ico");
-    if (window.matchMedia("(max-width: 900px)").matches) {
-      const open = shell.classList.toggle("is-side-open");
-      if (ico) ico.textContent = open ? "menu_open" : "menu";
-    } else {
-      const hidden = shell.classList.toggle("is-side-hidden");
-      if (ico) ico.textContent = hidden ? "menu" : "menu_open";
-    }
+    /* The W brand IS the toggle (no icon to swap) — reflect state via aria-expanded. */
+    const shown = window.matchMedia("(max-width: 900px)").matches
+      ? shell.classList.toggle("is-side-open")        // mobile: drawer open = shown
+      : !shell.classList.toggle("is-side-hidden");    // desktop: hidden = not shown
+    sideTog.setAttribute("aria-expanded", String(shown));
     return;
   }
   /* Close the mobile drawer when a nav link is picked or the backdrop is tapped. */
   const shellOpen = document.querySelector(".doc-shell.is-side-open");
   if (shellOpen && (e.target.closest(".doc-tree__link") || !e.target.closest(".doc-side"))) {
     shellOpen.classList.remove("is-side-open");
-    const stIco = document.querySelector("[data-side-toggle] .wb-ico");
-    if (stIco) stIco.textContent = "menu";
+    const brand = document.querySelector("[data-side-toggle]");
+    if (brand) brand.setAttribute("aria-expanded", "false");
   }
 
   /* Config: open the tweak drawer from an in-page button. */
@@ -1412,8 +1477,7 @@ themeMQ.addEventListener("change", () => { if (themeMode() === "system") applyTh
    then body). A command-palette dialog: ↑/↓ move the highlighted row, ↵ opens it. */
 let SEARCH_INDEX = null, searchBuilding = null;
 let searchHits = [], searchActive = 0;                 // current results + highlighted row
-const GROUP_OF = {};                                   // page id → its NAV group label
-NAV.forEach((g) => g.items.forEach((it) => { GROUP_OF[it.id] = g.group; }));
+/* GROUP_OF (page id → group/section label) is defined once with the nav model above. */
 
 function sEsc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function pageText(html) {
@@ -1424,7 +1488,7 @@ function pageText(html) {
 }
 function buildSearchIndex() {
   if (SEARCH_INDEX || searchBuilding) return;
-  const items = NAV.flatMap((g) => g.items).filter((it) => !it.coming);
+  const items = SECTIONS.flatMap(itemsOf);          // global: search spans every section
   searchBuilding = Promise.all(items.map((it) =>
     fetch("pages/" + it.id + ".html", { cache: "no-store" })
       .then((r) => (r.ok ? r.text() : ""))
@@ -1493,7 +1557,8 @@ function openSearch() {
 function closeSearch() { document.getElementById("searchModal").classList.remove("is-open"); }
 
 /* ---- Boot ----------------------------------------------------------------- */
-renderNav();
+/* The switcher + tree are mounted by loadRoute() (below) for the initial route's
+   section — no upfront renderNav() needed. */
 applyTheme(themeMode());
 applyThemeLabel();
 initConfig();

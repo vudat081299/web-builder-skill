@@ -35,7 +35,7 @@ use), but the primitives are general-purpose: use it for any minimalist web buil
    colours, paddings, or radii.
 3. If nothing fits, build the new piece **from existing tokens in the existing spirit**
    (see `references/design-principles.md`), add it to `web-builder.css`, create a demo page
-   `assets/pages/<id>.html`, register it in `app.js` (the `NAV` list), and record it in the
+   `assets/pages/<id>.html`, register it in `app.js` (the `SECTIONS` model), and record it in the
    catalog. Then reuse it forever.
 
 **Building a whole page, not just one part?** Start from the **Composing a page — recipes** section at the top
@@ -63,7 +63,7 @@ each app re-deriving the same piece. New to the shipped set since you last looke
 | `references/design-principles.md` | The colour ladder, neutral shadow rule, number/typography/font rules | Building something new or making an aesthetic call |
 | `references/integration.md` | How the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example) | Wiring the library into a real app |
 | `references/bootstrap-comparison.md` | Coverage vs Bootstrap 5.3 (what we have / skip / do differently), the popup set, the layout-foundation decision, and BOC structure | Deciding whether to add a component, or "do we have X?" |
-| `references/docs-site.md` | How the docs **site** is built — SPA architecture (index.html shell + app.js `NAV`/router + docs.css chrome), the page-grammar skeleton, the docs-chrome class inventory, and the Config/search/dual-preview/theme features | Rebuilding or extending the docs site itself (not a component). The docs **never ship**, but the skill stays self-sufficient to recreate them at the same quality |
+| `references/docs-site.md` | How the docs **site** is built — SPA architecture (index.html shell + app.js `SECTIONS`/router + docs.css chrome), the page-grammar skeleton, the docs-chrome class inventory, and the Config/search/dual-preview/theme features | Rebuilding or extending the docs site itself (not a component). The docs **never ship**, but the skill stays self-sufficient to recreate them at the same quality |
 
 ## The colour ladder (summary — full version in design-principles.md)
 
@@ -146,7 +146,7 @@ system — the icon-font `close` (`.wb-close` for panels, `.wb-tag__x` / `.wb-fi
 and the checkbox tick traces the same shape) — not a literal `✓`. Brand/provider logos (social
 login) are the **one** allowed colour exception — the rest of the button stays neutral. Watch the
 dark-mode `:where()` rule (design-principles §6) so tones don't grey out. When asked for a new component, build it in the same system and add it to the
-library (new `wb-*` classes + a `pages/<id>.html` demo + an `app.js` `NAV` entry + a catalog entry).
+library (new `wb-*` classes + a `pages/<id>.html` demo + an `app.js` `SECTIONS` entry + a catalog entry).
 
 **Three more conventions round out the taste** (full text in design-principles §19–21): write **Vietnamese-first
 copy** (labels/statuses are data — swap freely; keep one number/date locale per screen); hold an **a11y

@@ -19,11 +19,12 @@ dogfoods the primitive instead.
 ## 1. Architecture — one single-page app, three files
 
 - **`index.html`** — a static shell, never regenerated. It holds: the `<head>` with a **pre-paint theme
-  script** (below), the `.doc-shell` (sidebar + main + topbar), an empty `<main id="view">` the router fills,
-  an empty `<div id="docfooter">`, the Config drawer (`.doc-config`), and the search dialog
-  (`.wb-overlay.doc-search`). CSS + JS are injected with a `?v=Date.now()` cache-buster so local edits never
-  show stale (see script in `<head>`).
-- **`app.js`** — the whole engine: the `NAV` model (single source of truth), a hash router, per-page init,
+  script** (below), the `.doc-shell` — a **full-width `.doc-topbar`** stacked OVER a `.doc-body` (the
+  `.doc-side` sidebar + the `.doc-main` column), so the topbar always spans the whole width and the sidebar
+  never shrinks it — an empty `<main id="view">` the router fills, an empty `<div id="docfooter">`, the Config
+  drawer (`.doc-config`), and the search dialog (`.wb-overlay.doc-search`). CSS + JS are injected with a
+  `?v=Date.now()` cache-buster so local edits never show stale (see script in `<head>`).
+- **`app.js`** — the whole engine: the `SECTIONS` model (single source of truth), a hash router, per-page init,
   the Config playground, full-text search, theme cycling, the dual light/dark preview, and the auto-rendered
   pager + footer. Pages in `pages/` stay **markup-only — no shell, no `<script>`, no `<style>`.**
 - **`docs.css`** — the chrome classes only (inventory in §5). Reuses `--wb-*` tokens so the docs follow the
@@ -36,32 +37,52 @@ hard-refresh: `cd web-builder/assets && python3 serve.py` → http://127.0.0.1:8
 
 ---
 
-## 2. The NAV model — single source of truth
+## 2. The SECTIONS model — single source of truth
 
-One array drives the **sidebar tree**, the **router**, **route validation**, the **pager order**, the
-**search index**, and the page↔group map. Shape: an array of groups, each `{ group, items: [{ id, label }] }`
-(an item may carry `coming: true` to render a disabled "soon" stub).
+One array drives the **section switcher** (a dropdown at the top of the sidebar), the per-section **sidebar
+tree**, the **router**, **route validation**, the **pager order** (scoped *within* a section), the **search
+index** (global, spans every section), and the page↔group map. Shape: an array of **sections**, each
+`{ id, title, icon, … }`. The `components` section carries grouped headings via
+`groups: [{ group, items: [{ id, label }] }]`; the flatter `design` / `project` sections use a headingless
+`items: [{ id, label }]` (an item may carry `coming: true` to render a disabled "soon" stub).
+
+> **Why two shapes.** `validate-sync.sh` CHECK 10 greps every `group: "…"` in `app.js` and requires each to
+> appear in `SKILL.md`'s *Current scope* (the component-family list). So **only the `components` section uses
+> `group:` labels** — they ARE that scope; `design` / `project` are docs-site buckets kept flat (no `group:`)
+> so they never leak into the skill's scope. And sections name themselves with `title:` (not `label:`) so their
+> `id: "…"` lines don't trip CHECK 1's `id: "…", label:` route parser.
 
 ```js
-const NAV = [
-  { group: "Nền tảng", items: [
+const SECTIONS = [
+  { id: "design", title: "Thiết kế", icon: "format_paint", items: [
     { id: "overview", label: "Tổng quan" },
     { id: "tokens",   label: "Design tokens" },
   ]},
-  { group: "Hành động", items: [
-    { id: "buttons",  label: "Buttons" },
-    { id: "dropdown", label: "Dropdown / Menu" },
+  { id: "components", title: "Thành phần", icon: "widgets", groups: [
+    { group: "Hành động", items: [
+      { id: "buttons",  label: "Buttons" },
+      { id: "dropdown", label: "Dropdown / Menu" },
+    ]},
+  ]},
+  { id: "project", title: "Dự án & Skill", icon: "deployed_code", items: [
+    { id: "skill",     label: "Sản phẩm & skill" },
+    { id: "decisions", label: "Quyết định & đánh đổi" },
   ]},
 ];
-// Derived once, right after NAV:
-const ROUTES = {};                 // id -> item, for O(1) route lookup + validation
-NAV.forEach(g => g.items.forEach(it => ROUTES[it.id] = it));
+// Derived once, right after SECTIONS:
+function groupsOf(s) { return s.groups || [{ group: "", items: s.items || [] }]; } // flat → 1 headingless group
+function itemsOf(s)  { return groupsOf(s).flatMap(g => g.items).filter(it => !it.coming); }
+const ROUTES = {}, SECTION_OF = {}, SECTION_FIRST = {};    // id→item · id→section · section→first id
+SECTIONS.forEach(s => { const it = itemsOf(s); SECTION_FIRST[s.id] = it[0] ? it[0].id : "";
+  it.forEach(x => { ROUTES[x.id] = x; SECTION_OF[x.id] = s.id; }); });
 const DEFAULT_ROUTE = "overview";  // empty/unknown hash falls back here
 ```
 
-`renderNav()` maps `NAV` → the `.doc-tree` markup; `loadRoute()` validates against `ROUTES` and redirects to
-`DEFAULT_ROUTE` on a miss. Add a route to `NAV` and the sidebar, router, pager, and search pick it up — nothing
-else to wire.
+`renderSecSwitch(id)` renders the sidebar-top dropdown (dogfoods `.wb-dropdown` + `.wb-menu`); picking a
+section navigates to its `SECTION_FIRST`. `renderNav(id)` maps **one** section → the `.doc-tree` markup (a flat
+section renders one `--flat` headingless group). `loadRoute()` validates against `ROUTES`, and when a route's
+`SECTION_OF` differs from the mounted section it re-renders the switcher + tree. Add a route to the right
+section and the switcher, tree, router, pager, and search pick it up — nothing else to wire.
 
 ---
 
@@ -72,7 +93,7 @@ a page head, then `doc-sec` sections, each holding `doc-block` units, each holdi
 copyable code). Fill this in:
 
 ```html
-<!-- 1 · Page head: eyebrow (= NAV group), h2 title, one-line intro -->
+<!-- 1 · Page head: eyebrow (= group, or section title for a flat page), h2 title, one-line intro -->
 <div class="doc-page-head">
   <p class="doc-eyebrow">Nhập liệu</p>
   <h2>Switch</h2>
@@ -108,7 +129,7 @@ copyable code). Fill this in:
 ```
 
 **Rules baked into the grammar:**
-- `doc-eyebrow` text = the item's NAV group (kept in sync by hand).
+- `doc-eyebrow` text = the item's `group` (or, for a flat design/project page, its section title) — kept in sync by hand.
 - The **code sample is escaped HTML** inside `<pre><code>` and must mirror the live stage exactly. `.copy-btn`
   is picked up by a delegated click handler in `app.js` (copies the `<code>` text) — no per-page JS.
 - Use library layout primitives inside the stage (`.wb-stack`, `.wb-cluster`, `.wb-grid`), **never** inline
@@ -151,13 +172,13 @@ Non-`wb-*` classes — the chrome the library has no primitive for. Compact rost
 
 | Class | Role |
 |---|---|
-| `doc-shell` | flex wrapper: sidebar + main column, `min-height:100vh` |
-| `doc-side` | sticky left sidebar; the ONE divider is its right border; off-canvas drawer < 900px |
-| `doc-brand` · `__mark` · `__name` · `__ver` | sidebar brand block (logo tile + name + version) |
-| `doc-tree` · `__group` · `__head` · `__caret` · `__items` · `__link` · `__badge` | the grouped, collapsible nav tree; `__head` is a collapse button (caret on the RIGHT); `__link.is-active` / `.is-coming` |
+| `doc-shell` · `doc-body` | `doc-shell` = flex **column** (`min-height:100vh`): a full-width topbar over `doc-body`; `doc-body` = the flex row holding sidebar + main |
+| `doc-side` | sticky sidebar, offset **below** the topbar (`top: var(--doc-nav-h)`); the ONE divider is its right border; off-canvas drawer < 900px |
+| `doc-secswitch` · `-wrap` · `__btn` · `__ico` · `__label` | the **section switcher** dropdown at the top of the sidebar (dogfoods `.wb-dropdown` + `.wb-menu`); swaps which section's tree is shown |
+| `doc-brand` · `__mark` · `__text` · `__name` · `__ver` | brand block in the **topbar** (logo tile + name + version); it **is** the sidebar toggle (`data-side-toggle` — click the W) |
+| `doc-tree` · `__group` (`--flat`) · `__head` · `__caret` · `__items` · `__link` · `__badge` | one section's nav tree; `__head` is a collapse button (caret on the RIGHT); a flat section renders one `--flat` headingless group; `__link.is-active` / `.is-coming` |
 | `doc-main` | right column (flex:1) |
-| `doc-topbar` | sticky blurred header; holds `h1`, `.spacer`, search/config/theme buttons |
-| `doc-side-toggle` | panel-icon button that hides the sidebar (desktop) / opens the drawer (mobile) |
+| `doc-topbar` | **full-width** sticky blurred header (`min-height: --doc-nav-h`); holds the brand/toggle, the "Minimalist UI kit" cap, `.spacer`, and the search/config/theme buttons |
 | `theme-btn` · `doc-icon-btn` | pill theme cycler; round config icon-button |
 | `doc-content` | centered page column (`max-width:980px`), where injected pages render |
 | `doc-eyebrow` | uppercase kicker above a page/section title |
@@ -213,9 +234,10 @@ render two isolated `<iframe>`s side by side. Each iframe's `srcdoc` is a minima
 current Config tweaks are pushed in and the iframe auto-sizes to its content. Isolation is the point: a viewer
 on one theme still sees the other.
 
-**Auto-rendered pager + footer.** `PAGE_ORDER` (flattened `NAV`) drives a prev/next `.wb-pager` appended to the
-foot of **every** page by the router (`renderPager(id)`); `[` and `]` jump prev/next (guarded so typing in a
-field never triggers them). `renderFooter()` fills `#docfooter` **once** at boot with a `.wb-footer` (both
+**Auto-rendered pager + footer.** `sectionOrder(id)` (the current section's flattened items) drives a prev/next
+`.wb-pager` appended to the foot of **every** page by the router (`renderPager(id)`) — so the pager walks
+*within* a section (cross-section jumps go through the switcher); `[` and `]` jump prev/next (guarded so typing
+in a field never triggers them). `renderFooter()` fills `#docfooter` **once** at boot with a `.wb-footer` (both
 dogfood shipped primitives — the app.js driver an app would write).
 
 ---
@@ -225,9 +247,11 @@ dogfood shipped primitives — the app.js driver an app would write).
 Two steps (part of the 6-place sync in `CLAUDE.md` / `/wb-change`):
 
 1. Create `pages/<id>.html` using the §3 grammar (markup only).
-2. Add `{ id, label }` to the right group in `NAV` (`app.js`).
+2. Add `{ id, label }` to the right **section** in `SECTIONS` (`app.js`) — a component goes under the right
+   `group:` in the `components` section; a design/project page goes in that section's flat `items:`.
 
-The router (`ROUTES`), sidebar (`renderNav`), pager (`PAGE_ORDER`), and search index all derive from `NAV`, so
-they pick it up automatically — nothing else to wire. (The other four sync places are `web-builder.css`,
+The router (`ROUTES`), switcher + sidebar (`renderSecSwitch` / `renderNav`), pager (`sectionOrder`), and search
+index all derive from `SECTIONS`, so they pick it up automatically — nothing else to wire. (The other four sync
+places are `web-builder.css`,
 `components-catalog.md`, `SKILL.md`, and — if relevant — `design-principles.md` / `integration.md` /
 `bootstrap-comparison.md`.) `validate-sync.sh` enforces `routes == pages` and no per-page `<style>`.

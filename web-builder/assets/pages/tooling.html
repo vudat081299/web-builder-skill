@@ -1,5 +1,5 @@
 <div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
+  <p class="doc-eyebrow">Dự án &amp; Skill</p>
   <h2>Tooling: serve · verify · hook</h2>
   <p>Docs của repo này là <b>siêu tập con người đọc được</b> của mọi thứ trong repo: <b>skill + tool + code +
   tài liệu</b> (README, CLAUDE.md, references…). Trang này lo phần <b>tool</b> — thứ vận hành và bảo vệ skill:
@@ -56,7 +56,7 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
     <table class="wb-table wb-table--bordered">
       <thead><tr><th style="width:74px">CHECK</th><th>Bảo đảm điều gì</th><th style="width:96px">Loại</th></tr></thead>
       <tbody>
-        <tr><td><b>1</b></td><td><b>routes == pages</b>: mỗi <code>{ id }</code> trong <code>NAV</code> (app.js) khớp 1-1 với một <code>pages/&lt;id&gt;.html</code> — không trùng id, không route mồ côi, không trang mồ côi.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>1</b></td><td><b>routes == pages</b>: mỗi <code>{ id }</code> trong <code>SECTIONS</code> (app.js) khớp 1-1 với một <code>pages/&lt;id&gt;.html</code> — không trùng id, không route mồ côi, không trang mồ côi.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>2</b></td><td>Demo page <b>chỉ markup</b>: không có khối <code>&lt;style&gt;</code> trong <code>pages/*.html</code> (chrome dùng chung đặt ở <code>docs.css</code> — §16).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>3</b></td><td><code>app.js</code> <b>parse được</b> (<code>node --check</code>) — lớp "lỗi biên dịch" của một repo zero-build.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>4</b></td><td>Hex thô tô component trong inline <code>style</code> → khuyên dùng token / <code>--wb-*-color</code>. (Chỉ chạy khi gọi tay ở terminal.)</td><td><span class="wb-cap">nhắc</span></td></tr>
@@ -76,7 +76,7 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
         <tr><td><b>7</b></td><td>Mọi <code>references/*.md</code> mà <code>SKILL.md</code> trỏ tới đều <b>tồn tại</b>.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>8</b></td><td>Catalog <b>không</b> được tài liệu hoá một class <code>wb-*</code> mà <code>web-builder.css</code> không định nghĩa (class ma).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>9</b></td><td>CSS ship <b>cân ngoặc</b> <code>{ }</code> — hợp lệ về cấu trúc.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
-        <tr><td><b>10</b></td><td>Mục <b>"Current scope"</b> của <code>SKILL.md</code> nêu đủ <b>mọi nhóm NAV</b> trong <code>app.js</code> (NAV là source-of-truth; prose chép tay hay trôi lệch).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>10</b></td><td>Mục <b>"Current scope"</b> của <code>SKILL.md</code> nêu đủ <b>mọi nhóm component</b> (các <code>group</code> của section <code>components</code> trong <code>SECTIONS</code>) — app.js là source-of-truth; prose chép tay hay trôi lệch.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>11</b></td><td>Mọi <b>"§N"</b> trích dẫn khắp repo đều resolve về một <code>## N.</code> trong <code>design-principles.md</code>; <code>overview.html</code> <b>index</b> đủ §1…§max; và <code>principles.html</code> <b>render đầy đủ</b> §1…§max (không chỉ index — docs site tự chứa, §23).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
       </tbody>
     </table>

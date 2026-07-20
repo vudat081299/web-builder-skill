@@ -3,48 +3,10 @@
   <p>Một thư viện CSS + hệ thiết kế tối giản, ưu tiên trắng–đen–xám, dùng lại được — viết tay, token-based,
   không cần build, drop-in một file, prefix <code>wb-*</code> nên ghép được với mọi stack. Mạnh nhất cho web
   tài chính cá nhân (bảng tiền, ngân sách, hoá đơn) nhưng dùng tốt cho web bất kỳ. Trang này là <b>góc nhìn
-  tổng quan nhất</b>: repo là gì · ưu tiên gì khi xây · tư duy thiết kế · workflow vận hành · và vì sao gói trong
-  một file &amp; đọc repo sao cho rẻ token. Mỗi component nằm ở một trang riêng — chọn ở sidebar để xem chi tiết.</p>
+  thiết kế</b>: có gì trong hộp · ưu tiên khi xây · tư duy thiết kế (§1→§24). Phần dự án/skill (workflow, một
+  file CSS, AI dùng repo) nằm ở khu <a href="#/skill">Dự án &amp; Skill</a>. Mỗi component ở một trang riêng —
+  chọn ở sidebar để xem chi tiết.</p>
 </div>
-
-<section class="doc-sec">
-  <h3>Repo này là gì</h3>
-  <p class="doc-sec__desc">Một thư viện component để một AI vừa <b>dùng</b> (ráp UI) vừa <b>mở rộng</b> (thêm/sửa
-  component) — không chỉ để tra cứu.</p>
-  <div class="doc-note">
-    <span aria-hidden="true">🎯</span>
-    <div><b>Sản phẩm cuối cùng của repo = bộ skill <code>web-builder</code></b> (một file CSS drop-in
-    <code>web-builder.css</code> + <code>SKILL.md</code> + <code>references/</code>) — thứ <b>duy nhất “ship”</b>
-    vào app của bạn. Trang docs bạn đang xem, <code>/wb-change</code> và các hook <b>không ship</b> — chúng chỉ
-    để dựng, review, dogfood và bảo vệ chất lượng skill. Mọi thay đổi đo bằng một câu: <i>skill có tốt lên và
-    còn nhất quán không?</i></div>
-  </div>
-  <p class="doc-sec__desc">Cách lib hoạt động: CSS viết tay, <b>token-based</b> (đổi <a href="#/tokens">token</a>
-  là đổi cả hệ), <b>không cần build</b>, một file duy nhất, prefix <code>wb-*</code> nên ghép với mọi stack mà
-  không xung đột. Ưu tiên trắng–đen–xám, có dark mode. Khi build web thì <b>ráp lại từ catalog</b> thay vì
-  thiết kế lại — nguyên tắc reuse-first.</p>
-</section>
-
-<section class="doc-sec">
-  <h3>Ba lớp — mỗi lớp cho ai</h3>
-  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:230px;margin-top:8px">
-    <div class="nav-card">
-      <p class="nav-card__t">Skill — <b>ship</b></p>
-      <p class="nav-card__d"><code>web-builder.css</code> + <code>SKILL.md</code> + <code>references/</code>. Cho <b>AI dựng UI web</b>:
-      drop-in một file rồi ráp từ class <code>wb-*</code> + token. Đây là thứ đi vào app của bạn.</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Docs site — không ship</p>
-      <p class="nav-card__d"><code>index.html</code> · <code>app.js</code> · <code>pages/</code> (trang này). Cho <b>người &amp; AI</b> tra cứu,
-      xem thật từng component ở light/dark và verify trước khi tin.</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Tooling — không ship</p>
-      <p class="nav-card__d"><code>/wb-change</code> · hook · <code>validate-sync.sh</code>. Để <b>thêm/sửa component an toàn</b> và giữ
-      6 nơi (CSS ↔ demo ↔ NAV ↔ catalog ↔ SKILL ↔ principles) không lệch nhau.</p>
-    </div>
-  </div>
-</section>
 
 <section class="doc-sec">
   <h3>Có gì trong hộp</h3>
@@ -141,7 +103,8 @@
         <div class="wb-media__body">
           <p class="wb-media__title">Skill không được nói dối</p>
           <p class="wb-media__text">Đổi một component là đồng bộ đủ <b>6 nơi</b>. Catalog ↔ SKILL.md ↔ CSS ↔ demo lệch nhau
-          là AI kế tiếp bị dẫn sai — <code>validate-sync.sh</code> gác cổng khi commit.</p>
+          là AI kế tiếp bị dẫn sai — <code>validate-sync.sh</code> gác cổng khi commit. (Chi tiết ở
+          <a href="#/workflow">Workflow</a>.)</p>
         </div>
       </div>
     </div></div>
@@ -161,7 +124,7 @@
 <section class="doc-sec">
   <h3>Tư duy thiết kế</h3>
   <p class="doc-sec__desc">Những quyết định thẩm mỹ đã chốt sẵn, để không phải review lại trên từng trang. Vài
-  thẻ dưới đây là <b>nguyên tắc nổi bật</b>; <b>bản đầy đủ §1→§23 đọc ngay trên site</b> ở trang
+  thẻ dưới đây là <b>nguyên tắc nổi bật</b>; <b>bản đầy đủ §1→§24 đọc ngay trên site</b> ở trang
   <a href="#/principles">Nguyên tắc thiết kế</a> (mỗi § một accordion mở/gập). Mỗi § mang số hiệu <b>§N</b> —
   bất cứ trang nào nhắc "§N" đều nhảy về đó tra được. Bản song song cho AI là
   <code>references/design-principles.md</code> (cùng §N, giữ khớp qua guardrail).</p>
@@ -233,9 +196,9 @@
     </div>
   </div>
   <div class="doc-block" style="margin-top:26px">
-    <h4>Bản đồ nguyên tắc — §1 → §23</h4>
+    <h4>Bản đồ nguyên tắc — §1 → §24</h4>
     <p class="doc-block__desc">Index gọn "§N là gì" để nhảy nhanh. Bản <b>đầy đủ từng §</b> (mở/gập được) nằm
-    ngay trên site ở trang <a href="#/principles">Nguyên tắc thiết kế (§1–§23)</a> — không phải mở file ngoài.</p>
+    ngay trên site ở trang <a href="#/principles">Nguyên tắc thiết kế (§1–§24)</a> — không phải mở file ngoài.</p>
     <p class="doc-block__desc" style="line-height:2">
       <b>§1</b> thang màu · <b>§2</b> bóng trung tính (dark lật sáng) · <b>§3</b> số liệu tài chính (căn phải, tabular) ·
       <b>§4</b> typography &amp; mật độ · <b>§5</b> elevation &amp; bo góc · <b>§6</b> theming (mọi màu từ token) ·
@@ -245,287 +208,11 @@
       <b>§15</b> × góc phải-trên · <b>§16</b> docs dogfood · <b>§17</b> layout utility nhỏ (không 12-cột) ·
       <b>§18</b> token &gt; magic number · <b>§19</b> a11y mặc định · <b>§20</b> copy/locale VN-first ·
       <b>§21</b> responsive tự co · <b>§22</b> demo density (1 code / pattern) ·
-      <b>§23</b> docs site tự chứa (render, đừng đẩy ra .md).
+      <b>§23</b> docs site tự chứa (render, đừng đẩy ra .md) ·
+      <b>§24</b> góc lồng nhau đồng tâm (inner = outer − gap).
     </p>
   </div>
 
   <p class="doc-sec__desc" style="margin-top:18px">Xem trực tiếp: <a href="#/color">Triết lý màu</a> ·
   <a href="#/tokens">Design tokens</a> · <a href="#/border">Border &amp; bo góc</a> · <a href="#/config">Config playground</a>.</p>
-</section>
-
-<section class="doc-sec">
-  <h3>Workflow — pipeline <code>/wb-change</code></h3>
-  <p class="doc-sec__desc">Một thay đổi component chạm nhiều file, lệch một nơi là skill nói dối AI kế tiếp — nên có
-  quy trình chuẩn: <b>10 bước · 4 giai đoạn</b>, đồng bộ <b>6 nơi</b>, <b>2 hook</b> gác. Việc đọc rộng (discover ·
-  verify nhiều trang · review chéo) đẩy cho subagent để tiết kiệm token. (Stepper dưới đây dogfood
-  <a href="#/steps">wb-steps</a>.)</p>
-
-  <div class="wb-cluster" style="row-gap:8px;margin:6px 0 4px">
-    <span class="wb-cap wb-cap--elevated">A · Hiểu &amp; chốt</span>
-    <span class="doc-sep" aria-hidden="true">→</span>
-    <span class="wb-cap wb-cap--elevated">B · Làm</span>
-    <span class="doc-sep" aria-hidden="true">→</span>
-    <span class="wb-cap wb-cap--elevated">C · Kiểm chứng</span>
-    <span class="doc-sep" aria-hidden="true">→</span>
-    <span class="wb-cap wb-cap--elevated">D · Soát &amp; chốt</span>
-  </div>
-
-  <p class="doc-eyebrow" style="margin-top:20px">Giai đoạn A — Hiểu &amp; chốt</p>
-  <ol class="wb-steps">
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">1</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Discover + khả thi</p>
-        <p class="wb-steps__desc">Đọc <code>components-catalog.md</code> + <code>design-principles.md</code> trước — có thể đã tồn tại
-        (reuse) hoặc ghép được từ primitive sẵn có. Đọc rộng → subagent Explore.</p>
-      </div>
-    </li>
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">2</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Plan + confirm</p>
-        <p class="wb-steps__desc">Nêu gọn: đổi gì · chạm nơi nào trong 6 · ghép từ primitive nào · tier màu. Mơ hồ thì hỏi
-        1–2 câu <b>trước khi</b> code; rõ thì đi tiếp.</p>
-      </div>
-    </li>
-  </ol>
-
-  <p class="doc-eyebrow" style="margin-top:24px">Giai đoạn B — Làm</p>
-  <ol class="wb-steps">
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">3</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Implement</p>
-        <p class="wb-steps__desc">CSS trước (token, không magic number) → demo page → NAV → catalog → SKILL.md → (docs phụ nếu
-        cần). Hook PostToolUse tự nhắc checklist 6 nơi ngay khi chạm <code>web-builder.css</code>.</p>
-      </div>
-    </li>
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">4</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Check lỗi</p>
-        <p class="wb-steps__desc"><code>validate-sync.sh</code>: routes == pages · không <code>&lt;style&gt;</code> lạc · <code>app.js</code> parse.</p>
-        <span class="wb-steps__note">↺ Lỗi → sửa đúng chỗ đó (quay bước 3), không xoá làm lại</span>
-      </div>
-    </li>
-  </ol>
-
-  <p class="doc-eyebrow" style="margin-top:24px">Giai đoạn C — Kiểm chứng</p>
-  <ol class="wb-steps">
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">5</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Verify (xem thật)</p>
-        <p class="wb-steps__desc"><code>python3 serve.py</code> → mở <code>#/&lt;id&gt;</code> trong Browser; kiểm cả <b>sáng &amp; tối</b>.
-        Xem nhiều trang → subagent, trả kết luận gọn.</p>
-      </div>
-    </li>
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">6</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Rà soát tái dùng (reuse sweep) — <b>bắt buộc</b></p>
-        <p class="wb-steps__desc">Rà toàn repo tìm chỗ đang làm cách cũ mà nay thay được bằng bản mới, hoặc nên áp biến thể/token
-        vừa thêm. Quét rộng → subagent (trả <code>file:line</code> + đề xuất).</p>
-        <span class="wb-steps__note">↺ Áp thay thế → verify lại đúng chỗ vừa đổi (quay bước 5)</span>
-      </div>
-    </li>
-  </ol>
-
-  <p class="doc-eyebrow" style="margin-top:24px">Giai đoạn D — Soát &amp; chốt</p>
-  <ol class="wb-steps">
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">7</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Review code</p>
-        <p class="wb-steps__desc">Chạy <code>/code-review</code> trên diff.</p>
-      </div>
-    </li>
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">8</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Review docs liên đới</p>
-        <p class="wb-steps__desc">Đối chiếu 6 nơi có nhất quán không (catalog ↔ SKILL.md ↔ CSS ↔ comparison). Giao subagent đọc
-        chéo, trả danh sách lệch → sửa.</p>
-      </div>
-    </li>
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">9</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Guardrails</p>
-        <p class="wb-steps__desc"><code>validate-sync.sh</code> (cũng là PreToolUse gate) kiểm cả docs lẫn skill deliverable. Rồi soi
-        mắt: color-ladder · token-over-magic-number · × top-right · no left-accent bar · dark = light-lift shadow.</p>
-      </div>
-    </li>
-    <li class="wb-steps__item">
-      <span class="wb-steps__marker">10</span>
-      <div class="wb-steps__content">
-        <p class="wb-steps__title">Commit + push</p>
-        <p class="wb-steps__desc">Commit thẳng <code>main</code> (workflow solo). Message kết bằng dòng
-        <code>Co-Authored-By</code>. Rồi push.</p>
-      </div>
-    </li>
-  </ol>
-
-  <div class="doc-block">
-    <h4>Đồng bộ 6 nơi (cascade)</h4>
-    <p class="doc-block__desc">Sửa một component = cập nhật tối đa 6 nơi cùng một lần. Lệch một nơi = skill nói dối AI
-    kế tiếp.</p>
-    <div class="wb-cluster" style="row-gap:8px">
-      <span class="wb-cap">web-builder.css</span>
-      <span class="doc-sep" aria-hidden="true">↔</span>
-      <span class="wb-cap">pages/&lt;id&gt;.html</span>
-      <span class="doc-sep" aria-hidden="true">↔</span>
-      <span class="wb-cap">app.js (NAV)</span>
-      <span class="doc-sep" aria-hidden="true">↔</span>
-      <span class="wb-cap">components-catalog.md</span>
-      <span class="doc-sep" aria-hidden="true">↔</span>
-      <span class="wb-cap">SKILL.md</span>
-      <span class="doc-sep" aria-hidden="true">↔</span>
-      <span class="wb-cap">principles / integration / comparison</span>
-    </div>
-  </div>
-
-  <div class="doc-block">
-    <h4>2 hook gác (chạy tự động)</h4>
-    <div class="wb-grid wb-grid--2" style="margin-top:6px">
-      <div class="nav-card">
-        <p class="nav-card__t">PostToolUse — nhắc cascade</p>
-        <p class="nav-card__d">Vừa chạm <code>web-builder.css</code> là hook chèn checklist 6 nơi, để không quên đồng bộ chỗ nào.</p>
-      </div>
-      <div class="nav-card">
-        <p class="nav-card__t">PreToolUse — cổng commit</p>
-        <p class="nav-card__d"><code>git commit</code>/<code>push</code> bị chặn nếu <code>validate-sync.sh</code> fail (routes==pages ·
-        SKILL.md có frontmatter · catalog không khai class CSS thiếu · CSS cân ngoặc…).</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="doc-sec">
-  <h3>Một file CSS — và đọc repo cho rẻ token</h3>
-  <p class="doc-sec__desc">Phần lý-do đằng sau quy trình ở trên: vì sao thư viện gói trong <b>một</b> file, vì sao
-  <b>không</b> tách nhỏ, và cách AI nên đọc file lớn để mỗi lần thêm/sửa không đốt token vô ích.</p>
-
-  <div class="doc-note">
-    <span aria-hidden="true">📦</span>
-    <div><b>Một file là lời hứa sản phẩm — không phải lười gom.</b> <code>web-builder.css</code> tự quảng cáo
-    “self-contained · no build · drop-in một file”. Tách nó ra nhiều file sẽ buộc app dùng phải
-    <code>@import</code> nhiều lần (thêm request, render-blocking) hoặc dựng một bước build — phá đúng thứ skill
-    đang bán. Thứ tách được là <b>demo docs</b> (<code>pages/*.html</code>) vì chúng <b>không ship</b>; còn CSS thì
-    ở nguyên một file.</div>
-  </div>
-
-  <div class="doc-block">
-    <h4>Vì sao không tách CSS theo từng component</h4>
-    <p class="doc-block__desc">Rule của một component không nằm gọn một khối — nó <b>rải khắp file</b>: token trong
-    <code>:root</code> · khối chính ở giữa · <code>.dark</code>/<code>:where()</code> override chỗ khác · rồi
-    component khác tái dùng nó (hoá đơn tái dùng card). Đo khoảng cách dòng đầu ↔ dòng cuối của mỗi class:</p>
-    <div class="wb-cluster" style="row-gap:8px;margin-top:4px">
-      <span class="wb-cap">receipt · gọn ~145 dòng</span>
-      <span class="wb-cap">colorpicker · ~64</span>
-      <span class="wb-cap">input · rải ~2340</span>
-      <span class="wb-cap">card · rải ~2319</span>
-      <span class="wb-cap">chart · rải ~1463</span>
-    </div>
-    <p class="doc-block__desc" style="margin-top:10px"><code>input</code>/<code>card</code> rải gần cả file — tách
-    vật lý sẽ phải nhân đôi cascade dùng chung hoặc dựng chuỗi <code>@import</code> phụ thuộc thứ tự mong manh. Một
-    file là <b>biểu diễn trung thực</b> của một cascade gắn chặt, không phải nợ kỹ thuật.</p>
-  </div>
-
-  <div class="doc-block">
-    <h4>AI không đọc lại cả repo mỗi lần</h4>
-    <p class="doc-block__desc">Mỗi phiên chỉ <b>tự nạp</b> <code>CLAUDE.md</code> + bộ nhớ (nhỏ); còn lại đọc theo
-    nhu cầu. Kẻ đốt token thật là 3 file lớn khi lỡ đọc full — nên đừng bảo AI “đọc repo cho hiểu”:</p>
-    <div class="wb-grid wb-grid--auto" style="--wb-grid-min:200px;margin-top:8px">
-      <div class="nav-card">
-        <p class="nav-card__t">web-builder.css</p>
-        <p class="nav-card__d">~2900 dòng ≈ <b>~40k token</b> nếu đọc full.</p>
-      </div>
-      <div class="nav-card">
-        <p class="nav-card__t">app.js · catalog</p>
-        <p class="nav-card__d"><b>~16k token</b> mỗi file.</p>
-      </div>
-      <div class="nav-card">
-        <p class="nav-card__t">Đọc “ngây thơ” cả ba</p>
-        <p class="nav-card__d"><b>~70k token</b> trước khi viết một dòng.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="doc-block">
-    <h4>Đọc theo cụm — để <code>grep</code> làm bản đồ</h4>
-    <p class="doc-block__desc">Không Read full <code>web-builder.css</code>. Thay vào đó:</p>
-    <ol class="wb-steps">
-      <li class="wb-steps__item">
-        <span class="wb-steps__marker">1</span>
-        <div class="wb-steps__content">
-          <p class="wb-steps__title"><code>grep -n 'wb-&lt;comp&gt;'</code></p>
-          <p class="wb-steps__desc">Ra <b>toàn bộ</b> dòng của component — kể cả token, dark override và chỗ tái dùng rải rác.</p>
-        </div>
-      </li>
-      <li class="wb-steps__item">
-        <span class="wb-steps__marker">2</span>
-        <div class="wb-steps__content">
-          <p class="wb-steps__title">Gom cụm</p>
-          <p class="wb-steps__desc">Nhóm các dòng liền nhau thành vài cụm (khối chính · token · override).</p>
-        </div>
-      </li>
-      <li class="wb-steps__item">
-        <span class="wb-steps__marker">3</span>
-        <div class="wb-steps__content">
-          <p class="wb-steps__title">Read từng cụm</p>
-          <p class="wb-steps__desc">Bằng <code>offset/limit</code> (+vài dòng đệm) — <b>không</b> đọc cửa sổ cố định ±N dòng.</p>
-        </div>
-      </li>
-    </ol>
-    <p class="doc-block__desc" style="margin-top:12px"><b><code>.claude/tools/wb.sh locate &lt;class&gt;</code> làm hộ
-    cả 3 bước trên</b> — in sẵn lệnh <code>Read</code> theo cụm + bản đồ blast-radius (xem <a href="#/tooling">Tooling</a>
-    §3). <code>grep</code> tìm <b>mọi</b> lần xuất hiện nên bất chấp component dài hay rải rác; cửa sổ cố định ±N
-    dòng thì sẽ <b>sót rule</b>. <code>receipt</code> đọc ~2k token thay vì 40k (thắng ~20×); <code>input</code> rải
-    rác đọc ~3 cụm ~300 dòng (vẫn thắng ~8×). Việc đọc rộng thì đẩy cho <b>subagent</b> — 40k đó nằm trong context
-    riêng của nó, chỉ bản tóm tắt trở về luồng chính.</p>
-  </div>
-
-  <div class="doc-note">
-    <span aria-hidden="true">🛟</span>
-    <div><b>Lỡ đọc sót một lát thì sao?</b> Không ship lỗi âm thầm: <code>validate-sync.sh</code> lúc commit và bước
-    verify sáng/tối làm demo page <b>vỡ mắt thường</b> nếu thiếu token hay dark override — worst case là đọc lại
-    một lượt, không phải bug lọt ra.</div>
-  </div>
-</section>
-
-<section class="doc-sec">
-  <h3>AI làm gì với repo này</h3>
-  <p class="doc-sec__desc">Sáu việc thường gặp — tất cả đều xoay quanh giữ cho skill dày lên và không lệch.</p>
-  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:250px;margin-top:8px">
-    <div class="nav-card">
-      <p class="nav-card__t">Build UI web</p>
-      <p class="nav-card__d">Ráp màn hình từ <code>wb-*</code> + token, bám <a href="#/color">thang màu</a> (trắng–đen–xám trước,
-      màu chỉ cho status). Không tự chế style.</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Thêm primitive mới</p>
-      <p class="nav-card__d">Chạy <code>/wb-change</code>: discover → plan → implement → đồng bộ 6 nơi → verify →
-      <b>rà soát tái dùng</b> → review → commit.</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Update component đã có</p>
-      <p class="nav-card__d">Cùng workflow; sửa xong phải <b>rà toàn repo</b> tìm chỗ thay được bằng bản mới, hoặc áp biến thể/token vừa thêm.</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Sync docs ↔ lib ↔ skill</p>
-      <p class="nav-card__d">Giữ <code>components-catalog.md</code>, <code>SKILL.md</code>, CSS và demo khớp nhau — lệch một nơi là skill
-      nói dối AI kế tiếp; <code>validate-sync.sh</code> gác cổng khi commit.</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">So với lib khác</p>
-      <p class="nav-card__d">Đối chiếu phạm vi với Bootstrap (<code>bootstrap-comparison.md</code>) để lộ khoảng trống trong bộ component,
-      quyết định thêm gì tiếp.</p>
-    </div>
-    <div class="nav-card">
-      <p class="nav-card__t">Tích hợp vào app thật</p>
-      <p class="nav-card__d">Class lo phần nhìn; map sang engine hành vi (Radix, Recharts, dnd-kit) mà vẫn giữ nguyên pixel —
-      xem <code>integration.md</code>.</p>
-    </div>
-  </div>
 </section>

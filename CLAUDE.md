@@ -20,11 +20,11 @@ the skill (the sync steps below), so the skill keeps compounding in quality.
 **Docs = the human-readable superset of the repo.** The skill is the *product*, but the **docs** — this file,
 `README.md`, `web-builder/references/*.md`, the docs-site, and code comments — are where a **person** finds
 *everything true of the repo*: skill **+** code **+** tooling (the `/wb-change` workflow and how it triggers,
-the hooks, the numbered design principles §1–23, the deliberate trade-offs). If a fact lives only in code or
+the hooks, the numbered design principles §1–24, the deliberate trade-offs). If a fact lives only in code or
 tooling and a human can't find it in the docs, that's a gap to close — not to leave implicit. So a repo change
 isn't done when the code works; it's done when the docs a human would read still tell the whole, true story.
 And the docs **site** must be **self-contained** (§23): a `pages/*.html` renders its content **in-site** (for
-length use a `<details>`/accordion or a dedicated page — e.g. `principles.html` renders §1–23 in full,
+length use a `<details>`/accordion or a dedicated page — e.g. `principles.html` renders §1–24 in full,
 `tooling.html` covers serve/verify/hooks, `decisions.html` mirrors the README trade-offs (each tagged `T#`)),
 never a teaser punting a human to a raw `.md`. (The AI-facing `SKILL.md → references/*.md` layering stays —
 that's token thrift, not a gap. `validate-sync.sh` CHECK 11(c), 12 + 13 enforce this — 13 blocks a commit if a
@@ -39,7 +39,7 @@ README `T#` isn't rendered on `#/decisions`.)
   chrome and never ship.
 - **Preview:** `cd web-builder/assets && python3 serve.py` → http://127.0.0.1:8777 (no-store, so a normal
   reload shows edits). Drive the SPA by setting the hash, e.g. `#/receipt`; after editing `app.js`, do a
-  full reload (its in-memory `NAV`/`ROUTES` is stale until then).
+  full reload (its in-memory `SECTIONS`/`ROUTES` is stale until then).
 
 ## The change workflow (`/wb-change`) + guardrails
 
@@ -59,8 +59,9 @@ workflow lives in the skill/hooks (loaded on demand), not here — this file sta
    hairline `var(--wb-bw)`, pill `var(--wb-radius-pill)`).
 2. `web-builder/assets/pages/<id>.html` — the demo page (markup only; use `.wb-cluster/.wb-stack/.wb-grid`
    for layout, not inline `display:flex`).
-3. `web-builder/assets/app.js` — a `{ id, label }` in the `NAV` array (the single source of truth for the
-   sidebar + router).
+3. `web-builder/assets/app.js` — a `{ id, label }` in the `SECTIONS` model (single source of truth for the
+   section switcher + sidebar + router): a **component** goes under the right `group` in the `components`
+   section; a foundation/meta page goes in the flat `items` of the `design` / `project` section.
 4. `web-builder/references/components-catalog.md` — a section + a decision-guide row.
 5. `web-builder/SKILL.md` — the AI's **first read**: add the new part to the right per-intent scope group
    (*Nền tảng · Hành động · … · Cấu trúc*), or note a new capability on a family already listed. If SKILL.md
@@ -72,7 +73,7 @@ workflow lives in the skill/hooks (loaded on demand), not here — this file sta
 
 If these drift, the skill misleads the next AI. Verify with `.claude/hooks/validate-sync.sh` — it validates
 both the **docs site** (routes == pages · no per-page `<style>` · `app.js` parses) **and the skill
-deliverable** (SKILL.md frontmatter + trigger description · SKILL.md scope names every `NAV` group · every
+deliverable** (SKILL.md frontmatter + trigger description · SKILL.md scope names every component `group` · every
 `references/*.md` exists · the catalog never documents a class the CSS lacks · `web-builder.css` braces
 balanced). The commit gate runs it for you.
 
