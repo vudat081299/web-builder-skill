@@ -1349,13 +1349,16 @@
 .wb-accordion__item { border-bottom: var(--wb-bw) solid var(--wb-border); }
 .wb-accordion__item:last-child { border-bottom: 0; }
 .wb-accordion__item > summary {
-  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
-  padding: 14px 16px; font-size: 14px; font-weight: 600; color: var(--wb-fg);
+  list-style: none; cursor: pointer; position: relative; line-height: 1.4;
+  padding: 14px 44px 14px 16px; font-size: 14px; font-weight: 600; color: var(--wb-fg);
 }
 .wb-accordion__item > summary::-webkit-details-marker { display: none; }
-/* A real chevron icon. Points down when closed, rotates up when open. */
+/* A real chevron icon, pinned top-right so a long / multi-element title (inline
+   <code>/<b>) flows as normal wrapping text — NOT flex, which would make every
+   inline child its own item and shrink each to min-content (the "· jumps to the
+   next line" bug). Points down when closed, rotates up when open. */
 .wb-accordion__item > summary::after {
-  content: "\e5cf"; margin-left: auto; flex: none; color: var(--wb-fg-muted);
+  content: "\e5cf"; position: absolute; right: 14px; top: 11px; color: var(--wb-fg-muted);
   font-size: 22px; transition: transform .18s ease;
 }
 .wb-accordion__item[open] > summary::after { transform: rotate(180deg); }
