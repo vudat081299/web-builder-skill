@@ -14,6 +14,19 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 
+/* Docs shell renders at 90% by default — the site read a touch large at 100%, so
+   we bake in the zoom you'd otherwise apply by hand in Chrome. Docs-only:
+   web-builder.css is untouched, so the shipped library never carries this.
+   Caveat: CSS `zoom` (unlike browser zoom) does NOT rescale `vh`, so under
+   zoom `100vh` = only 90% of the real viewport. Full-viewport-height chrome
+   (shell, sidebar, drawers) therefore uses `--doc-vh`, which divides that back
+   out so those elements still fill the actual viewport. */
+:root {
+  --doc-zoom: 0.9;
+  zoom: var(--doc-zoom);
+  --doc-vh: calc(100vh / var(--doc-zoom));   /* = the real viewport height under zoom */
+}
+
 /* Docs-only tweak knobs — the Config panel drives these live; they never ship. */
 :root {
   --wb-demo-bw: 1px;
@@ -32,7 +45,7 @@ a { color: inherit; }
 
 /* Shell = a full-width topbar stacked OVER a [sidebar | main] row, so the topbar
    always spans the whole width and the sidebar never shrinks it. */
-.doc-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.doc-shell { display: flex; flex-direction: column; min-height: var(--doc-vh); }
 .doc-body  { display: flex; flex: 1 1 auto; min-height: 0; }
 
 /* -----------------------------------------------------------------------------
@@ -40,7 +53,7 @@ a { color: inherit; }
    -------------------------------------------------------------------------- */
 .doc-side {
   position: sticky; top: var(--doc-nav-h); align-self: flex-start;
-  width: 252px; height: calc(100vh - var(--doc-nav-h)); flex: none;
+  width: 252px; height: calc(var(--doc-vh) - var(--doc-nav-h)); flex: none;
   border-right: var(--wb-bw) solid var(--wb-border);   /* the ONE divider — on the right */
   background: var(--wb-surface);
   padding: 14px 12px 56px;                                  /* tail room so the last item scrolls clear */
@@ -340,7 +353,7 @@ a { color: inherit; }
 
 .doc-config {
   position: fixed; top: 0; right: 0; z-index: 200;
-  width: 366px; max-width: 92vw; height: 100vh;
+  width: 366px; max-width: 92vw; height: var(--doc-vh);
   display: flex; flex-direction: column;
   background: var(--wb-surface); border-left: var(--wb-bw) solid var(--wb-border);
   box-shadow: -14px 0 44px rgba(16, 17, 18, .14);
@@ -415,7 +428,7 @@ a { color: inherit; }
      `display:none`, so the toggle could never reveal it on a phone — now it can. (The
      desktop --hidden collapse is undone here; the drawer uses transform, not display.) */
   .doc-side {
-    position: fixed; top: 0; left: 0; height: 100vh; z-index: 60;
+    position: fixed; top: 0; left: 0; height: var(--doc-vh); z-index: 60;
     width: 264px; max-width: 82vw;
     transform: translateX(-100%); transition: transform .22s ease;
     box-shadow: var(--wb-shadow-md);
