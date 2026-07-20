@@ -87,9 +87,10 @@ steps (16/18/20/24/32, tokens `--wb-ico-*`), never ad-hoc `font-size`.
 
 ## Current scope
 
-Coverage maps to the **eleven intent-groups** in the docs sidebar (this is the map; the exhaustive
-roster with every modifier + copy-paste markup lives in `components-catalog.md` — **that's the single
-source of truth**, kept in sync per-component, so it never drifts here):
+Coverage maps to **eleven intent-groups** — foundation (**Nền tảng**, the docs' *Thiết kế* section) plus
+the **ten component groups** of the *Thành phần* section (this is the map; the exhaustive roster with every
+modifier + copy-paste markup lives in `components-catalog.md` — **that's the single source of truth**, kept in
+sync per-component, so it never drifts here):
 
 - **Nền tảng** — colour ladder, tokens, typography scale, fonts guidance (system stack by default, swap
   `--wb-font`), border & radius, and a live **Config** playground that edits tokens and exports a `.md`.
