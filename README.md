@@ -136,6 +136,9 @@ canonical, numbered home of the design thinking (when a note references "§N", i
 
 ## Deliberate trade-offs & deferred decisions
 
+Settled calls live here. Questions still **open** — including whether to build a React kit — live in
+[`HANDOFF.md`](HANDOFF.md), a working note that empties itself as each item lands here (or in the changelog).
+
 Recorded on purpose, so a future reader (or AI) understands these were **chosen**, not overlooked — don't
 "rediscover" them as bugs. Revisit only if the stated reason stops holding. Each is tagged **T#** and mirrored
 in full on the docs site at `#/decisions`; `validate-sync.sh` **CHECK 13** blocks a commit if a `T#` defined
