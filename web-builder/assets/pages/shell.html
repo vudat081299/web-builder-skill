@@ -7,6 +7,31 @@
 </div>
 
 <section class="wb-section">
+  <h3>Nền tảng — <code>.wb-app</code></h3>
+  <p class="wb-section__desc">Mặt đất mà mọi component đứng lên: <code>box-sizing: border-box</code> cho mọi
+  phần tử <code>wb-*</code>, font, màu nền/chữ, <code>line-height</code>, và link <b>thừa hưởng màu</b> thay vì
+  xanh mặc định trình duyệt. Đặt lên <code>&lt;body&gt;</code>.</p>
+
+  <div class="wb-block">
+    <h4>Khi nào phải viết ra</h4>
+    <p class="wb-block__desc"><code>.wb-shell</code> đã mang sẵn đúng những khai báo đó, nên màn có shell không
+    cần thêm gì. Màn <b>không</b> có shell — đăng nhập, landing, widget nhúng — phải tự khai
+    <code>class="wb-app"</code>, nếu không sẽ rơi về mặc định trình duyệt: chữ serif, link xanh gạch chân,
+    line-height rộng, body thừa 8px margin. Đây cố tình là <b>opt-in bằng class</b> chứ không phải rule
+    <code>body {}</code> trần — để thả file CSS này vào một trang chỉ cần một component thì không phá trang đó.</p>
+    <div class="demo">
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;body class="wb-app"&gt;                &lt;!-- màn không shell: bắt buộc --&gt;
+  &lt;main class="wb-container wb-container--narrow"&gt; … &lt;/main&gt;
+&lt;/body&gt;
+
+&lt;body class="wb-app"&gt;                &lt;!-- màn có shell: .wb-shell mang sẵn, để đây cho nhất quán --&gt;
+  &lt;div class="wb-shell"&gt; … &lt;/div&gt;
+&lt;/body&gt;</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="wb-section">
   <h3>Khung app-shell</h3>
   <p class="wb-section__desc">Bốn khe: thanh trên (<code>.wb-navbar</code>), hàng thân (<code>.wb-shell__body</code>)
   gồm rail trái (<code>.wb-shell__side</code>) cạnh cột nội dung (<code>.wb-shell__main</code>), và footer.
@@ -163,6 +188,23 @@
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>const shell = document.querySelector(".wb-shell");
 const narrow = window.matchMedia("(max-width: 900px)").matches;
 shell.classList.toggle(narrow ? "is-side-open" : "is-side-collapsed");</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Nút mở rail — <code>.wb-shell__side-toggle</code></h4>
+    <p class="wb-block__desc">Đặt nó <b>đầu thanh trên</b>. Nút chỉ hiện đúng lúc rail gập thành ngăn kéo
+    (≤ 900px) và tự ẩn ở màn rộng — nút và ngăn kéo dùng chung một mốc nên không bao giờ lệch nhau.
+    Đừng nhầm với <code>.wb-navbar__toggle</code>: cái đó gập <i>link inline của thanh</i> theo bề ngang
+    của chính thanh. Trong shell, điều hướng nằm ở rail — dùng cái này.</p>
+    <div class="demo">
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;header class="wb-navbar wb-navbar--sticky wb-navbar--glass"&gt;
+  &lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle"
+          data-side-toggle aria-label="Mở thanh điều hướng"&gt;
+    &lt;span class="wb-ico"&gt;menu&lt;/span&gt;
+  &lt;/button&gt;
+  …
+&lt;/header&gt;</code></pre></div>
     </div>
   </div>
 

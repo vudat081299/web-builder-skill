@@ -415,7 +415,7 @@ So a docs-site page must be **self-contained for the topic it covers**. Never wr
 `X.md`" / "the complete roster is in `X.md`" as a *substitute for content* — that is the incomplete-docs trap
 (the one that once left the overview's §-map a teaser pointing at this file). If length is the worry, that is
 exactly what disclosure primitives are for: put the full content in a `<details>` / accordion or a dedicated
-page and link **in-site** — as the §1–§24 rendering now lives on `pages/principles.html` (full, collapsible)
+page and link **in-site** — as the §1–§25 rendering now lives on `pages/principles.html` (full, collapsible)
 with the overview keeping only a compact §-index that links to it. Cross-linking to another **in-site page** is
 navigation, not deferral; sending a human to a raw reference file for content the site chose to cover is the
 anti-pattern.
@@ -476,3 +476,28 @@ This is the corner face of §5 (elevation & rounding) and §18 (token, not magic
 **derived** value — express it as `outer − gap`, not a second hand-picked constant that silently drifts when
 the outer radius or the padding is re-tuned. (Native help is arriving — iOS "concentric corners", and CSS
 `corner-shape` — but until it's ubiquitous, compute it.)
+
+## 25. Ship the ground, not just the parts
+
+A component library is judged by the screens people build with it, not by the components in isolation. Two
+whole layers of "why the docs look right" can hide **outside** what ships, and both did here:
+
+- **The baseline** — box-sizing, the font, canvas and ink colours, line-height, links that don't go
+  browser-blue. It lived in the docs' own stylesheet, so every other build fell through to browser defaults:
+  serif text, blue underlined links, a loose line-height, an 8px body margin. That was the largest single
+  reason a build didn't look like the docs. It ships now as `.wb-app` (CSS section 53), opt-in via the class
+  so the stylesheet is still droppable into a page that only wanted one component.
+- **The finished screen** — a parts list plus a recipe table still leaves a hundred small calls per page:
+  which heading level, where the breadcrumb sits, when a row is `--2` instead of `--auto`, how much colour
+  is enough. So the library ships **page templates** (`assets/templates/*.html`), and `SKILL.md` makes
+  starting from one a hard rule. A guardrail (`validate-sync.sh` CHECK 14) keeps every recipe and every
+  template in lockstep, both directions.
+
+The test to apply: **build a real screen with only what ships, and see what you have to invent.** Whatever
+you reach for and can't find is a hole in the library, not a gap in your patience. Writing the six templates
+found three in one sitting — `.wb-container` overflowing its parent for want of `box-sizing`, a rail that
+folded at 900px with no button to open it, and the whole baseline above. None of them were visible from
+inside the docs, because the docs had already patched around all three in a file that never shipped.
+
+Corollary for anything you add: if a rule is needed to make the library's own showcase look right, it
+belongs **in the library**. A rule that lives only in the showcase is a rule the next build will not get.

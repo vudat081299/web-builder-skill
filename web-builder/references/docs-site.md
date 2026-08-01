@@ -184,13 +184,18 @@ that these drivers are docs-only glue — a real app maps the same classes onto 
 
 Non-`wb-*` classes — the chrome the library has no primitive for. Compact roster by area.
 
-**What is NOT here any more, and why.** The page **frame** and the heading **rhythm** used to be docs chrome:
-shell, rail, topbar, content column, eyebrow / page-head / section / block, the note box, the link tiles.
-They were folded into the library (CSS section 52) because an app built with this skill needs exactly that frame and had
-no way to get it — the docs looked composed and a fresh build didn't. The mapping, if you meet the old names:
+**What is NOT here any more, and why.** The page **frame**, the heading **rhythm** and the document
+**baseline** used to be docs chrome: shell, rail, topbar, content column, eyebrow / page-head / section /
+block, the note box, the link tiles — plus `* { box-sizing }`, the `body {}` font/colour/line-height block
+and `a { color: inherit }`. All of it was folded into the library (CSS section 52 for the frame, 53 for the
+baseline) because an app built with this skill needs exactly that and had no way to get it — the docs looked
+composed and a fresh build didn't. The mapping, if you meet the old names:
 
 | was (docs.css) | now (shipped) |
 |---|---|
+| `* { box-sizing: border-box }` | `:where([class^="wb-"], [class*=" wb-"])` — scoped to the library, never the host page |
+| `body { font · bg · color · line-height · smoothing }` | **`.wb-app`** on `<body>` (`.wb-shell` carries the same) |
+| `a { color: inherit }` | `:where(.wb-app, .wb-shell) :where(a)` — zero specificity, so components still win |
 | `doc-shell` · `doc-body` · `doc-main` | `wb-shell` · `wb-shell__body` · `wb-shell__main` |
 | `doc-side` (+ off-canvas < 900px) | `wb-shell__side` (drawer + scrim ship too) |
 | `doc-topbar` | `wb-navbar wb-navbar--sticky wb-navbar--glass` (a `.doc-topbar` hook keeps two docs-only tweaks) |

@@ -13,14 +13,17 @@
 
    The page FRAME and the heading rhythm used to live here too — shell, rail,
    topbar, content column, eyebrow / page-head / section / block, the note box and
-   the link tiles. They are shipped primitives now (web-builder.css §52), because
-   an app built with this library needs exactly that frame and had no way to get
-   it. What is left of them here is consumer tuning: three token overrides and two
-   spacing hooks. If you find yourself re-declaring a frame rule in this file,
-   that is the signal it belongs upstream in §52.
+   the link tiles. So did the document BASELINE — border-box, the font, canvas /
+   ink colours, line-height, `a { color: inherit }`. All of it is shipped now
+   (web-builder.css CSS section 52 for the frame, 53 for the baseline), because an
+   app built with this library needs exactly that and had no way to get it. What
+   is left of them here is consumer tuning: three token overrides and two spacing
+   hooks. If you find yourself re-declaring a frame or baseline rule in this file,
+   that is the signal it belongs upstream.
    ========================================================================== */
-* { box-sizing: border-box; }
-html, body { margin: 0; }
+/* The baseline is `.wb-app` on <body> (index.html) — not a rule here. Only the
+   <html> margin is left, since .wb-app can only zero the body's. */
+html { margin: 0; }
 
 /* Docs shell renders at 90% by default — the site read a touch large at 100%, so
    we bake in the zoom you'd otherwise apply by hand in Chrome. Docs-only:
@@ -42,14 +45,6 @@ html, body { margin: 0; }
   --wb-doc-divider: var(--wb-border);
   --doc-nav-h: 58px;   /* topbar height — the sidebar sticks just below it */
 }
-body {
-  font-family: var(--wb-font);
-  background: var(--wb-canvas);
-  color: var(--wb-fg);
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.55;
-}
-a { color: inherit; }
 
 /* The shell, the rail slot and the content column are the SHIPPED scaffold
    (web-builder.css §52) — .wb-shell / __body / __side / __main. The docs are an

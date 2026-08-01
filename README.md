@@ -23,21 +23,22 @@ leaves the shipped skill better and coherent.
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **63 pages**, light/dark, browsable (incl. `#/principles` rendering §1–24 in full, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css`, the one file the real app consumes. |
+| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **65 pages**, light/dark, browsable (incl. `#/principles` rendering §1–25 in full, `#/templates` for the six page templates, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css` + `templates/`. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`web-builder.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
 
 **1 · Skill** — the AI-facing knowledge:
 - `SKILL.md` — entry point: the one rule ("don't invent styling"), the colour ladder, current scope, house conventions.
-- `references/components-catalog.md` — "building X → use Y, here's the snippet" lookup + a **Composing a page** recipe section (app-shell skeleton + dashboard/list/form/auth recipes) for whole screens (**start here** for a build task).
+- `references/components-catalog.md` — "building X → use Y, here's the snippet" lookup + a **Composing a page** section (app-shell skeleton + the recipe→template table) for whole screens (**start here** for a build task; for a whole screen it sends you to a template).
 - `references/design-principles.md` — the colour ladder, token discipline, dogfooding, layout stance, and every convention, numbered.
 - `references/integration.md` — how the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example).
 - `references/bootstrap-comparison.md` — coverage vs Bootstrap 5.3 (what we have / skip / do differently), for "do we need component X?" calls.
 - `references/docs-site.md` — how the docs **site** is built (SPA shell + `app.js` `SECTIONS`/router + `docs.css` chrome, the page-grammar skeleton, the Config/search/dual-preview features), so the skill can rebuild the docs. Docs are instrumentation and **never ship**.
 
 **2 · Docs** — the living gallery in `web-builder/assets/`:
-- `web-builder.css` — **the library** (design tokens + all `wb-*` components). **The only file that ships to the app.**
+- `web-builder.css` — **the library** (design tokens + all `wb-*` components). **The only file that ships to the app at runtime.**
+- `templates/<screen>.html` — **six finished screens** (dashboard · list · form · detail · settings · auth) on the shipped scaffold. Part of the skill, but *source you copy*, not something an app links — so the runtime payload stays one CSS file.
 - `index.html` + `app.js` + `docs.css` — the docs **shell** (hash router, sidebar tree, theme toggle, config drawer). Docs chrome — **never ships**.
 - `pages/<id>.html` — one small, markup-only page per component/foundation (one per `SECTIONS` route — kept in parity; see the self-check below).
 - `serve.py` — a `no-store` dev server so a normal reload shows edits.
@@ -60,7 +61,7 @@ Deep-link to a page with the hash: `#/tables`, `#/receipt`, `#/charts`. The docs
 
 ## Adding a primitive component (and keeping everything in sync)
 
-A component is **one change across six places** — if they drift, the skill starts lying to the next AI.
+A component is **one change across seven places** — if they drift, the skill starts lying to the next AI.
 
 1. **CSS** — add a numbered section to `web-builder/assets/web-builder.css`: `.wb-<name>` (+ `__element`,
    `--modifier`). Build from **tokens**, never raw hex/px (hairline = `var(--wb-bw)`, pill =
@@ -83,7 +84,11 @@ A component is **one change across six places** — if they drift, the skill sta
 5. **Skill** — update `web-builder/SKILL.md`, the AI's first read: add the component to the right per-intent
    scope group (*Foundation · … · Structure*), or note a new capability on a family already listed. Miss it and
    the next AI trusts SKILL.md's scope and assumes the part isn't there.
-6. **If relevant** — a new convention → `design-principles.md`; needs an app behaviour engine (Radix,
+6. **Templates** — if the change touches a whole-screen pattern (the shell, the page rhythm, a part every
+   screen carries), update the affected `web-builder/assets/templates/<screen>.html`. Adding a **new page
+   recipe** means adding both a row to the catalog's *Named recipes* table **and** its template file —
+   `validate-sync.sh` CHECK 14 locks the two together in both directions.
+7. **If relevant** — a new convention → `design-principles.md`; needs an app behaviour engine (Radix,
    dnd-kit, sonner…) → a row in `integration.md`; a Bootstrap-coverage note → `bootstrap-comparison.md`;
    a **user-visible** new/changed part → an entry in `web-builder/CHANGELOG.md` (else the shipped changelog rots).
 
@@ -133,7 +138,7 @@ White-black-grey first; colour only for real status/meaning; **tokens over magic
 equivalent); on dark, shadows flip to a soft **light** lift; a dismiss **×** sits **top-right**; **no
 left-accent bars**; icons come from an icon font (never hand-drawn). Layout stays a small flex/grid utility
 set — **not** a Bootstrap-style 12-column foundation — a *minimalism* choice, and self-sufficient (no
-Tailwind required). Full, numbered rules (§1–§24, human-readable — also rendered in full on the docs site at
+Tailwind required). Full, numbered rules (§1–§25, human-readable — also rendered in full on the docs site at
 `#/principles`):
 [`web-builder/references/design-principles.md`](web-builder/references/design-principles.md) — this is the
 canonical, numbered home of the design thinking (when a note references "§N", it means a rule there).

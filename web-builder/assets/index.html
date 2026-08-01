@@ -24,10 +24,12 @@
     } catch (e) {}
   </script>
 </head>
-<body>
-  <!-- The shell, the bar, the rail slot and the content column are all SHIPPED
-       primitives (web-builder.css §52 / §37) — the docs dogfood the same frame an
-       app gets. Only .doc-* hooks below are docs-specific chrome. -->
+<body class="wb-app">
+  <!-- .wb-app is the SHIPPED document baseline (CSS section 53): border-box, the
+       font, canvas/ink colours, line-height, links that inherit. The shell, the
+       bar, the rail slot and the content column are shipped too (section 52 / 37)
+       — the docs dogfood the same ground an app stands on. Only .doc-* hooks
+       below are docs-specific chrome. -->
   <div class="wb-shell">
 
     <!-- ===================== TOPBAR (full-width, on top) ================= -->

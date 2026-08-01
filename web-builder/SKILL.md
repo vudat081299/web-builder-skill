@@ -38,17 +38,33 @@ use), but the primitives are general-purpose: use it for any minimalist web buil
    `assets/pages/<id>.html`, register it in `app.js` (the `SECTIONS` model), and record it in the
    catalog. Then reuse it forever.
 
-**Building a whole page, not just one part?** Start from the **Composing a page — recipes** section at the top
-of `components-catalog.md`: it gives the app-shell skeleton (navbar · rail · container · footer) and named
-recipes (dashboard · records list · form · auth · settings) so you assemble the right *set* of parts, then
-fill each region with the single-component snippets. Page-level rhythm (container width, order, neutral-first
-at page scale) is spelled out there too — so you never re-decide page layout by hand.
+**Building a whole page, not just one part? START FROM A TEMPLATE — this is a rule, not a suggestion.**
+`assets/templates/` ships six finished screens, each a standalone HTML document built from these parts:
 
-The frame and the spacing are **shipped parts, not advice**: `.wb-shell` + its three slots, and the
-`.wb-page-head` → `.wb-section` → `.wb-block` heading ladder (catalog § *App shell & page scaffold*). Nest them
-in that order and the page's rhythm is already the one the docs were tuned to over many review rounds — no
-`min-height:100vh`, no hand-picked `margin-top`, no re-inventing a mobile rail. **A hand-rolled shell or a
-one-off margin is the single biggest reason a build stops looking like this system.**
+| Recipe | Template |
+|---|---|
+| Dashboard / home | `assets/templates/dashboard.html` |
+| Records / transactions list | `assets/templates/list.html` |
+| Add / edit form | `assets/templates/form.html` |
+| Detail / record view | `assets/templates/detail.html` |
+| Settings | `assets/templates/settings.html` |
+| Auth / login (no shell) | `assets/templates/auth.html` |
+
+Open the closest one, **replace the copy and the data, keep the frame**. Change text, numbers, icons, how
+many rows or fields; do not change the `wb-shell` frame, the `wb-page-head` → `wb-section` → `wb-block`
+nesting, or the spacing (it comes from tokens — if a gap feels wrong, set `--wb-section-gap` /
+`--wb-block-gap`, never a `margin` on one element). Only when no template fits the *shape* of the screen do
+you compose from the **Composing a page — recipes** section of `components-catalog.md` — and then fold the
+result back as a new recipe **plus** a new template, so the next build reuses it.
+
+Why the rule is hard: a table of parts cannot state the hundred small calls a finished page makes — which
+heading level, where the breadcrumb goes, when a row is `--2` instead of `--auto`, how much colour is
+enough. The templates already made them, the way the docs were tuned over many review rounds.
+
+The frame and the spacing are **shipped parts, not advice**: `body.wb-app` (the baseline: border-box, font,
+colours, line-height, links), `.wb-shell` + its slots, and the heading ladder (catalog § *App shell & page
+scaffold*). No `min-height:100vh`, no hand-picked `margin-top`, no re-inventing a mobile rail. **A
+hand-rolled shell or a one-off margin is the single biggest reason a build stops looking like this system.**
 
 If you find yourself picking a hex value or a pixel padding by hand, stop — there is
 almost certainly a token or class for it.
@@ -62,10 +78,11 @@ each app re-deriving the same piece. New to the shipped set since you last looke
 
 | File | What it is | Read when |
 |---|---|---|
-| `assets/web-builder.css` | The library: design tokens + components (self-contained, no build). **The only file that ships to the app.** | You need class names / token names, or are adding a component |
+| `assets/web-builder.css` | The library: design tokens + components (self-contained, no build). **The only file that ships to the app at runtime.** | You need class names / token names, or are adding a component |
+| `assets/templates/<screen>.html` | **Six finished screens** (dashboard · list · form · detail · settings · auth), standalone HTML on the shipped scaffold. Ships with the skill; they are source you copy, so the runtime payload is still one CSS file. | **Building a whole screen — open the closest one first.** Not for looking up a single component |
 | `assets/pages/<id>.html` | Living docs, **one small file per primitive** (buttons, tables, tags, input, select, charts, config, layout…). | You want the exact markup for one component — open just that file, not a monolith |
 | `assets/index.html` + `app.js` + `docs.css` | The docs **shell** (reused by every page): tree sidebar, hash router that loads one page at a time, theme toggle, copy, and the dual light/dark preview. | You're changing the docs site itself (nav, routing, chrome) — not a component |
-| `references/components-catalog.md` | "Building X → use Y, here's the snippet" lookup **+ a *Composing a page* recipe section** (app-shell skeleton + dashboard / list / form / auth recipes) for whole screens | **Start here** for any build task — one part *or* a whole page |
+| `references/components-catalog.md` | "Building X → use Y, here's the snippet" lookup **+ a *Composing a page* recipe section** (app-shell skeleton + the recipe→template table) for whole screens | **Start here** for a single part; for a whole screen it points you at the template |
 | `references/design-principles.md` | The colour ladder, neutral shadow rule, number/typography/font rules | Building something new or making an aesthetic call |
 | `references/integration.md` | How the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example) | Wiring the library into a real app |
 | `references/bootstrap-comparison.md` | Coverage vs Bootstrap 5.3 (what we have / skip / do differently), the popup set, the layout-foundation decision, and BOC structure | Deciding whether to add a component, or "do we have X?" |
@@ -98,11 +115,16 @@ the **ten component groups** of the *Components* section (this is the map; the e
 modifier + copy-paste markup lives in `components-catalog.md` — **that's the single source of truth**, kept in
 sync per-component, so it never drifts here):
 
-- **Foundation** — colour ladder, tokens, typography scale, fonts guidance (system stack by default, swap
-  `--wb-font`), border & radius, and a live **Config** playground that edits tokens and exports a `.md`.
+- **Foundation** — the **app baseline `.wb-app`** (on `<body>`: border-box for every `wb-*` element, the font,
+  canvas/ink colours, `line-height`, links that inherit instead of going browser-blue — `.wb-shell` implies it,
+  a shell-less screen must say it or it falls through to the browser's serif default), the colour ladder,
+  tokens, typography scale, fonts guidance (system stack by default, swap `--wb-font`), border & radius,
+  **page templates** (`assets/templates/*.html` — six finished screens; start any whole-screen build there),
+  and a live **Config** playground that edits tokens and exports a `.md`.
 - **Layout & utilities** — the **app shell & page scaffold** (`.wb-shell` + `__body`/`__side`/`__main` — the frame of a
   whole screen: sticky bar, a rail slot that sticks, scrolls and folds to an off-canvas drawer + scrim below 900px via
-  `.is-side-collapsed`/`.is-side-open`, and a content column `.wb-container--pad`; plus the heading rhythm
+  `.is-side-collapsed`/`.is-side-open` with `.wb-shell__side-toggle` = the ☰ that appears at exactly that fold width,
+  and a content column `.wb-container--pad`; plus the heading rhythm
   `.wb-eyebrow` / `.wb-page-head` (`--lg` hero) / `.wb-section` / `.wb-block`, each styling whatever `h1…h6` sits inside
   it, all driven by the `--wb-text-*` scale + `--wb-section-gap`/`--wb-block-gap`/`--wb-measure` knobs — **start any new
   screen here**, it's what keeps a build from re-deriving its own frame and drifting), the **grid/layout utilities**

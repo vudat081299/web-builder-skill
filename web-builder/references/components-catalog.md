@@ -112,6 +112,21 @@ The decision guide above picks **one part**. This section picks the **set** for 
 for a recipe, drop in the app shell, fill the content region with the parts each recipe names, then style
 nothing by hand.
 
+### Start from a template, not from this page
+
+`web-builder/assets/templates/*.html` holds six **finished screens** built from these parts. They ship with
+the skill. Building a screen means: open the closest one, replace the copy and the data, delete what you
+don't need. Composing from scratch is the fallback for a shape none of them covers — and when you do that,
+fold the result back as a new recipe **plus** a new template.
+
+Each is a standalone document: one `<link>` to `web-builder.css`, no build, no dependencies. Every shell
+template ends with the same ~12 lines of JS — two class toggles (rail, theme). That is the entire behaviour
+contract of a shell; the CSS owns the drawer, the scrim and the breakpoint.
+
+The screen root matters. `body.wb-app` is the shipped baseline (border-box, font, canvas/ink colours,
+line-height, links that inherit); `.wb-shell` implies it. A screen with **no** shell — auth, landing, an
+embedded widget — must say `class="wb-app"` on `<body>` or it falls through to the browser's serif default.
+
 ### The app shell (every page sits in this)
 
 Almost every app screen is: a top **navbar**, a body that is a rail beside a scrolling content **container**,
@@ -142,15 +157,23 @@ A public/marketing page drops the rail: just `wb-navbar` + a `wb-container wb-co
 
 ### Named recipes — content for the container
 
-| Screen | = these parts, in this order | Key sections |
-|---|---|---|
-| **Dashboard / home** | a `wb-stat-grid` KPI row → one or two **chart** cards (`wb-card` wrapping a chart) → a recent-**transactions table** (hero pattern) | [Stat](#stat--kpi-cards) · [Charts](#charts) · [Tables](#tables) |
-| **Records / transactions list** | a **filter bar** on top → the **transactions table** (`--sticky` header for long lists) → **pagination** (page through rows) or **pager** (page through the view) | [Filter bar](#filter-bar) · [Tables](#tables) · [Pagination](#pagination) |
-| **Add / edit form** | fields in a `wb-stack` inside a `wb-card` (label + control per row, `--narrow` container) → a **sticky** action bar (`wb-sticky--bottom`) holding Save / Cancel `wb-btn`s | [Forms](#form-controls) · [Sticky](#sticky) |
-| **Detail / record view** | a `wb-cluster--between` page-head (title + actions) → a `wb-grid--2` of `wb-card`s (summary + meta) → a **media/list** of line items, or a **receipt** for a single bill | [Card](#card) · [Receipt](#receipt) · [List group](#list-group) |
-| **Auth / login** | a **narrow, centred** `wb-container--narrow` (no sidenav) → a `wb-card` → a `wb-stack` of inputs + a primary `wb-btn` → a **social-login** stack | [Forms](#form-controls) · [Buttons](#buttons) |
-| **Settings** | a **sidenav** (or **tabs**) of sections → each section a `wb-stack` of `wb-list` rows / labelled controls (a `wb-switch` per toggle) | [Sidebar](#sidebar-side-nav) · [List group](#list-group) · [Forms](#form-controls) |
-| **Empty / first-run** | an **empty state** centred in the container (icon + line + a primary action) until data exists | [Empty](#empty-state) |
+**Every recipe with a template ships one. Open it and edit it — do not re-compose the screen from this
+table.** The table is the map; the template is the territory, and it is already correct about the
+hundred small calls (heading levels, where the breadcrumb goes, when a row is `--2` and not `--auto`,
+how much colour is enough) that a table cannot state.
+
+| Screen | Template | = these parts, in this order | Key sections |
+|---|---|---|---|
+| **Dashboard / home** | `templates/dashboard.html` | a `wb-stat-grid` KPI row → one or two **chart** cards (`wb-card` wrapping a chart) → **budget progress** bars → a recent-**transactions table** (hero pattern) | [Stat](#stat--kpi-cards) · [Charts](#charts) · [Tables](#tables) |
+| **Records / transactions list** | `templates/list.html` | a **filter bar** on top → the **transactions table** (`--sticky` header for long lists) → **pagination** (page through rows) or **pager** (page through the view) | [Filter bar](#filter-bar) · [Tables](#tables) · [Pagination](#pagination) |
+| **Add / edit form** | `templates/form.html` | fields in a `wb-stack` inside a `wb-card` (label + control per row, `--narrow` container) → a **sticky** action bar (`wb-sticky--bottom`) holding Save / Cancel `wb-btn`s | [Forms](#form-controls) · [Sticky](#sticky) |
+| **Detail / record view** | `templates/detail.html` | a page-head with breadcrumb → a status + actions row → a `wb-grid--2` of `wb-card`s (summary + meta) → line items → a `wb-steps` history → related list → the destructive action, last | [Card](#card) · [Steps](#steps--stepper) · [List group](#list-group) |
+| **Auth / login** | `templates/auth.html` | a **narrow, centred** `wb-container--narrow` on `body.wb-app` (no shell) → a `wb-card` → a `wb-stack` of inputs + one primary `wb-btn` → a **social-login** stack | [Forms](#form-controls) · [Buttons](#buttons) |
+| **Settings** | `templates/settings.html` | **tabs** (or a second **sidenav**) of sections → each panel a `wb-list` of labelled rows, one control per row (a `wb-switch` per toggle) | [Tabs](#tabs) · [List group](#list-group) · [Forms](#form-controls) |
+| **Empty / first-run** | — *(a state, not a screen — it lives inside `list.html`)* | an **empty state** centred in the container (icon + line + a primary action) until data exists | [Empty](#empty-state) |
+
+> `validate-sync.sh` **CHECK 14** locks this column to the folder both ways: a template with no row here,
+> or a row naming a file that doesn't exist, blocks the commit. Add a recipe → add its template.
 
 ### Page rhythm (the taste, so you don't re-decide it)
 
@@ -1423,6 +1446,10 @@ off-canvas drawer with a scrim below 900px; you do not assemble that.
   `.wb-sidenav` dropped inside contributes only its link styling. States on `.wb-shell`:
   `.is-side-collapsed` (desktop: hide the rail) · `.is-side-open` (narrow: slide it in over a scrim).
   Behaviour is one class toggle — the app's job, as everywhere else in this library.
+- `.wb-shell__side-toggle` — the ☰ that opens the folded rail. Put it first in the bar, hang
+  `.is-side-open` off it. It appears at exactly the width the rail folds at, so the button and the drawer
+  can never disagree. (Not the same as `.wb-navbar__toggle`, which collapses that bar's *inline links* by
+  the bar's own width. In a shell the navigation is in the rail, so this is the one you want.)
 - `.wb-shell__main` — the content column. Carries `min-width: 0`, without which a wide table pushes the
   column past the viewport instead of scrolling inside it.
 - `.wb-container--pad` — the content column's **vertical** rhythm (top room + tail room). Kept off the base
@@ -1438,13 +1465,25 @@ the same thing explicitly when the element isn't a heading.
   `--flush` drops that gap for a section opening the page right under the head.
 - `.wb-block` (+ `__title` / `__desc`) — a labelled sub-part inside a section.
 
+**Baseline — `.wb-app` on `<body>`.** Border-box for every `wb-*` element, the font, canvas/ink colours,
+`line-height: 1.55`, and links that inherit their colour instead of going browser-blue. `.wb-shell` carries
+the same declarations, so a shelled screen needs nothing extra; a screen **without** a shell (auth, landing,
+an embedded widget) must set `class="wb-app"` or it falls through to the browser defaults — serif text, blue
+underlined links, a loose line-height, an 8px body margin. Deliberately opt-in rather than a bare `body {}`
+rule, so dropping this stylesheet in for one component never restyles a host page.
+
 **Knobs** (tune once globally, never per page): `--wb-shell-h` · `--wb-navbar-h` · `--wb-sidenav-w` ·
 `--wb-page-pad-block` / `--wb-page-pad-end` · `--wb-section-gap` · `--wb-block-gap` · `--wb-measure`
 (`-tight`) for prose width · the `--wb-text-*` type scale.
 
 ```html
+<body class="wb-app">
 <div class="wb-shell">
-  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass"> … </header>
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle"
+            data-side-toggle aria-label="Mở thanh điều hướng"><span class="wb-ico">menu</span></button>
+    …
+  </header>
   <div class="wb-shell__body">
     <aside class="wb-shell__side"><nav class="wb-sidenav"> … </nav></aside>
     <div class="wb-shell__main">

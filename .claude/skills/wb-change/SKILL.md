@@ -22,13 +22,17 @@ AI kế tiếp. Skill này là bản điều phối của quy trình trong `CLAU
 phần semantic.
 
 ## Bản đồ liên đới (cascade — thuộc trước khi sửa)
-Sửa một component = đồng bộ tối đa **6 nơi**:
+Sửa một component = đồng bộ tối đa **7 nơi**:
 1. `web-builder/assets/web-builder.css` — rule `.wb-*` (token, **không** hex/px thô: hairline `var(--wb-bw)`, pill `var(--wb-radius-pill)`).
 2. `web-builder/assets/pages/<id>.html` — demo, **markup-only** (KHÔNG `<style>`; layout bằng `wb-cluster/stack/grid`).
 3. `web-builder/assets/app.js` — `{ id, label }` vào đúng **nhóm intent** (`group`) trong **section `components`** của mảng `SECTIONS` (component mới luôn vào đây; trang nền tảng/meta thì vào `items` phẳng của section `design`/`project`). Các `group` của `components` chính là source-of-truth danh sách nhóm mà CHECK 10 gác — **đừng chép cứng ra prose** (nó trôi lệch: từng có bản 8 nhóm kèm "Biểu đồ" ma). Danh sách nhóm đầy đủ: xem `SKILL.md` "Current scope".
 4. `web-builder/references/components-catalog.md` — section + 1 dòng "Quick decision guide".
 5. `web-builder/SKILL.md` — thêm vào đúng nhóm scope (AI's first read).
-6. Nếu liên quan: `design-principles.md` (convention mới) · `integration.md` (cần behaviour engine) · `bootstrap-comparison.md` (coverage) · `CHANGELOG.md` (part **user-visible** mới/đổi — kẻo changelog ship bị mục).
+6. `web-builder/assets/templates/<screen>.html` — **template trang** (dashboard · list · form · detail ·
+   settings · auth). Đụng vào shell, nhịp trang, hay thứ mọi màn đều có → phải cập nhật template tương ứng.
+   Thêm một **recipe trang mới** = thêm dòng trong bảng *Named recipes* của catalog **và** file template;
+   CHECK 14 khoá hai chiều. `SKILL.md` đặt luật cứng "bắt đầu từ template", nên template lệch = luật nói dối.
+7. Nếu liên quan: `design-principles.md` (convention mới) · `integration.md` (cần behaviour engine) · `bootstrap-comparison.md` (coverage) · `CHANGELOG.md` (part **user-visible** mới/đổi — kẻo changelog ship bị mục).
    Thêm **nguyên tắc §N mới** vào `design-principles.md` ⇒ phải render §N **đầy đủ** trên `pages/principles.html` **và** thêm §N vào index của `overview.html` (§23; CHECK 11b+11c chặn commit nếu thiếu).
 
 ## Các bước (đúng flow đã chốt)
@@ -75,7 +79,8 @@ accordion / trang riêng và link in-site (CHECK 12 nhắc; hai bề mặt AI vs
 **9 · Guardrails (bộ tiêu chuẩn, tự chạy khi commit).** `validate-sync.sh` (cũng là PreToolUse gate) kiểm
 **cả docs lẫn skill deliverable**: docs (routes==pages · page markup-only · `app.js` parse) + **skill**
 (SKILL.md có frontmatter + description ≤ cap · mọi `references/*.md` tồn tại · catalog không khai class CSS
-không có · `web-builder.css` cân ngoặc). Rồi soi bằng mắt: color-ladder (§1) · token-over-magic-number
+không có · `web-builder.css` cân ngoặc · **recipe ↔ template khớp hai chiều**, và mỗi template là tài liệu
+độc lập có `wb-app` + link CSS). Rồi soi bằng mắt: color-ladder (§1) · token-over-magic-number
 (§18) · × top-right (§15) · no left-accent bar (§9) · dark = light-lift shadow (§2).
 
 **10 · Commit + push.** Commit thẳng `main` (workflow solo, CLAUDE.md § Git). Message kết bằng:

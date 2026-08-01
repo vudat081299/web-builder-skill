@@ -1,6 +1,6 @@
 <div class="wb-page-head">
   <p class="wb-eyebrow">Foundation</p>
-  <h2>Nguyên tắc thiết kế (§1 → §24)</h2>
+  <h2>Nguyên tắc thiết kế (§1 → §25)</h2>
   <p>Những quyết định thẩm mỹ đã <b>chốt sẵn</b>, để không phải review lại trên từng trang. Mỗi nguyên tắc mang
   một số hiệu <b>§N</b> — bất cứ đâu trong repo nhắc "§N" là trỏ về đúng mục ở đây. Đây là <b>bản đầy đủ, đọc
   ngay trên site</b> (không phải bản tóm tắt): mỗi § là một mục mở/gập bằng <a href="#/accordion">accordion</a>,
@@ -12,7 +12,7 @@
   <div class="wb-alert wb-alert--info doc-note">
     <span aria-hidden="true">🎯</span>
     <div><b>Luật va nhau thì cái trên thắng.</b> Thứ tự ưu tiên khi hai nguyên tắc mâu thuẫn: <b>reuse-first</b> →
-    <b>thang màu (§1)</b> → <b>token thay số ma thuật (§18)</b> → <b>skill không nói dối (đồng bộ 6 nơi)</b> →
+    <b>thang màu (§1)</b> → <b>token thay số ma thuật (§18)</b> → <b>skill không nói dối (đồng bộ 7 nơi)</b> →
     <b>dogfood (§16)</b>. Và thứ <b>ship</b> là skill (<code>web-builder.css</code> + <code>SKILL.md</code> +
     references); một thay đổi làm demo đẹp lên nhưng <i>component ship</i> tệ đi — hoặc làm CSS lệch với điều
     SKILL/catalog hứa — là <b>hỏng</b>, dù trang trông đẹp cỡ nào.</div>
@@ -460,7 +460,7 @@
         "đọc bản đầy đủ ở <code>X.md</code>" / "roster đầy đủ ở <code>X.md</code>" như một <i>thứ thay cho nội
         dung</i> — đó là bẫy docs-thiếu (chính cái từng làm bản đồ §N của overview thành một teaser trỏ về file này).
         Lo trang dài? Đó là việc của primitive ẩn/hiện: bỏ nội dung đầy đủ vào <code>&lt;details&gt;</code>/accordion
-        hoặc một trang riêng và link <b>in-site</b> — như §1–§24 giờ nằm đầy đủ (gập được) ở chính trang này, còn
+        hoặc một trang riêng và link <b>in-site</b> — như §1–§25 giờ nằm đầy đủ (gập được) ở chính trang này, còn
         overview chỉ giữ index gọn trỏ tới. Link sang một <b>trang in-site khác</b> là điều hướng, không phải
         deferral; đẩy người đọc ra một file reference thô để lấy nội dung mà site đã nhận phụ trách mới là anti-pattern.</p>
         <p>Vẫn được phép <b>nêu tên</b> một <code>.md</code> như bản song song cho AI ("cùng luật, cho AI, ở
@@ -516,6 +516,33 @@
         trị <b>suy ra</b> — viết <code>ngoài − gap</code>, đừng đặt một hằng số thứ hai canh tay rồi lệch khi chỉnh
         lại bán kính/padding. (Native đang tới — iOS "concentric corners", CSS <code>corner-shape</code> — nhưng khi
         chưa phổ biến thì cứ tính.)</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§25 · Ship cả nền móng, không chỉ linh kiện</summary>
+      <div class="wb-accordion__body">
+        <p>Một thư viện component được chấm bằng <b>màn hình</b> người ta dựng ra, không phải bằng component đứng
+        một mình. Có hai lớp "vì sao docs đẹp" rất dễ nằm <b>ngoài</b> phần ship — và ở đây đã từng nằm ngoài cả hai:</p>
+        <ul class="doc-list">
+          <li><b>Nền tảng (baseline)</b> — box-sizing, font, màu nền/chữ, line-height, link không xanh mặc định
+          trình duyệt. Nó nằm trong stylesheet riêng của docs, nên mọi build khác rơi về mặc định trình duyệt:
+          chữ serif, link xanh gạch chân, line-height rộng, body thừa 8px margin. Đó là <b>lý do lớn nhất</b>
+          khiến một build không giống docs. Giờ ship dưới dạng <code>.wb-app</code> (CSS section 53), bật bằng
+          class chứ không phải rule <code>body {}</code> trần — để file vẫn thả được vào trang chỉ cần một component.</li>
+          <li><b>Màn hình hoàn chỉnh</b> — danh sách part cộng bảng recipe vẫn còn hàng trăm quyết định nhỏ mỗi
+          trang: cấp heading nào, breadcrumb đặt đâu, khi nào một hàng là <code>--2</code> thay vì
+          <code>--auto</code>, bao nhiêu màu là đủ. Nên thư viện ship <b>page template</b>
+          (<code>assets/templates/*.html</code>), và <code>SKILL.md</code> đặt luật cứng phải bắt đầu từ đó.
+          <code>validate-sync.sh</code> CHECK 14 khoá recipe ↔ template hai chiều.</li>
+        </ul>
+        <p>Phép thử: <b>dựng một màn thật chỉ bằng những gì được ship, xem phải tự chế ra cái gì.</b> Thứ bạn với
+        tay tìm mà không có là <i>lỗ hổng của thư viện</i>, không phải giới hạn kiên nhẫn của bạn. Viết 6 template
+        đã lộ ra ba lỗ trong một lượt — <code>.wb-container</code> tràn ra ngoài cha vì thiếu
+        <code>box-sizing</code>, rail gập ở 900px mà không có nút mở, và toàn bộ baseline ở trên. Không cái nào
+        nhìn thấy được từ bên trong docs, vì docs đã vá sẵn cả ba trong một file không bao giờ ship.</p>
+        <p>Hệ quả cho mọi thứ bạn thêm: nếu một luật là <b>cần thiết để chính showroom của thư viện trông đúng</b>,
+        luật đó thuộc về <b>thư viện</b>. Luật chỉ sống trong showroom là luật mà build kế tiếp sẽ không nhận được.</p>
       </div>
     </details>
 

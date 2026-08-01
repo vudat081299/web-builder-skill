@@ -11,6 +11,27 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.6-dev)
 
 ### Added
+- **Page templates** (`assets/templates/*.html`) — six **finished screens** built on the scaffold:
+  `dashboard` · `list` · `form` · `detail` · `settings` · `auth`. Each is a standalone HTML document (one
+  `<link>` to `web-builder.css`, no build) covering a named recipe in `components-catalog.md`, and each
+  shell template ends with the same ~12 lines of driver JS — two class toggles, the whole behaviour contract
+  of a shell. **`SKILL.md` now makes starting from a template a hard rule**, and `validate-sync.sh` CHECK 14
+  locks recipes ↔ templates both ways. **Why it matters to a consumer:** the previous release shipped the
+  frame but still left a build assembling a screen part by part, re-deciding heading levels, breadcrumb
+  placement and colour budget every time. These ship the decisions.
+- **`.wb-app` — the app baseline** (CSS section 53), the ground under everything: `box-sizing: border-box`
+  for every `wb-*` element, the font, canvas/ink colours, `line-height: 1.55`, font smoothing, and links
+  that inherit their colour instead of going browser-blue. Put it on `<body>`; `.wb-shell` carries the same
+  declarations, so only a shell-less screen (auth, landing, an embedded widget) needs it explicitly.
+  Deliberately opt-in rather than a bare `body {}` rule, so dropping the stylesheet in for one component
+  never restyles a host page. **Why it matters to a consumer:** this had never shipped — it lived in the
+  docs' own stylesheet — so every other build fell through to browser defaults (serif text, blue underlined
+  links, a loose line-height, an 8px body margin). It was the largest single reason a build didn't look
+  like the docs.
+- **`.wb-shell__side-toggle`** — the ☰ that opens the folded rail. Shows at exactly the 900px width the
+  rail folds at, so the button and the drawer can never disagree. (Distinct from `.wb-navbar__toggle`,
+  which collapses a bar's *inline links* by the bar's own width; between 640 and 900px there was previously
+  no way to open the rail.)
 - **App shell & page scaffold** (CSS section 52) — the layer *above* components: the frame of a whole screen plus the
   heading rhythm inside it. `wb-shell` + `__body` / `__side` / `__main`; the rail slot sticks below the bar,
   scrolls on its own, and folds into an off-canvas drawer with a scrim below 900px, driven by
@@ -52,6 +73,14 @@ can tell whether a part it needs already exists. Newest first.
   whole card instead of a handle).
 
 ### Changed / fixed
+- **`.wb-container` no longer overflows its parent** — it lacked `box-sizing: border-box`, so `width: 100%`
+  plus the inline padding made it **40px wider** than any column narrower than `--wb-container-max`. A
+  `--wide` container next to a shell rail scrolled the page sideways. Now covered by the section-53 rule
+  (every `wb-*` element is border-box) and set explicitly on the container. The docs never saw it: they cap
+  the max below the column width.
+- **`.wb-page-head > .wb-breadcrumb`** gets the gap under it. A breadcrumb carries no margin of its own (it
+  is also used inline, in a card, in a bar), so nested in a page head it collided with the eyebrow. Nest it
+  **inside** `.wb-page-head`; a sibling above still has no gap, by design.
 - **Intent-group names are English** — the eleven scope groups in `SKILL.md` are now *Foundation · Layout &
   utilities · Actions · Inputs · Pickers · Data display · Feedback · Overlays · Navigation · Disclosure ·
   Structure* (were Vietnamese). Names only: no component moved group, nothing was added or removed. A

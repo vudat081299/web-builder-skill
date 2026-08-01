@@ -9,7 +9,8 @@ better, and still coherent?* A pretty demo, a passing check, or a green hook mea
 regresses — so any guardrail, validator, or review worth having validates the **skill**, not just the docs plumbing.
 
 The skill = `web-builder/SKILL.md` + `web-builder/references/` + `web-builder/assets/web-builder.css` (**the
-only file that ships**). The docs site (`index.html` / `app.js` / `docs.css` / `pages/`) and `.claude/`
+only file that ships to a running app**) + `web-builder/assets/templates/` (source you copy, not something an
+app links). The docs site (`index.html` / `app.js` / `docs.css` / `pages/`) and `.claude/`
 tooling **never ship** — they exist to review, dogfood, and safeguard the skill. What the skill is: a
 minimalist, zero-build CSS component library for web UIs (personal-finance is its flagship use, not its
 boundary). `README.md` = project map; `web-builder/SKILL.md` = how to build UI with it.
@@ -20,11 +21,11 @@ the skill (the sync steps below), so the skill keeps compounding in quality.
 **Docs = the human-readable superset of the repo.** The skill is the *product*, but the **docs** — this file,
 `README.md`, `web-builder/references/*.md`, the docs-site, and code comments — are where a **person** finds
 *everything true of the repo*: skill **+** code **+** tooling (the `/wb-change` workflow and how it triggers,
-the hooks, the numbered design principles §1–24, the deliberate trade-offs). If a fact lives only in code or
+the hooks, the numbered design principles §1–25, the deliberate trade-offs). If a fact lives only in code or
 tooling and a human can't find it in the docs, that's a gap to close — not to leave implicit. So a repo change
 isn't done when the code works; it's done when the docs a human would read still tell the whole, true story.
 And the docs **site** must be **self-contained** (§23): a `pages/*.html` renders its content **in-site** (for
-length use a `<details>`/accordion or a dedicated page — e.g. `principles.html` renders §1–24 in full,
+length use a `<details>`/accordion or a dedicated page — e.g. `principles.html` renders §1–25 in full,
 `tooling.html` covers serve/verify/hooks, `decisions.html` mirrors the README trade-offs (each tagged `T#`)),
 never a teaser punting a human to a raw `.md`. (The AI-facing `SKILL.md → references/*.md` layering stays —
 that's token thrift, not a gap. `validate-sync.sh` CHECK 11(c), 12 + 13 enforce this — 13 blocks a commit if a
@@ -35,8 +36,8 @@ README `T#` isn't rendered on `#/decisions`.)
 - **Use the web-builder skill. Don't invent styling** — assemble from `wb-*` classes + tokens
   (look up the fit in `web-builder/references/components-catalog.md`). If you're typing a hex or a px, there is
   almost certainly a token for it.
-- **Only `web-builder/assets/web-builder.css` ships** to the app. `index.html` / `app.js` / `docs.css` are docs
-  chrome and never ship.
+- **Only `web-builder/assets/web-builder.css` ships to a running app** (+ `assets/templates/` as source you
+  copy). `index.html` / `app.js` / `docs.css` / `pages/` are docs chrome and never ship.
 - **Preview:** `cd web-builder/assets && python3 serve.py` → http://127.0.0.1:8777 (no-store, so a normal
   reload shows edits). Drive the SPA by setting the hash, e.g. `#/receipt`; after editing `app.js`, do a
   full reload (its in-memory `SECTIONS`/`ROUTES` is stale until then).
@@ -44,9 +45,9 @@ README `T#` isn't rendered on `#/decisions`.)
 ## The change workflow (`/wb-change`) + guardrails
 
 A component/token change touches many files, so run **`/wb-change`** — it orchestrates the full flow
-(discover → plan → confirm → implement → sync the 6 places below → verify in the browser → `/code-review`
+(discover → plan → confirm → implement → sync the 7 places below → verify in the browser → `/code-review`
 → commit + push), pushing heavy reads to subagents to save tokens. Two hooks in `.claude/` back it up:
-a **PostToolUse** nudge injects the 6-place checklist the moment you edit `web-builder.css`, and a
+a **PostToolUse** nudge injects the sync checklist the moment you edit `web-builder.css`, and a
 **PreToolUse** gate blocks `git commit`/`git push` when `.claude/hooks/validate-sync.sh` fails. For discovery,
 a read-only helper `.claude/tools/wb.sh locate <class>` prints ready-to-run `Read` offset/limit clusters +
 a blast-radius map, so you never read the whole CSS. (Automating §18/coherence as a *gate* was tried and
@@ -54,6 +55,12 @@ dropped — too noisy on the real CSS; they stay eyeball checks. See README § *
 workflow lives in the skill/hooks (loaded on demand), not here — this file stays a lean pointer.
 
 ## Adding or changing a component — sync ALL of these in one change
+
+> **Whole screens start from a template.** `web-builder/assets/templates/*.html` ships six finished screens
+> (dashboard · list · form · detail · settings · auth) on the scaffold; SKILL.md makes starting there a hard
+> rule. They ship *as source you copy* — the runtime payload is still exactly one CSS file. A change to the
+> shell, the page rhythm, or anything every screen carries must land in the affected templates too (step 7),
+> and a new page recipe means a catalog row **and** a template file (CHECK 14 locks both directions).
 
 1. `web-builder/assets/web-builder.css` — the `.wb-*` rules (numbered section; **tokens, not magic numbers** —
    hairline `var(--wb-bw)`, pill `var(--wb-radius-pill)`).
@@ -67,7 +74,9 @@ workflow lives in the skill/hooks (loaded on demand), not here — this file sta
    (*Foundation · Actions · … · Structure*), or note a new capability on a family already listed. If SKILL.md
    doesn't list it, the next AI trusts its scope and assumes the part doesn't exist — exactly the miss that
    put this line here.
-6. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
+6. `web-builder/assets/templates/<screen>.html` — if the change touches the shell, the page rhythm, or
+   anything every screen carries. A **new page recipe** = a catalog row **and** a template file (CHECK 14).
+7. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
    engine), `bootstrap-comparison.md` (coverage note), `CHANGELOG.md` (a **user-visible** new/changed part —
    the shipped changelog rots if you skip it).
 
@@ -75,7 +84,8 @@ If these drift, the skill misleads the next AI. Verify with `.claude/hooks/valid
 both the **docs site** (routes == pages · no per-page `<style>` · `app.js` parses) **and the skill
 deliverable** (SKILL.md frontmatter + trigger description · SKILL.md scope names every component `group` · every
 `references/*.md` exists · the catalog never documents a class the CSS lacks · `web-builder.css` braces
-balanced). The commit gate runs it for you.
+balanced · every catalog recipe has a real template and every template has a recipe). The commit gate runs
+it for you.
 
 ## Conventions to keep
 

@@ -119,6 +119,18 @@ divider) — one page frame plus a small utility set, not a separate 12-column g
 the layout decision above. **Structure** then holds only
 the structural pieces: the drag-and-drop tree + sortable.
 
+One thing neither Bootstrap nor Tailwind ships, and Web Builder now does: **finished page templates**
+(`assets/templates/*.html`, six screens on the shipped scaffold). Bootstrap has *Examples* — a separate
+download, not part of the library, and explicitly "not production-ready". Here they are part of the skill
+and starting from one is a **hard rule** in `SKILL.md`, guarded both ways by `validate-sync.sh` CHECK 14.
+The bet is the opposite of Bootstrap's: a consumer of this library is usually an AI, and an AI given a parts
+list re-derives a worse page every time, while an AI given a finished page edits it correctly.
+
+Also folded in where Bootstrap uses Reboot and Tailwind uses Preflight: **`.wb-app`** — border-box (scoped to
+`wb-*` elements only), font, canvas/ink colours, line-height, links that inherit. Opt-in via the class rather
+than a bare `body {}` rule, because this stylesheet must stay droppable into a page that only wanted one
+component. Load order matters next to Preflight — see `integration.md`.
+
 One locale note, since Bootstrap's docs are English throughout: Web Builder's **chrome** (nav, topbar, Tweak
 panel) is English too, but the **component copy** in every sample stays Vietnamese — copy is data (§20), and
 the flagship consumer is a Vietnamese finance app.

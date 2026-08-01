@@ -79,12 +79,12 @@ if [ -t 1 ]; then
   fi
 fi
 
-# --- CHECK 5 (advisory): the 6-place cascade — CSS changed but docs didn't ----
+# --- CHECK 5 (advisory): the 7-place cascade — CSS changed but docs didn't ----
 changed="$(git status --porcelain 2>/dev/null | cut -c4-)"
 if printf '%s\n' "$changed" | grep -q 'web-builder/assets/web-builder.css' \
    && ! printf '%s\n' "$changed" | grep -qE 'assets/pages/|assets/app.js|components-catalog.md|SKILL.md'; then
   { echo "note · web-builder.css changed but no demo page / NAV / catalog / SKILL.md is staged."
-    echo "       Adding or changing a component is a 6-place sync (CLAUDE.md / /wb-change)."; } >&2
+    echo "       Adding or changing a component is a 7-place sync (CLAUDE.md / /wb-change)."; } >&2
 fi
 
 # =============================================================================
@@ -264,6 +264,41 @@ elif [ -f README.md ] && grep -qE '\*\*T[0-9]+ ' README.md; then
   fail=1
 fi
 
+# --- CHECK 14 (hard): every page RECIPE has a template, and vice versa ----------
+# SKILL.md makes "start from a template" a hard rule, so the set of templates and the
+# recipe table in components-catalog.md must agree BOTH ways. A recipe with no template
+# sends the AI back to composing from scratch (the thing the rule exists to stop); a
+# template no recipe names is invisible — nothing points an AI at it. A recipe that is
+# deliberately template-less writes `—` in the Template column with the reason.
+TPL_DIR="$A/templates"
+if [ -d "$TPL_DIR" ] && [ -f "$CAT" ]; then
+  tpl_files="$(ls "$TPL_DIR"/*.html 2>/dev/null | sed 's|.*/||' | sort -u)"
+  # Names claimed by the catalog's recipe table: `templates/<name>.html` in a table cell.
+  tpl_named="$(grep -oE 'templates/[a-z0-9-]+\.html' "$CAT" | sed 's|templates/||' | sort -u)"
+  miss_tpl="$(comm -13 <(printf '%s\n' "$tpl_files") <(printf '%s\n' "$tpl_named"))"
+  orphan_tpl="$(comm -23 <(printf '%s\n' "$tpl_files") <(printf '%s\n' "$tpl_named"))"
+  if [ -n "$miss_tpl" ]; then
+    { echo "BLOCK · components-catalog.md names template file(s) that don't exist in $TPL_DIR/:"
+      printf '%s\n' "$miss_tpl" | sed 's/^/    /'
+      echo "    Create the template, or fix the name in the 'Named recipes' table."; } >&2
+    fail=1
+  fi
+  if [ -n "$orphan_tpl" ]; then
+    { echo "BLOCK · template file(s) no recipe in components-catalog.md points at (invisible to the next AI):"
+      printf '%s\n' "$orphan_tpl" | sed 's/^/    /'
+      echo "    Add a row to the 'Named recipes' table naming templates/<file>, or delete the template."; } >&2
+    fail=1
+  fi
+  # A template must actually be one: standalone doc, on the shipped baseline + the CSS.
+  while IFS= read -r t; do
+    [ -z "$t" ] && continue
+    f="$TPL_DIR/$t"
+    grep -q '<!doctype html>' "$f" || { echo "BLOCK · $f is not a standalone document (no <!doctype html>)." >&2; fail=1; }
+    grep -q 'web-builder.css' "$f" || { echo "BLOCK · $f does not link web-builder.css — a template must run as-is." >&2; fail=1; }
+    grep -q 'class="wb-app"' "$f" || { echo "BLOCK · $f is missing class=\"wb-app\" on <body> (the shipped baseline, CSS section 53)." >&2; fail=1; }
+  done < <(printf '%s\n' "$tpl_files")
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "" >&2
   echo "^ Fix the BLOCK item(s) and keep editing (don't restart). Guardrail: .claude/hooks/validate-sync.sh" >&2
@@ -273,6 +308,6 @@ fi
 # Quiet as a hook (stdout is piped); informative when run by hand in a terminal.
 if [ -t 1 ]; then
   n="$(printf '%s\n' "$routes" | grep -c .)"
-  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes & principles renders §1..§${maxp:-?} + README trade-offs (T#) mirrored on #/decisions coherent."
+  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes & principles renders §1..§${maxp:-?} + README trade-offs (T#) mirrored on #/decisions + recipe<->template parity coherent."
 fi
 exit 0

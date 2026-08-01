@@ -24,7 +24,8 @@ const SECTIONS = [
   { id: "design", title: "Design", icon: "format_paint", items: [
     { id: "overview",   label: "Overview" },
     { id: "recipes",    label: "Page recipes" },
-    { id: "principles", label: "Principles (§1–§24)" },
+    { id: "templates",  label: "Page templates" },
+    { id: "principles", label: "Principles (§1–§25)" },
     { id: "color",      label: "Colour philosophy" },
     { id: "tokens",     label: "Design tokens" },
     { id: "typography", label: "Typography" },

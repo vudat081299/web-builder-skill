@@ -1,0 +1,165 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Foundation</p>
+  <h2>Page templates</h2>
+  <p>Sáu <b>màn hình hoàn chỉnh</b>, viết sẵn bằng chính scaffold + component của thư viện. Đây là
+  <b>điểm bắt đầu bắt buộc</b> khi dựng một màn mới: mở file, đổi nội dung, giữ nguyên khung — thay vì
+  ghép một trang từ số không rồi tự phát minh lại nhịp.</p>
+</div>
+
+<div class="wb-alert wb-alert--info doc-note">
+  <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+  <div>Template <b>có ship</b> cùng skill (<code>web-builder/assets/templates/*.html</code>). Chúng là
+  <b>mã nguồn để copy</b>, không phải thứ app phải link — payload lúc chạy vẫn đúng một file
+  <code>web-builder.css</code>.</div>
+</div>
+
+<section class="wb-section">
+  <h3>Tại sao là template, không phải “ghép từ catalog”</h3>
+  <p class="wb-section__desc">Catalog trả lời “dùng part nào”. Recipe trả lời “một màn gồm những part gì,
+  theo thứ tự nào”. Template trả lời phần còn lại — thứ mà chỉ khi <b>viết ra một trang thật</b> mới lộ:
+  đúng cấp heading, đúng chỗ đặt breadcrumb, đúng lúc dùng <code>--flush</code>, khi nào một hàng nên là
+  <code>--2</code> thay vì <code>--auto</code>, và bao nhiêu màu là đủ.</p>
+  <p class="wb-section__desc">Chính lúc viết 6 template này đã phát hiện <b>3 lỗ hổng có thật</b> trong
+  CSS ship: <code>.wb-container</code> tràn ngang vì thiếu <code>box-sizing</code>, rail gập ở 900px mà
+  không có nút mở, và toàn bộ <b>nền tảng chữ</b> (font, màu, line-height, link) vẫn nằm ở
+  <code>docs.css</code> không ship. Cả ba đã vá — đó là giá trị thật của việc dựng trang thật.</p>
+</section>
+
+<section class="wb-section">
+  <h3>Sáu template</h3>
+  <p class="wb-section__desc">Mỗi file là một tài liệu HTML độc lập: chỉ <code>&lt;link&gt;</code> tới
+  <code>web-builder.css</code>, không build, không phụ thuộc. Mở trực tiếp bằng trình duyệt là chạy.</p>
+
+  <div class="wb-card">
+    <div class="wb-table-scroll">
+      <table class="wb-table wb-table--compact">
+        <thead><tr><th>File</th><th>Recipe</th><th>Gồm những gì</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="wb-cell-strong">dashboard.html</span></td>
+            <td><span class="wb-cap">Dashboard / home</span></td>
+            <td>Hàng KPI <code>wb-stat-grid</code> → 2 chart card (đường + cột thu/chi) → nhóm
+            <code>wb-progress</code> ngân sách → bảng giao dịch gần đây. Thứ tự: tổng quan → xu hướng → chi tiết.</td>
+          </tr>
+          <tr>
+            <td><span class="wb-cell-strong">list.html</span></td>
+            <td><span class="wb-cap">Records list</span></td>
+            <td><code>wb-filterbar</code> + token gỡ được → bảng <code>--sticky</code> trong hộp cuộn giới hạn
+            → <code>wb-pagination</code> ở <code>card__foot</code>. Kèm sẵn khối <b>empty state</b> (comment lại)
+            cho trường hợp không có dữ liệu.</td>
+          </tr>
+          <tr>
+            <td><span class="wb-cell-strong">form.html</span></td>
+            <td><span class="wb-cap">Add / edit form</span></td>
+            <td>Container <code>--narrow</code>, mỗi <code>wb-field</code> một dòng, có sẵn ô
+            <code>data-mask="date"</code>, ô <code>.is-invalid</code> + <code>.wb-error</code>, và thanh
+            <code>wb-sticky--bottom</code> giữ nút Lưu luôn trong tầm tay.</td>
+          </tr>
+          <tr>
+            <td><span class="wb-cell-strong">detail.html</span></td>
+            <td><span class="wb-cap">Detail / record</span></td>
+            <td>Head có breadcrumb → hàng capsule trạng thái + hành động → 2 card tóm tắt → bảng thành phần
+            → <code>wb-steps</code> lịch sử → danh sách liên quan → vùng xoá (nút đỏ duy nhất, đặt cuối).</td>
+          </tr>
+          <tr>
+            <td><span class="wb-cell-strong">settings.html</span></td>
+            <td><span class="wb-cap">Settings</span></td>
+            <td><code>wb-tabs</code> chia nhóm; mỗi panel là <code>wb-list</code>, mỗi hàng đúng một control.
+            Có ví dụ <code>wb-switch--locked</code> cho tính năng ngoài gói.</td>
+          </tr>
+          <tr>
+            <td><span class="wb-cell-strong">auth.html</span></td>
+            <td><span class="wb-cap">Auth / login</span></td>
+            <td>Màn <b>duy nhất bỏ shell</b>: <code>body.wb-app</code> căn giữa, container
+            <code>--narrow</code>, một card, đúng <b>một</b> nút primary, rồi social login.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div><b>Guardrail:</b> <code>validate-sync.sh</code> CHECK 14 khoá hai chiều bảng
+    <i>Named recipes</i> trong <code>components-catalog.md</code> với thư mục
+    <code>templates/</code> — thêm template mà quên khai trong catalog (hoặc ngược lại) là commit bị chặn.</div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Bộ khung dùng chung</h3>
+  <p class="wb-section__desc">Năm template có shell dùng <b>y hệt</b> phần khung dưới đây. Copy nguyên khối
+  này rồi chỉ thay phần <code>&lt;main&gt;</code> là ra một màn mới đúng chuẩn.</p>
+  <div class="demo">
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;body class="wb-app"&gt;                       &lt;!-- nền tảng: font · màu · link · border-box --&gt;
+&lt;div class="wb-shell"&gt;
+
+  &lt;header class="wb-navbar wb-navbar--sticky wb-navbar--glass"&gt;
+    &lt;button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle"
+            data-side-toggle aria-label="Mở thanh điều hướng"&gt;
+      &lt;span class="wb-ico"&gt;menu&lt;/span&gt;               &lt;!-- chỉ hiện khi rail gập (≤900px) --&gt;
+    &lt;/button&gt;
+    &lt;a class="wb-navbar__brand" href="#"&gt;…&lt;/a&gt;
+    &lt;span class="wb-navbar__spacer"&gt;&lt;/span&gt;
+    &lt;div class="wb-navbar__actions"&gt;…&lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;div class="wb-shell__body"&gt;
+    &lt;aside class="wb-shell__side wb-scrollbars"&gt;
+      &lt;nav class="wb-sidenav"&gt;…&lt;/nav&gt;
+    &lt;/aside&gt;
+
+    &lt;div class="wb-shell__main"&gt;
+      &lt;main class="wb-container wb-container--pad"&gt;   &lt;!-- --narrow form · --wide bảng rộng --&gt;
+        &lt;div class="wb-page-head"&gt;…&lt;/div&gt;
+        &lt;section class="wb-section"&gt;…&lt;/section&gt;
+      &lt;/main&gt;
+      &lt;footer class="wb-footer wb-footer--slim"&gt;…&lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+  <p class="wb-block__desc">Toàn bộ JS một shell cần là <b>hai lần đổi class</b> — mở/đóng rail và lật
+  sáng/tối. CSS lo drawer, scrim và breakpoint; template có sẵn ~12 dòng driver đó ở cuối file.</p>
+</section>
+
+<section class="wb-section">
+  <h3>Luật dùng</h3>
+  <div class="wb-card"><div class="wb-card__body">
+    <ol class="wb-steps wb-steps--dot">
+      <li class="wb-steps__item is-done">
+        <span class="wb-steps__marker"></span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Bắt đầu từ template gần nhất</p>
+          <p class="wb-steps__desc">Chọn theo recipe, không theo cảm giác. Không có recipe nào khớp → lấy
+          cái gần nhất rồi cắt bớt, đừng dựng trang trắng.</p>
+        </div>
+      </li>
+      <li class="wb-steps__item is-done">
+        <span class="wb-steps__marker"></span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Đổi nội dung, giữ khung</p>
+          <p class="wb-steps__desc">Chữ, số, icon, số lượng hàng/mục — thoải mái. Khung <code>wb-shell</code>,
+          nhịp <code>page-head → section → block</code>, và khoảng cách (lấy từ token) — giữ nguyên.</p>
+        </div>
+      </li>
+      <li class="wb-steps__item is-active">
+        <span class="wb-steps__marker"></span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Thấy khoảng cách sai? Đổi token, đừng thêm margin</p>
+          <p class="wb-steps__desc"><code>--wb-section-gap</code> · <code>--wb-block-gap</code> ·
+          <code>--wb-stack-gap</code>. Một <code>margin</code> viết tay trên một trang là cách nhịp bắt đầu
+          trôi (§17, §18).</p>
+        </div>
+      </li>
+      <li class="wb-steps__item is-todo">
+        <span class="wb-steps__marker"></span>
+        <div class="wb-steps__content">
+          <p class="wb-steps__title">Dựng một dạng màn mới? Gấp ngược lại đây</p>
+          <p class="wb-steps__desc">Thêm recipe vào catalog <b>và</b> một template — cùng tinh thần với việc
+          gấp một component mới về thư viện. Lần sau tái dùng, không dựng lại.</p>
+        </div>
+      </li>
+    </ol>
+  </div></div>
+</section>
