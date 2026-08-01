@@ -62,6 +62,10 @@
   /* Focus ring — neutral, used by buttons and inputs. */
   --wb-ring: rgba(24, 24, 27, .30);
 
+  /* Scrim — the ONE dim behind anything that covers the page (modal · drawer ·
+     the shell's mobile rail, §52). One value so two overlays never dim differently. */
+  --wb-scrim: rgba(9, 9, 11, .5);
+
   /* Semantic colours — tier 2 (solid) and tier 3 (soft = alpha tint). */
   --wb-success:        #16a34a;
   --wb-success-fg:     #ffffff;
@@ -136,6 +140,34 @@
   /* Border width — one knob so hairlines can be tuned globally (per-component
      overrides below inherit this by default). */
   --wb-bw: 1px;
+
+  /* Type scale — ONE ladder of text sizes, the steps shown on the Typography page.
+     The page scaffold (§52) is built on them, so a screen's headings can never
+     drift into ad-hoc px. Components still carry their own literal size; retrofitting
+     the whole set onto these tokens is a deliberate later sweep, not a silent one. */
+  --wb-text-display: 31px;   /* hero / landing headline */
+  --wb-text-page:    27px;   /* page title */
+  --wb-text-section: 19px;   /* section heading inside a page */
+  --wb-text-title:   15px;   /* card / block title, page lede */
+  --wb-text-body:    14px;   /* body copy */
+  --wb-text-help:    13px;   /* help / description text */
+  --wb-text-caption: 12px;   /* caption */
+  --wb-text-label:   11px;   /* eyebrow / uppercase label */
+
+  /* Measure — how far a line of prose may run before it gets tiring to read.
+     Applies to lede/description text, never to tables or data. */
+  --wb-measure:       68ch;
+  --wb-measure-tight: 62ch;
+
+  /* App shell + page rhythm (§52) — the vertical breathing of a whole screen,
+     as knobs, so it is tuned once globally instead of per page. */
+  --wb-shell-h:    100dvh;   /* shell height; override if the page is zoomed or embedded */
+  --wb-navbar-h:   56px;     /* the top bar — the rail sticks just below it */
+  --wb-sidenav-w:  240px;
+  --wb-page-pad-block: 36px; /* content column: room above the page title… */
+  --wb-page-pad-end:   120px;/* …and tail room so the last block scrolls clear */
+  --wb-section-gap: 44px;    /* between .wb-section blocks */
+  --wb-block-gap:   28px;    /* between .wb-block sub-blocks */
 
   /* Per-component radii — default to the global scale; override to taste. */
   --wb-btn-radius:   var(--wb-radius-sm);
@@ -1031,7 +1063,8 @@
    .wb-card is the surface (border + radius + soft shadow). It already wraps
    tables; these parts make it a general content card. Compose head/body/foot.
      VARIANTS: --dashed (dashed hairline, no shadow) · --flat (no shadow) ·
-               --hover (lifts on hover — for clickable cards)
+               --hover (lifts on hover — for clickable cards) ·
+               --pad (padding on the card itself, for content with no head/body/foot)
    -------------------------------------------------------------------------- */
 .wb-card__head {
   display: flex; align-items: flex-start; gap: 12px;
@@ -1046,6 +1079,9 @@
   padding: 14px 18px; border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2);
 }
 .wb-card--flat   { box-shadow: none; }
+/* One-part card: content sits straight in the card, so the padding lives on the card
+   instead of a __body wrapper. Use for link groups, callout tiles, small summaries. */
+.wb-card--pad    { padding: 18px; }
 .wb-card--dashed { border-style: dashed; border-color: var(--wb-border-strong); box-shadow: none; }
 .wb-card--hover  { transition: border-color .13s ease, box-shadow .13s ease, transform .06s ease; cursor: pointer; }
 .wb-card--hover:hover { border-color: var(--wb-border-strong); box-shadow: var(--wb-shadow-md); transform: translateY(-1px); }
@@ -1142,7 +1178,7 @@
 .wb-overlay {
   position: fixed; inset: 0; z-index: 100; display: none;
   align-items: center; justify-content: center; padding: 20px;
-  background: rgba(9, 9, 11, .5); backdrop-filter: blur(2px);
+  background: var(--wb-scrim); backdrop-filter: blur(2px);
 }
 .wb-overlay.is-open { display: flex; }
 /* Backdrop options. Default = modal: dims + light blur, blocks the page, click-
@@ -2310,11 +2346,14 @@
    -----------------------------------------------------------------------------
    A horizontal bar for the top of an app shell. Compose the middle links from
    the NAV primitive (§38): <nav class="wb-nav"> inside .wb-navbar__nav.
-   --sticky pins it; behaviour (mobile menu toggle) is the app's job.
+   --sticky pins it, --glass makes it translucent over scrolling content;
+   behaviour (mobile menu toggle) is the app's job.
    -------------------------------------------------------------------------- */
 .wb-navbar {
   display: flex; align-items: center; gap: 16px;
-  height: 56px; padding: 0 18px;
+  /* min-height (not height): the bar grows if a taller control lands in it, and
+     the shell rail reads the same token for its sticky offset (§52). */
+  min-height: var(--wb-navbar-h); box-sizing: border-box; padding: 0 18px;
   background: var(--wb-surface);
   border-bottom: var(--wb-bw) solid var(--wb-border);
   font-family: var(--wb-font);
@@ -2322,6 +2361,12 @@
   container-type: inline-size;   /* collapse by OWN width, not the viewport */
 }
 .wb-navbar--sticky { position: sticky; top: 0; z-index: 30; }
+/* Translucent bar — content scrolls UNDER it and stays faintly readable, instead of
+   hitting an opaque band. Pair with --sticky; on a static bar it has nothing to reveal. */
+.wb-navbar--glass {
+  background: color-mix(in srgb, var(--wb-canvas) 82%, transparent);
+  backdrop-filter: saturate(1.1) blur(8px);
+}
 /* Hamburger toggle — hidden until the bar is too narrow for inline links. */
 .wb-navbar__toggle { display: none; }
 /* When the bar itself gets narrow: hide the inline links, show the hamburger, and
@@ -2401,11 +2446,13 @@
    -----------------------------------------------------------------------------
    A left navigation column for an app shell: sections + icon links + count
    badges. Icons are .wb-ico; active is a plain highlight (matches §38 / the
-   docs tree). Give it a height + let it scroll with §27 .wb-scroll if long.
+   docs tree). Standalone it needs a height + §27 .wb-scroll if long; inside an
+   app shell drop it in the .wb-shell__side slot (§52), which already sticks,
+   scrolls and folds to an off-canvas drawer on narrow screens.
    -------------------------------------------------------------------------- */
 .wb-sidenav {
   display: flex; flex-direction: column; gap: 1px;
-  width: 240px; padding: 12px 10px;
+  width: var(--wb-sidenav-w); padding: 12px 10px;
   background: var(--wb-surface);
   border-right: var(--wb-bw) solid var(--wb-border);
   font-family: var(--wb-font);
@@ -2945,3 +2992,134 @@
 .wb-footer__social { display: flex; align-items: center; gap: 2px; }
 .wb-footer--slim .wb-footer__inner { padding: 18px 24px; }
 .wb-footer--slim .wb-footer__bottom { margin-top: 0; padding-top: 0; border-top: 0; }
+
+/* -----------------------------------------------------------------------------
+   52. APP SHELL & PAGE SCAFFOLD  (the frame of a screen + the rhythm inside it)
+   -----------------------------------------------------------------------------
+   The layer ABOVE components. Components answer "what goes here"; this answers
+   "where does it go, and how far apart". Without it every new screen re-derives
+   its own frame and spacing by hand, which is where a build stops looking like
+   the rest of the system. Composes with §34 container, §37 navbar, §39 sidenav,
+   §51 footer — this section only adds the slots and the vertical rhythm.
+
+     <div class="wb-shell">
+       <header class="wb-navbar wb-navbar--sticky wb-navbar--glass"> … </header>
+       <div class="wb-shell__body">
+         <aside class="wb-shell__side"> … .wb-sidenav__link children … </aside>
+         <div class="wb-shell__main">
+           <main class="wb-container wb-container--pad">
+             <div class="wb-page-head"><p class="wb-eyebrow">…</p><h1>…</h1><p>…</p></div>
+             <section class="wb-section"> <h2>…</h2> <p>…</p>
+               <div class="wb-block"> <h3>…</h3> <p>…</p> … </div>
+             </section>
+           </main>
+           <footer class="wb-footer"> … </footer>
+         </div>
+       </div>
+     </div>
+
+   HEADING LEVELS ARE FREE. .wb-page-head / .wb-section / .wb-block style whatever
+   heading tag sits directly inside them, so an app keeps a correct document
+   outline (h1 → h2 → h3) and still gets the scale. The __title / __desc children
+   say the same thing explicitly when the element isn't a heading tag.
+
+   RAIL BEHAVIOUR IS THE APP'S — one class toggle on .wb-shell, like every other
+   interactive part of this library: .is-side-collapsed hides the rail on desktop,
+   .is-side-open slides it in over the page on narrow screens.
+
+   Z-INDEX LADDER, so the shell can't fight the overlays: sticky bar 30 (§37) ·
+   rail scrim 55 · off-canvas rail 60 · drawer 101 (§33) · toast 120 (§20).
+   -------------------------------------------------------------------------- */
+.wb-shell { display: flex; flex-direction: column; min-height: var(--wb-shell-h); font-family: var(--wb-font); }
+/* The bar sits ABOVE this row, so it always spans the full width and the rail
+   never eats into it. */
+.wb-shell__body { display: flex; flex: 1 1 auto; min-height: 0; }
+.wb-shell__side {
+  position: sticky; top: var(--wb-navbar-h); align-self: flex-start; flex: none;
+  width: var(--wb-sidenav-w); height: calc(var(--wb-shell-h) - var(--wb-navbar-h));
+  padding: 14px 12px 56px;              /* tail room so the last link scrolls clear */
+  background: var(--wb-surface);
+  border-right: var(--wb-bw) solid var(--wb-border);   /* the ONE divider — on the right */
+  overflow-y: auto; scroll-padding-block-end: 12px;
+  overscroll-behavior: contain;         /* the rail's scroll stays put — no chaining to the page behind it */
+}
+/* The slot already paints the rail surface, so a .wb-sidenav dropped inside it
+   contributes its link styling only — no second border, width or background. */
+.wb-shell__side > .wb-sidenav { width: 100%; padding: 0; background: none; border-right: 0; }
+/* min-width:0 is load-bearing: without it a wide table or a long unbroken string
+   pushes the main column past the viewport instead of scrolling inside it. */
+.wb-shell__main { flex: 1 1 auto; min-width: 0; }
+.wb-shell.is-side-collapsed > .wb-shell__body > .wb-shell__side { display: none; }
+
+/* The content column's vertical rhythm. Kept off the base .wb-container so a
+   container used *inside* a page (a section band, a card row) stays flush. */
+.wb-container--pad { padding-block: var(--wb-page-pad-block) var(--wb-page-pad-end); }
+
+/* Overline above a page title — the section/category the screen belongs to. */
+.wb-eyebrow {
+  font-size: var(--wb-text-label); font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 8px;
+}
+
+/* Page header — the title + one-line lede that opens a screen. */
+.wb-page-head { margin-bottom: 8px; }
+.wb-page-head__title,
+.wb-page-head > :where(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--wb-text-page); font-weight: 700; letter-spacing: -.02em; margin: 0 0 8px;
+}
+.wb-page-head__desc,
+.wb-page-head > :where(p):not(.wb-eyebrow) {
+  font-size: var(--wb-text-title); color: var(--wb-fg-muted); margin: 0; max-width: var(--wb-measure-tight);
+}
+/* --lg = the landing/hero size of the same block (one step up, nothing else changes). */
+.wb-page-head--lg .wb-page-head__title,
+.wb-page-head--lg > :where(h1, h2, h3, h4, h5, h6) { font-size: var(--wb-text-display); margin-bottom: 10px; }
+
+/* Section — a titled band of a page. The gap ABOVE it is the page's main rhythm. */
+.wb-section { margin-top: var(--wb-section-gap); }
+/* --flush drops that gap, for a section that opens the page directly under the head
+   (the lede already introduced it, so a full section gap reads as a hole). Reach for
+   this instead of a one-off margin — that's the whole point of the ladder. */
+.wb-section--flush { margin-top: 0; }
+.wb-section__title,
+.wb-section > :where(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--wb-text-section); font-weight: 700; letter-spacing: -.01em; margin: 0 0 6px;
+}
+.wb-section__desc,
+.wb-section > :where(p):not(.wb-eyebrow) {
+  font-size: var(--wb-text-body); color: var(--wb-fg-muted); margin: 0 0 20px; max-width: var(--wb-measure);
+}
+
+/* Block — a labelled sub-part inside a section (one example, one field group). */
+.wb-block { margin-top: var(--wb-block-gap); }
+.wb-block__title,
+.wb-block > :where(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--wb-text-body); font-weight: 600; margin: 0 0 3px;
+}
+.wb-block__desc,
+.wb-block > :where(p):not(.wb-eyebrow) {
+  font-size: var(--wb-text-help); color: var(--wb-fg-muted); margin: 0 0 14px;
+}
+
+/* Narrow screens: the rail leaves the flow and becomes an off-canvas drawer over
+   the page. This is the ONE place the library measures the viewport instead of a
+   container (§37 navbar, §50 pager use container queries) — correct here, because
+   the shell IS the viewport; there is no outer container to ask. */
+@media (max-width: 900px) {
+  .wb-shell__side {
+    position: fixed; top: 0; left: 0; z-index: 60;
+    width: 264px; max-width: 82vw; height: var(--wb-shell-h);
+    transform: translateX(-100%); transition: transform .22s ease;
+    box-shadow: var(--wb-shadow-md);
+  }
+  /* Collapsed is a desktop idea — on mobile the rail is hidden by default anyway,
+     and hiding it here would make the ☰ toggle do nothing. */
+  .wb-shell.is-side-collapsed > .wb-shell__body > .wb-shell__side { display: block; }
+  .wb-shell.is-side-open > .wb-shell__body > .wb-shell__side { transform: translateX(0); }
+  /* Scrim — dims the page under the open rail and swallows the tap that closes it.
+     Same --wb-scrim as the modal/drawer overlay: one dim across the system. */
+  .wb-shell.is-side-open::before {
+    content: ""; position: fixed; inset: 0; z-index: 55; background: var(--wb-scrim);
+  }
+  .wb-container--pad { padding-block: 26px 90px; }
+}

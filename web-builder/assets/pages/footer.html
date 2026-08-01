@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Điều hướng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Điều hướng</p>
   <h2>Footer &amp; chuyển trang</h2>
   <p>Hai primitive cho <b>chân trang</b>: <code>.wb-footer</code> (footer site — thương hiệu + cột liên kết + dòng bản quyền)
   và <code>.wb-pager</code> (nút <b>Trang trước / Trang sau</b> đặt cuối mỗi trang). Pager có <b>phím tắt</b>:
@@ -7,10 +7,10 @@
   <b>pager thật cuối trang này</b> (docs tự gắn vào mọi trang). Đi kèm là keycap nhỏ <code>.wb-kbd</code>.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Chuyển trang — <code>.wb-pager</code></h4>
-    <p class="doc-block__desc">Hai thẻ: <b>trước</b> bên trái, <b>sau</b> bên phải; mỗi thẻ có nhãn hướng + tên trang đích + gợi ý phím.
+    <p class="wb-block__desc">Hai thẻ: <b>trước</b> bên trái, <b>sau</b> bên phải; mỗi thẻ có nhãn hướng + tên trang đích + gợi ý phím.
     Thêm <code>data-pager</code> rồi để driver (app.js) map <kbd class="wb-kbd">[</kbd> <kbd class="wb-kbd">]</kbd> vào 2 link
     <code>data-pager-prev</code> / <code>data-pager-next</code> (bỏ qua khi đang gõ trong ô nhập). Thanh tự xuống 1 cột khi hẹp.</p>
     <div class="demo">
@@ -60,9 +60,9 @@ addEventListener("keydown", (e) =&gt; {
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chỉ một phía — đầu / cuối danh sách</h4>
-    <p class="doc-block__desc">Trang <b>đầu</b> bỏ thẻ <i>trước</i>, trang <b>cuối</b> bỏ thẻ <i>sau</i> — thẻ còn lại vẫn nằm đúng cột
+    <p class="wb-block__desc">Trang <b>đầu</b> bỏ thẻ <i>trước</i>, trang <b>cuối</b> bỏ thẻ <i>sau</i> — thẻ còn lại vẫn nằm đúng cột
     (grid 2 cột), không bị nhảy sang giữa.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -93,9 +93,9 @@ addEventListener("keydown", (e) =&gt; {
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Footer — <code>.wb-footer</code></h4>
-    <p class="doc-block__desc">Dải full-width (viền trên hairline), <code>__inner</code> căn giữa nội dung: thương hiệu + tagline ·
+    <p class="wb-block__desc">Dải full-width (viền trên hairline), <code>__inner</code> căn giữa nội dung: thương hiệu + tagline ·
     các <b>cột liên kết</b> (<code>__col</code> · <code>__title</code> · <code>__link</code>) · dòng dưới có bản quyền + icon xã hội
     (tái dùng <code>.wb-btn--ghost.wb-btn--icon</code>). Không màu thương hiệu — theo gu xám (link mờ → đậm khi hover).</p>
     <div class="demo demo--plain">
@@ -161,9 +161,9 @@ addEventListener("keydown", (e) =&gt; {
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Footer gọn — <code>--slim</code></h4>
-    <p class="doc-block__desc">Bỏ phần cột, còn <b>một dòng</b> bản quyền + icon — hợp app nhỏ hoặc trang trong.</p>
+    <p class="wb-block__desc">Bỏ phần cột, còn <b>một dòng</b> bản quyền + icon — hợp app nhỏ hoặc trang trong.</p>
     <div class="demo demo--plain">
       <div class="demo__stage" style="padding:0">
         <footer class="wb-footer wb-footer--slim">
@@ -187,7 +187,7 @@ addEventListener("keydown", (e) =&gt; {
     </div>
   </div>
 
-  <div class="doc-note">
+  <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">keyboard</span>
     <div>Phím tắt <kbd class="wb-kbd">[</kbd> / <kbd class="wb-kbd">]</kbd> đang chạy trên chính docs này — mỗi trang có
     một <code>.wb-pager</code> ở cuối (dựng theo thứ tự menu). Cuộn xuống hoặc bấm thử ngay.</div>

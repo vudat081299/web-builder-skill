@@ -66,8 +66,10 @@ A component is **one change across six places** — if they drift, the skill sta
    `--modifier`). Build from **tokens**, never raw hex/px (hairline = `var(--wb-bw)`, pill =
    `var(--wb-radius-pill)`; see design-principles §18). Dark mode is automatic if you use `--wb-*`.
 2. **Demo page** — create `web-builder/assets/pages/<id>.html`. Markup only (no `<html>`/shell). Copy the
-   `doc-page-head` → `doc-sec` → `doc-block` → `demo` / `demo__code` structure from an existing page, and
+   `wb-page-head` → `wb-section` → `wb-block` → `demo` / `demo__code` structure from an existing page, and
    use the library's own layout utilities (`.wb-cluster` / `.wb-stack` / `.wb-grid`), not inline flex.
+   (Everything there except `demo*` is a **shipped** primitive — the docs run on the same page scaffold an
+   app gets, so a page that looks right here looks right in a build.)
 3. **Nav** — add `{ id: "<id>", label: "…" }` to the right **section** in the `SECTIONS` model in
    `web-builder/assets/app.js` (the single source of truth for the section switcher, the sidebar **and** the
    router). Three sections: **Thiết kế** (foundations) · **Thành phần** (components) · **Dự án & Skill**

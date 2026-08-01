@@ -11,8 +11,23 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.6-dev)
 
 ### Added
+- **App shell & page scaffold** (CSS section 52) — the layer *above* components: the frame of a whole screen plus the
+  heading rhythm inside it. `wb-shell` + `__body` / `__side` / `__main`; the rail slot sticks below the bar,
+  scrolls on its own, and folds into an off-canvas drawer with a scrim below 900px, driven by
+  `.is-side-collapsed` / `.is-side-open` on the shell. Content column = `wb-container--pad`. Heading ladder:
+  `wb-eyebrow` · `wb-page-head` (`--lg` hero) · `wb-section` · `wb-block`, each with `__title` / `__desc` and
+  each styling whatever `h1…h6` you nest inside, so an app keeps a valid outline and still gets the scale.
+  **Why it matters to a consumer:** this frame previously existed only in the un-shipped docs chrome, so a
+  build using the skill had every component but had to invent its own shell and spacing — the main reason a
+  finished screen didn't look like the docs. Start every new screen here.
+- **Type scale + rhythm tokens** — `--wb-text-display/-page/-section/-title/-body/-help/-caption/-label`
+  (the ladder the Typography page documented as a convention is now an API), `--wb-measure` / `-tight` for
+  prose width, and the shell/rhythm knobs `--wb-shell-h` · `--wb-navbar-h` · `--wb-sidenav-w` ·
+  `--wb-page-pad-block` / `--wb-page-pad-end` · `--wb-section-gap` · `--wb-block-gap`.
+  Existing components keep their literal px sizes for now — retrofitting them onto the tokens is a deliberate
+  separate sweep, not folded silently into this one.
 - **Page recipes** — `references/components-catalog.md` gains a *Composing a page* section: an app-shell
-  skeleton (`wb-navbar` · `wb-sidenav` · `wb-container` · `wb-footer` · `wb-pager`) plus named recipes
+  skeleton (now rooted in `wb-shell` — see the entry above) plus named recipes
   (dashboard · records list · form · detail · auth · settings) and page-rhythm notes. The "build a whole
   screen from nothing" layer.
 - **`references/docs-site.md`** — the docs-site architecture (NAV/router, page grammar, docs-chrome inventory,
@@ -37,6 +52,17 @@ can tell whether a part it needs already exists. Newest first.
   whole card instead of a handle).
 
 ### Changed / fixed
+- **Card** gains `--pad` — padding on the card itself, for a one-part card with no `__head`/`__body`/`__foot`
+  (link groups, callout tiles, small summaries).
+- **Section** gains `--flush` — drops the top gap for a section that opens a page right under the head, so
+  that case stops being a hand-written `margin-top`.
+- **`--wb-scrim`** — the dim behind anything covering the page is now one token, shared by `wb-overlay`
+  (modal / drawer) and the shell's mobile rail. No visual change; two overlays can no longer dim differently.
+- **Navbar**: height is now `min-height: var(--wb-navbar-h)` instead of a fixed `56px`, so the bar grows for a
+  taller control and the shell rail can read the same token for its sticky offset. New `--glass` modifier
+  (translucent + blur) for a sticky bar over scrolling content.
+- **Sidenav**: width reads `--wb-sidenav-w`. Inside a `.wb-shell__side` slot it drops its own surface (the slot
+  paints it) and contributes only link styling — standalone use is unchanged.
 - **Accordion** (`wb-accordion`): a long / multi-element `<summary>` (inline `<code>`/`<b>`) no longer
   fragments — the chevron is pinned top-right and the title flows as normal wrapping text (was `display:flex`,
   which made every inline child a flex item and shrank each to min-content, dropping the `·` to its own line).

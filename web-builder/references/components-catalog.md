@@ -69,7 +69,7 @@ for the look (see `integration.md`).
 | A multi-step flow / wizard / progress timeline | **Steps** (`.wb-steps`) | [Steps](#steps--stepper) |
 | The top app bar (brand · links · actions) | **Navbar** | [Navbar](#navbar--nav-menu) |
 | A set of page-navigation links (a menu) | **Nav** (`.wb-nav`) | [Navbar](#navbar--nav-menu) |
-| The left navigation rail of an app shell | **Sidebar** (`.wb-sidenav`) | [Sidebar](#sidebar-side-nav) |
+| The left navigation rail of an app shell | **`.wb-shell__side`** slot + **Sidebar** (`.wb-sidenav`) links inside it | [App shell](#app-shell--page-scaffold) · [Sidebar](#sidebar-side-nav) |
 | A segmented filter of joined buttons (Ngày/Tuần/Tháng) | **Button group** | [Button group](#button-group) |
 | Budget usage / completion ratio | **Progress** | [Progress](#progress) |
 | A % bar that's still loading / syncing (shimmer on the fill) | **Progress** `--loading` | [Progress](#progress) |
@@ -94,6 +94,8 @@ for the look (see `integration.md`).
 | Reorder a flat list or grid of cards (drag) | **Sortable** | [Sortable](#sortable-list--grid) |
 | Reorder rows inside a data table (drag) | **Sortable table** (`--sortable`) | [Sortable](#sortable-list--grid) |
 | Place items in a **fixed grid/list**, keep empty slots between them (drag → any slot, swap) | **Slot grid** (`.wb-slotgrid`) | [Slot grid](#slot-grid) |
+| The frame of a whole screen (top bar + rail + scrolling content + footer) | **App shell** (`.wb-shell`) | [App shell](#app-shell--page-scaffold) |
+| A page title / section heading / sub-block, and the spacing between them | **Page scaffold** (`.wb-page-head` / `.wb-section` / `.wb-block`) | [App shell](#app-shell--page-scaffold) |
 | Arrange in a row/column, align (top/center/bottom, left/right), wrap, equal widths | **Grid / Layout** utilities | [Layout](#grid--layout) |
 | Pin a bar / card / button to the top or bottom edge on scroll | **Sticky** (`.wb-sticky`) | [Sticky](#sticky) |
 | A bounded scroll region (long list / wide row) with a theme-aware bar | **Scroll** (`.wb-scroll-y` / `-x`) | [Scroll areas](#scroll-areas) |
@@ -112,30 +114,31 @@ nothing by hand.
 
 ### The app shell (every page sits in this)
 
-Almost every app screen is: a top **navbar**, a body that is a **sidenav** rail beside a scrolling content
-**container**, and a **footer** — with a **pager** at the foot of long content. Layout is the utilities
-(`wb-stack` vertical, `wb-cluster` horizontal), never inline `display:flex`.
+Almost every app screen is: a top **navbar**, a body that is a rail beside a scrolling content **container**,
+and a **footer** — with a **pager** at the foot of long content. That frame is a **shipped primitive**,
+`.wb-shell` (see [App shell & page scaffold](#app-shell--page-scaffold)) — don't hand-roll it out of layout
+utilities and inline styles, and don't re-derive the sticky/scroll/mobile-drawer behaviour of the rail.
 
 ```html
-<div class="wb-stack" style="--wb-stack-gap:0; min-height:100vh">
-  <div class="wb-navbar"> … brand · nav · actions (theme toggle) … </div>
+<div class="wb-shell">
+  <header class="wb-navbar wb-navbar--sticky"> … brand · nav · actions (theme toggle) … </header>
 
-  <div class="wb-cluster wb-cluster--nowrap" style="gap:0; align-items:stretch; flex:1; min-height:0">
-    <nav class="wb-sidenav wb-scroll-y" style="width:230px"> … app rail … </nav>
+  <div class="wb-shell__body">
+    <aside class="wb-shell__side"> <nav class="wb-sidenav"> … app rail … </nav> </aside>
 
-    <main class="wb-grow wb-scrollbars" style="overflow:auto">
-      <div class="wb-container">           <!-- --narrow for forms · --wide for wide tables -->
+    <div class="wb-shell__main">
+      <main class="wb-container wb-container--pad">   <!-- --narrow for forms · --wide for wide tables -->
         …  page content (a recipe below)  …
         <nav class="wb-pager"> … prev · next … </nav>
-      </div>
-    </main>
+      </main>
+      <footer class="wb-footer"> … brand · link columns · copyright … </footer>
+    </div>
   </div>
-
-  <div class="wb-footer"> … brand · link columns · copyright … </div>
 </div>
 ```
 
-A public/marketing page drops the sidenav: just `wb-navbar` + a `wb-container` of sections + `wb-footer`.
+A public/marketing page drops the rail: just `wb-navbar` + a `wb-container wb-container--pad` of sections +
+`wb-footer`.
 
 ### Named recipes — content for the container
 
@@ -158,9 +161,14 @@ A public/marketing page drops the sidenav: just `wb-navbar` + a `wb-container` o
 - **Neutral-first still holds at page scale:** a screen is mostly white-black-grey; colour appears only on the
   few status cells/among the KPIs that carry meaning (design-principles §1). A dashboard is *not* a colour
   parade.
-- **Spacing is the utilities' gap**, not margins you hand-pick: sections are `wb-stack` (a vertical gap),
-  card rows are `wb-grid` / `wb-cluster`. If a gap feels wrong, change the `--wb-stack-gap` / cluster gap, not
-  a one-off margin.
+- **Vertical spacing is the scaffold's**, not margins you hand-pick: nest `wb-page-head` → `wb-section` →
+  `wb-block` and the rhythm is already right. *Inside* a block, spacing is the utilities' gap (`wb-stack`
+  vertical, `wb-grid` / `wb-cluster` for rows). If a gap feels wrong anywhere, change the token
+  (`--wb-section-gap` / `--wb-block-gap` / `--wb-stack-gap`) — never a one-off margin on one page.
+- **Prose has a measure.** The page lede caps at `--wb-measure-tight` (62ch) and a section description at
+  `--wb-measure` (68ch), automatically. A `.wb-block__desc` is deliberately uncapped — it sits under a
+  narrow sub-heading and is usually one line; if you write a long one, cap it yourself. Never let a
+  paragraph run the full width of a wide screen.
 - **One divider tone, one icon scale, one shadow scale** across the whole page — all from tokens.
 
 > Adding a genuinely new page pattern? Fold it back here as a recipe (same spirit as folding a new component
@@ -740,7 +748,8 @@ the dashed "droppable" affordance for statements/receipts — a `<label>` around
 
 `.wb-card` = the surface (border + radius + soft shadow). Compose `__head` / `__body` /
 `__foot`. Variants: `--dashed` (dashed hairline, no shadow — "add new"/drop zones),
-`--flat` (no shadow), `--hover` (lifts on hover — clickable cards). It also wraps tables.
+`--flat` (no shadow), `--hover` (lifts on hover — clickable cards), `--pad` (padding on the card itself, for
+a one-part card with no head/body/foot: link groups, callout tiles, small summaries). It also wraps tables.
 
 ```html
 <div class="wb-card">
@@ -749,6 +758,10 @@ the dashed "droppable" affordance for statements/receipts — a `<label>` around
   <div class="wb-card__foot">…</div>
 </div>
 <div class="wb-card wb-card--dashed"><div class="wb-card__body">＋ Thêm</div></div>
+<div class="wb-card wb-card--pad">                        <!-- one-part card, no __body wrapper -->
+  <p class="wb-card__title">Bố cục &amp; tiện ích</p>
+  <p class="wb-card__sub"><a href="#">Grid</a> · <a href="#">Sticky</a></p>
+</div>
 ```
 
 ### Media object
@@ -910,7 +923,10 @@ overlay (the shared modal JS works: `data-modal-open` / `-close`, click scrim to
 ## Navbar / Nav (menu)
 
 `.wb-navbar` = the top app bar: `__brand` (+ `__mark` square logo), a `.wb-nav` of links, `__spacer`
-(pushes the rest right), `__actions`. `--sticky` pins it. `.wb-nav` is the standalone **menu** primitive —
+(pushes the rest right), `__actions`. Height is `min-height: var(--wb-navbar-h)` — the shell rail reads the
+same token for its sticky offset, so retune the bar's height there, never with a literal.
+`--sticky` pins it; `--glass` makes it translucent + blurred so content scrolls faintly *under* it instead of
+hitting an opaque band (pair with `--sticky`; on a static bar there's nothing to reveal). `.wb-nav` is the standalone **menu** primitive —
 `.wb-nav__link` (+ `.is-active` / `.is-disabled`, optional `.wb-ico`); `--vertical` stacks it, `--underline`
 gives a page-tab look. Active is a plain highlight (no left bar). Wire `.is-active` to the router. A
 **`.wb-theme-toggle`** icon button (two glyphs: `dark_mode` moon +
@@ -945,9 +961,14 @@ App: keep the classes; drive `.is-active` from React Router (`NavLink`).
 ## Sidebar (side-nav)
 
 `.wb-sidenav` = the vertical app rail: `__section` (uppercase group label), `__link` (icon + label,
-+ `.is-active`), `__badge` (right-aligned count). A shippable sibling of the docs' own sidebar (which adds
-collapse behaviour and stays docs chrome). Add `.wb-scroll-y` if it gets long; compose with `.wb-navbar`
-for a full app shell.
++ `.is-active`), `__badge` (right-aligned count). Width reads `--wb-sidenav-w`.
+
+**In an app shell, this is not the rail — it's the rail's *contents*.** Put it inside the
+[`.wb-shell__side`](#app-shell--page-scaffold) slot, which owns the surface, the sticky column, its own
+scroll and the mobile off-canvas drawer; the sidenav then contributes link styling only (it drops its own
+border/background/width there automatically). Don't hand-compose a shell out of `.wb-navbar` +
+`.wb-sidenav` + a flex row — that's the thing `.wb-shell` exists to stop. Standalone (outside a shell) it's
+a plain static rail: give it a height and add `.wb-scroll-y` if it gets long.
 
 ```html
 <nav class="wb-sidenav">
@@ -1388,10 +1409,88 @@ marker; the checkbox tick traces the same shape) — never a literal `✓`.
 <button class="wb-tag__x" aria-label="Xoá"></button>         <!-- chip dismiss ×  (glyph from ::before) -->
 ```
 
+## App shell & page scaffold
+
+The layer **above** components: the frame a screen sits in, and the heading rhythm inside it. Reach for it
+**first** on any new screen — this is what stops a build from re-deriving its own frame and spacing and
+drifting away from the system. (The docs site runs on exactly these classes.)
+
+**Shell — four slots.** The rail slot already sticks below the bar, scrolls on its own, and folds into an
+off-canvas drawer with a scrim below 900px; you do not assemble that.
+- `.wb-shell` — the page column (`min-height: var(--wb-shell-h)`, default `100dvh`).
+- `.wb-shell__body` — the row under the bar: rail + main.
+- `.wb-shell__side` — the rail slot. It **paints the surface** (background + right hairline + padding), so a
+  `.wb-sidenav` dropped inside contributes only its link styling. States on `.wb-shell`:
+  `.is-side-collapsed` (desktop: hide the rail) · `.is-side-open` (narrow: slide it in over a scrim).
+  Behaviour is one class toggle — the app's job, as everywhere else in this library.
+- `.wb-shell__main` — the content column. Carries `min-width: 0`, without which a wide table pushes the
+  column past the viewport instead of scrolling inside it.
+- `.wb-container--pad` — the content column's **vertical** rhythm (top room + tail room). Kept off the base
+  `.wb-container` so a container used *inside* a page stays flush.
+
+**Scaffold — three heading levels**, each carrying its own size and the gap above it. Nest in order and the
+page rhythm is correct without picking a single margin. Each styles **whatever heading tag** sits directly
+inside it (`:where(h1…h6)`), so an app keeps a valid document outline; the `__title` / `__desc` children say
+the same thing explicitly when the element isn't a heading.
+- `.wb-eyebrow` — uppercase overline above a page title.
+- `.wb-page-head` (+ `__title` / `__desc`) — page title + lede. `--lg` = the hero/landing size.
+- `.wb-section` (+ `__title` / `__desc`) — a titled band; the gap above it is the page's main rhythm.
+  `--flush` drops that gap for a section opening the page right under the head.
+- `.wb-block` (+ `__title` / `__desc`) — a labelled sub-part inside a section.
+
+**Knobs** (tune once globally, never per page): `--wb-shell-h` · `--wb-navbar-h` · `--wb-sidenav-w` ·
+`--wb-page-pad-block` / `--wb-page-pad-end` · `--wb-section-gap` · `--wb-block-gap` · `--wb-measure`
+(`-tight`) for prose width · the `--wb-text-*` type scale.
+
+```html
+<div class="wb-shell">
+  <header class="wb-navbar wb-navbar--sticky wb-navbar--glass"> … </header>
+  <div class="wb-shell__body">
+    <aside class="wb-shell__side"><nav class="wb-sidenav"> … </nav></aside>
+    <div class="wb-shell__main">
+      <main class="wb-container wb-container--pad">
+        <div class="wb-page-head">
+          <p class="wb-eyebrow">Sổ tiền</p>
+          <h1>Giao dịch</h1>
+          <p>Mọi khoản thu chi trong kỳ.</p>
+        </div>
+        <section class="wb-section">
+          <h2>Tháng này</h2>
+          <p class="wb-section__desc">Tổng hợp theo danh mục.</p>
+          <div class="wb-block"><h3>Ăn uống</h3><p class="wb-block__desc">18 giao dịch</p> … </div>
+        </section>
+      </main>
+      <footer class="wb-footer"> … </footer>
+    </div>
+  </div>
+</div>
+
+<!-- Public / marketing page: drop the rail entirely. -->
+<div class="wb-shell">
+  <header class="wb-navbar wb-navbar--sticky"> … </header>
+  <main class="wb-container wb-container--pad">
+    <div class="wb-page-head wb-page-head--lg"><h1> … </h1><p> … </p></div>
+  </main>
+  <footer class="wb-footer"> … </footer>
+</div>
+```
+
+```js
+// The rail toggle — the whole behaviour contract.
+const shell = document.querySelector(".wb-shell");
+const narrow = window.matchMedia("(max-width: 900px)").matches;
+shell.classList.toggle(narrow ? "is-side-open" : "is-side-collapsed");
+```
+
+> The shell is the **one** place the library measures the viewport instead of a container (navbar and pager
+> use container queries) — correct here, because the shell *is* the viewport. The 900px breakpoint is
+> repeated in whatever driver toggles the rail; keep the two in step.
+
 ## Grid / Layout
 
 Composable layout utilities (no colour/meaning — just placement; swap for Tailwind flex/grid if you
-prefer):
+prefer). These place things *inside* a screen; the frame *of* the screen is the
+[app shell](#app-shell--page-scaffold) above:
 - `.wb-cluster` — a row that **wraps**. Main axis (justify): `--start` / `--end` / `--center` /
   `--between` / `--around` / `--evenly` / `--stretch` (equal-**width** items fill the row). Cross axis
   (align, when items differ in height): `--top` / `--middle` (vertical centre = default) / `--bottom` /

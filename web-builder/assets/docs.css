@@ -1,8 +1,8 @@
 /* =============================================================================
    Web Builder — DOCS SITE CHROME  (not part of the shipped library)
    -----------------------------------------------------------------------------
-   Styles only the documentation shell: the tree sidebar, topbar, demo stages,
-   code blocks, the dual light/dark preview, and the typography/font specimens.
+   Styles only documentation chrome: the tree sidebar, demo stages, code blocks,
+   the dual light/dark preview, and the typography/font specimens.
    It reuses web-builder tokens so the docs follow the same light/dark theme.
    The shipped library is web-builder.css; this file never ships to the app.
 
@@ -10,6 +10,14 @@
    buttons / cards / nav / sidenav…), the pages use it DIRECTLY. This file only
    holds chrome the library has no equivalent for — the sidebar tree, code block,
    dual preview, config drawer, and the token / type / font specimens.
+
+   The page FRAME and the heading rhythm used to live here too — shell, rail,
+   topbar, content column, eyebrow / page-head / section / block, the note box and
+   the link tiles. They are shipped primitives now (web-builder.css §52), because
+   an app built with this library needs exactly that frame and had no way to get
+   it. What is left of them here is consumer tuning: three token overrides and two
+   spacing hooks. If you find yourself re-declaring a frame rule in this file,
+   that is the signal it belongs upstream in §52.
    ========================================================================== */
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -43,28 +51,30 @@ body {
 }
 a { color: inherit; }
 
-/* Shell = a full-width topbar stacked OVER a [sidebar | main] row, so the topbar
-   always spans the whole width and the sidebar never shrinks it. */
-.doc-shell { display: flex; flex-direction: column; min-height: var(--doc-vh); }
-.doc-body  { display: flex; flex: 1 1 auto; min-height: 0; }
+/* The shell, the rail slot and the content column are the SHIPPED scaffold
+   (web-builder.css §52) — .wb-shell / __body / __side / __main. The docs are an
+   ordinary consumer of it and only retune three tokens:
+     · --wb-shell-h  the `zoom: .9` above means plain 100dvh would come out 10%
+       short, so the shell reads the divided-back-out height instead. Docs-only
+       artifact — an app never needs this.
+     · --wb-navbar-h / --wb-sidenav-w  the docs bar and rail run a little larger
+       than the library defaults (58/252 vs 56/240).
+   Theme-aware scrollbars come from `.wb-scrollbars` (§27), carried in index.html
+   by the rail, <html> and the Config drawer.
+
+   Each override is scoped to the element that needs it, NOT to :root — on :root
+   they would also retune every standalone navbar / sidenav demo on the pages, so
+   the docs would stop showing the library's own defaults. --wb-shell-h is the
+   exception: it's a page-wide zoom correction, and demo shells set their own. */
+:root       { --wb-shell-h:   var(--doc-vh); }
+.doc-topbar { --wb-navbar-h:  var(--doc-nav-h); }
+/* The rail needs the bar's height too — it sticks below it and subtracts it from
+   the shell height. Same value, declared where it is read. */
+.doc-side   { --wb-sidenav-w: 252px; --wb-navbar-h: var(--doc-nav-h); }
 
 /* -----------------------------------------------------------------------------
    Sidebar — the tree (grouped, collapsible)
    -------------------------------------------------------------------------- */
-.doc-side {
-  position: sticky; top: var(--doc-nav-h); align-self: flex-start;
-  width: 252px; height: calc(var(--doc-vh) - var(--doc-nav-h)); flex: none;
-  border-right: var(--wb-bw) solid var(--wb-border);   /* the ONE divider — on the right */
-  background: var(--wb-surface);
-  padding: 14px 12px 56px;                                  /* tail room so the last item scrolls clear */
-  overflow-y: auto; scroll-padding-block-end: 12px;
-  overscroll-behavior: contain;   /* the sidebar's scroll stays put — no chaining to (or
-                                     rubber-band reveal of) the page scrolling behind it */
-}
-/* Theme-aware scrollbars now come from the library primitive `.wb-scrollbars`
-   (web-builder.css §27): the sidebar (.doc-side), the whole page (<html>) and the
-   Config drawer body carry the class in index.html, so this file no longer re-declares
-   the bar — it dogfoods the shipped utility instead of duplicating it. */
 
 /* Brand lives in the topbar now and doubles as the sidebar toggle (click the W).
    §24 concentric radius: the W tile has radius --brand-mark-r and sits --brand-gap
@@ -133,18 +143,12 @@ a { color: inherit; }
 }
 
 /* -----------------------------------------------------------------------------
-   Main column + topbar
+   Topbar extras
+   -----------------------------------------------------------------------------
+   The bar itself is the shipped .wb-navbar --sticky --glass; only the two docs
+   deviations stay here (a slightly roomier gap, and a tighter one on phones).
    -------------------------------------------------------------------------- */
-.doc-main { flex: 1 1 auto; min-width: 0; }
-.doc-topbar {
-  position: sticky; top: 0; z-index: 30;
-  min-height: var(--doc-nav-h); box-sizing: border-box;
-  display: flex; align-items: center; gap: 14px; padding: 0 20px;
-  background: color-mix(in srgb, var(--wb-canvas) 82%, transparent);
-  backdrop-filter: saturate(1.1) blur(8px);
-  border-bottom: var(--wb-bw) solid var(--wb-border);
-}
-.doc-topbar .spacer { margin-left: auto; }
+.doc-topbar { gap: 14px; padding: 0 20px; }
 .theme-btn {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: inherit; font-size: 13px; font-weight: 550; cursor: pointer;
@@ -175,35 +179,16 @@ a { color: inherit; }
 .doc-secswitch.is-open .wb-dropdown__caret { transform: rotate(180deg); }
 .doc-secswitch .wb-dropdown__menu { width: 100%; }
 
-/* The W-brand toggle hides the whole sidebar on desktop; main reflows to full width. */
-.doc-shell.is-side-hidden .doc-side { display: none; }
+/* The reading column is .wb-container --pad; the docs just want it a touch
+   narrower than the shipped 1120 default, with roomier side gutters (the
+   shipped --pad deliberately owns the VERTICAL rhythm only). */
+.doc-content { --wb-container-max: 980px; padding-inline: 32px; }
+@media (max-width: 900px) { .doc-content { padding-inline: 18px; } }
 
-.doc-content { max-width: 980px; margin: 0 auto; padding: 36px 32px 120px; }
-
-/* -----------------------------------------------------------------------------
-   Page + section headers (used inside every partial)
-   -------------------------------------------------------------------------- */
-.doc-eyebrow { font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
-  color: var(--wb-fg-subtle); font-weight: 700; margin: 0 0 8px; }
-.doc-page-head { margin-bottom: 8px; }
-.doc-page-head h2 { font-size: 27px; margin: 0 0 8px; letter-spacing: -.02em; font-weight: 700; }
-.doc-page-head p  { font-size: 15px; color: var(--wb-fg-muted); margin: 0; max-width: 64ch; }
-
-.doc-sec { margin-top: 44px; }
-.doc-sec > h3 { font-size: 19px; margin: 0 0 6px; letter-spacing: -.01em; }
-.doc-sec__desc { color: var(--wb-fg-muted); margin: 0 0 20px; font-size: 14px; max-width: 68ch; }
-.doc-block { margin-top: 28px; }
-.doc-block > h4 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
-.doc-block__desc { font-size: 13px; color: var(--wb-fg-muted); margin: 0 0 14px; }
-
-/* A small callout box for notes / tips — outline + soft tint (no left bar). */
-.doc-note {
-  display: flex; gap: 10px; align-items: flex-start;
-  border: 1px solid color-mix(in srgb, var(--wb-info) 45%, var(--wb-border));
-  background: var(--wb-info-soft); color: var(--wb-fg);
-  border-radius: var(--wb-radius); padding: 12px 14px; font-size: 13.5px; margin: 18px 0;
-}
-.doc-note b { font-weight: 650; }
+/* Notes are the shipped .wb-alert--info. What stays here is page-FLOW spacing (a
+   layout concern of the docs partials, not of the component) and the top-aligned
+   icon, since every docs note runs to more than one line. */
+.wb-alert.doc-note { margin: 18px 0; align-items: flex-start; }
 
 /* -----------------------------------------------------------------------------
    Demo stage + code block
@@ -253,14 +238,8 @@ a { color: inherit; }
 /* -----------------------------------------------------------------------------
    Overview cards
    -------------------------------------------------------------------------- */
-.doc-hero h2 { font-size: 31px; margin: 0 0 10px; letter-spacing: -.02em; font-weight: 700; }
-.doc-hero p  { font-size: 15px; color: var(--wb-fg-muted); margin: 0; max-width: 62ch; }
-.nav-card { display: block; text-decoration: none; border: var(--wb-bw) solid var(--wb-border);
-  border-radius: var(--wb-radius-lg); background: var(--wb-surface); padding: 18px;
-  box-shadow: var(--wb-shadow-sm); transition: border-color .13s ease, transform .06s ease; }
-.nav-card:hover { border-color: var(--wb-border-strong); transform: translateY(-1px); }
-.nav-card__t { font-weight: 650; font-size: 15px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
-.nav-card__d { font-size: 13px; color: var(--wb-fg-muted); margin: 0; }
+/* The hero is .wb-page-head--lg and the link tiles are .wb-card --pad with
+   __title / __sub — both shipped (§52 / §7), so nothing is declared here. */
 
 /* -----------------------------------------------------------------------------
    Overview extras — a separator glyph for the phase strip + cascade.
@@ -338,7 +317,7 @@ a { color: inherit; }
    shadow (some previously had a shadow, some didn't — this syncs them). One knob
    (--wb-demo-shadow) turns it up/down/off for the whole docs site. */
 .demo, .type-scale, .swatch, .tier__item, .weight-cell,
-.dual__panel, .font-card, .nav-card { box-shadow: var(--wb-demo-shadow); }
+.dual__panel, .font-card { box-shadow: var(--wb-demo-shadow); }
 
 /* -----------------------------------------------------------------------------
    Config / tweak drawer (docs-only) — slides in from the right
@@ -422,23 +401,10 @@ a { color: inherit; }
   border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2);
 }
 
+/* The rail's off-canvas drawer + scrim below 900px is shipped behaviour now
+   (web-builder.css §52) — the docs get it from .wb-shell__side / .is-side-open
+   and only trim the bar's own padding here. */
 @media (max-width: 900px) {
-  /* Sidebar → off-canvas DRAWER: slid off-screen by default, brought in by the topbar
-     toggle (.is-side-open on the shell) over a dim backdrop. Previously this was a hard
-     `display:none`, so the toggle could never reveal it on a phone — now it can. (The
-     desktop --hidden collapse is undone here; the drawer uses transform, not display.) */
-  .doc-side {
-    position: fixed; top: 0; left: 0; height: var(--doc-vh); z-index: 60;
-    width: 264px; max-width: 82vw;
-    transform: translateX(-100%); transition: transform .22s ease;
-    box-shadow: var(--wb-shadow-md);
-  }
-  .doc-shell.is-side-hidden .doc-side { display: block; }        /* undo the desktop hide on mobile */
-  .doc-shell.is-side-open .doc-side { transform: translateX(0); }
-  .doc-shell.is-side-open::before {
-    content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(0, 0, 0, .42);
-  }
-  .doc-content { padding: 26px 18px 90px; }
   .doc-topbar { padding: 0 14px; }
 }
 
@@ -463,7 +429,7 @@ a { color: inherit; }
   .doc-search-trigger__label, .doc-search-trigger__kbd { display: none; }
   .doc-topbar { gap: 8px; }
   .doc-brand__text { display: none; }          /* phones: keep just the W toggle */
-  .doc-topbar .wb-cap { display: none; }
+  .doc-topbar__cap { display: none; }        /* own hook — don't reach into .wb-cap */
   .doc-search-trigger { padding: 0; width: 34px; justify-content: center; }
   .theme-btn { gap: 0; padding: 0; width: 34px; height: 34px; justify-content: center; }
   .theme-btn #themeLabel { display: none; }

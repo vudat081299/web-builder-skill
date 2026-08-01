@@ -17,14 +17,14 @@ Tailwind note below).
 | Breadcrumb | ✅ `wb-breadcrumb` | |
 | Buttons | ✅ `wb-btn` | + social-login, `--icon`, `--block` |
 | Button group | ✅ `wb-btn-group` | segmented |
-| Card | ✅ `wb-card` | + `--dashed/--flat/--hover` |
+| Card | ✅ `wb-card` | + `--dashed/--flat/--hover/--pad` |
 | Carousel | ❌ **skipped** | heavy/branded; rarely needed and hard to keep minimal |
 | Close button | ✅ `wb-close` | always top-right |
 | Collapse | ✅ `wb-collapse` | one standalone show/hide region (`wb-accordion` for grouped) |
 | Dropdowns | ✅ `wb-dropdown` / `wb-menu` | behaviour → Radix |
 | List group | ✅ `wb-list` | settings/accounts |
 | Modal | ✅ `wb-modal` + `wb-overlay` | behaviour → Radix Dialog |
-| Navbar | ✅ `wb-navbar` | **added** — top app bar |
+| Navbar | ✅ `wb-navbar` | **added** — top app bar; `--sticky` / `--glass` (translucent over scrolling content), height = `--wb-navbar-h` |
 | Navs & tabs | ✅ `wb-nav` + `wb-tabs` | nav = page links; tabs = panel switch |
 | Offcanvas | ✅ `wb-drawer` | slide-in over the scrim |
 | Pagination | ✅ `wb-pagination` | |
@@ -41,7 +41,9 @@ Tailwind note below).
 | Layout (12-col grid, breakpoints, gutters) | 🟡 by design | flex-first utilities instead — **with full flex alignment** (justify / align / self / grow); no 12-col scaffold. See below & design-principles §17 |
 | Flex/align utilities (justify-content, align-items, align-self, flex-fill) | ✅ | on `.wb-cluster` / `.wb-stack` (`--start/end/center/between/around/evenly`, `--top/middle/bottom/baseline`) + `.wb-grow` / `.wb-self--*` |
 
-**Only in Web Builder (no Bootstrap 5 equivalent):** tags (`#` category chips), stat/KPI cards,
+**Only in Web Builder (no Bootstrap 5 equivalent):** an **app shell + page scaffold** (`wb-shell` + the
+`wb-page-head`/`wb-section`/`wb-block` heading rhythm — Bootstrap ships example *templates* you copy, not a
+shell primitive with a mobile rail baked in), tags (`#` category chips), stat/KPI cards,
 charts (line/bars/combo/donut/sparkline + budget), category **tree** (drag reorder/reparent), **sortable**
 list/grid/rows, **receipt** (hoá đơn — torn-paper slip), tinted category capsules, social-login buttons,
 a **steps/stepper** (`wb-steps` — wizard · timeline; Bootstrap has none), a **media object** (`wb-media` —
@@ -62,9 +64,14 @@ primitive. Behaviour still delegates to a behaviour engine (Radix Popover/Dialog
 Bootstrap treats layout as core: `.container` → `.row` → `.col-{bp}-{n}`, a 12-column grid, five
 breakpoints (sm/md/lg/xl/xxl), and gutter utilities. Most Bootstrap pages are scaffolded on it.
 
-Web Builder keeps layout as a **small flex-first utility set** — `.wb-cluster` (wrap row), `.wb-stack`
-(column), `.wb-grid` (`--auto/-2/-3/-4/--equal`), `.wb-container`, `.wb-ratio` — each collapsing
-sensibly on mobile, no breakpoint bookkeeping. The set carries **full flex alignment** so a row/column is
+Web Builder keeps *within-page* layout as a **small flex-first utility set** — `.wb-cluster` (wrap row),
+`.wb-stack` (column), `.wb-grid` (`--auto/-2/-3/-4/--equal`), `.wb-container`, `.wb-ratio` — each collapsing
+sensibly on mobile, no breakpoint bookkeeping. **Above them sits one page-level primitive Bootstrap has no
+equivalent for**: `.wb-shell` + `__body`/`__side`/`__main` (sticky bar · a rail that sticks, scrolls and
+folds to an off-canvas drawer + scrim under 900px via `.is-side-collapsed`/`.is-side-open` · a
+`.wb-container--pad` content column) plus the `.wb-page-head`/`.wb-section`/`.wb-block` heading rhythm.
+Skipping a 12-col grid was never meant to leave the whole-page level unowned. The utility set carries
+**full flex alignment** so a row/column is
 never hand-styled: cluster justifies (`--start/end/center/between/around/evenly`) and aligns
 (`--top/middle/bottom/baseline`), stack aligns (`--start/center/end`), plus `.wb-grow` and `.wb-self--*` for
 per-item control. What we skip is only the 12-column scaffold, not alignment. Reasoning (full version in `design-principles.md §17`):
@@ -90,8 +97,12 @@ token-based:
 
 What it intentionally leaves to Tailwind (if you run it) or to a one-off inline style: **generic spacing /
 sizing / positioning utilities**. A full `m-*/p-*/w-*` scale would balloon the API and fight the minimalist
-ethos, and component padding/gaps are already tokenised. Net: on Tailwind, the two compose (Web Builder for
-the look, Tailwind for one-off spacing); off Tailwind, the built-ins are enough to build real pages.
+ethos, and component padding/gaps are already tokenised. **One carve-out:** *page-level* vertical rhythm is
+NOT a one-off — the gaps between page head, sections and blocks are shipped tokens (`--wb-page-pad-block` /
+`--wb-page-pad-end` / `--wb-section-gap` / `--wb-block-gap`) carried by the scaffold, and reaching for
+`mt-10` or `style="margin-top:…"` there is the drift the scaffold exists to prevent (design-principles §17).
+Net: on Tailwind, the two compose (Web Builder for the look *and the page frame*, Tailwind for one-off
+spacing inside a block); off Tailwind, the built-ins are enough to build real pages.
 
 ## Docs sidebar (BOC) structure — Bootstrap vs ours
 
@@ -103,9 +114,10 @@ the look, Tailwind for one-off spacing); off Tailwind, the built-ins are enough 
   (structure)*. A builder thinks "I need to show data" → **Hiển thị dữ liệu**, not "is this a Component or a Utility?".
 
 Both open with a foundation section (Bootstrap: Getting started/Customize; Web Builder: Nền tảng — colour
-ladder, tokens, typography, border). The flex-first **layout utilities** sit in their own foundation-tier
-group **Bố cục & tiện ích** (grid/cluster/stack + sticky/scroll/divider) — a small utility set, not a
-separate 12-column grid section, consistent with the layout decision above. **Cấu trúc** then holds only
+ladder, tokens, typography, border). The **app shell & page scaffold** leads the foundation-tier group
+**Bố cục & tiện ích**, followed by the flex-first **layout utilities** (grid/cluster/stack + sticky/scroll/
+divider) — one page frame plus a small utility set, not a separate 12-column grid section, consistent with
+the layout decision above. **Cấu trúc** then holds only
 the structural pieces: the drag-and-drop tree + sortable.
 
 ## Honest pros / cons

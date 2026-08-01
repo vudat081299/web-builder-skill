@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Nền tảng</p>
   <h2>Config / Tweak</h2>
   <p>Bảng tinh chỉnh trượt ra từ bên phải (nút <span class="wb-ico wb-ico--sm" style="vertical-align:-5px">tune</span>
   trên thanh trên cùng). Kéo các thông số và xem giao diện đổi <b>ngay lập tức</b>. Việc chỉnh ở đây
@@ -7,21 +7,21 @@
   Chỉnh xong bấm <b>Xuất .md</b> để lấy khối token, rồi dán vào source (hoặc đưa cho AI cập nhật).</p>
 </div>
 
-<section class="doc-sec">
+<section class="wb-section">
   <button class="wb-btn wb-btn--lg" data-config-open>
     <span class="wb-ico wb-ico--sm">tune</span> Mở bảng tinh chỉnh
   </button>
 
-  <div class="doc-note" style="margin-top:20px">
+  <div class="wb-alert wb-alert--info doc-note" style="margin-top:20px">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Cơ chế: bảng chỉ ghi các biến CSS (<code>--wb-*</code>) lên <code>:root</code> của trang docs. Vì component
     dùng biến, chúng đổi theo tức thì; còn file thư viện thì <b>bất biến</b>. Màu áp dụng cho <b>theme đang xem</b> —
     muốn chỉnh cả sáng &amp; tối thì đổi theme rồi xuất thêm một lần nữa.</div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Xem trực tiếp khi chỉnh</h4>
-    <p class="doc-block__desc">Mở bảng và thử preset "Kiểu góc" (Vuông sắc), "Độ dày viền", "Viền checkbox", "Cỡ/đậm icon" hay đổi màu — cụm dưới đây đổi theo.</p>
+    <p class="wb-block__desc">Mở bảng và thử preset "Kiểu góc" (Vuông sắc), "Độ dày viền", "Viền checkbox", "Cỡ/đậm icon" hay đổi màu — cụm dưới đây đổi theo.</p>
     <div class="demo">
       <div class="demo__stage">
         <div class="wb-cluster">
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Chỉnh được những gì</h4>
     <div class="wb-card" style="max-width:640px">
       <div class="wb-table-scroll">
@@ -65,7 +65,7 @@
         </table>
       </div>
     </div>
-    <p class="doc-block__desc" style="margin-top:12px">Nút <b>Đặt lại</b> trả mọi thứ về mặc định. Nút <b>Xuất .md</b> tải
+    <p class="wb-block__desc" style="margin-top:12px">Nút <b>Đặt lại</b> trả mọi thứ về mặc định. Nút <b>Xuất .md</b> tải
     về file <code>web-builder-tweaks.md</code> chứa khối <code>:root { … }</code> đúng các giá trị bạn đã đổi.</p>
   </div>
 </section>

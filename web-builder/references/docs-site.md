@@ -19,11 +19,15 @@ dogfoods the primitive instead.
 ## 1. Architecture — one single-page app, three files
 
 - **`index.html`** — a static shell, never regenerated. It holds: the `<head>` with a **pre-paint theme
-  script** (below), the `.doc-shell` — a **full-width `.doc-topbar`** stacked OVER a `.doc-body` (the
-  `.doc-side` sidebar + the `.doc-main` column), so the topbar always spans the whole width and the sidebar
-  never shrinks it — an empty `<main id="view">` the router fills, an empty `<div id="docfooter">`, the Config
-  drawer (`.doc-config`), and the search dialog (`.wb-overlay.doc-search`). CSS + JS are injected with a
-  `?v=Date.now()` cache-buster so local edits never show stale (see script in `<head>`).
+  script** (below), then the **shipped app shell** (`web-builder.css`, CSS section 52) — a `.wb-shell` whose full-width
+  `.wb-navbar--sticky --glass` bar sits OVER a `.wb-shell__body` (the `.wb-shell__side` rail + the
+  `.wb-shell__main` column), so the bar always spans the whole width and the rail never shrinks it — an empty
+  `<main id="view" class="wb-container wb-container--pad">` the router fills, an empty `<div id="docfooter">`,
+  the Config drawer (`.doc-config`), and the search dialog (`.wb-overlay.doc-search`). CSS + JS are injected
+  with a `?v=Date.now()` cache-buster so local edits never show stale (see script in `<head>`).
+  **The docs own no frame of their own**: shell, rail, bar and content column are all library primitives, and
+  `docs.css` only retunes three tokens (`--wb-shell-h` / `--wb-navbar-h` / `--wb-sidenav-w`). If you catch
+  yourself declaring a frame rule in `docs.css`, it belongs upstream in CSS section 52 instead.
 - **`app.js`** — the whole engine: the `SECTIONS` model (single source of truth), a hash router, per-page init,
   the Config playground, full-text search, theme cycling, the dual light/dark preview, and the auto-rendered
   pager + footer. Pages in `pages/` stay **markup-only — no shell, no `<script>`, no `<style>`.**
@@ -89,29 +93,33 @@ section and the switcher, tree, router, pager, and search pick it up — nothing
 ## 3. The page grammar — copy-paste skeleton
 
 Every `pages/<id>.html` is a **markup-only fragment** (no `<html>/<head>/<body>`). It follows one grammar:
-a page head, then `doc-sec` sections, each holding `doc-block` units, each holding a `demo` (live stage +
-copyable code). Fill this in:
+a page head, then `wb-section` sections, each holding `wb-block` units, each holding a `demo` (live stage +
+copyable code).
+
+Everything in that grammar **except `demo*` / `copy-btn` is a shipped primitive** (CSS section 52) — the docs page
+scaffold *is* the library's page scaffold. That's deliberate: a page laid out correctly here is laid out
+correctly in a real build, and the rhythm can't drift between the two. Fill this in:
 
 ```html
-<!-- 1 · Page head: eyebrow (= group, or section title for a flat page), h2 title, one-line intro -->
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nhập liệu</p>
+<!-- 1 · Page head: eyebrow (= group, or section title for a flat page), title, one-line intro -->
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Nhập liệu</p>
   <h2>Switch</h2>
   <p>One-sentence description of the component and when to use it.</p>
 </div>
 
-<!-- Optional callout: outline + soft tint box, no left bar (leading emoji + text) -->
-<div class="doc-note"><span>💡</span><div><b>Tip:</b> a note or gotcha worth surfacing.</div></div>
+<!-- Optional callout: the shipped info alert; .doc-note adds only page-flow margin + a top-aligned icon -->
+<div class="wb-alert wb-alert--info doc-note"><span>💡</span><div><b>Tip:</b> a note or gotcha worth surfacing.</div></div>
 
-<!-- 2 · Section: a themed grouping. h3 title + optional lead paragraph -->
-<section class="doc-sec">
+<!-- 2 · Section: a themed grouping. Heading + optional lead paragraph -->
+<section class="wb-section">
   <h3>Cơ bản</h3>
-  <p class="doc-sec__desc">Optional section lead — max ~68ch, muted.</p>
+  <p class="wb-section__desc">Optional section lead — capped at --wb-measure (~68ch), muted.</p>
 
-  <!-- 3 · Block: one variant. h4 label + optional sub-description -->
-  <div class="doc-block">
+  <!-- 3 · Block: one variant. Sub-heading + optional sub-description -->
+  <div class="wb-block">
     <h4>Default</h4>
-    <p class="doc-block__desc">Optional per-variant note, e.g. what a modifier changes.</p>
+    <p class="wb-block__desc">Optional per-variant note, e.g. what a modifier changes.</p>
 
     <!-- 4 · Demo unit: live stage on top, copyable code below -->
     <div class="demo">
@@ -129,7 +137,7 @@ copyable code). Fill this in:
 ```
 
 **Rules baked into the grammar:**
-- `doc-eyebrow` text = the item's `group` (or, for a flat design/project page, its section title) — kept in sync by hand.
+- `wb-eyebrow` text = the item's `group` (or, for a flat design/project page, its section title) — kept in sync by hand.
 - The **code sample is escaped HTML** inside `<pre><code>` and must mirror the live stage exactly. `.copy-btn`
   is picked up by a delegated click handler in `app.js` (copies the `<code>` text) — no per-page JS.
 - Use library layout primitives inside the stage (`.wb-stack`, `.wb-cluster`, `.wb-grid`), **never** inline
@@ -168,27 +176,37 @@ that these drivers are docs-only glue — a real app maps the same classes onto 
 
 ## 5. Docs-chrome class inventory (`docs.css`)
 
-Non-`wb-*` classes — the chrome the library has no primitive for. Compact roster by area:
+Non-`wb-*` classes — the chrome the library has no primitive for. Compact roster by area.
+
+**What is NOT here any more, and why.** The page **frame** and the heading **rhythm** used to be docs chrome:
+shell, rail, topbar, content column, eyebrow / page-head / section / block, the note box, the link tiles.
+They were folded into the library (CSS section 52) because an app built with this skill needs exactly that frame and had
+no way to get it — the docs looked composed and a fresh build didn't. The mapping, if you meet the old names:
+
+| was (docs.css) | now (shipped) |
+|---|---|
+| `doc-shell` · `doc-body` · `doc-main` | `wb-shell` · `wb-shell__body` · `wb-shell__main` |
+| `doc-side` (+ off-canvas < 900px) | `wb-shell__side` (drawer + scrim ship too) |
+| `doc-topbar` | `wb-navbar wb-navbar--sticky wb-navbar--glass` (a `.doc-topbar` hook keeps two docs-only tweaks) |
+| `doc-content` | `wb-container wb-container--pad` (docs set `--wb-container-max: 980px` + 32px side gutters) |
+| `doc-eyebrow` · `doc-page-head` · `doc-sec` · `doc-block` | `wb-eyebrow` · `wb-page-head` · `wb-section` · `wb-block` |
+| `doc-hero` | `wb-page-head--lg` |
+| `doc-note` | `wb-alert wb-alert--info` (`.doc-note` survives as page-flow margin + top-aligned icon) |
+| `nav-card` · `__t` · `__d` | `wb-card wb-card--pad` · `wb-card__title` · `wb-card__sub` |
+| `.doc-shell.is-side-hidden` | `.wb-shell.is-side-collapsed` |
+
+The still-docs-only roster:
 
 | Class | Role |
 |---|---|
-| `doc-shell` · `doc-body` | `doc-shell` = flex **column** (`min-height:100vh`): a full-width topbar over `doc-body`; `doc-body` = the flex row holding sidebar + main |
-| `doc-side` | sticky sidebar, offset **below** the topbar (`top: var(--doc-nav-h)`); the ONE divider is its right border; off-canvas drawer < 900px |
 | `doc-secswitch` · `-wrap` · `__btn` · `__ico` · `__label` | the **section switcher** dropdown at the top of the sidebar (dogfoods `.wb-dropdown` + `.wb-menu`); swaps which section's tree is shown |
 | `doc-brand` · `__mark` · `__text` · `__name` · `__ver` | brand block in the **topbar** (logo tile + name + version); it **is** the sidebar toggle (`data-side-toggle` — click the W) |
 | `doc-tree` · `__group` (`--flat`) · `__head` · `__caret` · `__items` · `__link` · `__badge` | one section's nav tree; `__head` is a collapse button (caret on the RIGHT); a flat section renders one `--flat` headingless group; `__link.is-active` / `.is-coming` |
-| `doc-main` | right column (flex:1) |
-| `doc-topbar` | **full-width** sticky blurred header (`min-height: --doc-nav-h`); holds the brand/toggle, the "Minimalist UI kit" cap, `.spacer`, and the search/config/theme buttons |
+| `doc-topbar` · `doc-topbar__cap` | hook on the shipped bar for the two docs deviations: a roomier gap/padding, and hiding the "Minimalist UI kit" cap on phones |
 | `theme-btn` · `doc-icon-btn` | pill theme cycler; round config icon-button |
-| `doc-content` | centered page column (`max-width:980px`), where injected pages render |
-| `doc-eyebrow` | uppercase kicker above a page/section title |
-| `doc-page-head` (`h2`,`p`) | page title block |
-| `doc-sec` · `doc-sec__desc` | a page section + its muted lead paragraph |
-| `doc-block` · `doc-block__desc` | a variant unit within a section + its sub-description |
-| `doc-note` | outline + soft-tint callout box (no left bar) |
+| `doc-content` | consumer tuning of the shipped content column: `--wb-container-max: 980px` + roomier 32px side gutters (18px under 900px) |
+| `doc-note` | margin + top-aligned icon on the shipped info alert (page flow, not looks) |
 | `doc-sep` | neutral separator glyph (→ / ↔) between inline chips |
-| `doc-hero` (`h2`,`p`) | larger title block, overview page only |
-| `nav-card` · `__t` · `__d` | link/summary card grid tile (overview, cross-links) |
 | `demo` · `demo__stage` · `demo__code` · `demo--plain` · `demo--pop` | the demo container: live stage (canvas bg) + code block; `--pop` lets overlays escape |
 | `copy-btn` | copy-to-clipboard button inside `demo__code` |
 | `cap-row` · `cap-row__label` | labelled row of capsule/badge specimens |

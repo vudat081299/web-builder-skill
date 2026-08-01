@@ -30,6 +30,7 @@ const SECTIONS = [
   ]},
   { id: "components", title: "Thành phần", icon: "widgets", groups: [
     { group: "Bố cục & tiện ích", items: [
+      { id: "shell",      label: "App shell & nhịp trang" },
       { id: "layout",     label: "Grid / Layout" },
       { id: "sticky",     label: "Sticky" },
       { id: "scroll",     label: "Scroll / thanh cuộn" },
@@ -1020,22 +1021,25 @@ document.addEventListener("click", (e) => {
     groupTog.setAttribute("aria-expanded", String(!collapsed));
     return;
   }
-  /* Sidebar toggle. On DESKTOP it collapses the panel (.is-side-hidden). On a small
+  /* Sidebar toggle. On DESKTOP it collapses the panel (.is-side-collapsed). On a small
      screen the panel is an off-canvas drawer, so the toggle OPENS it (.is-side-open)
      over a backdrop instead — otherwise a phone could never reveal the menu. */
   const sideTog = e.target.closest("[data-side-toggle]");
   if (sideTog) {
-    const shell = document.querySelector(".doc-shell");
-    /* The W brand IS the toggle (no icon to swap) — reflect state via aria-expanded. */
+    const shell = document.querySelector(".wb-shell");
+    /* The W brand IS the toggle (no icon to swap) — reflect state via aria-expanded.
+       Both state classes are the shipped shell's (web-builder.css §52); this is the
+       "tiny driver in docs, behaviour engine in your app" split. The 900px breakpoint
+       is duplicated from that section's media query — keep the two in step. */
     const shown = window.matchMedia("(max-width: 900px)").matches
-      ? shell.classList.toggle("is-side-open")        // mobile: drawer open = shown
-      : !shell.classList.toggle("is-side-hidden");    // desktop: hidden = not shown
+      ? shell.classList.toggle("is-side-open")         // mobile: drawer open = shown
+      : !shell.classList.toggle("is-side-collapsed");  // desktop: collapsed = not shown
     sideTog.setAttribute("aria-expanded", String(shown));
     return;
   }
   /* Close the mobile drawer when a nav link is picked or the backdrop is tapped. */
-  const shellOpen = document.querySelector(".doc-shell.is-side-open");
-  if (shellOpen && (e.target.closest(".doc-tree__link") || !e.target.closest(".doc-side"))) {
+  const shellOpen = document.querySelector(".wb-shell.is-side-open");
+  if (shellOpen && (e.target.closest(".doc-tree__link") || !e.target.closest(".wb-shell__side"))) {
     shellOpen.classList.remove("is-side-open");
     const brand = document.querySelector("[data-side-toggle]");
     if (brand) brand.setAttribute("aria-expanded", "false");

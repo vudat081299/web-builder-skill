@@ -39,10 +39,16 @@ use), but the primitives are general-purpose: use it for any minimalist web buil
    catalog. Then reuse it forever.
 
 **Building a whole page, not just one part?** Start from the **Composing a page — recipes** section at the top
-of `components-catalog.md`: it gives the app-shell skeleton (navbar · sidenav · container · footer) and named
+of `components-catalog.md`: it gives the app-shell skeleton (navbar · rail · container · footer) and named
 recipes (dashboard · records list · form · auth · settings) so you assemble the right *set* of parts, then
 fill each region with the single-component snippets. Page-level rhythm (container width, order, neutral-first
 at page scale) is spelled out there too — so you never re-decide page layout by hand.
+
+The frame and the spacing are **shipped parts, not advice**: `.wb-shell` + its three slots, and the
+`.wb-page-head` → `.wb-section` → `.wb-block` heading ladder (catalog § *App shell & page scaffold*). Nest them
+in that order and the page's rhythm is already the one the docs were tuned to over many review rounds — no
+`min-height:100vh`, no hand-picked `margin-top`, no re-inventing a mobile rail. **A hand-rolled shell or a
+one-off margin is the single biggest reason a build stops looking like this system.**
 
 If you find yourself picking a hex value or a pixel padding by hand, stop — there is
 almost certainly a token or class for it.
@@ -94,14 +100,21 @@ sync per-component, so it never drifts here):
 
 - **Nền tảng** — colour ladder, tokens, typography scale, fonts guidance (system stack by default, swap
   `--wb-font`), border & radius, and a live **Config** playground that edits tokens and exports a `.md`.
-- **Bố cục & tiện ích** — the **grid/layout utilities** (`.wb-cluster`/`.wb-grid`/`.wb-stack`/`.wb-container`/`.wb-ratio`
+- **Bố cục & tiện ích** — the **app shell & page scaffold** (`.wb-shell` + `__body`/`__side`/`__main` — the frame of a
+  whole screen: sticky bar, a rail slot that sticks, scrolls and folds to an off-canvas drawer + scrim below 900px via
+  `.is-side-collapsed`/`.is-side-open`, and a content column `.wb-container--pad`; plus the heading rhythm
+  `.wb-eyebrow` / `.wb-page-head` (`--lg` hero) / `.wb-section` / `.wb-block`, each styling whatever `h1…h6` sits inside
+  it, all driven by the `--wb-text-*` scale + `--wb-section-gap`/`--wb-block-gap`/`--wb-measure` knobs — **start any new
+  screen here**, it's what keeps a build from re-deriving its own frame and drifting), the **grid/layout utilities**
+  (`.wb-cluster`/`.wb-grid`/`.wb-stack`/`.wb-container`/`.wb-ratio`
   with full row/column **alignment** + `.wb-self--*` per-item + `.wb-grow` — the base every component composes on),
   **sticky** (`.wb-sticky` / `--bottom` — pin a bar/card to an edge on scroll), **scroll** (`.wb-scroll-y`/`-x` themed overflow regions + `.wb-scrollbars` — theme any scrollbar incl. the whole-page viewport), and **divider** (`.wb-divider` — neutral line styles solid/dotted/dashed/long-dash/fade + `--strong` ink, ray/label, horizontal + vertical; no status hues).
 - **Hành động** — buttons (incl. button-group, social-login with brand logos, a borderless icon-`×` close button; **shapes** `--icon` square · `--round` pill/circle · `--block`; a **reveal-on-hover icon button** = `--ghost --icon` [+`--round`] that shows a grey chip only on hover — toolbars, row actions), dropdown / menu (chevron caret that flips; an **expandable row** `.wb-menu__group` > `--expand` + `.wb-menu__sub` for a collapsible sub-list).
 - **Nhập liệu** — text input (prefix/suffix + icon addons; a **clickable affix button** `.wb-input-group__btn` for password show/hide, clear ×; **`--seamless`** = no outline / no addon dividers, melts into the page; **masked inputs** that format *while typing* via `data-mask` — date · time · datetime · card · daterange, no popup; **`.wb-input-tpl`** = a segmented date/time field whose ` / : – ` separators are real inked characters with left-aligned, grey-placeholder parts that auto-advance; tapping the field resumes focus at the first empty / last filled segment; within-date `/`·`:` stay tight, a between-cluster `–` takes `.wb-input-tpl__sep--gap` for a space each side), select, textarea (themed scrollbar both axes + a custom round-capped resize handle via `.wb-textarea-wrap`; `--code` for no-wrap horizontal scroll), **format toolbar** (`.wb-toolbar` — a horizontal rich-text/markdown bar Aa/H1/H2/bold/italic/underline/strike/highlight+colour/clear over a textarea; `--attached` fuses it on top), checkbox/radio (radio fills: default / `--ring` / `--solid`; both take `--locked`), switch
   (incl. a **locked** state + an **I/O** on/off variant), range (single + **dual min–max** band + tick-mark scale `.wb-range-ticks` — labels centre on the mark, or `--labels-left`/`--labels-right`), file + dropzone; validation via the `.is-invalid` state.
 - **Bộ chọn** — **calendar** (`.wb-calendar` — month grid; single date or `--range` date-range; selection = tier-1 neutral chip, today = neutral ring, range = soft band), **time picker** (`.wb-timepicker` — iOS-style scroll columns hour : minute, `--ampm` for 12-hour), and the **colour** pickers: a preset **swatch palette** (`.wb-swatches`, pick from approved hues) + a custom **colour picker** (`.wb-colorpicker` — SV · hue · hex · presets; replaces the OS dialog). All host inline or in `.wb-popover` for a trigger→popup (calendar/time pair with an `.wb-input-group` field you can **type into via `data-mask` OR pick from**, kept two-way in sync); behaviour (grid maths, drag, mask) is a tiny driver in docs, a headless lib in an app.
-- **Hiển thị dữ liệu** — card, tables (basic → transactions → striped/compact/bordered/sticky/debt),
+- **Hiển thị dữ liệu** — card (`--dashed` / `--flat` / `--hover` / **`--pad`** = padding on the card itself for a
+  one-part card with no `__head`/`__body`/`__foot`), tables (basic → transactions → striped/compact/bordered/sticky/debt),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
   stat/KPI cards, capsules/badges (incl. `--tinted` category hue + `--dashed` optional/add-new), tags, avatar, **media object**
   (`.wb-media` — a leading figure + title/text body: ranked rows, feature lists; pairs with card), **receipt**
@@ -110,7 +123,7 @@ sync per-component, so it never drifts here):
 - **Phản hồi** — alert/banner (tone outline, or `--plain` = no outline/flat), toast, progress (+ indeterminate/loading, status tones + `--info`), skeleton, empty state.
 - **Lớp phủ (Overlay)** — modal/dialog, drawer/offcanvas (backdrop options on `.wb-overlay`: `--blur` /
   `--clear`, or `--pass` = **non-modal**, page below stays usable), tooltip, **popover** (click-toggled card w/ arrow + × — richer than tooltip, not a menu).
-- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**; **responsive** — a container-query collapse where `.wb-nav.wb-navbar__menu` tucks into a `.wb-navbar__toggle` ☰ menu on a narrow bar, no overlap), nav / menu, sidenav (app rail), tabs, **steps/stepper** (`.wb-steps` — numbered or `--dot`; vertical timeline + `--horizontal` wizard; `.is-todo`/`.is-active`/`.is-done` states + per-item `--dashed` tentative/optional step), breadcrumb, pagination, **pager** (`.wb-pager` — prev/next **page** links for the foot of a page, `[`/`]` keyboard shortcuts via a tiny guarded driver; ≠ pagination which pages through rows) + **`.wb-kbd`** keycap chip, and **footer** (`.wb-footer` — site footer: brand + link columns + copyright/social bar; `--slim` one-liner; greyscale).
+- **Điều hướng** — navbar (+ a **theme sáng/tối toggle**; height = `--wb-navbar-h`; `--glass` = translucent + blurred for a sticky bar over scrolling content; **responsive** — a container-query collapse where `.wb-nav.wb-navbar__menu` tucks into a `.wb-navbar__toggle` ☰ menu on a narrow bar, no overlap), nav / menu, sidenav (app rail — inside a shell it goes in the `.wb-shell__side` slot, which owns the surface + sticky + mobile drawer), tabs, **steps/stepper** (`.wb-steps` — numbered or `--dot`; vertical timeline + `--horizontal` wizard; `.is-todo`/`.is-active`/`.is-done` states + per-item `--dashed` tentative/optional step), breadcrumb, pagination, **pager** (`.wb-pager` — prev/next **page** links for the foot of a page, `[`/`]` keyboard shortcuts via a tiny guarded driver; ≠ pagination which pages through rows) + **`.wb-kbd`** keycap chip, and **footer** (`.wb-footer` — site footer: brand + link columns + copyright/social bar; `--slim` one-liner; greyscale).
 - **Đóng/mở (Disclosure)** — accordion (`<details>` FAQ) and **collapse** (one standalone show/hide region).
 - **Cấu trúc** — drag-and-drop **tree** (reorder + reparent), a flat **sortable** list/grid/rows (grip top-left in grid; `--no-grip` = drag the whole card), and a **slot grid** (`.wb-slotgrid` — fixed cells `--1`…`--6`; drop an item into any slot, empty gaps are kept; drop on an occupied slot **swaps**).
 

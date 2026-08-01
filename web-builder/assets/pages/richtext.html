@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nhập liệu</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Nhập liệu</p>
   <h2>Rich text — thanh định dạng (format bar)</h2>
   <p>Thanh nút <b>nằm ngang</b> đặt trên một <code>.wb-textarea</code> để người dùng viết kiểu <b>markdown</b>:
   văn bản thường (Aa), tiêu đề (H1/H2), <b>đậm</b> · <i>nghiêng</i> · gạch dưới · gạch ngang, tô nền (highlight) +
@@ -7,10 +7,10 @@
   markdown) là một driver nhỏ trong <code>app.js</code> — app thật thay bằng trình soạn thảo thực (TipTap, Lexical…).</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-block">
+<section class="wb-section">
+  <div class="wb-block">
     <h4>Thanh định dạng gắn trên textarea</h4>
-    <p class="doc-block__desc">Bôi đen một đoạn rồi bấm nút — ký hiệu markdown tự bọc quanh đoạn chọn (H1/H2 thêm ở đầu dòng).
+    <p class="wb-block__desc">Bôi đen một đoạn rồi bấm nút — ký hiệu markdown tự bọc quanh đoạn chọn (H1/H2 thêm ở đầu dòng).
     Nút đang bật dùng nền <b>đặc trung tính</b> (tầng 1). <code>--attached</code> ghép liền mép trên của textarea.</p>
     <div class="demo">
       <div class="demo__stage">
@@ -79,9 +79,9 @@ Nhà hàng **The Deck**, thanh toán bằng thẻ. Cần ==xuất hoá đơn== t
     </div>
   </div>
 
-  <div class="doc-block">
+  <div class="wb-block">
     <h4>Thanh rời (không gắn textarea)</h4>
-    <p class="doc-block__desc">Bỏ <code>--attached</code> để dùng như một thanh công cụ độc lập (bo góc đủ 4 cạnh). Nhóm nút bằng
+    <p class="wb-block__desc">Bỏ <code>--attached</code> để dùng như một thanh công cụ độc lập (bo góc đủ 4 cạnh). Nhóm nút bằng
     <code>__group</code> + <code>__sep</code>; nút bật thêm <code>.is-active</code>.</p>
     <div class="demo">
       <div class="demo__stage">

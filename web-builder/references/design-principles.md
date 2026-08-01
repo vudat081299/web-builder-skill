@@ -103,6 +103,11 @@ where a token exists.
 - Table headers are small, uppercase, letter-spaced, muted — quiet scaffolding that
   lets the data be the loudest thing on screen.
 - Prefer `--compact` tables for data-dense finance views; default density for hero lists.
+- The **type scale is a token ladder**, `--wb-text-display / -page / -section / -title / -body / -help /
+  -caption / -label` — an API, not just a convention to eyeball off the Typography page. New code reads the
+  tokens; the page scaffold (`.wb-page-head` / `.wb-section` / `.wb-block`) already does. Older components
+  still carry literal px that match the ladder — a deliberate deferred sweep, not a licence for new ad-hoc
+  sizes. Prose width is `--wb-measure` (68ch) / `--wb-measure-tight` (62ch).
 - The **type scale** and **font** choices have their own doc pages (`pages/typography.html`,
   `pages/fonts.html`). Default is the system stack; to adopt a finance-friendly typeface
   (Inter is the recommended default — also Plus Jakarta Sans / IBM Plex Sans / Manrope),
@@ -262,7 +267,10 @@ the top-right corner, and a centred × next to wrapping text reads as accidental
 
 ## 16. The docs eat their own dog food
 
-The docs site is built **from the primitives it documents.** Demo markup should use `.wb-stack` /
+The docs site is built **from the primitives it documents** — including its own frame: the shell, the rail,
+the bar, the content column and every page/section/block heading are shipped `wb-*` parts (§17), so `docs.css`
+holds chrome only. That is the strongest test the library has: if a page reads well here it reads well in a
+real build, because it is literally the same scaffold. Demo markup should use `.wb-stack` /
 `.wb-cluster` / `.wb-grid` / `.wb-container` for layout rather than one-off
 `style="display:flex…"`, and reuse real components (a "chart" that's really `.wb-progress` rows, a
 row header that's `.wb-cluster--between`). If a demo needs a layout the utilities can't express,
@@ -282,15 +290,30 @@ five breakpoints (sm–xxl), and gutter utilities you scaffold most pages on. We
    a real page.
 2. **Real pages rarely need 12 columns.** What they need: chips/buttons that wrap (`.wb-cluster`),
    a form/section that stacks (`.wb-stack`), an equal card grid that reflows (`.wb-grid--auto/-2/-3`),
-   a centred page column (`.wb-container`), and a fixed media ratio (`.wb-ratio`). That's the whole
-   job — each collapsing sensibly on mobile, no breakpoint bookkeeping.
+   a centred page column (`.wb-container`), and a fixed media ratio (`.wb-ratio`) — each collapsing
+   sensibly on mobile, no breakpoint bookkeeping.
 3. **Less to learn, less to misuse.** A 12-col grid invites nesting rows-in-cols and off-by-one column
    maths; flexbox-first utilities keep a page readable.
 
 So the answer to "should layout go into the foundation like Bootstrap?" is **no**: keep the flex/grid
-utilities as the layout layer. They cover the real cases on their own; if you happen to run Tailwind and hit
+utilities small. They cover the real cases on their own; if you happen to run Tailwind and hit
 a genuine 12-col case, its grid is right there — a bonus, not a dependency. Add a utility only when a real
 screen can't be expressed (see §16) — not to mirror Bootstrap.
+
+**But there IS one layer above them: the page frame (`.wb-shell`) and the heading rhythm
+(`.wb-page-head` → `.wb-section` → `.wb-block`).** Rejecting a 12-col grid is not the same as leaving the
+whole-page level unowned — and for a long time it was, which is precisely why a build assembled from correct
+components still didn't look like this system: it had to invent its own shell and its own spacing. Two rules
+come with that layer:
+
+- **Vertical rhythm between page parts is the scaffold's, never a hand-picked margin.** Nest the three
+  heading levels in order and the spacing is already right. If a gap feels wrong, move the token
+  (`--wb-section-gap` / `--wb-block-gap` / `--wb-page-pad-*`), never add `style="margin-top:…"` to one page —
+  that is the §18 rule applied to space instead of colour, and the fastest way a build drifts.
+- **`.wb-shell__side` is the one sanctioned exception to "layout places, it never paints."** The rail slot
+  carries a background and a right hairline, because a rail without them isn't a rail. Everything else in
+  the layout layer stays colourless and meaning-free — that's what keeps it swappable for Tailwind
+  utilities, and the shell deliberately is not.
 
 **Alignment is part of this small set, not an extra beyond it.** The flex utilities carry full main- and
 cross-axis control: `.wb-cluster` justifies with `--start/end/center/between/around/evenly` and aligns with
@@ -361,7 +384,7 @@ When a variation needs **no new markup or class** — it's the same component di
 or context* (a breadcrumb with more levels, a table with more rows, a `.wb-cluster` given more chips) — put the
 extra specimen in the **same stage** and **do not add a second code block**. Show the pattern once; a comment
 carries the "and so on" (`<!-- thêm cấp = lặp <a> + __sep -->`). Opening a **second `.demo` card**, or a new
-`doc-sec`/`doc-block` with its own heading and prose, just to re-print near-identical code is **length, not
+`wb-section`/`wb-block` with its own heading and prose, just to re-print near-identical code is **length, not
 information** — it reads as if the behaviour needed configuring when the component already does it for free.
 (This is exactly the trap the breadcrumb page fell into and was fixed: two cards + two identical-pattern
 snippets → one card, two specimens in one stage, one snippet.)

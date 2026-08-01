@@ -1,5 +1,5 @@
-<div class="doc-page-head">
-  <p class="doc-eyebrow">Nền tảng</p>
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Nền tảng</p>
   <h2>Nguyên tắc thiết kế (§1 → §24)</h2>
   <p>Những quyết định thẩm mỹ đã <b>chốt sẵn</b>, để không phải review lại trên từng trang. Mỗi nguyên tắc mang
   một số hiệu <b>§N</b> — bất cứ đâu trong repo nhắc "§N" là trỏ về đúng mục ở đây. Đây là <b>bản đầy đủ, đọc
@@ -8,8 +8,8 @@
   giữ khớp nhau qua guardrail. Trang <a href="#/overview">Tổng quan</a> chỉ giữ một index gọn trỏ về đây.</p>
 </div>
 
-<section class="doc-sec">
-  <div class="doc-note">
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
     <span aria-hidden="true">🎯</span>
     <div><b>Luật va nhau thì cái trên thắng.</b> Thứ tự ưu tiên khi hai nguyên tắc mâu thuẫn: <b>reuse-first</b> →
     <b>thang màu (§1)</b> → <b>token thay số ma thuật (§18)</b> → <b>skill không nói dối (đồng bộ 6 nơi)</b> →
@@ -312,7 +312,7 @@
     </details>
 
     <details class="wb-accordion__item">
-      <summary>§17 · Layout là bộ utility nhỏ — không phải "nền tảng" lưới</summary>
+      <summary>§17 · Layout là bộ utility nhỏ (+ một khung trang) — không phải "nền tảng" lưới</summary>
       <div class="wb-accordion__body">
         <p>Bootstrap biến <b>layout thành nền tảng</b>: lưới 12 cột responsive (<code>.container</code> →
         <code>.row</code> → <code>.col-*</code>), năm breakpoint (sm–xxl), và tiện ích gutter mà bạn scaffold hầu hết
@@ -323,14 +323,29 @@
           <b>tự đủ</b>: không cần Tailwind, Bootstrap hay framework nào để dựng một trang thật.</li>
           <li><b>Trang thật hiếm khi cần 12 cột.</b> Cái chúng cần: chip/nút wrap (<code>.wb-cluster</code>), một
           form/section xếp dọc (<code>.wb-stack</code>), một lưới card đều tự reflow (<code>.wb-grid--auto/-2/-3</code>),
-          một cột trang căn giữa (<code>.wb-container</code>), một tỉ lệ media cố định (<code>.wb-ratio</code>). Đó là
-          toàn bộ việc.</li>
+          một cột trang căn giữa (<code>.wb-container</code>), một tỉ lệ media cố định (<code>.wb-ratio</code>) — mỗi
+          cái tự xuống cấp gọn trên mobile, không phải sổ sách breakpoint.</li>
           <li><b>Ít để học, ít để dùng sai.</b> Lưới 12-cột mời gọi lồng row-trong-col và toán cột lệch một; utility
           flex-first giữ trang dễ đọc.</li>
         </ol>
         <p>Nên câu trả lời cho "layout có nên thành nền tảng như Bootstrap không?" là <b>không</b>: giữ utility
-        flex/grid làm lớp layout. Chỉ thêm utility khi một màn thật không diễn đạt được (xem §16) — không phải để soi
+        flex/grid nhỏ gọn. Chỉ thêm utility khi một màn thật không diễn đạt được (xem §16) — không phải để soi
         gương Bootstrap.</p>
+        <p><b>Nhưng CÓ một lớp nằm trên chúng: khung trang (<a href="#/shell"><code>.wb-shell</code></a>) và nhịp tiêu
+        đề (<code>.wb-page-head</code> → <code>.wb-section</code> → <code>.wb-block</code>).</b> Từ chối lưới 12-cột
+        không đồng nghĩa bỏ trống cấp-cả-trang — mà đã có thời gian dài nó bị bỏ trống, và đó chính là lý do một bản
+        build ráp từ component đúng vẫn không giống hệ thống này: nó phải tự nghĩ ra khung và khoảng cách riêng.
+        Hai luật đi kèm lớp đó:</p>
+        <ul class="doc-list">
+          <li><b>Nhịp dọc giữa các phần của trang là của scaffold, không bao giờ là margin nhặt tay.</b> Lồng ba mức
+          tiêu đề đúng thứ tự là khoảng cách đã đúng. Thấy sai thì dịch token (<code>--wb-section-gap</code> /
+          <code>--wb-block-gap</code> / <code>--wb-page-pad-*</code>), đừng thêm <code>style="margin-top:…"</code> cho
+          một trang — đó là luật §18 áp cho <i>khoảng cách</i> thay vì màu, và là đường trôi nhanh nhất.</li>
+          <li><b><code>.wb-shell__side</code> là ngoại lệ <i>duy nhất</i> được phép của luật "layout sắp chỗ, không
+          bao giờ sơn".</b> Khe rail mang nền và một hairline bên phải, vì một cái rail không có chúng thì không phải
+          rail. Phần còn lại của lớp layout vẫn vô sắc, vô nghĩa — đó là thứ giữ cho nó thay được bằng utility của
+          Tailwind, còn shell thì cố ý không.</li>
+        </ul>
         <p><b>Căn chỉnh là một phần của bộ nhỏ này, không phải thứ thêm bên ngoài.</b> Utility flex mang đủ điều khiển
         trục chính và trục chéo: <code>.wb-cluster</code> justify với <code>--start/end/center/between/around/evenly</code>
         và align với <code>--top/middle/bottom/baseline</code>; <code>.wb-stack</code> align items với
@@ -416,7 +431,7 @@
         cảnh</i> (một breadcrumb nhiều cấp hơn, một bảng nhiều hàng hơn, một <code>.wb-cluster</code> nhiều chip hơn)
         — hãy đặt specimen thêm vào <b>cùng stage</b> và <b>đừng thêm code block thứ hai</b>. In pattern một lần; một
         comment lo phần "và cứ thế" (<code>&lt;!-- thêm cấp = lặp &lt;a&gt; + __sep --&gt;</code>). Mở một
-        <b><code>.demo</code> card thứ hai</b>, hay một <code>doc-sec</code>/<code>doc-block</code> mới có heading và
+        <b><code>.demo</code> card thứ hai</b>, hay một <code>wb-section</code>/<code>wb-block</code> mới có heading và
         prose riêng, chỉ để in lại code gần y hệt là <b>độ dài, không phải thông tin</b>.</p>
         <p>Chỉ tiêu một code block / sample <b>mới</b> khi người đọc phải <b>viết khác đi</b>: một modifier
         (<code>--striped</code>, <code>--compact</code>, <code>--range</code>), một cấu trúc khác, hay một cách dùng
@@ -459,7 +474,7 @@
       <div class="wb-accordion__body">
         <p>Khi một element bo góc nằm <b>bên trong</b> một element bo góc khác, hai góc nên <b>chung một tâm</b> để
         hai đường cong song song và khe hở nhìn <b>đều</b> quanh viền. Luật:</p>
-        <p class="doc-block__desc" style="font-size:14px"><b>bán kính trong = bán kính ngoài − gap</b> &nbsp;(gap =
+        <p class="wb-block__desc" style="font-size:14px"><b>bán kính trong = bán kính ngoài − gap</b> &nbsp;(gap =
         padding/khoảng hở giữa hai mép tại đúng góc đó).</p>
         <p>Để bán kính trong <i>bằng</i> ngoài thì góc trong <b>phình</b> ra — cong quá gắt so với chỗ nó ngồi. Chạy
         cả hai chiều: ngoài 12px + padding 8px → trong <code>12 − 8 = 4px</code>; một ô trong bán kính 8px cần chừa
@@ -480,7 +495,7 @@
           vuông giữa list), góc còn lại không phải của parent → xét <b>từng góc</b>, không một bán kính chung.</li>
           <li><b>Cố ý tràn / để vuông</b> — child nhô khỏi khung, hoặc góc trong giữ vuông để tương phản. Không phải ca concentric.</li>
         </ul>
-        <p class="doc-block__desc" style="margin:0 0 6px">Quy tắc nhớ: bán kính <b>suy ra</b> (chọn cho đẹp) thì
+        <p class="wb-block__desc" style="margin:0 0 6px">Quy tắc nhớ: bán kính <b>suy ra</b> (chọn cho đẹp) thì
         theo công thức; bán kính <b>ngữ nghĩa</b> (pill/tròn, do hình) thì miễn. Khi đã đủ điều kiện, cơ chế:</p>
         <ul>
           <li><b>Là gap, không phải chiều cao.</b> Cái quyết định là khoảng inset, <b>từng góc</b> — góc trên-trái
@@ -500,7 +515,7 @@
 
   </div>
 
-  <p class="doc-sec__desc" style="margin-top:18px">Xem trực tiếp vài nguyên tắc thành hình: <a href="#/color">Triết
+  <p class="wb-section__desc" style="margin-top:18px">Xem trực tiếp vài nguyên tắc thành hình: <a href="#/color">Triết
   lý màu (§1)</a> · <a href="#/tokens">Design tokens (§18)</a> · <a href="#/border">Border &amp; bo góc (§9)</a> ·
   <a href="#/config">Config playground (§6)</a>. Quy trình giữ các § này khỏi lệch: <a href="#/tooling">Tooling:
   verify · hook</a>.</p>
