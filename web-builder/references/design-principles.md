@@ -361,6 +361,13 @@ screen is **format, not language**: money uses the app's locale format (`1.234.5
 before `₫`, per §3), dates/times use one locale, and numeric columns keep `tabular-nums` (`.wb-num`). Don't mix
 `1,234.56` and `1.234,56` on the same page.
 
+The corollary, and where the docs site draws its own line: **chrome is not copy**. Names of *things* — the
+docs' nav model, its intent-group labels, the topbar, the Tweak panel, and the scope headers in `SKILL.md`
+— are **English**, because they're a shared vocabulary between the library, the skill and whoever reads the
+repo. Everything a screen *says to a user* is Vietnamese-first. Same split applies in your app: keep the
+component vocabulary (`wb-*`, token names, group names) in one language and the user-facing copy in another
+without either leaking into the other.
+
 ## 21. Responsive — graceful collapse, not breakpoint bookkeeping
 
 Components degrade on narrow screens **on their own**, without a breakpoint-grid to manage (§17). The habits:

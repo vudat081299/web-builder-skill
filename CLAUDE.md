@@ -64,7 +64,7 @@ workflow lives in the skill/hooks (loaded on demand), not here — this file sta
    section; a foundation/meta page goes in the flat `items` of the `design` / `project` section.
 4. `web-builder/references/components-catalog.md` — a section + a decision-guide row.
 5. `web-builder/SKILL.md` — the AI's **first read**: add the new part to the right per-intent scope group
-   (*Nền tảng · Hành động · … · Cấu trúc*), or note a new capability on a family already listed. If SKILL.md
+   (*Foundation · Actions · … · Structure*), or note a new capability on a family already listed. If SKILL.md
    doesn't list it, the next AI trusts its scope and assumes the part doesn't exist — exactly the miss that
    put this line here.
 6. If relevant: `design-principles.md` (a convention), `integration.md` (needs an app behaviour
@@ -84,6 +84,12 @@ bright **solid** colour only for real status (tier 2 — paid / overdue / due-so
 when the signal should stay calm (tier 3). Tiers 2–3 are colour-spend *levels* that ride on **any** component
 (capsule, tag, number, border, row tint, card, chart) — not just capsules. Classification (a category) is
 *not* status — keep it grey.
+
+**Locale split:** docs **chrome is English** (the sidebar/nav model in `app.js`, the topbar, the Tweak panel,
+the footer — and a page's `wb-eyebrow`, which echoes its `SECTIONS` group label so the two must be renamed
+together). Everything a page *says* — prose, demo copy, sample labels — stays **Vietnamese-first** (§20: copy
+is data). Rename a NAV `group` and you also touch SKILL.md's scope headers (CHECK 10), README, this file,
+`bootstrap-comparison.md`, `docs-site.md` and the eyebrows on that group's pages.
 
 Then: **tokens over magic numbers**; the docs are **dogfooded** (built from `wb-*` primitives); dark flips
 shadows to a soft light lift; dismiss **×** top-right; **no left-accent bars**; layout is a small flex/grid

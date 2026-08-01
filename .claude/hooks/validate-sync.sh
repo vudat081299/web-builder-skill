@@ -146,7 +146,7 @@ fi
 # stale (README + /wb-change both grew a phantom "Biểu đồ" group that NAV never had).
 # NAV in app.js is the source of truth; the SHIPPING SKILL.md is the copy the next AI
 # trusts, so enforce that one against NAV. Each NAV group label must appear as a bold
-# scope header `**<label>**` (parentheticals incl., e.g. `**Lớp phủ (Overlay)**`).
+# scope header `**<label>**`, verbatim incl. any parenthetical (e.g. `**Layout & utilities**`).
 # Other prose (README, /wb-change, CLAUDE.md) may abbreviate — don't repeat the list;
 # point at NAV. (Lesson banked in /wb-change SKILL.md step 3.)
 if [ -f "$SKILL" ]; then

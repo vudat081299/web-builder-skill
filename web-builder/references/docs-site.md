@@ -56,21 +56,27 @@ index** (global, spans every section), and the page↔group map. Shape: an array
 > so they never leak into the skill's scope. And sections name themselves with `title:` (not `label:`) so their
 > `id: "…"` lines don't trip CHECK 1's `id: "…", label:` route parser.
 
+> **Locale.** Everything `app.js` / `index.html` render is **chrome → English**: these `title:` / `group:` /
+> `label:` strings, the topbar, the search dialog, the Tweak panel, the footer. Everything a `pages/*.html`
+> *says* is **content → Vietnamese-first** (§20 — copy is data). The one string that crosses the line is a
+> page's `wb-eyebrow`: it echoes that page's `group:` label, so renaming a group means renaming the eyebrow
+> on every page in it (and SKILL.md's scope header, which CHECK 10 grep-matches).
+
 ```js
 const SECTIONS = [
-  { id: "design", title: "Thiết kế", icon: "format_paint", items: [
-    { id: "overview", label: "Tổng quan" },
+  { id: "design", title: "Design", icon: "format_paint", items: [
+    { id: "overview", label: "Overview" },
     { id: "tokens",   label: "Design tokens" },
   ]},
-  { id: "components", title: "Thành phần", icon: "widgets", groups: [
-    { group: "Hành động", items: [
+  { id: "components", title: "Components", icon: "widgets", groups: [
+    { group: "Actions", items: [
       { id: "buttons",  label: "Buttons" },
       { id: "dropdown", label: "Dropdown / Menu" },
     ]},
   ]},
-  { id: "project", title: "Dự án & Skill", icon: "deployed_code", items: [
-    { id: "skill",     label: "Sản phẩm & skill" },
-    { id: "decisions", label: "Quyết định & đánh đổi" },
+  { id: "project", title: "Project & skill", icon: "deployed_code", items: [
+    { id: "skill",     label: "Product & skill" },
+    { id: "decisions", label: "Decisions & trade-offs" },
   ]},
 ];
 // Derived once, right after SECTIONS:
@@ -103,7 +109,7 @@ correctly in a real build, and the rhythm can't drift between the two. Fill this
 ```html
 <!-- 1 · Page head: eyebrow (= group, or section title for a flat page), title, one-line intro -->
 <div class="wb-page-head">
-  <p class="wb-eyebrow">Nhập liệu</p>
+  <p class="wb-eyebrow">Inputs</p>
   <h2>Switch</h2>
   <p>One-sentence description of the component and when to use it.</p>
 </div>

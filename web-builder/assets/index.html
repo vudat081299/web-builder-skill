@@ -34,7 +34,7 @@
     <!-- Brand doubles as the sidebar toggle: click the W to collapse/expand the
          sidebar. The topbar spans the whole width, so the sidebar never eats it. -->
     <header class="wb-navbar wb-navbar--sticky wb-navbar--glass doc-topbar">
-      <button class="doc-brand" data-side-toggle aria-label="Web Builder — ẩn/hiện thanh bên" aria-expanded="true">
+      <button class="doc-brand" data-side-toggle aria-label="Web Builder — show/hide the sidebar" aria-expanded="true">
         <span class="doc-brand__mark">W</span>
         <span class="doc-brand__text">
           <span class="doc-brand__name">Web Builder</span>
@@ -43,16 +43,16 @@
       </button>
       <span class="wb-cap wb-cap--outline wb-cap--sm doc-topbar__cap">Minimalist UI kit</span>
       <div class="wb-navbar__spacer"></div>
-      <button class="doc-search-trigger" id="searchBtn" aria-label="Tìm kiếm" title="Tìm kiếm — Ctrl/⌘K">
+      <button class="doc-search-trigger" id="searchBtn" aria-label="Search" title="Search — Ctrl/⌘K">
         <span class="wb-ico wb-ico--sm">search</span>
-        <span class="doc-search-trigger__label">Tìm kiếm</span>
+        <span class="doc-search-trigger__label">Search</span>
         <kbd class="doc-search-trigger__kbd">⌘K</kbd>
       </button>
-      <button class="doc-icon-btn" id="configBtn" aria-label="Tinh chỉnh (Config)" title="Tinh chỉnh">
+      <button class="doc-icon-btn" id="configBtn" aria-label="Tweak (Config)" title="Tweak">
         <span class="wb-ico">tune</span>
       </button>
-      <button class="theme-btn" id="themeBtn" title="Giao diện: Tự động → Sáng → Tối" aria-label="Đổi giao diện">
-        <span id="themeIcon">◐</span> <span id="themeLabel">Tự động</span>
+      <button class="theme-btn" id="themeBtn" title="Theme: Auto → Light → Dark" aria-label="Change theme">
+        <span id="themeIcon">◐</span> <span id="themeLabel">Auto</span>
       </button>
     </header>
 
@@ -77,19 +77,19 @@
   </div>
 
   <!-- Config / tweak drawer (docs-only; slides in from the right). -->
-  <aside class="doc-config" id="configDrawer" aria-label="Bảng tinh chỉnh">
+  <aside class="doc-config" id="configDrawer" aria-label="Tweak panel">
     <div class="doc-config__head">
       <div>
-        <div class="doc-config__title">Tinh chỉnh</div>
-        <div class="doc-config__sub">Chỉnh sống — chỉ ảnh hưởng bản docs này</div>
+        <div class="doc-config__title">Tweak</div>
+        <div class="doc-config__sub">Live tuning — affects this docs session only</div>
       </div>
-      <button class="wb-close" data-config-close aria-label="Đóng"></button>
+      <button class="wb-close" data-config-close aria-label="Close"></button>
     </div>
     <div class="doc-config__body wb-scrollbars"><!-- rendered by app.js --></div>
     <div class="doc-config__foot">
-      <button class="wb-btn wb-btn--outline wb-btn--sm" data-config-reset>Đặt lại</button>
+      <button class="wb-btn wb-btn--outline wb-btn--sm" data-config-reset>Reset</button>
       <button class="wb-btn wb-btn--sm" data-config-export>
-        <span class="wb-ico wb-ico--sm">download</span> Xuất .md
+        <span class="wb-ico wb-ico--sm">download</span> Export .md
       </button>
     </div>
   </aside>
@@ -97,18 +97,18 @@
   <!-- Search dialog (docs-only): full-text search across every page. A command-palette
        shell built on the .wb-overlay + .wb-modal primitives; the rows are doc-* chrome. -->
   <div class="wb-overlay doc-search" id="searchModal" aria-hidden="true">
-    <div class="wb-modal doc-search__box" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+    <div class="wb-modal doc-search__box" role="dialog" aria-modal="true" aria-label="Search">
       <div class="doc-search__bar">
         <span class="wb-ico doc-search__bar-ico" aria-hidden="true">search</span>
         <input class="doc-search__input" id="searchInput" type="text" role="combobox"
                aria-controls="searchResults" aria-expanded="true" aria-autocomplete="list"
-               placeholder="Tìm trong tiêu đề &amp; nội dung mọi trang…" autocomplete="off" spellcheck="false" />
-        <button class="wb-close" data-modal-close aria-label="Đóng"></button>
+               placeholder="Search every page — title &amp; body…" autocomplete="off" spellcheck="false" />
+        <button class="wb-close" data-modal-close aria-label="Close"></button>
       </div>
-      <div class="doc-search__results wb-scrollbars" id="searchResults" role="listbox" aria-label="Kết quả"></div>
+      <div class="doc-search__results wb-scrollbars" id="searchResults" role="listbox" aria-label="Results"></div>
       <div class="doc-search__foot">
         <span class="doc-search__legend">
-          <kbd>↑</kbd><kbd>↓</kbd> di chuyển&nbsp;&nbsp; <kbd>↵</kbd> mở&nbsp;&nbsp; <kbd>esc</kbd> đóng
+          <kbd>↑</kbd><kbd>↓</kbd> move&nbsp;&nbsp; <kbd>↵</kbd> open&nbsp;&nbsp; <kbd>esc</kbd> close
         </span>
         <span class="doc-search__count" id="searchCount" aria-live="polite"></span>
       </div>

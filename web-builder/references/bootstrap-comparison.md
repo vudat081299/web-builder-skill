@@ -108,17 +108,20 @@ spacing inside a block); off Tailwind, the built-ins are enough to build real pa
 
 - **Bootstrap** groups its left nav by **technical layer**: *Getting started · Customize · Layout · Content
   · Forms · Components · Helpers · Utilities · Extend*. Layout and Utilities are first-class top sections.
-- **Web Builder** groups by **user intent / job-to-be-done**: *Nền tảng (foundation) · Bố cục & tiện ích
-  (layout & utilities) · Hành động (actions) · Nhập liệu (input) · Hiển thị dữ liệu (data, incl. charts) ·
-  Phản hồi (feedback) · Lớp phủ (overlays) · Điều hướng (navigation) · Đóng/mở (disclosure) · Cấu trúc
-  (structure)*. A builder thinks "I need to show data" → **Hiển thị dữ liệu**, not "is this a Component or a Utility?".
+- **Web Builder** groups by **user intent / job-to-be-done**: *Foundation · Layout & utilities · Actions ·
+  Inputs · Pickers · Data display (incl. charts) · Feedback · Overlays · Navigation · Disclosure ·
+  Structure*. A builder thinks "I need to show data" → **Data display**, not "is this a Component or a Utility?".
 
-Both open with a foundation section (Bootstrap: Getting started/Customize; Web Builder: Nền tảng — colour
+Both open with a foundation section (Bootstrap: Getting started/Customize; Web Builder: Foundation — colour
 ladder, tokens, typography, border). The **app shell & page scaffold** leads the foundation-tier group
-**Bố cục & tiện ích**, followed by the flex-first **layout utilities** (grid/cluster/stack + sticky/scroll/
+**Layout & utilities**, followed by the flex-first **layout utilities** (grid/cluster/stack + sticky/scroll/
 divider) — one page frame plus a small utility set, not a separate 12-column grid section, consistent with
-the layout decision above. **Cấu trúc** then holds only
+the layout decision above. **Structure** then holds only
 the structural pieces: the drag-and-drop tree + sortable.
+
+One locale note, since Bootstrap's docs are English throughout: Web Builder's **chrome** (nav, topbar, Tweak
+panel) is English too, but the **component copy** in every sample stays Vietnamese — copy is data (§20), and
+the flagship consumer is a Vietnamese finance app.
 
 ## Honest pros / cons
 

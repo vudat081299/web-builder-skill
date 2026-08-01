@@ -52,6 +52,11 @@ can tell whether a part it needs already exists. Newest first.
   whole card instead of a handle).
 
 ### Changed / fixed
+- **Intent-group names are English** — the eleven scope groups in `SKILL.md` are now *Foundation · Layout &
+  utilities · Actions · Inputs · Pickers · Data display · Feedback · Overlays · Navigation · Disclosure ·
+  Structure* (were Vietnamese). Names only: no component moved group, nothing was added or removed. A
+  consumer that grepped the old Vietnamese headers to locate a family needs the new names. Component **copy**
+  in every example is unchanged — still Vietnamese-first (design-principles §20: copy is data, not style).
 - **Card** gains `--pad` — padding on the card itself, for a one-part card with no `__head`/`__body`/`__foot`
   (link groups, callout tiles, small summaries).
 - **Section** gains `--flush` — drops the top gap for a section that opens a page right under the head, so

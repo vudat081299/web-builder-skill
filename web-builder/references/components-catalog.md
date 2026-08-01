@@ -759,7 +759,7 @@ a one-part card with no head/body/foot: link groups, callout tiles, small summar
 </div>
 <div class="wb-card wb-card--dashed"><div class="wb-card__body">＋ Thêm</div></div>
 <div class="wb-card wb-card--pad">                        <!-- one-part card, no __body wrapper -->
-  <p class="wb-card__title">Bố cục &amp; tiện ích</p>
+  <p class="wb-card__title">Layout &amp; utilities</p>
   <p class="wb-card__sub"><a href="#">Grid</a> · <a href="#">Sticky</a></p>
 </div>
 ```

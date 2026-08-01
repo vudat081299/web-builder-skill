@@ -72,14 +72,16 @@ A component is **one change across six places** — if they drift, the skill sta
    app gets, so a page that looks right here looks right in a build.)
 3. **Nav** — add `{ id: "<id>", label: "…" }` to the right **section** in the `SECTIONS` model in
    `web-builder/assets/app.js` (the single source of truth for the section switcher, the sidebar **and** the
-   router). Three sections: **Thiết kế** (foundations) · **Thành phần** (components) · **Dự án & Skill**
-   (meta). A new *component* goes under the right intent `group` in the `components` section (10, in order):
-   *Bố cục & tiện ích · Hành động · Nhập liệu · Bộ chọn · Hiển thị dữ liệu · Phản hồi · Lớp phủ · Điều hướng
-   · Đóng/mở · Cấu trúc* (charts lives under *Hiển thị dữ liệu*, not its own group); a foundation/meta page
-   goes in the flat `items` of the `design` / `project` section.
+   router). Three sections: **Design** (foundations) · **Components** · **Project & skill** (meta). A new
+   *component* goes under the right intent `group` in the `components` section (10, in order):
+   *Layout & utilities · Actions · Inputs · Pickers · Data display · Feedback · Overlays · Navigation
+   · Disclosure · Structure* (charts lives under *Data display*, not its own group); a foundation/meta page
+   goes in the flat `items` of the `design` / `project` section. Docs **chrome is English** (nav, topbar,
+   Tweak panel — and a page's `wb-eyebrow`, which echoes its group label); page bodies and every component's
+   sample copy stay Vietnamese-first (§20).
 4. **Catalog** — add a section + a "Quick decision guide" row to `web-builder/references/components-catalog.md`.
 5. **Skill** — update `web-builder/SKILL.md`, the AI's first read: add the component to the right per-intent
-   scope group (*Nền tảng · … · Cấu trúc*), or note a new capability on a family already listed. Miss it and
+   scope group (*Foundation · … · Structure*), or note a new capability on a family already listed. Miss it and
    the next AI trusts SKILL.md's scope and assumes the part isn't there.
 6. **If relevant** — a new convention → `design-principles.md`; needs an app behaviour engine (Radix,
    dnd-kit, sonner…) → a row in `integration.md`; a Bootstrap-coverage note → `bootstrap-comparison.md`;
