@@ -73,6 +73,14 @@ can tell whether a part it needs already exists. Newest first.
   whole card instead of a handle).
 
 ### Changed / fixed
+- **Transparent controls now have a visible hover** — `--ghost` / `--outline` buttons and every dismiss ×
+  (`.wb-close`, `.wb-tag__x`, `.wb-filter-token__x`) hover to the new **`--wb-ink-hover`** token, a
+  *translucent* ink tint, instead of the opaque `--wb-surface-2` / `--wb-surface-hover`. The bug: an opaque
+  `--wb-surface-2` is **byte-identical to `--wb-canvas`**, so a ghost icon button sitting on the app canvas —
+  a toolbar, a row action, a close × outside a card — had **literally zero hover feedback**, and on a
+  soft-tinted alert an opaque grey punched a grey hole in the colour. Alpha composites correctly on a card,
+  the canvas, and a tinted surface alike, and carries its own dark value, so two `.dark` override rules were
+  deleted. Nothing to change in an app's markup. New principle in `design-principles.md` §1.
 - **`.wb-container` no longer overflows its parent** — it lacked `box-sizing: border-box`, so `width: 100%`
   plus the inline padding made it **40px wider** than any column narrower than `--wb-container-max`. A
   `--wide` container next to a shell rail scrolled the page sideways. Now covered by the section-53 rule

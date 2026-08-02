@@ -64,6 +64,15 @@ carries status (a progress bar that can go red / amber / green) keeps the tier-2
 neutral ladder is only its tier-1 default. Likewise icon **size** comes from one scale — the `.wb-ico--xs…--xl`
 steps (16 / 18 / 20 / 24 / 32, tokens `--wb-ico-*`) — not an ad-hoc `font-size`.
 
+**A hover on a *transparent* control is translucent ink, not an opaque grey** (`--wb-ink-hover`). A ghost
+button, an outline button, a dismiss × — these have no background of their own, so they inherit whatever is
+behind them: a white card, the app canvas, a tinted alert, a status-toned chip. An opaque hover colour can
+only be right on one of those. `--wb-surface-2` is *literally the same value* as `--wb-canvas`, so an opaque
+grey hover is **invisible** the moment the control sits on the canvas — exactly where toolbars and row
+actions live — and on a soft-tinted alert it punches a grey hole in the colour. A single alpha tint reads on
+all four backgrounds and flips itself in dark, so no `.dark` override is needed. Opaque `--wb-surface-hover`
+stays correct for a control that sits on a **known** opaque surface (a menu item, a table row, a calendar day).
+
 **Demos are neutral-first.** When a component has both a neutral and a coloured form, place the grey /
 neutral example *before* the coloured one — a grey chart to the left of a coloured chart, a plain alert before
 a toned alert. The reader meets the tier-1 default first and sees colour as the exception, exactly as the

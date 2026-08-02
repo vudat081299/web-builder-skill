@@ -66,6 +66,14 @@
         xám khác nhau; thang tự lật đúng ở dark. Phần <i>cũng</i> mang status (progress có thể đỏ/hổ phách/xanh) thì
         cưỡi màu tier-2 lên trên. Cỡ icon cũng từ một thang (<code>.wb-ico--xs…--xl</code>: 16/18/20/24/32), không
         <code>font-size</code> tuỳ hứng.</p>
+        <p><b>Hover của control TRONG SUỐT là mực mờ, không phải xám đặc</b> (<code>--wb-ink-hover</code>). Nút
+        ghost, nút outline, nút × đóng — chúng không có nền riêng nên đội luôn nền phía sau: card trắng, canvas app,
+        alert nền mềm, chip có tone. Một màu <i>đặc</i> chỉ đúng được ở một trong số đó. <code>--wb-surface-2</code>
+        <i>đúng bằng</i> <code>--wb-canvas</code>, nên hover xám đặc <b>tàng hình</b> ngay khi nút nằm trên canvas —
+        đúng chỗ thanh công cụ và ô hành động trong bảng hay nằm — còn trên alert nền mềm thì nó đục một lỗ xám giữa
+        vùng màu. Một lớp mực mờ đọc được trên cả bốn nền và tự lật ở dark, khỏi cần override <code>.dark</code>.
+        <code>--wb-surface-hover</code> đặc vẫn đúng cho control nằm trên bề mặt <b>đã biết</b> (mục menu, dòng bảng,
+        ô ngày lịch).</p>
         <p><b>Demo trung tính trước.</b> Khi component có cả bản trung tính lẫn bản màu, đặt ví dụ xám <i>trước</i>
         ví dụ màu — người đọc gặp mặc định tier-1 trước, thấy màu là ngoại lệ, đúng như thang màu muốn.</p>
       </div>

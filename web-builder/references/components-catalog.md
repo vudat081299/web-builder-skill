@@ -230,6 +230,9 @@ colour, so it works on any variant.
 **Reveal-on-hover icon button** — `--ghost` + `--icon`: no background/border at rest, a grey
 chip appears only on hover (toolbar, row actions, close ×). Square by default; add `--round`
 for a **circle**. `--round` also pills a text button. (Same family the footer `__social` uses.)
+The chip is `--wb-ink-hover` — **translucent** ink, so it stays visible whether the button sits
+on a card, on the app canvas, or on a tinted row (an opaque grey would vanish on the canvas,
+which is the same colour as `--wb-surface-2`). `--outline` hovers to the same tint.
 
 ```html
 <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Sửa"><span class="wb-ico wb-ico--sm">edit</span></button>
@@ -1423,7 +1426,9 @@ chevron from a `.wb-ico` inside `.wb-select-wrap`. Swap `--wb-icon-font` to use 
 **Close × and check ✓ are one glyph each.** Every dismiss × is the icon-font `close` — via `.wb-close`
 (panels: alert/toast/modal/drawer/popover) or `.wb-tag__x` / `.wb-filter-token__x` (chips), all empty in
 markup (glyph from `::before`). Never type a literal `×`/`✕`. Every ✓ is the icon-font `check` (stepper
-marker; the checkbox tick traces the same shape) — never a literal `✓`.
+marker; the checkbox tick traces the same shape) — never a literal `✓`. All three × variants hover to
+`--wb-ink-hover` (translucent), because a × lands on a tinted alert or a toned chip as often as on white —
+an opaque grey would punch a grey hole in the colour.
 
 ```html
 <span class="wb-ico">search</span>

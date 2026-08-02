@@ -108,6 +108,11 @@ keeps one page from drawing three dividers in three greys. A part that *also* sh
 going red/amber/green) rides tier-2 colour on top. **Icon size** is likewise one scale: the `.wb-ico--xs…--xl`
 steps (16/18/20/24/32, tokens `--wb-ico-*`), never ad-hoc `font-size`.
 
+**A transparent control hovers to translucent ink** — `--wb-ink-hover`, never an opaque grey. A ghost/outline
+button or a dismiss × shows whatever is behind it (card · canvas · tinted alert · toned chip), and no opaque
+colour is right on all of them: `--wb-surface-2` *equals* `--wb-canvas`, so an opaque hover disappears on the
+canvas. Opaque `--wb-surface-hover` is still right on a **known** surface (menu item, table row, calendar day).
+
 ## Current scope
 
 Coverage maps to **eleven intent-groups** — foundation (**Foundation**, the docs' *Design* section) plus

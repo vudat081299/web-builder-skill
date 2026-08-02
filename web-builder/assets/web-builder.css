@@ -39,6 +39,12 @@
   --wb-surface:      var(--wb-white);     /* cards, tables             */
   --wb-surface-2:    var(--wb-gray-50);   /* header rows, striped rows */
   --wb-surface-hover:var(--wb-gray-100);  /* row hover                 */
+  /* Hover tint for a TRANSPARENT control (ghost button, tag ×). Translucent ink,
+     NOT an opaque grey: --wb-surface-2 equals --wb-canvas, so an opaque hover is
+     literally invisible whenever the control sits on the app canvas — which is
+     exactly where toolbar / row-action / close buttons live. Alpha composites on
+     ANY background (canvas, card, tinted row) and carries its own dark flip. */
+  --wb-ink-hover:    rgba(9, 9, 11, .07);
   --wb-fg:           var(--wb-gray-900);  /* primary text              */
   --wb-fg-muted:     var(--wb-gray-500);  /* secondary text            */
   --wb-fg-subtle:    var(--wb-gray-400);  /* tertiary / placeholder    */
@@ -192,6 +198,7 @@
   --wb-surface:      #131316;
   --wb-surface-2:    #1a1a1e;
   --wb-surface-hover:#212127;
+  --wb-ink-hover:    rgba(255, 255, 255, .12);
   --wb-fg:           var(--wb-gray-50);
   --wb-fg-muted:     var(--wb-gray-400);
   --wb-fg-subtle:    var(--wb-gray-500);
@@ -483,8 +490,7 @@
   background: transparent; color: inherit; opacity: .6;
 }
 .wb-tag__x::before { content: "\e5cd"; font-size: 14px; }   /* close */
-.wb-tag__x:hover { opacity: 1; background: rgba(0, 0, 0, .08); }
-.dark .wb-tag__x:hover { background: rgba(255, 255, 255, .14); }
+.wb-tag__x:hover { opacity: 1; background: var(--wb-ink-hover); }
 
 /* A tidy wrapper when several tags sit together (transaction row, filter bar). */
 .wb-tags { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
@@ -649,13 +655,15 @@
 .dark .wb-btn--secondary { background: var(--wb-surface-2); }
 .dark .wb-btn--secondary:hover { background: var(--wb-surface-hover); }
 
+/* Transparent variants hover to --wb-ink-hover (translucent), never to an opaque
+   surface: --wb-surface-2 IS --wb-canvas, so an opaque hover vanishes the moment
+   the button sits on the app canvas instead of inside a white card. The alpha
+   token also flips itself in dark, so neither needs a .dark override. */
 .wb-btn--outline { background: transparent; color: var(--wb-fg); border-color: var(--wb-border-strong); }
-.wb-btn--outline:hover { background: var(--wb-surface-2); }
-.dark .wb-btn--outline:hover { background: var(--wb-surface-hover); }
+.wb-btn--outline:hover { background: var(--wb-ink-hover); }
 
 .wb-btn--ghost { background: transparent; color: var(--wb-fg-muted); }
-.wb-btn--ghost:hover { background: var(--wb-surface-2); color: var(--wb-fg); }
-.dark .wb-btn--ghost:hover { background: var(--wb-surface-hover); }
+.wb-btn--ghost:hover { background: var(--wb-ink-hover); color: var(--wb-fg); }
 
 .wb-btn--danger  { background: var(--wb-danger);  color: var(--wb-danger-fg);  }
 .wb-btn--success { background: var(--wb-success); color: var(--wb-success-fg); }
@@ -1055,7 +1063,9 @@
   cursor: pointer; font-size: 0; line-height: 1;
 }
 .wb-close::before { content: "\e5cd"; font-size: 19px; }   /* close */
-.wb-close:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+/* Ink tint, not an opaque grey: a × lives on a card header AND on a tinted alert
+   (--wb-*-soft), where an opaque hover would punch a grey hole in the colour. */
+.wb-close:hover { background: var(--wb-ink-hover); color: var(--wb-fg); }
 
 /* -----------------------------------------------------------------------------
    7. CARD
@@ -2530,7 +2540,7 @@
   background: none; color: var(--wb-fg-subtle); cursor: pointer;
 }
 .wb-filter-token__x::before { content: "\e5cd"; font-size: 14px; line-height: 1; }   /* Material "close" — one × across the whole system */
-.wb-filter-token__x:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+.wb-filter-token__x:hover { background: var(--wb-ink-hover); color: var(--wb-fg); }   /* ink: the token itself may be tinted */
 
 /* Soft status tones — use ONLY when the token stands for a status filter. */
 .wb-filter-token--success { --wb-ft-c: var(--wb-success-text); border-color: var(--wb-success); background: var(--wb-success-soft); }
