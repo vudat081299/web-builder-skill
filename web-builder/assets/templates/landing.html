@@ -54,11 +54,19 @@
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
           aria-label="Menu"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="landing.html"><span class="wb-navbar__mark">C</span> Cashy</a>
+  <!-- The two text CTAs live at the END of __menu, after a nested __spacer that pushes
+       them hard right. They must NOT sit in __actions: that slot never collapses, so a
+       text button there keeps its full width at 390px and scrolls the whole page
+       sideways (this template did exactly that — 116px of overflow). __actions is
+       icon-only; __menu is the slot that tucks into the ☰ panel. -->
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#tinh-nang">Tính năng</a>
     <a class="wb-nav__link" href="#cach-dung">Cách dùng</a>
     <a class="wb-nav__link" href="#bang-gia">Bảng giá</a>
     <a class="wb-nav__link" href="#hoi-dap">Hỏi đáp</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-btn wb-btn--ghost" href="auth.html">Đăng nhập</a>
+    <a class="wb-btn" href="auth.html">Dùng thử miễn phí</a>
   </nav>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
@@ -66,8 +74,6 @@
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
     </button>
-    <a class="wb-btn wb-btn--ghost" href="auth.html">Đăng nhập</a>
-    <a class="wb-btn" href="auth.html">Dùng thử miễn phí</a>
   </div>
 </header>
 

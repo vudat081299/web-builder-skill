@@ -101,9 +101,17 @@ document.documentElement.scrollWidth - document.documentElement.clientWidth
 
 Check **1280 · 900 · 700 · 390**. Those aren't arbitrary: 900 is where `.wb-shell` folds its rail and
 `.wb-navbar--collapse-lg` collapses, 640 is where a default `.wb-navbar` collapses. The gaps *between* two
-breakpoints are where real bugs live — both responsive bugs this library has shipped (no rail-open button
-between 640–900px; a public navbar wrapping to two rows between ~660–840px) were invisible at 1280 and at
-390, and only appeared in the band between.
+breakpoints are where real bugs live — two of the three responsive bugs this library has shipped (no
+rail-open button between 640–900px; a public navbar wrapping to two rows between ~660–840px) were invisible
+at 1280 and at 390, and only appeared in the band between. The third (a text CTA in `wb-navbar__actions`,
+which never collapses) only showed at **390** — so no single width is enough.
+
+> **Actually resize, then actually measure.** This gate has been *reported passing on a page that was
+> overflowing 116px* — the widths were named in the write-up but the number was never read back at 390. If
+> you can't paste the line above and show its output per width, the gate did not run. To sweep several pages
+> at once, load each in an `<iframe>` of the target width (same origin) and read
+> `f.contentDocument.documentElement.scrollWidth - …clientWidth` — an iframe is its own viewport, so one pass
+> covers every template without resizing anything.
 
 Also check the bar didn't **wrap**: `document.querySelector('.wb-navbar').getBoundingClientRect().height`
 should stay at `--wb-navbar-h` (56) at every width. A taller bar means its contents don't fit and it hasn't
@@ -169,6 +177,7 @@ Each of these was a real bug, not a hypothetical:
 | Inline `display:flex` on a demo/page wrapper | layout is a utility set | `wb-cluster` / `wb-stack` / `wb-grid` |
 | A hex or a px in a `style=` attribute | there is almost certainly a token | look it up in `tokens` before typing a literal |
 | `.wb-num` on a standalone number (a price, a hero figure) | it is `text-align: right` **on purpose** — for money in a table column, where digits must line up. In a card it shoves the number to the edge | `.wb-stat__value` (a big standalone number; not scoped to `.wb-stat`) |
+| A text button in `wb-navbar__actions` | that slot is `flex: none` and **never collapses** (its icons must stay reachable on a phone), so the text keeps full width at 390 and scrolls the page | move the CTA to the end of `wb-navbar__menu`, after a `wb-navbar__spacer` nested *inside* the menu |
 | `.wb-shell__side-toggle` vs `.wb-navbar__toggle` | different jobs — one opens the rail, one collapses the bar's inline links | rail → `__side-toggle`; public bar links → `__navbar-toggle` + `--collapse-lg` |
 | A "recommended" plan tinted green | recommended is not a status | small solid **neutral** capsule + the row's only solid button |
 

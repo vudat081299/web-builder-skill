@@ -94,6 +94,24 @@ can tell whether a part it needs already exists. Newest first.
   whole card instead of a handle).
 
 ### Changed / fixed
+- **`wb-steps--horizontal`: the rail no longer runs through the markers.** It was drawn centre-to-centre
+  (`left: 50%; width: 100%`) and only *looked* right because the default marker is opaque and sits on
+  `z-index: 1`, hiding the half-line crossing it. Every state that deliberately drops that fill —
+  **`.is-todo`**, **`--dashed`**, `--dot` + `.is-todo`, and all of them in dark — tore the mask off and the
+  connector cut straight through the circle. Now it spans the **gap** between two markers
+  (`left: calc(50% + size/2); width: calc(100% - size)`), which is exact: horizontal items are `flex: 1 1 0`
+  with the marker centred, so centre-to-centre is one item width. Geometry instead of a mask, so it is right
+  for every state and every variant at once. No markup change.
+- **A text CTA in `wb-navbar__actions` scrolled the whole page sideways.** `__actions` is `flex: none` and is
+  never touched by the collapse (by design — the theme toggle, search and avatar must stay reachable on a
+  phone), so a text button in it kept its full width at 390px: the shipped **`templates/landing.html`
+  overflowed by 116px**, and the catalog was actively recommending that placement. `__actions` is now
+  **icon-only by contract**; a text CTA goes at the **end of `__menu`**, after a `wb-navbar__spacer` nested
+  inside the menu. To make that work, `.wb-navbar__menu` now takes the free width (`flex: 1 1 auto;
+  min-width: 0`) so the nested spacer can push the CTA hard right while the bar is wide — and the CTA tucks
+  into the ☰ panel when it collapses. **A bar without a CTA is unaffected**: links stay left, `__actions`
+  stays hard right, the outer `__spacer` simply has no free space left to claim. Verified on all seven
+  templates × 1280/900/700/390: zero overflow, bar height 56 everywhere.
 - **Transparent controls now have a visible hover** — `--ghost` / `--outline` buttons and every dismiss ×
   (`.wb-close`, `.wb-tag__x`, `.wb-filter-token__x`) hover to the new **`--wb-ink-hover`** token, a
   *translucent* ink tint, instead of the opaque `--wb-surface-2` / `--wb-surface-hover`. The bug: an opaque

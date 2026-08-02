@@ -970,8 +970,17 @@ icon actions). A **public / marketing** bar also carries a full link menu *and* 
 that needs ~840px, so at 640 it has already wrapped to two rows, the exact broken state the collapse exists
 to prevent. Add **`.wb-navbar--collapse-lg`** and it collapses at **900** instead — deliberately the same
 width `.wb-shell` folds its rail at, so a page makes one layout shift, not two. (A modifier and not a token:
-a container query can't read a custom property.) Rule of thumb: more than ~3 links, or any text button in
-`__actions` → `--collapse-lg`.
+a container query can't read a custom property.) Rule of thumb: more than ~3 links, or any text CTA in the
+bar → `--collapse-lg`.
+
+**Where a text CTA goes — `__menu`, never `__actions`.** `__actions` is the slot that is *never* collapsed,
+on purpose: the theme toggle, search, notifications and the avatar have to stay reachable on a phone. That
+makes it **icon-only by contract** — it is `flex: none`, so a text button in it keeps its full width at 390px
+and scrolls the whole page sideways. (The shipped `landing.html` did exactly that: **116px** of horizontal
+overflow at 390.) Put "Đăng nhập" / "Dùng thử" at the **end of `__menu`**, after a `__spacer` *nested inside
+the menu*: `__menu` takes the free width, so that spacer pushes the CTAs hard right while the bar is wide —
+and when the bar collapses they tuck into the ☰ panel with the links and become full-width rows. One markup,
+both widths. Verify with page-review **G4** at 390.
 
 ```html
 <div class="wb-navbar">
@@ -980,8 +989,13 @@ a container query can't read a custom property.) Rule of thumb: more than ~3 lin
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link is-active">Tổng quan</a>
     <a class="wb-nav__link">Giao dịch</a>
+    <!-- a public bar's CTAs belong HERE, after a nested spacer — they collapse with the menu -->
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-btn wb-btn--ghost">Đăng nhập</a>
+    <a class="wb-btn">Dùng thử miễn phí</a>
   </nav>
   <span class="wb-navbar__spacer"></span>
+  <!-- icon-only: this slot never collapses, so it must fit at 360px -->
   <div class="wb-navbar__actions">
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" aria-label="Sáng/Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>

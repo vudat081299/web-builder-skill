@@ -2410,6 +2410,9 @@
   }
   .wb-navbar__menu.is-open .wb-nav__link { justify-content: flex-start; padding: 8px 12px; border-radius: var(--wb-radius-sm); }
   .wb-navbar__menu.is-open .wb-nav__link.is-active { background: var(--wb-surface-hover); }
+  /* A __spacer nested in the menu (what pushes a CTA right while the bar is wide)
+     has no job in a stacked panel — drop it so it doesn't leave a stray gap row. */
+  .wb-navbar__menu.is-open > .wb-navbar__spacer { display: none; }
   /* …and the lg threshold itself. */
   .wb-navbar--collapse-lg > .wb-navbar__toggle { display: inline-flex; order: -1; }
   .wb-navbar--collapse-lg > .wb-navbar__menu:not(.is-open) { display: none; }
@@ -2430,6 +2433,24 @@
 }
 .dark .wb-navbar__mark { background: var(--wb-gray-100); color: var(--wb-gray-900); }
 .wb-navbar__spacer { margin-left: auto; }
+/* The link menu eats the free width. Two reasons, and the second is the load-bearing one:
+   1. it changes nothing for a bar without a CTA — links stay left-aligned, __actions stays
+      hard right, the outer __spacer simply has no free space left to claim;
+   2. it lets a text CTA live at the END of __menu (after a nested __spacer, which now has
+      room to push) instead of in __actions — and __menu is the slot that COLLAPSES.
+   That distinction is the whole contract below: __actions never collapses, so anything
+   in it must fit at 360px, i.e. icon buttons. A text CTA there overflows the page.
+   min-width: 0 so long link text shrinks the menu instead of the bar. */
+.wb-navbar__menu { flex: 1 1 auto; min-width: 0; }
+/* --------------------------------------------------------------------------
+   __actions is the slot that stays VISIBLE at every width — it is never
+   collapsed by the container queries above, because the things that belong in
+   it (theme toggle, search, notifications, avatar) must stay reachable on a
+   phone. That makes it ICON-ONLY by contract: `flex: none` plus a text button
+   is how a bar pushes the whole page sideways (the shipped landing template
+   did exactly that — 116px of horizontal scroll at 390px).
+   Text buttons — Đăng nhập / Dùng thử / any CTA — go at the end of __menu.
+   -------------------------------------------------------------------------- */
 .wb-navbar__actions { display: flex; align-items: center; gap: 8px; flex: none; }
 
 /* Theme (sáng/tối) toggle — an icon button that shows the glyph for the mode you'd switch TO.
@@ -2750,9 +2771,18 @@
   flex: 1 1 0; flex-direction: column; align-items: center; text-align: center;
   gap: 8px; padding: 0;
 }
+/* The rail spans the GAP between two markers, not centre-to-centre. Centre-to-centre
+   (left:50%; width:100%) only looked right because the default marker is opaque and
+   sits on z-index 1 — it hid the half-line crossing it. Every state that deliberately
+   drops that fill (.is-todo, --dashed, --dot + .is-todo, and all of them in dark) tore
+   the mask off and the line ran straight through the circle. Geometry, not a mask:
+   items are `flex: 1 1 0` with the marker centred, so centre-to-centre is exactly one
+   item width — inset both ends by the marker's radius and the rail lands in the gap. */
 .wb-steps--horizontal .wb-steps__item::before {
-  left: 50%; top: calc(var(--wb-steps-size) / 2); right: auto; bottom: auto;
-  width: 100%; height: var(--wb-bw); transform: translateY(-50%);
+  left: calc(50% + var(--wb-steps-size) / 2); top: calc(var(--wb-steps-size) / 2);
+  right: auto; bottom: auto;
+  width: calc(100% - var(--wb-steps-size)); height: var(--wb-bw);
+  transform: translateY(-50%);
 }
 .wb-steps--horizontal .wb-steps__content { padding-top: 0; }
 
