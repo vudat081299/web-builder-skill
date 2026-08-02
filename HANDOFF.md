@@ -153,13 +153,9 @@ Independent of the kit question, ordered by value against the flagship use (mone
 6. **a11y §19 is half-done.** `:focus-visible` (14 sites) and `prefers-reduced-motion` (3) are good;
    `forced-colors` and `prefers-contrast` are **0**. RTL is 0 too — that one should be **recorded as a non-goal**
    rather than built.
-7. **Versioning is inconsistent.** `CHANGELOG.md` says *Unreleased (v0.6-dev)* while
-   [`index.html:38`](web-builder/assets/index.html:38) already presents `v0.6` as shipped — and neither
-   `web-builder.css` nor `SKILL.md` carries a version string at all, so a consumer can't tell which build of
-   the one shipped file they hold. Cut v0.6 and stamp the CSS header.
-8. **Stale positioning in the shipped file.** [`web-builder.css:2`](web-builder/assets/web-builder.css:2) still
-   reads *"component library for personal finance web apps"* — left over from `cashy-ui`, on the **first line of
-   the only file that ships**, after the repo repositioned to general web UI.
+> Items 7 (version drift) and 8 (stale positioning in the shipped file) were **resolved in `03b8a4c`** and
+> deleted from this list per the rule above. Their durable homes: `CHANGELOG.md` v0.6, the `--wb-version`
+> token, and `validate-sync.sh` CHECK 15 (rendered on `#/tooling`) so the drift can't come back silently.
 
 **Already recorded, still open:** T3 (manual `.skill` packaging) and T4 (no inlined manual `/wb-change`) remain
 *deferred*; T5 (no §18/coherence gate) remains *chosen — keep it*. `carousel` / `scrollspy` / floating labels
@@ -171,5 +167,6 @@ stay skipped on purpose (`bootstrap-comparison.md`).
 
 - Anything in §6 that touches a component or token → run **`/wb-change`**; it drives the 6-place sync and the
   commit gate runs `validate-sync.sh` for you.
-- §6 items 7 and 8 are the cheapest, and the ones that rot fastest if left.
+- Of what's left in §6, items **1–2** (table column sort, row selection / bulk actions) carry the most weight
+  against the flagship use — a transactions or debt table can't be sorted or acted on in bulk today.
 - The kit question (§0–§5) is a **decision first, code second**. Land T6 before writing `.tsx`.
