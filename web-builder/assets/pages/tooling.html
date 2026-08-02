@@ -68,7 +68,7 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
   </div>
 
   <div class="wb-block">
-    <h4>Nửa skill deliverable — CHECK 6 → 11</h4>
+    <h4>Nửa skill deliverable — CHECK 6 → 11, 14–15</h4>
     <table class="wb-table wb-table--bordered">
       <thead><tr><th style="width:74px">CHECK</th><th>Bảo đảm điều gì</th><th style="width:96px">Loại</th></tr></thead>
       <tbody>
@@ -78,6 +78,8 @@ cd web-builder/assets &amp;&amp; python3 serve.py 9000   # truyền cổng để
         <tr><td><b>9</b></td><td>CSS ship <b>cân ngoặc</b> <code>{ }</code> — hợp lệ về cấu trúc.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>10</b></td><td>Mục <b>"Current scope"</b> của <code>SKILL.md</code> nêu đủ <b>mọi nhóm component</b> (các <code>group</code> của section <code>components</code> trong <code>SECTIONS</code>) — app.js là source-of-truth; prose chép tay hay trôi lệch.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>11</b></td><td>Mọi <b>"§N"</b> trích dẫn khắp repo đều resolve về một <code>## N.</code> trong <code>design-principles.md</code>; <code>overview.html</code> <b>index</b> đủ §1…§max; và <code>principles.html</code> <b>render đầy đủ</b> §1…§max (không chỉ index — docs site tự chứa, §23).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>14</b></td><td><b>Recipe ↔ template khớp hai chiều</b>: mỗi <i>Named recipe</i> trong catalog phải có file <code>assets/templates/&lt;tên&gt;.html</code> thật, và mỗi template phải được một recipe trỏ tới. Thêm nữa, mỗi template phải <b>chạy được ngay</b>: có <code>&lt;!doctype html&gt;</code>, có link <code>web-builder.css</code>, có <code>class="wb-app"</code> trên <code>&lt;body&gt;</code>. Recipe cố ý không có template thì viết <code>—</code> kèm lý do.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>15</b></td><td><b>Một chuỗi version, thống nhất mọi nơi</b>: token <code>--wb-version</code> trong CSS là source-of-truth; bản release mới nhất trong <code>CHANGELOG.md</code>, header của file CSS, <code>SKILL.md</code>, brand ở topbar và footer docs phải cùng nói một số. (Mục <code>## Unreleased (vX.Y-dev)</code> nằm trên bản đã cắt thì được bỏ qua — docs hiển thị bản <b>đã cắt</b> gần nhất trong khi bản kế còn đang làm.)</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -183,7 +185,7 @@ bash .claude/tools/wb.sh classes           # base wb-* mà CSS định nghĩa (-
     <thead><tr><th>File</th><th>Là gì</th></tr></thead>
     <tbody>
       <tr><td><code>.claude/settings.json</code></td><td>Wire hai hook (matcher + timeout).</td></tr>
-      <tr><td><code>.claude/hooks/validate-sync.sh</code></td><td>Bộ 13 check (docs + skill). Chạy tay hoặc do hook gọi.</td></tr>
+      <tr><td><code>.claude/hooks/validate-sync.sh</code></td><td>Bộ 15 check (docs + skill). Chạy tay hoặc do hook gọi.</td></tr>
       <tr><td><code>.claude/hooks/pre-commit-gate.sh</code></td><td>PreToolUse: cổng chặn <code>git commit</code>/<code>push</code>.</td></tr>
       <tr><td><code>.claude/hooks/wb-sync-reminder.sh</code></td><td>PostToolUse: nhắc checklist 6 nơi khi sửa CSS.</td></tr>
       <tr><td><code>.claude/tools/wb.sh</code></td><td>Locator read-only: <code>locate &lt;class&gt;</code> → cụm <code>Read</code> + blast-radius; <code>classes</code> liệt kê wb-*.</td></tr>

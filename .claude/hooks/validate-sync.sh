@@ -299,6 +299,38 @@ if [ -d "$TPL_DIR" ] && [ -f "$CAT" ]; then
   done < <(printf '%s\n' "$tpl_files")
 fi
 
+# --- CHECK 15 (hard): ONE version string, agreed everywhere it is shown ---------
+# The shipped CSS is COPIED into a project, not installed, so `--wb-version` is the only
+# way a consumer can tell which build they hold — which makes it worthless the moment it
+# disagrees with what the docs and the changelog claim. This drifted once already
+# (CHANGELOG said "Unreleased (v0.6-dev)" while the docs brand had shipped "v0.6" and the
+# CSS carried no version at all). The token is the source of truth; the newest cut release
+# in CHANGELOG.md, the CSS header, SKILL.md and the two docs-chrome strings must match it.
+# An "## Unreleased (vX.Y-dev)" section above the newest release is fine and ignored — the
+# docs legitimately show the last CUT version while the next one is in progress.
+CSS="$A/web-builder.css"
+CHG="web-builder/CHANGELOG.md"
+VER="$(grep -oE -- '--wb-version:[[:space:]]*"[0-9]+\.[0-9]+"' "$CSS" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+' | head -1)"
+if [ -z "$VER" ]; then
+  { echo "BLOCK · $CSS has no --wb-version token in :root."
+    echo "    Add:  --wb-version: \"0.6\";   (the only way an app can identify a copied stylesheet)"; } >&2
+  fail=1
+else
+  # Newest CUT release heading in the changelog: first "## v<X.Y>" that is not an Unreleased line.
+  chg_ver="$(grep -oE '^## v[0-9]+\.[0-9]+' "$CHG" 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+')"
+  if [ -n "$chg_ver" ] && [ "$chg_ver" != "$VER" ]; then
+    { echo "BLOCK · version drift: --wb-version is \"$VER\" but the newest cut release in CHANGELOG.md is v$chg_ver."
+      echo "    Cut the release and bump the token together, or the shipped file lies about what it is."; } >&2
+    fail=1
+  fi
+  # Everywhere the version is SHOWN to a human must say the same thing.
+  for pair in "$CSS:the CSS header comment" "$SKILL:SKILL.md" "$A/index.html:the docs brand" "$A/app.js:the docs footer"; do
+    f="${pair%%:*}"; what="${pair#*:}"
+    [ -f "$f" ] || continue
+    grep -q "v$VER" "$f" || { echo "BLOCK · $what ($f) does not carry v$VER — it disagrees with --wb-version." >&2; fail=1; }
+  done
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "" >&2
   echo "^ Fix the BLOCK item(s) and keep editing (don't restart). Guardrail: .claude/hooks/validate-sync.sh" >&2

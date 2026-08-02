@@ -53,6 +53,15 @@
 --wb-shell-h 100dvh | --wb-navbar-h 56 | --wb-sidenav-w 240
 --wb-page-pad-block 36 | --wb-page-pad-end 120 | --wb-section-gap 44 | --wb-block-gap 28
 
+/* Bản dựng — token DUY NHẤT không phải để tạo kiểu. File CSS này thường được
+   COPY vào dự án chứ không cài qua package manager, nên không có package.json
+   để tra; đọc thẳng lúc chạy để biết app đang cầm bản nào (nó là CSS *string* nên
+   trả về kèm dấu nháy — nhớ bỏ đi):
+     getComputedStyle(document.documentElement)
+       .getPropertyValue('--wb-version').replace(/"/g, '')   // → 0.6
+   Số này phải khớp CHANGELOG + header CSS + docs (CHECK 15 chặn commit nếu lệch). */
+--wb-version   /* "0.6" */
+
 /* Font — đổi 1 dòng này là đổi toàn bộ chữ (xem trang Fonts) */
 --wb-font
 --wb-font-mono   /* chữ đều bề rộng — ô ngày/giờ (.wb-input-tpl) canh theo ô ký tự */</code></pre>

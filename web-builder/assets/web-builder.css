@@ -1,6 +1,12 @@
 /* =============================================================================
-   Web Builder — component library for personal finance web apps
+   Web Builder v0.6 — a minimalist, zero-build CSS component library for web UIs
    -----------------------------------------------------------------------------
+   • Deepest on money screens (amount tables, balances, budgets, debts, receipts)
+     — that is where the set is strongest, not where it stops. Anything suited to
+     a white-black-grey ladder builds from the same parts: dashboards, lists,
+     forms, settings, auth, landing pages.
+   • Version: also readable at runtime as var(--wb-version) — this file is usually
+     copied, not installed, so there is no package.json to check. See CHANGELOG.md.
    • Self-contained: link this one file, no build step required.
    • Themed entirely through CSS custom properties (design tokens).
    • Light is the default; add class="dark" on <html> (or any ancestor) for dark.
@@ -19,6 +25,16 @@
    1. DESIGN TOKENS
    -------------------------------------------------------------------------- */
 :root {
+  /* Which build of this file an app is holding. A CSS *string*, so it also works in
+     `content:` — which means reading it in JS gives you the quotes back, strip them:
+       getComputedStyle(document.documentElement)
+         .getPropertyValue('--wb-version').replace(/"/g, '')      // → 0.6
+     The one shipped file is normally COPIED into a project, not installed, so there
+     is no package.json to read — without this a consumer cannot tell v0.5 from v0.6
+     while looking at a running app. Cut in step with CHANGELOG.md (CHECK 15 blocks
+     a commit if this, the header above, the docs brand and the footer disagree). */
+  --wb-version: "0.6";
+
   /* Neutral scale — the backbone. Near-black instead of pure #000 reads softer. */
   --wb-white:      #ffffff;
   --wb-gray-50:    #f7f7f8;

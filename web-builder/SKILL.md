@@ -15,6 +15,10 @@ description: >-
 
 # Web Builder
 
+**v0.6** — the same string the stylesheet carries as `var(--wb-version)`, so you can tell which build an
+app is actually holding (the CSS is copied into projects, not installed; there is no package.json to read).
+Newest first in `CHANGELOG.md`.
+
 A **standalone, minimalist CSS component library + design system** for building web UIs —
 hand-written, token-based, **zero-build**, one drop-in stylesheet, every class `wb-*`-prefixed
 so it composes with any stack and needs none. Its reason to exist: designing UI from scratch

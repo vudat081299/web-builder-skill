@@ -8,9 +8,23 @@ can tell whether a part it needs already exists. Newest first.
 > is instrumentation that never ships and isn't versioned here. How to *rebuild* the docs from the skill lives
 > in [`references/docs-site.md`](references/docs-site.md); how the loop closes is in `SKILL.md` ("Closing the loop").
 
-## Unreleased (v0.6-dev)
+## v0.6 — 2026-08-02
+
+The release that ships the **ground under the components**: the app shell + page scaffold, the `.wb-app`
+baseline, seven finished page templates, and a self-review rubric. Everything below had lived only in the
+docs' own un-shipped stylesheet, which is why a build using the skill never looked like the docs.
+
+The one shipped file now carries its own version: `var(--wb-version)` (`"0.6"`), readable at runtime.
 
 ### Added
+- **`--wb-version`** — the shipped stylesheet now says which build it is, as a `:root` token you can read at
+  runtime: `getComputedStyle(document.documentElement).getPropertyValue('--wb-version').replace(/"/g,'')`
+  → `0.6` (it is a CSS *string*, so it works in `content:` too — hence the quote-strip). The one
+  file is normally **copied** into a project rather than installed, so there is no `package.json` to check —
+  a consumer holding `web-builder.css` previously had no way at all to tell v0.5 from v0.6, and the repo
+  itself had drifted (this changelog said *Unreleased (v0.6-dev)* while the docs already displayed a shipped
+  *v0.6*). The token is the source of truth and `validate-sync.sh` **CHECK 15** now blocks a commit when the
+  changelog, the CSS header, `SKILL.md` or the docs chrome disagree with it.
 - **`references/page-review.md` — a nine-gate self-review** an AI runs on a finished page *before* delivering
   it. Four gates are **measurable**, with a console snippet in the file: invented classes · the colour ladder ·
   horizontal overflow at 1280/900/700/390 · a navbar that has wrapped. The rest are judgement gates (frame,
@@ -94,6 +108,11 @@ can tell whether a part it needs already exists. Newest first.
   whole card instead of a handle).
 
 ### Changed / fixed
+- **The shipped file no longer describes itself as a personal-finance kit.** Line 2 of `web-builder.css` —
+  the first thing anyone reads in the *only* file that ships — still said *"component library for personal
+  finance web apps"*, left over from `cashy-ui`, long after the repo repositioned to general web UI. It now
+  matches what `SKILL.md` and the README have said for a while: a minimalist, zero-build library for web UIs,
+  **deepest** on money screens rather than **limited** to them. Comment only; no rule changed.
 - **`wb-steps--horizontal`: the rail no longer runs through the markers.** It was drawn centre-to-centre
   (`left: 50%; width: 100%`) and only *looked* right because the default marker is opaque and sits on
   `z-index: 1`, hiding the half-line crossing it. Every state that deliberately drops that fill —

@@ -84,8 +84,9 @@ If these drift, the skill misleads the next AI. Verify with `.claude/hooks/valid
 both the **docs site** (routes == pages · no per-page `<style>` · `app.js` parses) **and the skill
 deliverable** (SKILL.md frontmatter + trigger description · SKILL.md scope names every component `group` · every
 `references/*.md` exists · the catalog never documents a class the CSS lacks · `web-builder.css` braces
-balanced · every catalog recipe has a real template and every template has a recipe). The commit gate runs
-it for you.
+balanced · every catalog recipe has a real template and every template has a recipe · **one version string**
+— `--wb-version` agrees with the newest cut release in `CHANGELOG.md`, the CSS header, SKILL.md and both
+docs-chrome strings). The commit gate runs it for you.
 
 ## Conventions to keep
 
