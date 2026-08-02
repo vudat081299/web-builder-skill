@@ -39,7 +39,7 @@ use), but the primitives are general-purpose: use it for any minimalist web buil
    catalog. Then reuse it forever.
 
 **Building a whole page, not just one part? START FROM A TEMPLATE — this is a rule, not a suggestion.**
-`assets/templates/` ships six finished screens, each a standalone HTML document built from these parts:
+`assets/templates/` ships seven finished screens, each a standalone HTML document built from these parts:
 
 | Recipe | Template |
 |---|---|
@@ -49,6 +49,7 @@ use), but the primitives are general-purpose: use it for any minimalist web buil
 | Detail / record view | `assets/templates/detail.html` |
 | Settings | `assets/templates/settings.html` |
 | Auth / login (no shell) | `assets/templates/auth.html` |
+| Landing / marketing (no shell) | `assets/templates/landing.html` |
 
 Open the closest one, **replace the copy and the data, keep the frame**. Change text, numbers, icons, how
 many rows or fields; do not change the `wb-shell` frame, the `wb-page-head` → `wb-section` → `wb-block`
@@ -66,6 +67,12 @@ colours, line-height, links), `.wb-shell` + its slots, and the heading ladder (c
 scaffold*). No `min-height:100vh`, no hand-picked `margin-top`, no re-inventing a mobile rail. **A
 hand-rolled shell or a one-off margin is the single biggest reason a build stops looking like this system.**
 
+**Before you deliver a page, run `references/page-review.md`.** Nine gates, four of them measurable with a
+console snippet the file gives you (invented classes · the colour ladder · horizontal overflow · the bar
+wrapping). It is the other half of the template rule: the template makes the page start right, the review
+checks it still ends right. Don't skip the mechanical four — an invented class renders as *nothing* and no
+tool will tell you.
+
 If you find yourself picking a hex value or a pixel padding by hand, stop — there is
 almost certainly a token or class for it.
 
@@ -79,11 +86,12 @@ each app re-deriving the same piece. New to the shipped set since you last looke
 | File | What it is | Read when |
 |---|---|---|
 | `assets/web-builder.css` | The library: design tokens + components (self-contained, no build). **The only file that ships to the app at runtime.** | You need class names / token names, or are adding a component |
-| `assets/templates/<screen>.html` | **Six finished screens** (dashboard · list · form · detail · settings · auth), standalone HTML on the shipped scaffold. Ships with the skill; they are source you copy, so the runtime payload is still one CSS file. | **Building a whole screen — open the closest one first.** Not for looking up a single component |
+| `assets/templates/<screen>.html` | **Seven finished screens** (dashboard · list · form · detail · settings · auth · landing), standalone HTML on the shipped scaffold. Ships with the skill; they are source you copy, so the runtime payload is still one CSS file. | **Building a whole screen — open the closest one first.** Not for looking up a single component |
 | `assets/pages/<id>.html` | Living docs, **one small file per primitive** (buttons, tables, tags, input, select, charts, config, layout…). | You want the exact markup for one component — open just that file, not a monolith |
 | `assets/index.html` + `app.js` + `docs.css` | The docs **shell** (reused by every page): tree sidebar, hash router that loads one page at a time, theme toggle, copy, and the dual light/dark preview. | You're changing the docs site itself (nav, routing, chrome) — not a component |
 | `references/components-catalog.md` | "Building X → use Y, here's the snippet" lookup **+ a *Composing a page* recipe section** (app-shell skeleton + the recipe→template table) for whole screens | **Start here** for a single part; for a whole screen it points you at the template |
 | `references/design-principles.md` | The colour ladder, neutral shadow rule, number/typography/font rules | Building something new or making an aesthetic call |
+| `references/page-review.md` | The **nine-gate self-review** you run on a finished page — four of them measurable with a console snippet (invented classes · colour ladder · overflow · a wrapping bar), plus the specific smells this library invites | **Before you deliver any page.** The other end of the "start from a template" rule |
 | `references/integration.md` | How the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example) | Wiring the library into a real app |
 | `references/bootstrap-comparison.md` | Coverage vs Bootstrap 5.3 (what we have / skip / do differently), the popup set, the layout-foundation decision, and BOC structure | Deciding whether to add a component, or "do we have X?" |
 | `references/docs-site.md` | How the docs **site** is built — SPA architecture (index.html shell + app.js `SECTIONS`/router + docs.css chrome), the page-grammar skeleton, the docs-chrome class inventory, and the Config/search/dual-preview/theme features | Rebuilding or extending the docs site itself (not a component). The docs **never ship**, but the skill stays self-sufficient to recreate them at the same quality |
@@ -150,7 +158,7 @@ sync per-component, so it never drifts here):
 - **Feedback** — alert/banner (tone outline, or `--plain` = no outline/flat), toast, progress (+ indeterminate/loading, status tones + `--info`), skeleton, empty state.
 - **Overlays** — modal/dialog, drawer/offcanvas (backdrop options on `.wb-overlay`: `--blur` /
   `--clear`, or `--pass` = **non-modal**, page below stays usable), tooltip, **popover** (click-toggled card w/ arrow + × — richer than tooltip, not a menu).
-- **Navigation** — navbar (+ a **theme sáng/tối toggle**; height = `--wb-navbar-h`; `--glass` = translucent + blurred for a sticky bar over scrolling content; **responsive** — a container-query collapse where `.wb-nav.wb-navbar__menu` tucks into a `.wb-navbar__toggle` ☰ menu on a narrow bar, no overlap), nav / menu, sidenav (app rail — inside a shell it goes in the `.wb-shell__side` slot, which owns the surface + sticky + mobile drawer), tabs, **steps/stepper** (`.wb-steps` — numbered or `--dot`; vertical timeline + `--horizontal` wizard; `.is-todo`/`.is-active`/`.is-done` states + per-item `--dashed` tentative/optional step), breadcrumb, pagination, **pager** (`.wb-pager` — prev/next **page** links for the foot of a page, `[`/`]` keyboard shortcuts via a tiny guarded driver; ≠ pagination which pages through rows) + **`.wb-kbd`** keycap chip, and **footer** (`.wb-footer` — site footer: brand + link columns + copyright/social bar; `--slim` one-liner; greyscale).
+- **Navigation** — navbar (+ a **theme sáng/tối toggle**; height = `--wb-navbar-h`; `--glass` = translucent + blurred for a sticky bar over scrolling content; **responsive** — a container-query collapse where `.wb-nav.wb-navbar__menu` tucks into a `.wb-navbar__toggle` ☰ menu on a narrow bar, no overlap; the threshold is 640 for an app bar, **`--collapse-lg`** = 900 for a public bar carrying a full menu + text CTAs), nav / menu, sidenav (app rail — inside a shell it goes in the `.wb-shell__side` slot, which owns the surface + sticky + mobile drawer), tabs, **steps/stepper** (`.wb-steps` — numbered or `--dot`; vertical timeline + `--horizontal` wizard; `.is-todo`/`.is-active`/`.is-done` states + per-item `--dashed` tentative/optional step), breadcrumb, pagination, **pager** (`.wb-pager` — prev/next **page** links for the foot of a page, `[`/`]` keyboard shortcuts via a tiny guarded driver; ≠ pagination which pages through rows) + **`.wb-kbd`** keycap chip, and **footer** (`.wb-footer` — site footer: brand + link columns + copyright/social bar; `--slim` one-liner; greyscale).
 - **Disclosure** — accordion (`<details>` FAQ) and **collapse** (one standalone show/hide region).
 - **Structure** — drag-and-drop **tree** (reorder + reparent), a flat **sortable** list/grid/rows (grip top-left in grid; `--no-grip` = drag the whole card), and a **slot grid** (`.wb-slotgrid` — fixed cells `--1`…`--6`; drop an item into any slot, empty gaps are kept; drop on an occupied slot **swaps**).
 

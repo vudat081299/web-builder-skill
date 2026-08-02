@@ -11,6 +11,27 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.6-dev)
 
 ### Added
+- **`references/page-review.md` — a nine-gate self-review** an AI runs on a finished page *before* delivering
+  it. Four gates are **measurable**, with a console snippet in the file: invented classes · the colour ladder ·
+  horizontal overflow at 1280/900/700/390 · a navbar that has wrapped. The rest are judgement gates (frame,
+  heading ladder, both themes, a11y floor, real copy) plus a table of the specific mistakes this library
+  invites. **Why it matters to a consumer:** "start from a template" makes a page *begin* right; nothing
+  checked that it still *ended* right. On its first run the class-parity gate found `.is-done` — see below.
+- **`templates/landing.html`** — the seventh screen and the second shell-less one: the public/marketing page
+  (navbar + container + full footer, no rail). Hero → proof → features → `wb-steps--horizontal` → pricing →
+  FAQ → CTA. Entirely **tier 1**: it ships with zero coloured backgrounds, because a marketing page has no
+  status to report — the ladder's most-tempting-to-break case, answered by example.
+- **`.wb-navbar--collapse-lg`** — collapse the bar's inline links at **900px** instead of 640. 640 fits an
+  *app* bar (brand + a couple of links + icon actions); a *public* bar also carries a full link menu and one
+  or two text CTAs, which needs ~840 — so between roughly **660 and 840px it wrapped to two rows**, the exact
+  broken state the collapse exists to prevent. 900 is deliberately the width `.wb-shell` folds its rail at, so
+  a page makes one layout shift, not two. A modifier rather than a token because a container query cannot read
+  a custom property. Rule of thumb: more than ~3 links, or any text button in `__actions` → use it.
+- **`.wb-steps__item.is-done`** — now a **real rule**. The docs, the catalog and the CSS comment all promised
+  the triad `.is-done` / `.is-active` / `.is-todo`, but only the last two were ever defined; `is-done` "worked"
+  purely because it happened to match the marker's default. It read as an invented class in any markup audit
+  (that is how it was found), and it would have broken silently the day the default changed. Same declarations
+  as the base marker, on purpose. Two shipped templates were using it.
 - **Page templates** (`assets/templates/*.html`) — six **finished screens** built on the scaffold:
   `dashboard` · `list` · `form` · `detail` · `settings` · `auth`. Each is a standalone HTML document (one
   `<link>` to `web-builder.css`, no build) covering a named recipe in `components-catalog.md`, and each

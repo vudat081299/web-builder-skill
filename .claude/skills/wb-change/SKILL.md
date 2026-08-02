@@ -84,7 +84,8 @@ không có · `web-builder.css` cân ngoặc · **recipe ↔ template khớp hai
 (§18) · × top-right (§15) · no left-accent bar (§9) · dark = light-lift shadow (§2).
 
 **10 · Commit + push.** Commit thẳng `main` (workflow solo, CLAUDE.md § Git). Message kết bằng:
-`Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`. Rồi push.
+`Co-Authored-By: Claude <model> <noreply@anthropic.com>` — `<model>` là model bạn **đang thật sự chạy**
+(`Claude Opus 5`, …), đừng chép cứng tên ở đây. Rồi push.
 
 ## Token discipline (mục tiêu tối ưu)
 - Đọc rộng (discover · verify nhiều trang · review docs chéo) → **subagent**, không kéo cả file vào luồng chính.

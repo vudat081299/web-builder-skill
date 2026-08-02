@@ -2385,22 +2385,38 @@
 .wb-navbar__toggle { display: none; }
 /* When the bar itself gets narrow: hide the inline links, show the hamburger, and
    turn the nav into a dropdown panel under the bar (toggle .is-open on it). This is
-   the standard app-bar collapse — no overlap, links tuck into a menu. */
-@container (max-width: 640px) {
-  .wb-navbar__toggle { display: inline-flex; order: -1; }   /* leads the row */
-  /* Links tuck into a COMPACT dropdown pinned under the ☰ (top-left), sized to its own
-     content — not a full-width sheet. `.wb-navbar .` raises specificity above `.wb-nav`
+   the standard app-bar collapse — no overlap, links tuck into a menu.
+   -----------------------------------------------------------------------------
+   TWO thresholds, because how much room a bar needs depends on what it carries:
+     default (640)  — an APP bar: brand + a couple of links + icon actions.
+     --collapse-lg  — a PUBLIC bar: brand + a full link menu + one or two text CTA
+                      buttons. That needs ~840px, so at 640 it has already wrapped
+                      to two rows — a broken state this collapse exists to prevent.
+   900 is deliberately the same width the shell rail folds at (§52), so a page
+   makes ONE layout shift, not two. A container query can't read a custom property,
+   so this is a modifier rather than a token. */
+@container (max-width: 900px) {
+  /* The panel look, written ONCE for both thresholds: it is only reachable while
+     the ☰ is visible, i.e. when one of the two rules below has collapsed the bar.
+     A COMPACT dropdown pinned under the ☰ (top-left), sized to its own content —
+     not a full-width sheet. `.wb-navbar .` raises specificity above `.wb-nav`
      (align-items:center) so the links stretch + left-align like a normal menu. */
-  .wb-navbar .wb-navbar__menu {
+  .wb-navbar .wb-navbar__menu.is-open {
     position: absolute; top: calc(100% + 4px); left: 14px; right: auto; z-index: 40;
     flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px; padding: 6px;
     min-width: 176px; width: max-content; max-width: calc(100% - 28px);
     background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border);
     border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md);
   }
-  .wb-navbar .wb-navbar__menu:not(.is-open) { display: none; }
-  .wb-navbar__menu .wb-nav__link { justify-content: flex-start; padding: 8px 12px; border-radius: var(--wb-radius-sm); }
-  .wb-navbar__menu .wb-nav__link.is-active { background: var(--wb-surface-hover); }
+  .wb-navbar__menu.is-open .wb-nav__link { justify-content: flex-start; padding: 8px 12px; border-radius: var(--wb-radius-sm); }
+  .wb-navbar__menu.is-open .wb-nav__link.is-active { background: var(--wb-surface-hover); }
+  /* …and the lg threshold itself. */
+  .wb-navbar--collapse-lg > .wb-navbar__toggle { display: inline-flex; order: -1; }
+  .wb-navbar--collapse-lg > .wb-navbar__menu:not(.is-open) { display: none; }
+}
+@container (max-width: 640px) {
+  .wb-navbar__toggle { display: inline-flex; order: -1; }   /* leads the row */
+  .wb-navbar__menu:not(.is-open) { display: none; }
 }
 .wb-navbar__brand {
   display: inline-flex; align-items: center; gap: 9px; flex: none;
@@ -2659,7 +2675,7 @@
    Per-item state classes drive a live flow:
      .is-todo    → upcoming (muted outline marker)
      .is-active  → current  (filled + neutral ring)
-     default / .is-done → filled  (put <span class="wb-ico">check</span> in a done marker)
+     .is-done    → finished (filled — also the default look; put <span class="wb-ico">check</span> inside)
    .wb-steps__note is a dashed annotation pill hung under a step (e.g. a loop-back).
    Marker size is one knob: --wb-steps-size.
    -------------------------------------------------------------------------- */
@@ -2696,6 +2712,15 @@
   border: var(--wb-bw) dashed var(--wb-border-strong);
   border-radius: var(--wb-radius-pill); padding: 3px 11px;
 }
+/* State: done — the marker's default look, named explicitly. The triad the docs and
+   the catalog promise (.is-done / .is-active / .is-todo) must ALL be real classes:
+   leaning on "the default happens to look done" makes `is-done` read as an invented
+   class in any markup audit (it did), and it breaks silently the day the default
+   marker changes. Same declarations as the base marker, on purpose. */
+.wb-steps__item.is-done .wb-steps__marker {
+  background: var(--wb-gray-900); color: var(--wb-white); border-color: transparent;
+}
+.dark .wb-steps__item.is-done .wb-steps__marker { background: var(--wb-gray-100); color: var(--wb-gray-900); }
 /* State: upcoming — a muted outline marker. */
 .wb-steps__item.is-todo .wb-steps__marker {
   background: transparent; color: var(--wb-fg-subtle); border-color: var(--wb-border-strong);

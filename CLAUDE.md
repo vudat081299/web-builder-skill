@@ -108,4 +108,6 @@ utility set, **not** a 12-column foundation. Full numbered rules: `web-builder/r
 ## Git
 
 Solo repo, committed directly to `main` (the user's established workflow). Branch only if asked.
-End commit messages with `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
+End commit messages with `Co-Authored-By: Claude <model> <noreply@anthropic.com>`, where `<model>` is the
+model you are actually running as (`Claude Opus 5`, …) — sign what authored the commit, don't copy a name
+out of this file. History up to `41bcc01` is signed *Claude Opus 4.8*, which was accurate at the time.

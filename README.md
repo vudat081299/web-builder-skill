@@ -23,7 +23,7 @@ leaves the shipped skill better and coherent.
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **65 pages**, light/dark, browsable (incl. `#/principles` rendering §1–25 in full, `#/templates` for the six page templates, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css` + `templates/`. |
+| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **65 pages**, light/dark, browsable (incl. `#/principles` rendering §1–25 in full, `#/templates` for the seven page templates + the page-review rubric, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css` + `templates/`. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`web-builder.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
@@ -32,13 +32,14 @@ leaves the shipped skill better and coherent.
 - `SKILL.md` — entry point: the one rule ("don't invent styling"), the colour ladder, current scope, house conventions.
 - `references/components-catalog.md` — "building X → use Y, here's the snippet" lookup + a **Composing a page** section (app-shell skeleton + the recipe→template table) for whole screens (**start here** for a build task; for a whole screen it sends you to a template).
 - `references/design-principles.md` — the colour ladder, token discipline, dogfooding, layout stance, and every convention, numbered.
+- `references/page-review.md` — the **nine-gate self-review** an AI runs on a finished page before delivering it; four gates are measurable with a console snippet (invented classes · colour ladder · overflow · a wrapping navbar). The other end of the "start from a template" rule.
 - `references/integration.md` — how the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example).
 - `references/bootstrap-comparison.md` — coverage vs Bootstrap 5.3 (what we have / skip / do differently), for "do we need component X?" calls.
 - `references/docs-site.md` — how the docs **site** is built (SPA shell + `app.js` `SECTIONS`/router + `docs.css` chrome, the page-grammar skeleton, the Config/search/dual-preview features), so the skill can rebuild the docs. Docs are instrumentation and **never ship**.
 
 **2 · Docs** — the living gallery in `web-builder/assets/`:
 - `web-builder.css` — **the library** (design tokens + all `wb-*` components). **The only file that ships to the app at runtime.**
-- `templates/<screen>.html` — **six finished screens** (dashboard · list · form · detail · settings · auth) on the shipped scaffold. Part of the skill, but *source you copy*, not something an app links — so the runtime payload stays one CSS file.
+- `templates/<screen>.html` — **seven finished screens** (dashboard · list · form · detail · settings · auth · landing) on the shipped scaffold. Part of the skill, but *source you copy*, not something an app links — so the runtime payload stays one CSS file.
 - `index.html` + `app.js` + `docs.css` — the docs **shell** (hash router, sidebar tree, theme toggle, config drawer). Docs chrome — **never ships**.
 - `pages/<id>.html` — one small, markup-only page per component/foundation (one per `SECTIONS` route — kept in parity; see the self-check below).
 - `serve.py` — a `no-store` dev server so a normal reload shows edits.

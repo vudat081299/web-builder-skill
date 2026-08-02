@@ -14,6 +14,13 @@
     không còn chèn đè lên nhau. Bọc <code>.wb-nav</code> thêm <code>.wb-navbar__menu</code> và thêm nút
     <code>.wb-navbar__toggle</code> có <code>data-navbar-toggle</code>. (Dùng <b>container query</b> — gập theo bề rộng
     của chính thanh, nên đúng cả trong ô demo hẹp lẫn màn hình nhỏ.)</p>
+    <p class="wb-block__desc"><b>Chọn ngưỡng gập theo thứ thanh đang mang.</b> Mặc định <b>640</b> hợp với thanh
+    <b>app</b> (brand + vài link + nút icon). Thanh <b>public/marketing</b> còn mang cả menu link đầy đủ <i>lẫn</i>
+    một hai nút chữ CTA — chỗ đó cần ~840px, nên tới 640 thì thanh đã <b>vỡ thành 2 dòng</b>, đúng cái trạng thái
+    hỏng mà cơ chế gập sinh ra để tránh. Thêm <code>wb-navbar--collapse-lg</code> để gập ở <b>900</b> — cố ý trùng
+    bề ngang mà <code>.wb-shell</code> gập rail, để cả trang chỉ đổi bố cục <b>một lần</b>. Quy tắc nhanh: quá ~3
+    link, hoặc có nút chữ trong <code>__actions</code> → dùng <code>--collapse-lg</code>. (Là modifier chứ không
+    phải token: container query không đọc được CSS variable.)</p>
     <div class="demo demo--pop">
       <div class="demo__stage">
         <div class="wb-navbar">

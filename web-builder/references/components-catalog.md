@@ -170,6 +170,7 @@ how much colour is enough) that a table cannot state.
 | **Detail / record view** | `templates/detail.html` | a page-head with breadcrumb → a status + actions row → a `wb-grid--2` of `wb-card`s (summary + meta) → line items → a `wb-steps` history → related list → the destructive action, last | [Card](#card) · [Steps](#steps--stepper) · [List group](#list-group) |
 | **Auth / login** | `templates/auth.html` | a **narrow, centred** `wb-container--narrow` on `body.wb-app` (no shell) → a `wb-card` → a `wb-stack` of inputs + one primary `wb-btn` → a **social-login** stack | [Forms](#form-controls) · [Buttons](#buttons) |
 | **Settings** | `templates/settings.html` | **tabs** (or a second **sidenav**) of sections → each panel a `wb-list` of labelled rows, one control per row (a `wb-switch` per toggle) | [Tabs](#tabs) · [List group](#list-group) · [Forms](#form-controls) |
+| **Landing / marketing** | `templates/landing.html` | the one **public** screen — no rail, no shell: `wb-navbar --collapse-lg` → `wb-page-head--lg` hero + CTA cluster → proof `wb-stat`s → feature `wb-grid--auto` → `wb-steps--horizontal` → pricing `wb-grid--3` → `wb-accordion` FAQ → closing CTA → the **full** `wb-footer` | [Navbar](#navbar--nav-menu) · [Steps](#steps--stepper) · [Accordion](#accordion) · [Pager & Footer](#pager--footer) |
 | **Empty / first-run** | — *(a state, not a screen — it lives inside `list.html`)* | an **empty state** centred in the container (icon + line + a primary action) until data exists | [Empty](#empty-state) |
 
 > `validate-sync.sh` **CHECK 14** locks this column to the folder both ways: a template with no row here,
@@ -963,6 +964,14 @@ gives a page-tab look. Active is a plain highlight (no left bar). Wire `.is-acti
 `.wb-navbar__toggle` button (`data-navbar-toggle`, a `menu` ☰ icon): below ~640px the inline links hide, the
 hamburger shows, and the links drop into a panel toggled by `.is-open` (the docs driver / your app wires the
 class). No more overlapping controls on a phone.
+
+**Pick the threshold to match what the bar carries.** 640 suits an **app** bar (brand + a couple of links +
+icon actions). A **public / marketing** bar also carries a full link menu *and* one or two text CTA buttons —
+that needs ~840px, so at 640 it has already wrapped to two rows, the exact broken state the collapse exists
+to prevent. Add **`.wb-navbar--collapse-lg`** and it collapses at **900** instead — deliberately the same
+width `.wb-shell` folds its rail at, so a page makes one layout shift, not two. (A modifier and not a token:
+a container query can't read a custom property.) Rule of thumb: more than ~3 links, or any text button in
+`__actions` → `--collapse-lg`.
 
 ```html
 <div class="wb-navbar">
