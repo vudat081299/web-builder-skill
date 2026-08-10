@@ -1125,8 +1125,7 @@ document.addEventListener("click", (e) => {
   const open = e.target.closest("[data-modal-open]");
   if (open) { const m = document.querySelector(open.getAttribute("data-modal-open"));
     if (m) m.classList.add("is-open"); return; }
-  if (e.target.closest("[data-modal-close]") ||
-      (e.target.classList && e.target.classList.contains("wb-overlay"))) {
+  if (e.target.closest("[data-modal-close]")) {
     const ov = e.target.closest(".wb-overlay");
     if (ov) ov.classList.remove("is-open");
     return;
@@ -1146,6 +1145,22 @@ document.addEventListener("click", (e) => {
         (p.hidden = p.dataset.panel !== tab.dataset.tab));
     }
   }
+});
+
+/* Backdrop dismiss: close a modal only when BOTH the pointerdown and the pointerup land
+   on the .wb-overlay scrim itself — not on the .wb-modal inside it. A bare "click" (as
+   before) also closed on a text-selection drag that started inside the modal and released
+   on the backdrop, because the click event targets the nearest common ancestor of press
+   and release — which, when the overlay wraps the modal, is the overlay. */
+let _wbOverlayDown = null;
+document.addEventListener("pointerdown", (e) => {
+  _wbOverlayDown = (e.target.classList && e.target.classList.contains("wb-overlay")) ? e.target : null;
+});
+document.addEventListener("pointerup", (e) => {
+  if (_wbOverlayDown && e.target === _wbOverlayDown && e.target.classList.contains("wb-overlay")) {
+    e.target.classList.remove("is-open");
+  }
+  _wbOverlayDown = null;
 });
 
 function spawnToast(d) {

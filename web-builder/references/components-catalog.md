@@ -909,7 +909,12 @@ App: use **sonner**; keep `wb-toast*` classes.
 ## Modal / Dialog
 
 `.wb-overlay` (dims screen, toggle `.is-open`) → `.wb-modal` with `__head` / `__body` /
-`__foot`. `data-modal-open="#id"` opens, `data-modal-close` (or clicking the backdrop) closes.
+`__foot`. `data-modal-open="#id"` opens, `data-modal-close` closes. Clicking the backdrop also
+closes — but only when **both** the press and the release land on the `.wb-overlay` scrim (not on
+the `.wb-modal` inside it), so a text-selection drag that begins in the modal and ends on the
+backdrop won't dismiss it. Drive that with a `pointerdown`+`pointerup` pair, **not** a bare `click`:
+a `click` fires on the nearest common ancestor of press and release, which — when the overlay wraps
+the modal — is the overlay itself, so the drag would close it by mistake.
 
 **Backdrop options** (on `.wb-overlay`, shared with Drawer): default dims + light blur and **blocks**
 the page; `--blur` frosted glass; `--clear` no dim (still blocks); `--pass` **non-modal** — the page

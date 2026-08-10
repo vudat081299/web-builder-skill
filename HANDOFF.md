@@ -10,6 +10,33 @@ component). If this note ever contradicts those, **they win.**
 
 ---
 
+## Backdrop dismiss — press *and* release must land on the scrim (fixed 2026-08-10)
+
+**The gap.** The same modal/drawer footgun surfaced across several downstream projects at once:
+pressing inside a modal, dragging out, and releasing on the backdrop **dismissed** it. Root cause is
+here in the skill, on two reinforcing paths: (1) the docs-demo driver `assets/app.js` closed the
+overlay on a bare `click` whose target was `.wb-overlay`, and a `click` fires on the nearest common
+ancestor of press + release — which, when the overlay wraps the modal, is the overlay; (2) the catalog
+said only "clicking the backdrop closes", so hand-written implementations downstream reinvented the
+same `e.target === overlay`-on-`click` bug.
+
+**Fixed.** `assets/app.js` — the click branch now only handles `[data-modal-close]`; backdrop dismiss
+moved to a `pointerdown`/`pointerup` pair on `document` that clears `.is-open` only when **both** land
+on the same `.wb-overlay`. `references/components-catalog.md` (Modal / Dialog) now spells out the
+press+release rule and says to drive it with pointer events, not `click`.
+
+**Still open (judgment):**
+- Promote the rule to a numbered design principle (§15, "a dismiss × sits top-right", is the natural
+  neighbour). Left out of this pass to avoid the `principles.html` render-sync — do it next time
+  principles are touched.
+- **Popover / dropdown outside-click** (`assets/app.js`, the popover branch) still closes on the same
+  bare `click`: a drag that starts inside the card and releases outside can dismiss it. Lower stakes
+  (no full-screen scrim) and not fixed here — decide whether it deserves the same guard.
+- The docs site never ships, but `assets/app.js` **is** copied verbatim into live sites; any holder of
+  a copy needs the same two-part change. The one known copy has already been patched.
+
+---
+
 ## 0. The question that triggered this note
 
 **Goal:** when another AI reads the `web-builder` skill and builds a web app, the resulting app code should be
