@@ -244,7 +244,12 @@ Any region that scrolls follows two habits (both baked into `.wb-scroll-y`):
 
 1. **Themed scrollbar** — a thin bar with a **transparent track** and a neutral-border thumb, so it
    follows the theme instead of showing a bright OS bar that clashes on a dark canvas or reads as a
-   second divider. (The built-in scroll areas — table body, dropdown menu — already carry it.)
+   second divider. This is the **page-wide default**, declared once in section 27 of the stylesheet: the
+   viewport bar, the built-in areas (table body, dropdown menu), an overflow div you wrote by hand and
+   a third-party widget all inherit it — **no class needed, nothing to remember per element**. It was
+   an opt-in name list until v0.7, which meant every scroller outside that list quietly showed an OS
+   bar next to wb surfaces. Hand a subtree back to the OS bar with `.wb-scrollbars--os` when you
+   *want* un-themed (a widget that ships its own bar).
 2. **Breathing room past the last item** — `scroll-padding` + a bottom pad so the final rows scroll
    clear of the edge and are easy to read and to tap/select, instead of being pinned to the frame.
 

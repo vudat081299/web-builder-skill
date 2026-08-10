@@ -98,8 +98,9 @@ for the look (see `integration.md`).
 | A page title / section heading / sub-block, and the spacing between them | **Page scaffold** (`.wb-page-head` / `.wb-section` / `.wb-block`) | [App shell](#app-shell--page-scaffold) |
 | Arrange in a row/column, align (top/center/bottom, left/right), wrap, equal widths | **Grid / Layout** utilities | [Layout](#grid--layout) |
 | Pin a bar / card / button to the top or bottom edge on scroll | **Sticky** (`.wb-sticky`) | [Sticky](#sticky) |
-| A bounded scroll region (long list / wide row) with a theme-aware bar | **Scroll** (`.wb-scroll-y` / `-x`) | [Scroll areas](#scroll-areas) |
-| Theme the whole-page (viewport) scrollbar | **`.wb-scrollbars`** on `<html>` | [Scroll areas](#scroll-areas) |
+| A bounded scroll region (long list / wide row) + tail room | **Scroll** (`.wb-scroll-y` / `-x`) | [Scroll areas](#scroll-areas) |
+| Theme the whole-page / any scrollbar | **nothing to do** — page-wide default (CSS section 27) | [Scroll areas](#scroll-areas) |
+| Give one subtree back the native OS scrollbar | **`.wb-scrollbars--os`** | [Scroll areas](#scroll-areas) |
 | A UI icon (chevron, close, drag, search…) | **Icon** (`.wb-ico`) | [Icons](#icons) |
 | Fine-tune tokens live + export a `.md` | **Config** (docs playground) | [Config](#config--tweak) |
 
@@ -1617,15 +1618,28 @@ scrollbar** (transparent track + neutral-border thumb, so no bright OS bar clash
 divider); `.wb-scroll-y` also adds **`scroll-padding` tail room** — add `--pad` for extra bottom space so the
 last item scrolls clear of the edge (easier to read/tap/select).
 
-**Bar-only:** `.wb-scrollbars` themes an element's scrollbar **without** touching its overflow — put it on
-`<html class="wb-scrollbars">` for a theme-aware **viewport (whole-page)** bar, or on any element that already
-scrolls. Textareas and the built-in table body (`.wb-table-scroll`) + dropdown `.wb-menu` carry the theming
-automatically. Scale the tail to the case — a short menu needs little, a long list wants more.
+**The themed bar is the page-wide default — declared once, no class to add (v0.7).** CSS section 27 sets it on `:root`
+(+ `.dark`) and `*`, so **every** scroller on the page inherits it: the **viewport (whole-page)** bar, the
+built-in areas (table body `.wb-table-scroll`, dropdown `.wb-menu`, textarea), an `overflow:auto` div you wrote
+by hand, even a third-party widget. So `.wb-scroll-y` / `-x` are about **overflow + tail room**, not about the
+bar's look. Before v0.7 the theming was an opt-in class list and anything outside it showed a bright OS bar.
+
+**Escape hatch:** `.wb-scrollbars--os` hands an element **and its subtree** back to the native OS scrollbar —
+for a widget that ships its own bar, or a surface that must look un-themed. `.wb-scrollbars` still exists and
+is a **no-op** on a normal page (kept for existing markup); its one live use is re-asserting the theme on a
+scroller *inside* a `--os` subtree.
+
+Why one declaration is enough (measured in Chrome 148): `scrollbar-color` **inherits**, so `:root` reaches the
+whole tree — `scrollbar-width` and `::-webkit-scrollbar` don't, hence `*`. And where a scroller has
+`scrollbar-color`/`-width`, Chrome **ignores** its `::-webkit-scrollbar` rules, so that block is now a
+**legacy-WebKit-only fallback** (Safari < 18.2), not a twin of the standard props — if you retune the look,
+**edit both** or the two engines drift apart.
 
 ```html
 <div class="wb-scroll-y wb-scroll-y--pad" style="max-height:320px"> … danh mục dài … </div>
 <div class="wb-scroll-x"> … hàng thẻ rộng … </div>
-<html class="wb-scrollbars">   <!-- theme the whole-page (viewport) scrollbar -->
+<div style="overflow:auto"> … thanh cuộn đã theo theme, không cần class … </div>
+<div class="wb-scrollbars--os"> … nhánh này trả về thanh cuộn OS … </div>
 ```
 
 ## Config / Tweak

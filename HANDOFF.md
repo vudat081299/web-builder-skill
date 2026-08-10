@@ -37,6 +37,18 @@ press+release rule and says to drive it with pointer events, not `click`.
 
 ---
 
+## Scroll indicator — resolved 2026-08-10
+
+> The themed scrollbar is now a **page-wide default declared once** (CSS section 27, on `:root` + `*`), with
+> `.wb-scrollbars--os` as the escape hatch. Durable homes: `CHANGELOG.md` *Unreleased (v0.7-dev)*,
+> `README.md` **T6** + the `#/decisions` mirror, `design-principles.md` §13, the catalog *Scroll areas*
+> section, `SKILL.md`, and the `#/scroll` demo. Verified in Chrome 148: a scroller with **no** `wb-*` class
+> inherits the theme in light + dark; `--os` returns `auto`. One fact worth keeping in mind while editing
+> CSS section 27 — where `scrollbar-color`/`-width` applies, Chrome **ignores** that scroller's `::-webkit-scrollbar`
+> rules, so the `::-webkit-*` half is a legacy-WebKit fallback, not a twin. Edit both halves.
+
+---
+
 ## 0. The question that triggered this note
 
 **Goal:** when another AI reads the `web-builder` skill and builds a web app, the resulting app code should be
@@ -88,7 +100,7 @@ Net: **the pattern is documented, the kit is not built** — roughly 1 wrapper o
 **Gap worth closing regardless of what you decide:** "no React kit" is **not recorded as a deliberate
 trade-off.** `README.md` T1–T5 don't cover it, so a future reader (or AI) sees "optional React wrappers" in
 `SKILL.md`, finds an empty repo, and can't tell **chosen** from **forgotten**. Whatever you land on — *including
-"never build one"* — should become **T6** in `README.md` and be mirrored on `pages/decisions.html`
+"never build one"* — should become **T7** in `README.md` (T6 is taken — the scrollbar default) and be mirrored on `pages/decisions.html`
 (`validate-sync.sh` CHECK 13 enforces the mirror). Right now the silence is the bug.
 
 ---

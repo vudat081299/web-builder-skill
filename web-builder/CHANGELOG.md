@@ -8,6 +8,26 @@ can tell whether a part it needs already exists. Newest first.
 > is instrumentation that never ships and isn't versioned here. How to *rebuild* the docs from the skill lives
 > in [`references/docs-site.md`](references/docs-site.md); how the loop closes is in `SKILL.md` ("Closing the loop").
 
+## Unreleased (v0.7-dev)
+
+### Changed
+- **The theme-aware scrollbar is now a page-wide default, declared once** (CSS section 27). It used to be an **opt-in
+  name list** (`.wb-scroll-y` · `.wb-scroll-x` · `.wb-table-scroll` · `.wb-menu` · `.wb-textarea` ·
+  `.wb-scrollbars`), so any *other* scroller — an `overflow:auto` div you wrote by hand, a third-party widget,
+  a hand-rolled dialog body — showed a bright OS bar next to wb surfaces, and `.wb-scrollbars` had to be
+  repeated on every one of them. Now CSS section 27 declares it on `:root` (+ `.dark`) and `*`, and **every** scroller on
+  the page inherits it, including the viewport bar, with **no class to add**. `.wb-scroll-y`/`-x` keep their
+  real job: overflow + tail room.
+  - **New: `.wb-scrollbars--os`** — hands an element **and its subtree** back to the native OS scrollbar
+    (a widget that ships its own bar, or a surface that must look un-themed).
+  - **`.wb-scrollbars` still works** but is now a **no-op** on a normal page; it is kept for existing markup
+    and for re-asserting the theme on a scroller *inside* a `--os` subtree. Nothing to change in an app that
+    uses it — the repo's own templates simply dropped it.
+  - **If you retune the bar, edit both halves.** Measured in Chrome 148: where a scroller has
+    `scrollbar-color`/`-width`, Chrome **ignores** that scroller's `::-webkit-scrollbar` rules — so the
+    `::-webkit-*` block in that section is a **legacy-WebKit fallback** (Safari < 18.2), not a twin of the standard
+    props. The old comment claiming the two were "kept identical" was wrong.
+
 ## v0.6 — 2026-08-02
 
 The release that ships the **ground under the components**: the app shell + page scaffold, the `.wb-app`

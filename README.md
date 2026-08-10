@@ -181,3 +181,13 @@ here isn't rendered there, so this list can't silently go missing from the site 
   gate only trains you to ignore it. Trade-off: §18 and 6-place coherence stay **model/human eyeball** checks
   (`/wb-change` steps 8–9), not mechanical guarantees — revisit only if raw-hex abuse actually appears, or if a
   low-noise base-vs-modifier split ever makes a coherence *advisory* (never a gate) worth its upkeep.
+- **T6 · CSS section 27 styles scrollbars page-wide from `:root` + `*` — the one place the CSS reaches outside the
+  `wb-*` namespace.** *Chosen.* Everywhere else the prefix is a promise: drop the file in and nothing you didn't
+  opt into changes. Scrollbars are the deliberate exception, because the opt-in version failed in practice —
+  the theming was a fixed class list, so any scroller outside it (a hand-written `overflow:auto` div, a
+  third-party widget) showed a bright OS bar right next to a wb surface, and the fix was to remember
+  `.wb-scrollbars` on every one of them. A scrollbar is chrome, not content: getting it wrong is visible on
+  every screen, and "declare it once" is the only version that stays true as a page grows. The escape hatch is
+  `.wb-scrollbars--os` (an element **and** its subtree back to the native bar). Cost accepted: an app that
+  wanted the OS bar on most of the page now opts *out* instead of in. Revisit if a real integration needs the
+  native bar as the default.
