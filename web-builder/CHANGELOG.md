@@ -28,6 +28,21 @@ can tell whether a part it needs already exists. Newest first.
     `::-webkit-*` block in that section is a **legacy-WebKit fallback** (Safari < 18.2), not a twin of the standard
     props. The old comment claiming the two were "kept identical" was wrong.
 
+### Fixed
+- **The app-shell rail could float over the page and let main content show through it.**
+  `.wb-shell__side` carried both `position: sticky` and its own `overflow-y: auto` — sticking to the
+  viewport scroll *and* scrolling its own content on the same node. Chromium can mistrack that box's
+  size/position after a fast, forceful scroll: the rail collapses to its content height and renders as a
+  floating card, and since it no longer occupies real space in the shell's flex row, the main column flows
+  in right where the rail used to sit — whatever was there (an alert, a heading) shows through around it.
+  Reported against a consuming page and confirmed with a screenshot of it happening on Chrome/macOS.
+  Fixed by splitting the two roles: `.wb-shell__side` now only sticks and clips (`overflow: hidden`, no
+  scroll math of its own); `.wb-sidenav` — already the documented single child every consumer nests inside
+  it — carries the real `overflow-y: auto` plus the padding that used to sit on the slot. **No markup
+  change**: every shipped template, the docs shell, and every demo page already nest content this way. (The
+  docs site's own rail has two children instead of one — see `docs.css` `.doc-side`/`.doc-tree` — so it got
+  its own flex-column split rather than the shipped `.wb-sidenav` convention.)
+
 ## v0.6 — 2026-08-02
 
 The release that ships the **ground under the components**: the app shell + page scaffold, the `.wb-app`

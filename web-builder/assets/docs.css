@@ -65,7 +65,19 @@ html { margin: 0; }
 .doc-topbar { --wb-navbar-h:  var(--doc-nav-h); }
 /* The rail needs the bar's height too — it sticks below it and subtracts it from
    the shell height. Same value, declared where it is read. */
-.doc-side   { --wb-sidenav-w: 252px; --wb-navbar-h: var(--doc-nav-h); }
+/* `.wb-shell__side` stopped scrolling itself and lost the padding that used to
+   live there with it (web-builder.css §52 — sticky + the element's own
+   overflow-y:auto on one node is a Chromium footgun; the shipped fix moves both
+   onto a single `.wb-sidenav` child). This rail has TWO children instead of one
+   (a pinned switcher above a scrollable tree), so it needs its own flex column:
+   the switcher stays put, `.doc-tree` below is the one that scrolls. Padding is
+   split the same way the kit's used to read (`14px 12px 56px`) — top+sides here
+   since both children share that inset, bottom tail-room moved onto `.doc-tree`
+   (where `.wb-scrollbars`'s theming also has to move to, below). */
+.doc-side   {
+  --wb-sidenav-w: 252px; --wb-navbar-h: var(--doc-nav-h);
+  display: flex; flex-direction: column; padding: 14px 12px 0;
+}
 
 /* -----------------------------------------------------------------------------
    Sidebar — the tree (grouped, collapsible)
@@ -94,7 +106,19 @@ html { margin: 0; }
 .doc-brand__name { font-weight: 650; font-size: 14px; }
 .doc-brand__ver  { font-size: 11px; color: var(--wb-fg-muted); }
 
-.doc-tree { display: flex; flex-direction: column; }
+.doc-tree {
+  display: flex; flex-direction: column;
+  flex: 1 1 auto; min-height: 0; padding-bottom: 56px;   /* tail room, was on .wb-shell__side */
+  overflow-y: auto; overscroll-behavior: contain; scroll-padding-block-end: 12px;
+  scrollbar-width: thin; scrollbar-color: var(--wb-border-strong) transparent;   /* was .wb-scrollbars on the aside */
+}
+.doc-tree::-webkit-scrollbar { width: 10px; height: 10px; }
+.doc-tree::-webkit-scrollbar-track { background: transparent; }
+.doc-tree::-webkit-scrollbar-thumb {
+  background: var(--wb-border-strong); border-radius: var(--wb-radius-pill);
+  border: 3px solid transparent; background-clip: padding-box;
+}
+.doc-tree::-webkit-scrollbar-thumb:hover { background: var(--wb-fg-subtle); }
 .doc-tree__group { margin-top: 12px; }
 .doc-tree__group:first-child { margin-top: 0; }
 /* Group heading: the one prominent (primary) line. It's a button that collapses
@@ -156,6 +180,7 @@ html { margin: 0; }
 /* Section switcher — the dropdown at the top of the sidebar (dogfoods .wb-dropdown
    + .wb-menu). Full-width trigger; the popup menu spans the sidebar width. */
 .doc-secswitch-wrap {
+  flex: none;   /* pinned above the scrollable .doc-tree — see .doc-side above */
   padding: 0 2px 12px; margin-bottom: 8px;
   border-bottom: var(--wb-bw) solid var(--wb-border);
 }

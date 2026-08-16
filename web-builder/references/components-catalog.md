@@ -1476,8 +1476,11 @@ drifting away from the system. (The docs site runs on exactly these classes.)
 off-canvas drawer with a scrim below 900px; you do not assemble that.
 - `.wb-shell` — the page column (`min-height: var(--wb-shell-h)`, default `100dvh`).
 - `.wb-shell__body` — the row under the bar: rail + main.
-- `.wb-shell__side` — the rail slot. It **paints the surface** (background + right hairline + padding), so a
-  `.wb-sidenav` dropped inside contributes only its link styling. States on `.wb-shell`:
+- `.wb-shell__side` — the rail slot. It **paints the surface** (background + right hairline), sticks below
+  the bar and clips (`overflow: hidden`) — it does not scroll itself. The padding and the actual
+  `overflow-y: auto` live on `.wb-sidenav`, the slot's documented single child (sticky + the element's own
+  scroll on the same node is a Chromium footgun — see the CSS comment above `.wb-shell__side`), so a
+  `.wb-sidenav` dropped inside still contributes only its link styling on top of that. States on `.wb-shell`:
   `.is-side-collapsed` (desktop: hide the rail) · `.is-side-open` (narrow: slide it in over a scrim).
   Behaviour is one class toggle — the app's job, as everywhere else in this library.
 - `.wb-shell__side-toggle` — the ☰ that opens the folded rail. Put it first in the bar, hang
