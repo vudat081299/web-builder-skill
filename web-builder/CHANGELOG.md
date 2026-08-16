@@ -39,9 +39,24 @@ can tell whether a part it needs already exists. Newest first.
   Fixed by splitting the two roles: `.wb-shell__side` now only sticks and clips (`overflow: hidden`, no
   scroll math of its own); `.wb-sidenav` — already the documented single child every consumer nests inside
   it — carries the real `overflow-y: auto` plus the padding that used to sit on the slot. **No markup
-  change**: every shipped template, the docs shell, and every demo page already nest content this way. (The
-  docs site's own rail has two children instead of one — see `docs.css` `.doc-side`/`.doc-tree` — so it got
-  its own flex-column split rather than the shipped `.wb-sidenav` convention.)
+  change** for a rail built the documented way: every shipped template and every demo page already nests
+  content like that. A rail with **more** than that one child needs the new `--stack` below.
+
+### Added
+- **`.wb-shell__side--stack`** — the rail slot for a rail that holds **more than the one `.wb-sidenav`**: a
+  pinned search box, a workspace switcher, an account block that must stay put while the nav scrolls. The
+  slot takes the padding back and becomes a flex column; every child is pinned by default and the **one**
+  that scrolls says so with `.wb-scroll-y`, taking the leftover height plus the tail room.
+  ```html
+  <aside class="wb-shell__side wb-shell__side--stack">
+    <div class="wb-input-group"> … </div>          <!-- pinned -->
+    <nav class="wb-sidenav wb-scroll-y"> … </nav>  <!-- the one that scrolls -->
+  </aside>
+  ```
+  This closes the hole the fix above would otherwise have left: with the scrolling moved onto the
+  `.wb-sidenav` child, a rail whose direct child *isn't* that nav had nothing scrolling at all and got
+  silently clipped by the slot's `overflow: hidden`. The docs site's own rail is exactly that shape and now
+  runs on this modifier instead of a docs-only flex column.
 
 ## v0.6 — 2026-08-02
 

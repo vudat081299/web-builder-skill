@@ -70,6 +70,7 @@ for the look (see `integration.md`).
 | The top app bar (brand · links · actions) | **Navbar** | [Navbar](#navbar--nav-menu) |
 | A set of page-navigation links (a menu) | **Nav** (`.wb-nav`) | [Navbar](#navbar--nav-menu) |
 | The left navigation rail of an app shell | **`.wb-shell__side`** slot + **Sidebar** (`.wb-sidenav`) links inside it | [App shell](#app-shell--page-scaffold) · [Sidebar](#sidebar-side-nav) |
+| That rail, but with a pinned part above the scrolling nav | **`.wb-shell__side--stack`** + `.wb-scroll-y` on the child that scrolls | [App shell](#app-shell--page-scaffold) |
 | A segmented filter of joined buttons (Ngày/Tuần/Tháng) | **Button group** | [Button group](#button-group) |
 | Budget usage / completion ratio | **Progress** | [Progress](#progress) |
 | A % bar that's still loading / syncing (shimmer on the fill) | **Progress** `--loading` | [Progress](#progress) |
@@ -1019,9 +1020,10 @@ App: keep the classes; drive `.is-active` from React Router (`NavLink`).
 + `.is-active`), `__badge` (right-aligned count). Width reads `--wb-sidenav-w`.
 
 **In an app shell, this is not the rail — it's the rail's *contents*.** Put it inside the
-[`.wb-shell__side`](#app-shell--page-scaffold) slot, which owns the surface, the sticky column, its own
-scroll and the mobile off-canvas drawer; the sidenav then contributes link styling only (it drops its own
-border/background/width there automatically). Don't hand-compose a shell out of `.wb-navbar` +
+[`.wb-shell__side`](#app-shell--page-scaffold) slot, which owns the surface, the sticky column and the mobile
+off-canvas drawer; the sidenav then contributes link styling only (it drops its own border/background/width
+there automatically) **and carries the rail's padding + the scrolling** — the sticky slot deliberately does
+not scroll itself. If the rail needs a second child beside this nav, that's `.wb-shell__side--stack`. Don't hand-compose a shell out of `.wb-navbar` +
 `.wb-sidenav` + a flex row — that's the thing `.wb-shell` exists to stop. Standalone (outside a shell) it's
 a plain static rail: give it a height and add `.wb-scroll-y` if it gets long.
 
@@ -1472,8 +1474,8 @@ The layer **above** components: the frame a screen sits in, and the heading rhyt
 **first** on any new screen — this is what stops a build from re-deriving its own frame and spacing and
 drifting away from the system. (The docs site runs on exactly these classes.)
 
-**Shell — four slots.** The rail slot already sticks below the bar, scrolls on its own, and folds into an
-off-canvas drawer with a scrim below 900px; you do not assemble that.
+**Shell — four slots.** The rail slot already sticks below the bar, scrolls (on its `.wb-sidenav` child — see
+below), and folds into an off-canvas drawer with a scrim below 900px; you do not assemble that.
 - `.wb-shell` — the page column (`min-height: var(--wb-shell-h)`, default `100dvh`).
 - `.wb-shell__body` — the row under the bar: rail + main.
 - `.wb-shell__side` — the rail slot. It **paints the surface** (background + right hairline), sticks below
@@ -1483,6 +1485,19 @@ off-canvas drawer with a scrim below 900px; you do not assemble that.
   `.wb-sidenav` dropped inside still contributes only its link styling on top of that. States on `.wb-shell`:
   `.is-side-collapsed` (desktop: hide the rail) · `.is-side-open` (narrow: slide it in over a scrim).
   Behaviour is one class toggle — the app's job, as everywhere else in this library.
+- `.wb-shell__side--stack` — **the rail has more than that one nav child**: a pinned search box, a workspace
+  switcher, an account block that must stay put while the nav scrolls. Add it and the slot takes the padding
+  back and becomes a flex column; every child is pinned, and the **one** that scrolls says so with
+  `.wb-scroll-y` — it takes the leftover height plus the tail room. Without it the extra children would ride
+  the nav's scroll, and a rail whose direct child isn't a `.wb-sidenav` at all would scroll nowhere and get
+  clipped by the slot's `overflow: hidden`. (The docs site's own rail is exactly this shape.)
+
+  ```html
+  <aside class="wb-shell__side wb-shell__side--stack">
+    <div class="wb-input-wrap"> … tìm kiếm, ghim trên … </div>   <!-- pinned -->
+    <nav class="wb-sidenav wb-scroll-y"> … </nav>                <!-- the one that scrolls -->
+  </aside>
+  ```
 - `.wb-shell__side-toggle` — the ☰ that opens the folded rail. Put it first in the bar, hang
   `.is-side-open` off it. It appears at exactly the width the rail folds at, so the button and the drawer
   can never disagree. (Not the same as `.wb-navbar__toggle`, which collapses that bar's *inline links* by

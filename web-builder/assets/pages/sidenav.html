@@ -78,7 +78,7 @@
       <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-shell"&gt;
   &lt;header class="wb-navbar"&gt; … &lt;/header&gt;
   &lt;div class="wb-shell__body"&gt;
-    &lt;aside class="wb-shell__side"&gt;                &lt;!-- khe đã dính + cuộn + gập mobile --&gt;
+    &lt;aside class="wb-shell__side"&gt;                &lt;!-- khe dính + gập mobile; nav bên trong là cái cuộn --&gt;
       &lt;nav class="wb-sidenav"&gt; … &lt;/nav&gt;
     &lt;/aside&gt;
     &lt;main class="wb-shell__main"&gt; … nội dung … &lt;/main&gt;
@@ -90,8 +90,10 @@
   <div class="wb-alert wb-alert--info doc-note">
     <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
     <div>Thanh sidebar của <b>tài liệu này</b> có thêm hành vi (thu/gọn nhóm) nên phần cây là chrome riêng — nhưng
-    cái <b>khe</b> chứa nó thì đúng là <a href="#/shell"><code>.wb-shell__side</code></a> đã ship.
+    cái <b>khe</b> chứa nó thì đúng là <a href="#/shell"><code>.wb-shell__side</code></a> đã ship, ở biến thể
+    <a href="#/shell"><code>--stack</code></a> (nó có ô chuyển mục ghim trên cây).
     Đứng một mình (ngoài shell), <code>.wb-sidenav</code> cần bạn cho chiều cao + <code>.wb-scroll-y</code>
-    (<a href="#/scroll">Scroll areas</a>); trong shell thì dính, cuộn và gập ngăn kéo mobile là có sẵn.</div>
+    (<a href="#/scroll">Scroll areas</a>); trong shell thì dính và gập ngăn kéo mobile là có sẵn, còn
+    <b>cuộn nằm trên chính <code>.wb-sidenav</code></b> — khe dính không tự cuộn.</div>
   </div>
 </section>

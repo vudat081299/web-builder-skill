@@ -35,7 +35,9 @@
   <h3>Khung app-shell</h3>
   <p class="wb-section__desc">Bốn khe: thanh trên (<code>.wb-navbar</code>), hàng thân (<code>.wb-shell__body</code>)
   gồm rail trái (<code>.wb-shell__side</code>) cạnh cột nội dung (<code>.wb-shell__main</code>), và footer.
-  Rail đã tự dính, tự cuộn, và tự gập thành ngăn kéo trên màn hẹp — không phải ráp thêm gì.</p>
+  Rail đã tự dính, tự cuộn, và tự gập thành ngăn kéo trên màn hẹp — không phải ráp thêm gì. (Chi tiết đáng biết:
+  cái <b>cuộn</b> nằm trên <code>.wb-sidenav</code> bên trong, không nằm trên khe dính — xem khối
+  <a href="#/shell">rail nhiều thành phần</a> bên dưới.)</p>
 
   <div class="wb-block">
     <h4>Toàn bộ khung</h4>
@@ -89,6 +91,49 @@
 &lt;/div&gt;
 
 &lt;!-- Trang public/marketing: bỏ rail — navbar + .wb-container--pad + footer là đủ. --&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="wb-block">
+    <h4>Rail nhiều thành phần — <code>.wb-shell__side--stack</code></h4>
+    <p class="wb-block__desc">Mặc định khe rail giả định <b>đúng một</b> con <code>.wb-sidenav</code>: khe lo dính +
+    gập, còn nav bên trong mới là chỗ có padding và <b>cuộn</b> (khe dính mà tự cuộn là bẫy của Chromium — rail có thể
+    tụt xuống thành thẻ nổi đè lên trang). Khi rail cần thêm phần <b>ghim</b> phía trên — ô tìm kiếm, bộ chuyển
+    workspace, khối tài khoản — thêm <code>--stack</code>: khe thành cột flex, mọi con đều ghim, và
+    <b>đúng một</b> con mang <code>.wb-scroll-y</code> để ăn phần chiều cao còn lại và cuộn.</p>
+    <div class="demo">
+      <div class="demo__stage">
+        <div class="wb-shell" style="--wb-shell-h:260px; --wb-navbar-h:0px; --wb-sidenav-w:190px; border:var(--wb-bw) solid var(--wb-border); border-radius:var(--wb-radius); overflow:hidden">
+          <div class="wb-shell__body">
+            <aside class="wb-shell__side wb-shell__side--stack">
+              <div class="wb-input-group wb-input-group--seamless" style="margin-bottom:10px">
+                <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+                <input class="wb-input wb-input--sm" placeholder="Tìm mục…" aria-label="Tìm mục" />
+              </div>
+              <nav class="wb-sidenav wb-scroll-y">
+                <div class="wb-sidenav__section">Sổ tiền</div>
+                <a class="wb-sidenav__link is-active" href="#/shell"><span class="wb-ico wb-ico--sm">dashboard</span> Tổng quan</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">receipt_long</span> Giao dịch</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">savings</span> Ngân sách</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">insights</span> Báo cáo</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">account_balance</span> Tài khoản</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">sync_alt</span> Chuyển khoản</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">sell</span> Danh mục</a>
+                <a class="wb-sidenav__link" href="#/shell"><span class="wb-ico wb-ico--sm">settings</span> Cài đặt</a>
+              </nav>
+            </aside>
+            <div class="wb-shell__main">
+              <main class="wb-container wb-container--pad" style="--wb-page-pad-block:18px; --wb-page-pad-end:18px">
+                <p class="wb-section__desc" style="margin:0">Ô tìm kiếm ghim tại chỗ; chỉ danh sách bên dưới cuộn.</p>
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;aside class="wb-shell__side wb-shell__side--stack"&gt;
+  &lt;div class="wb-input-group wb-input-group--seamless"&gt; … &lt;/div&gt;   &lt;!-- ghim --&gt;
+  &lt;nav class="wb-sidenav wb-scroll-y"&gt; … &lt;/nav&gt;            &lt;!-- con duy nhất cuộn --&gt;
+&lt;/aside&gt;</code></pre></div>
     </div>
   </div>
 

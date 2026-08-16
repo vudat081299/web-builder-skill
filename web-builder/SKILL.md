@@ -139,8 +139,10 @@ sync per-component, so it never drifts here):
   **page templates** (`assets/templates/*.html` — six finished screens; start any whole-screen build there),
   and a live **Config** playground that edits tokens and exports a `.md`.
 - **Layout & utilities** — the **app shell & page scaffold** (`.wb-shell` + `__body`/`__side`/`__main` — the frame of a
-  whole screen: sticky bar, a rail slot that sticks, scrolls and folds to an off-canvas drawer + scrim below 900px via
-  `.is-side-collapsed`/`.is-side-open` with `.wb-shell__side-toggle` = the ☰ that appears at exactly that fold width,
+  whole screen: sticky bar, a rail slot that sticks and folds to an off-canvas drawer + scrim below 900px via
+  `.is-side-collapsed`/`.is-side-open` with `.wb-shell__side-toggle` = the ☰ that appears at exactly that fold width —
+  the **scrolling lives on the slot's `.wb-sidenav` child**, never on the sticky slot, and a rail needing a pinned part
+  above that nav says `.wb-shell__side--stack` + `.wb-scroll-y` on the one child that scrolls,
   and a content column `.wb-container--pad`; plus the heading rhythm
   `.wb-eyebrow` / `.wb-page-head` (`--lg` hero) / `.wb-section` / `.wb-block`, each styling whatever `h1…h6` sits inside
   it, all driven by the `--wb-text-*` scale + `--wb-section-gap`/`--wb-block-gap`/`--wb-measure` knobs — **start any new

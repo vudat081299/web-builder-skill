@@ -2525,8 +2525,10 @@
    A left navigation column for an app shell: sections + icon links + count
    badges. Icons are .wb-ico; active is a plain highlight (matches §38 / the
    docs tree). Standalone it needs a height + §27 .wb-scroll if long; inside an
-   app shell drop it in the .wb-shell__side slot (§52), which already sticks,
-   scrolls and folds to an off-canvas drawer on narrow screens.
+   app shell drop it in the .wb-shell__side slot (§52), which already sticks and
+   folds to an off-canvas drawer on narrow screens — there this nav is the child
+   that carries the rail's padding AND its scroll (the sticky slot itself must
+   not scroll; see the comment on .wb-shell__side).
    -------------------------------------------------------------------------- */
 .wb-sidenav {
   display: flex; flex-direction: column; gap: 1px;
@@ -3152,6 +3154,24 @@
 .wb-shell__side > .wb-sidenav {
   width: 100%; height: 100%; padding: 14px 12px 56px; background: none; border-right: 0;
   overflow-y: auto; overscroll-behavior: contain; scroll-padding-block-end: 12px;
+}
+/* --stack = the rail has MORE THAN the one nav child: a pinned search box, a
+   workspace switcher, an account block that must stay put while the nav below
+   it scrolls. Without this the extra children would share the nav's scroll (or,
+   if the nav isn't the direct child at all, nothing would scroll and the slot's
+   `overflow: hidden` would silently clip the rail). The slot takes the padding
+   back and becomes a flex column; every child is pinned by default, and the ONE
+   that scrolls says so with `.wb-scroll-y` (§27) — it takes the leftover height
+   and the tail room. Same split as above: the scrolling is never on the sticky
+   node itself. */
+.wb-shell__side--stack { display: flex; flex-direction: column; padding: 14px 12px 0; }
+.wb-shell__side--stack > * { flex: none; }
+/* A nav inside a stack is just one of the children — the slot pads it now, and it
+   only scrolls if it is the child carrying .wb-scroll-y (rule below wins, later). */
+.wb-shell__side--stack > .wb-sidenav { height: auto; padding: 0; overflow: visible; }
+.wb-shell__side--stack > .wb-scroll-y {
+  flex: 1 1 auto; min-height: 0; padding-bottom: 56px;
+  overflow-y: auto; overscroll-behavior: contain;
 }
 /* min-width:0 is load-bearing: without it a wide table or a long unbroken string
    pushes the main column past the viewport instead of scrolling inside it. */

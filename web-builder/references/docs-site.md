@@ -197,7 +197,7 @@ composed and a fresh build didn't. The mapping, if you meet the old names:
 | `body { font · bg · color · line-height · smoothing }` | **`.wb-app`** on `<body>` (`.wb-shell` carries the same) |
 | `a { color: inherit }` | `:where(.wb-app, .wb-shell) :where(a)` — zero specificity, so components still win |
 | `doc-shell` · `doc-body` · `doc-main` | `wb-shell` · `wb-shell__body` · `wb-shell__main` |
-| `doc-side` (+ off-canvas < 900px) | `wb-shell__side` (drawer + scrim ship too) |
+| `doc-side` (+ off-canvas < 900px) | `wb-shell__side wb-shell__side--stack` (drawer + scrim ship too; `--stack` because this rail pins the section switcher above the scrolling tree — the tree is the child carrying `.wb-scroll-y`) |
 | `doc-topbar` | `wb-navbar wb-navbar--sticky wb-navbar--glass` (a `.doc-topbar` hook keeps two docs-only tweaks) |
 | `doc-content` | `wb-container wb-container--pad` (docs set `--wb-container-max: 980px` + 32px side gutters) |
 | `doc-eyebrow` · `doc-page-head` · `doc-sec` · `doc-block` | `wb-eyebrow` · `wb-page-head` · `wb-section` · `wb-block` |

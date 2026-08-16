@@ -62,14 +62,13 @@
     <div class="wb-shell__body">
       <!-- Sidebar: section switcher (dropdown) on top, then the section's tree.
            .wb-shell__side gives it the sticky column + the mobile off-canvas
-           behaviour, but not the scrolling — this rail has two children (the
-           switcher should stay pinned, not scroll away with the tree), so
-           .doc-tree carries its own overflow-y:auto (docs.css: .doc-side /
-           .doc-tree; scrollbar theming is automatic — §27). The tree inside
-           is docs chrome. -->
-      <aside class="wb-shell__side doc-side">
+           behaviour; --stack is the shipped answer to a rail with more than the
+           one nav child — the switcher stays pinned and the child marked
+           .wb-scroll-y (the tree) is the one that scrolls. Scrollbar theming is
+           automatic (§27). The tree's own look is docs chrome. -->
+      <aside class="wb-shell__side wb-shell__side--stack doc-side">
         <div class="doc-secswitch-wrap" id="secswitch"><!-- section switcher, rendered by app.js --></div>
-        <nav class="doc-tree" id="nav"><!-- rendered by app.js per section --></nav>
+        <nav class="doc-tree wb-scroll-y" id="nav"><!-- rendered by app.js per section --></nav>
       </aside>
 
       <div class="wb-shell__main">
