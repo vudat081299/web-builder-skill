@@ -1,0 +1,13 @@
+{
+  "course": "Học Tài Chính Cá Nhân",
+  "modules": [
+    {
+      "id": "basics",
+      "title": "Nền tảng",
+      "lessons": [
+        { "id": "intro", "title": "Vì sao theo dõi chi tiêu", "file": "lessons/intro.html",
+          "est_min": 6, "prereq": [], "tags": ["basics"] }
+      ]
+    }
+  ]
+}

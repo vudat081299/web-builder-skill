@@ -1,0 +1,26 @@
+<!-- Lesson content unit: independently authored, knows nothing about other lessons.
+     Interaction is declared via data-* hooks that features/quiz.js wires up — no inline <script>. -->
+<article class="wb-stack" data-lesson="intro">
+  <header class="wb-page-head">
+    <p class="wb-eyebrow">Nền tảng · 6 phút</p>
+    <h1>Vì sao theo dõi chi tiêu</h1>
+  </header>
+
+  <p>Bạn không thể cải thiện thứ mình không đo. Ghi lại các khoản chi biến những cảm giác mơ hồ
+     ("hình như tháng này tiêu nhiều") thành con số rõ ràng bạn có thể hành động.</p>
+
+  <section class="wb-block">
+    <h2>Ba lợi ích</h2>
+    <ul>
+      <li>Thấy rõ tiền đi đâu — theo hạng mục, không phải một đống hoá đơn.</li>
+      <li>Bắt được rò rỉ nhỏ lặp lại (phí thuê bao quên huỷ).</li>
+      <li>Đặt ngân sách dựa trên thực tế, không phải phỏng đoán.</li>
+    </ul>
+  </section>
+
+  <!-- Quiz hook: declarative. features/quiz.js reads data-quiz + data-answer and renders state. -->
+  <section class="wb-block" data-quiz='{"q":"Theo dõi chi tiêu giúp gì đầu tiên?","a":["Đo được để cải thiện","Kiếm nhiều tiền hơn"],"correct":0}'>
+    <h2>Kiểm tra nhanh</h2>
+    <p class="wb-text-muted">(Bài trắc nghiệm hiển thị ở đây khi quiz.js chạy.)</p>
+  </section>
+</article>

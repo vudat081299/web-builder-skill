@@ -107,6 +107,7 @@ const SECTIONS = [
   { id: "project", title: "Project & skill", icon: "deployed_code", items: [
     { id: "skill",     label: "Product & skill" },
     { id: "workflow",  label: "Workflow (/wb-change)" },
+    { id: "architecture", label: "Architecture & levels" },
     { id: "onefile",   label: "One CSS file · tokens" },
     { id: "ai-repo",   label: "AI & this repo" },
     { id: "tooling",   label: "Tooling (verify · hooks)" },

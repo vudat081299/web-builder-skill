@@ -10,6 +10,21 @@ can tell whether a part it needs already exists. Newest first.
 
 ## Unreleased (v0.7-dev)
 
+### Added
+- **Architecture layer — AI-native project organization.** Beside building UI, the skill now helps an agent
+  choose *how a project is organized* — an **adaptive** capability, never mandatory ceremony. Small builds take
+  a **one-file fast path** (a single `index.html`, no `.agent/`); structure appears only when a complexity gate
+  says a site is large/long-lived (Level 1/2), synthesized from constraints rather than a fixed tree.
+  - **New references (ship with the skill):** `project-architecture.md` (the hub — Level 0/1/2 gate,
+    constraint-based synthesis, capability vocabulary, patterns, file-decomposition, evolution rules),
+    `site-profiles.md`, `learning-sites.md`, `large-static-sites.md`, `project-protocol.md`,
+    `problem-routing.md`, `verification.md`.
+  - **`SKILL.md`** gained the one-file gate, the invocation boundary, and architecture routing; its trigger
+    description now also covers new-site / architecture / restructure. Still < 500 lines.
+  - **Repo tooling (does NOT ship):** agent-agnostic `scripts/` (verify · package · verify-package · install ·
+    release + project/problem classifiers), workflows `/wb-architect` · `/wb-intake` · `/wb-release`, and
+    `tests/forward-tests.sh`. No component, template, runtime, or component doc changed.
+
 ### Changed
 - **The theme-aware scrollbar is now a page-wide default, declared once** (CSS section 27). It used to be an **opt-in
   name list** (`.wb-scroll-y` · `.wb-scroll-x` · `.wb-table-scroll` · `.wb-menu` · `.wb-textarea` ·

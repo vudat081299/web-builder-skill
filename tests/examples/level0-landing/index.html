@@ -1,0 +1,80 @@
+<!doctype html>
+<!-- LEVEL 0 EXAMPLE (one-file fast path). One authored source file: this index.html.
+     No .agent/, no architecture docs, no ADR, no handoff, no folders "for later" —
+     just semantic HTML + the web-builder design system + a tiny inline behaviour.
+     This is the DEFAULT for a small landing/portfolio/one-off page. It scales to
+     ~1,000 lines before you even evaluate splitting (project-architecture.md). -->
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quỹ Nhỏ — theo dõi chi tiêu đơn giản</title>
+  <!-- The ONLY runtime dependency: one drop-in stylesheet. -->
+  <link rel="stylesheet" href="../../../web-builder/assets/web-builder.css" />
+</head>
+<body class="wb-app">
+  <nav class="wb-navbar" aria-label="Chính">
+    <div class="wb-navbar__brand"><span class="wb-ico">savings</span> Quỹ Nhỏ</div>
+    <div class="wb-navbar__spacer"></div>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon" id="theme" aria-label="Đổi giao diện sáng/tối">
+      <span class="wb-ico">dark_mode</span>
+    </button>
+    <a class="wb-btn wb-btn--primary" href="#dangky">Bắt đầu</a>
+  </nav>
+
+  <main class="wb-container wb-container--pad">
+    <header class="wb-page-head wb-page-head--lg">
+      <p class="wb-eyebrow">Miễn phí · không cần tài khoản</p>
+      <h1>Biết tiền đi đâu, trong 30 giây mỗi ngày.</h1>
+      <p class="wb-page-head__sub">Ghi nhanh một khoản, xem ngay số dư và ngân sách còn lại — không bảng
+        tính, không rối mắt.</p>
+    </header>
+
+    <section class="wb-section">
+      <div class="wb-grid wb-grid--auto" style="--wb-grid-min: 240px">
+        <article class="wb-card wb-card--pad">
+          <h3 class="wb-card__title"><span class="wb-ico">bolt</span> Ghi trong một chạm</h3>
+          <p class="wb-card__sub">Số tiền, hạng mục, xong. Không biểu mẫu dài.</p>
+        </article>
+        <article class="wb-card wb-card--pad">
+          <h3 class="wb-card__title"><span class="wb-ico">donut_small</span> Ngân sách rõ ràng</h3>
+          <p class="wb-card__sub">Thanh tiến độ cho biết còn bao nhiêu trước khi vượt.</p>
+        </article>
+        <article class="wb-card wb-card--pad">
+          <h3 class="wb-card__title"><span class="wb-ico">lock</span> Ở lại máy bạn</h3>
+          <p class="wb-card__sub">Dữ liệu lưu ngay trên trình duyệt, không gửi đi đâu.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wb-section" id="dangky">
+      <div class="wb-card wb-card--pad">
+        <div class="wb-stack">
+          <h2>Thử ngay</h2>
+          <p class="wb-text-muted">Nhập một khoản chi để xem cảm giác.</p>
+          <form class="wb-cluster" id="demo" onsubmit="return false">
+            <input class="wb-input" type="text" inputmode="numeric" placeholder="50.000" aria-label="Số tiền" />
+            <button class="wb-btn wb-btn--primary" type="submit">Thêm khoản</button>
+          </form>
+          <p class="wb-cap wb-cap--soft-success" id="ok" hidden>Đã ghi! (demo)</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wb-footer wb-footer--slim">
+    <span class="wb-footer__copy">© 2026 Quỹ Nhỏ · Dựng bằng Web Builder</span>
+  </footer>
+
+  <script>
+    // Behaviour #1: theme toggle. Behaviour #2: demo confirm. Two tiny behaviours — well under the Level-0 cap.
+    document.getElementById('theme').addEventListener('click', () => {
+      const r = document.documentElement;
+      r.setAttribute('data-theme', r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+    document.getElementById('demo').addEventListener('submit', () => {
+      document.getElementById('ok').hidden = false;
+    });
+  </script>
+</body>
+</html>

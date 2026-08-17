@@ -1,0 +1,7 @@
+{ "name": "Data-Science index.html, ~20000 lines", "scenario": "FT9",
+  "routes": 1, "loc": 20000, "kb": 900, "behaviors": 8,
+  "backend_api": false, "auth": false, "database": false,
+  "router": false, "build": false, "ssr": false,
+  "content_units": true, "complex_state": true, "recurring_maintenance": true,
+  "cohesive": false, "tool_lag": true,
+  "expect": "L2", "expect_migrate": "incremental" }

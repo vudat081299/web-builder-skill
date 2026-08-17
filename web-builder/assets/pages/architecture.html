@@ -1,0 +1,159 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Project &amp; skill</p>
+  <h2>Architecture — chọn đúng mức, không nghi thức</h2>
+  <p>Web Builder làm <b>UI đẹp</b> (đó là việc chính, ở mọi trang khác). Đây là việc thứ hai: giúp agent chọn
+  <b>cách tổ chức project</b> để còn bảo trì tiếp được. Là <b>năng lực thích ứng, không bắt buộc</b> — đa số build
+  là nhỏ, nên <b>mặc định một file</b>. Bản AI-facing chi tiết: <code>references/project-architecture.md</code>.</p>
+</div>
+
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">info</span>
+    <div>Nguyên tắc: <b>kiến trúc bạn không cần là ma sát, không phải "phòng xa"</b>. Chạy complexity gate
+    trước; nếu là Level 0 thì <b>dừng</b> — đừng bọc một trang landing 200 dòng trong folder, ADR và handoff nó
+    không bao giờ dùng. Tiêu mức tổ chức như cách design-system tiêu màu: mức thấp nhất đủ việc.</div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Complexity gate — chạy TRƯỚC khi dựng cấu trúc</h3>
+  <p class="wb-section__desc">Một câu hỏi: project này thực sự cần bao nhiêu tổ chức? Trả lời từ yêu cầu + repo
+  hiện có, trong vài giây, trước khi viết cấu trúc.</p>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min: 250px">
+    <article class="wb-card wb-card--pad">
+      <h4 class="wb-card__title"><span class="wb-cap wb-cap--solid">Level 0</span> One-file fast path</h4>
+      <p class="wb-card__sub">Mặc định. Một <code>index.html</code> (markup + một <code>&lt;link&gt;</code> tới
+      <code>web-builder.css</code> + chút JS inline). <b>Không</b> <code>.agent/</code>, không docs kiến trúc,
+      không ADR, không folder "để dành".</p>
+    </article>
+    <article class="wb-card wb-card--pad">
+      <h4 class="wb-card__title"><span class="wb-cap wb-cap--outline">Level 1</span> Compact long-lived</h4>
+      <p class="wb-card__sub">Nhỏ nhưng bảo trì thường xuyên: cây nhỏ theo convention framework + <b>một
+      <code>AGENTS.md</code> ngắn</b> làm bản đồ. Thường chưa cần <code>.agent/</code> nhiều file.</p>
+    </article>
+    <article class="wb-card wb-card--pad">
+      <h4 class="wb-card__title"><span class="wb-cap">Level 2</span> Structured / complex</h4>
+      <p class="wb-card__sub">Nhiều unit đổi độc lập, API/state/persistence thật, hay cần handoff rõ:
+      <code>AGENTS.md</code> + <code>.agent/</code> + <code>docs/architecture</code> — <b>tạo theo nhu cầu</b>,
+      không theo checklist. Chọn <b>mức nhỏ nhất giải quyết được</b>.</p>
+    </article>
+  </div>
+</section>
+
+<section class="wb-section">
+  <div class="wb-block">
+    <h4>Level 0 — giữ một <code>index.html</code> khi TẤT CẢ đúng</h4>
+    <ul>
+      <li>Một route/trang.</li>
+      <li>Code viết tay HTML+CSS+JS <b>≲ 1.000 dòng và ≲ 100 KB</b>.</li>
+      <li><b>≤ 3</b> behaviour nhỏ (menu/theme toggle, tabs đơn giản, validation nhẹ).</li>
+      <li>Không backend / auth / database.</li>
+      <li>Không client router / build / SSR.</li>
+      <li>Không tập nhiều unit (lesson/bài/record) cập nhật độc lập.</li>
+      <li>Không state/persistence phức tạp; không bảo trì feature-by-feature qua nhiều session.</li>
+    </ul>
+    <p class="wb-section__desc">Ngưỡng dòng/KB là <b>heuristic đường-nhanh, không phải luật split</b>: vượt ngưỡng
+    thì <i>đánh giá</i>, không tự động tách — một file cohesive 10.000 dòng vẫn có thể đúng (xem
+    <a href="#/recipes">recipes</a> và <code>large-static-sites.md</code>).</p>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Khi nào gọi Web Builder — và khi nào KHÔNG</h3>
+  <div class="wb-grid wb-grid--2">
+    <article class="wb-card wb-card--pad">
+      <h4 class="wb-card__title"><span class="wb-ico">bolt</span> Gọi Web Builder</h4>
+      <ul>
+        <li>Bắt đầu website/trang mới.</li>
+        <li>Ráp hoặc thiết kế UI đáng kể.</li>
+        <li>Thiết kế / refactor architecture.</li>
+        <li>Thêm screen flow hay khối tính năng lớn.</li>
+        <li>Thêm UI chưa có sẵn local.</li>
+        <li>Đổi shell / layout / design-system.</li>
+        <li>Refactor monolith / site lớn.</li>
+        <li>Điều tra bug nghi thuộc <b>upstream</b>.</li>
+        <li>Update / đóng gói / release skill.</li>
+      </ul>
+    </article>
+    <article class="wb-card wb-card--pad">
+      <h4 class="wb-card__title"><span class="wb-ico">check_circle</span> Routine — KHÔNG cần</h4>
+      <ul>
+        <li>Sửa copy / nội dung.</li>
+        <li>Update lesson / data.</li>
+        <li>Fix bug nhỏ local.</li>
+        <li>Tái dùng component local có sẵn.</li>
+        <li>Đổi behaviour trong boundary hiện tại.</li>
+        <li>Thêm test local.</li>
+        <li>Resume từ handoff.</li>
+        <li>Refactor nhỏ không đổi architecture.</li>
+      </ul>
+      <p class="wb-section__desc">Trong project có sẵn: đọc <code>AGENTS.md</code> local trước, <b>reuse giải pháp
+      local</b>, đừng restructure chỉ để giống một profile.</p>
+    </article>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Synthesize từ ràng buộc — không có "cây phổ quát"</h3>
+  <p class="wb-section__desc">Đừng với lấy một layout thư mục thuộc lòng. Kiến trúc được <b>tổng hợp</b> từ các
+  lực trước mặt; thứ được chuẩn hoá là <b>hợp đồng khám phá ngữ nghĩa</b> (cái gì · ở đâu · verify sao — ghi
+  trong <code>AGENTS.md</code>), <b>không phải</b> cây vật lý.</p>
+  <div class="wb-block">
+    <div class="wb-cluster">
+      <span class="wb-cap">requirements</span>
+      <span class="wb-cap">responsibilities</span>
+      <span class="wb-cap">units of change</span>
+      <span class="wb-cap">source-of-truth</span>
+      <span class="wb-cap">framework conventions</span>
+      <span class="wb-cap">repo hiện có</span>
+      <span class="wb-cap">runtime/deploy</span>
+      <span class="wb-cap">discoverability</span>
+      <span class="wb-cap">verification</span>
+      <span class="wb-cap wb-cap--solid">= kiến trúc của project này</span>
+    </div>
+  </div>
+  <p class="wb-section__desc">Profile theo loại site (<code>site-profiles.md</code>; sâu nhất là learning site,
+  <code>learning-sites.md</code>) là <b>điểm khởi đầu, không phải preset</b> — không khớp profile nào thì
+  synthesize cây mới là chuyện bình thường.</p>
+</section>
+
+<section class="wb-section">
+  <h3>File decomposition — kích thước là <i>chẩn đoán</i>, không phải luật</h3>
+  <div class="wb-alert wb-alert--plain doc-note">
+    <div>Tách theo <b>responsibility · unit-of-change · lookup locality · testability · hiệu năng tool</b> — không
+    theo số dòng. Một file <b>content cohesive 10.000 dòng</b> có thể chấp nhận được; một file <b>1.000 dòng trộn
+    layout + content + CSS + state + nhiều behaviour</b> thì không. Monolith cần tách → <b>migrate tăng dần</b>
+    (baseline → tách content → styling → behaviour → routes cuối), verify parity từng bước, <b>không big-bang</b>.</div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Hai vòng đời: upstream ⇄ downstream</h3>
+  <div class="wb-grid wb-grid--2">
+    <article class="wb-card wb-card--pad">
+      <h4 class="wb-card__title">Upstream — repo này</h4>
+      <p class="wb-card__sub">Nguồn sự thật cho skill, design-system, architecture knowledge, protocol, và
+      tooling đóng gói/release.</p>
+    </article>
+    <article class="wb-card wb-card--pad">
+      <h4 class="wb-card__title">Downstream — site skill dựng ra</h4>
+      <p class="wb-card__sub">Tự chọn Level của nó, giữ <code>AGENTS.md</code> riêng, để agent <b>routine</b> làm
+      tiếp <b>không cần</b> nạp Web Builder.</p>
+    </article>
+  </div>
+  <p class="wb-section__desc" style="margin-top:12px">Vòng lặp khép: một finding downstream được <b>phân loại</b>
+  (<code>problem-routing.md</code>) local hay upstream; nếu thật sự upstream thì <b>báo cáo</b> (khối
+  <code>WEB-BUILDER UPSTREAM REQUIRED</code>) → intake → đổi skill → verify → package → cài lại. <b>Không bao giờ
+  tự vá</b> repo khác từ session downstream. Đó là cách skill dồn chất lượng.</p>
+</section>
+
+<section class="wb-section">
+  <div class="wb-alert wb-alert--info doc-note">
+    <span class="wb-ico" style="color:var(--wb-info-text)">menu_book</span>
+    <div>Đọc sâu (AI-facing, nạp khi cần): <code>project-architecture.md</code> (hub) →
+    <code>site-profiles.md</code> · <code>learning-sites.md</code> · <code>large-static-sites.md</code> ·
+    <code>project-protocol.md</code> · <code>problem-routing.md</code> · <code>verification.md</code>. Workflow:
+    <b>/wb-architect</b> (dựng/kiến trúc), <b>/wb-intake</b> (phân loại finding), <b>/wb-release</b> (đóng gói) —
+    xem <a href="#/workflow">Workflow</a> và <a href="#/tooling">Tooling</a>.</div>
+  </div>
+</section>

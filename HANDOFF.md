@@ -10,6 +10,31 @@ component). If this note ever contradicts those, **they win.**
 
 ---
 
+## AI-native architecture layer — landed 2026-08-17
+
+The skill gained a second job beside "build beautiful UI": **help an agent choose the right amount of project
+architecture** (a one-file fast path by default; real structure only when a site is large/long-lived). No
+component, template, runtime, or component doc changed — this is skill/tooling/architecture only. Durable homes
+(don't re-derive from here):
+
+- **Knowledge:** `web-builder/references/project-architecture.md` (hub: Level 0/1/2 gate + constraint-based
+  synthesis + patterns + decomposition + evolution) → `site-profiles.md` · `learning-sites.md` ·
+  `large-static-sites.md` · `project-protocol.md` · `problem-routing.md` · `verification.md`.
+- **Router:** `web-builder/SKILL.md` (one-file gate + invocation boundary + architecture routing; frontmatter
+  trigger extended; stays < 500 lines).
+- **Tooling (agent-agnostic core, outside `.claude`):** `scripts/verify.sh` (former `validate-sync.sh`; the
+  `.claude` hook is now a thin adapter), `package-skill.sh` + `verify-package.sh` + `release-skill.sh` +
+  `install-skill.sh` + `skill-manifest.txt`; classifiers `classify-project.sh` / `classify-problem.sh`.
+- **Workflows:** `/wb-architect` · `/wb-intake` · `/wb-release` (non-overlapping with `/wb-change`).
+- **Proof:** `tests/forward-tests.sh` + `tests/fixtures/` + `tests/examples/` (L0 vs L2), folded into the gate.
+- **Decisions:** `README.md` **T3** (packaging — now resolved), **T7** (`.skill` ships agent payload only),
+  **T8** (architecture is adaptive, not a standard tree) — mirrored on `#/decisions`. Entrypoint: root
+  `AGENTS.md`.
+
+Nothing here is open; this note is a pointer so the next agent finds the homes fast.
+
+---
+
 ## Backdrop dismiss — press *and* release must land on the scrim (fixed 2026-08-10)
 
 **The gap.** The same modal/drawer footgun surfaced across several downstream projects at once:
@@ -100,7 +125,8 @@ Net: **the pattern is documented, the kit is not built** — roughly 1 wrapper o
 **Gap worth closing regardless of what you decide:** "no React kit" is **not recorded as a deliberate
 trade-off.** `README.md` T1–T5 don't cover it, so a future reader (or AI) sees "optional React wrappers" in
 `SKILL.md`, finds an empty repo, and can't tell **chosen** from **forgotten**. Whatever you land on — *including
-"never build one"* — should become **T7** in `README.md` (T6 is taken — the scrollbar default) and be mirrored on `pages/decisions.html`
+"never build one"* — should become **T9** in `README.md` (T1–T8 are now taken — T7 = `.skill` payload, T8 =
+adaptive architecture) and be mirrored on `pages/decisions.html`
 (`validate-sync.sh` CHECK 13 enforces the mirror). Right now the silence is the bug.
 
 ---
@@ -196,8 +222,9 @@ Independent of the kit question, ordered by value against the flagship use (mone
 > deleted from this list per the rule above. Their durable homes: `CHANGELOG.md` v0.6, the `--wb-version`
 > token, and `validate-sync.sh` CHECK 15 (rendered on `#/tooling`) so the drift can't come back silently.
 
-**Already recorded, still open:** T3 (manual `.skill` packaging) and T4 (no inlined manual `/wb-change`) remain
-*deferred*; T5 (no §18/coherence gate) remains *chosen — keep it*. `carousel` / `scrollspy` / floating labels
+**Already recorded:** T3 (`.skill` packaging) is now **resolved** — a deterministic pipeline (see the landed
+note at the top). T4 (no inlined manual `/wb-change`) remains *deferred*; T5 (no §18/coherence gate) remains
+*chosen — keep it*. `carousel` / `scrollspy` / floating labels
 stay skipped on purpose (`bootstrap-comparison.md`).
 
 ---

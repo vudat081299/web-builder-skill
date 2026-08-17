@@ -1,0 +1,7 @@
+{ "name": "Hybrid site matching no single profile -> synthesize", "scenario": "FT8",
+  "routes": 8, "loc": 5000, "kb": 260, "behaviors": 7,
+  "backend_api": true, "auth": true, "database": false,
+  "router": true, "build": true, "ssr": true,
+  "content_units": true, "complex_state": true, "recurring_maintenance": true,
+  "multi_contributor": true, "cohesive": true, "expect": "L2",
+  "note": "no profile fits -> constraint-based synthesis is the normal move" }

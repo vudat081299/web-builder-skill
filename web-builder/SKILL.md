@@ -1,16 +1,17 @@
 ---
 name: web-builder
 description: >-
-  Thư viện component CSS + design system tối giản (minimalism) để build giao diện web nói chung —
-  viết tay, token-based, không cần build, drop-in một file CSS, prefix wb-* nên ghép được với mọi
-  stack mà không xung đột. Dùng skill này khi build hoặc sửa bất kỳ UI web nào theo phong cách
-  trắng-đen-xám (có dark mode): ráp từ các thành phần đã duyệt (class wb-* + design tokens) thay vì
-  thiết kế lại từ đầu (tốn token, lệch phong cách). Mạnh nhất cho web tài chính cá nhân (bảng tiền,
-  số dư/thu-chi, ngân sách, công nợ, hoá đơn) vì bộ component hiện tại hợp — nhưng dùng tốt cho web
-  bất kỳ: buttons/dropdown, form input, card, capsule/badge/tag, biểu đồ (chart/donut/sparkline),
-  điều hướng (navbar/sidenav/tabs), modal/drawer/toast, cây kéo-thả, tiện ích grid/layout, và trang
-  Config chỉnh token. Ví dụ: build web/trang tối giản, dashboard, bảng dữ liệu, form, landing,
-  finance/financial UI. KHÔNG dùng cho backend/logic không liên quan giao diện.
+  Thư viện component CSS + design system tối giản (trắng-đen-xám, có dark mode, zero-build, prefix
+  wb-*) để build giao diện web ĐẸP và NHẤT QUÁN — ráp từ thành phần đã duyệt (class wb-* + design
+  tokens) thay vì thiết kế lại từ đầu (tốn token, lệch phong cách). Ngoài dựng UI, skill còn giúp
+  CHỌN mức tổ chức project: web nhỏ/một trang đi one-file fast path (một index.html, không kiến trúc
+  thừa); web lớn/dài hạn/nhiều route/có backend mới synthesize architecture ở mức tối thiểu vừa đủ.
+  Dùng khi: bắt đầu website/trang mới; ráp hoặc thiết kế UI đáng kể; thiết kế/refactor architecture;
+  thêm screen-flow/tính năng lớn; đổi shell/layout/design-system; refactor monolith; điều tra bug
+  nghi thuộc Web Builder; hoặc update/đóng gói/release skill. Mạnh nhất cho finance UI và learning
+  site, dùng tốt cho web bất kỳ (landing, portfolio, docs, dashboard, CRUD, content). KHÔNG
+  auto-trigger khi chỉ sửa copy/nội dung, update data/lesson, fix bug nhỏ local, tái dùng component
+  local, hay backend/logic không liên quan giao diện.
 ---
 
 # Web Builder
@@ -28,6 +29,41 @@ made and approved** and captured as tokens, ready-made components, and copy-past
 job is to **assemble approved parts**, so the user reviews *content and layout*, not aesthetics.
 It's tuned first for **personal-finance UI** (money tables, budgets, receipts, tags — its flagship
 use), but the primitives are general-purpose: use it for any minimalist web build.
+
+## Before you build: one file, or architecture?
+
+Web Builder does two jobs. The first — **making the UI beautiful and consistent** — is everything below and
+applies to **every** build. The second — **choosing how the project is organized** — is an *adaptive* capability
+you reach for **only when the build is big enough to need it.** Most builds are small: **default to one file.**
+
+**Level 0 — the one-file fast path (the default).** Create or keep a single `index.html` (markup +
+`web-builder.css` via one `<link>` + a little inline JS) when **all** hold: one page; ≤ ~1,000 lines / ~100 KB
+of hand-written code; ≤ 3 small behaviours; no backend / auth / database; no router / build / SSR; no
+collection of independently-updated units (lessons, posts, records); no complex state; not maintained
+feature-by-feature across many sessions. At Level 0 **do not** create `.agent/`, architecture docs, ADRs, a
+handoff, or folders "for later" — that's friction, not future-proofing. Just ship semantic HTML, a beautiful
+Web-Builder UI, responsive + accessible, and a quick render check. The line/KB numbers are a safe-fast-path
+**heuristic, not a split law**: over them you *evaluate*, you don't auto-split (a cohesive 10,000-line file can
+be right; see `references/large-static-sites.md`).
+
+**More than that? Don't improvise a structure.** Run the complexity gate and synthesize the *smallest*
+architecture that fits — **read `references/project-architecture.md`** (the Level 0/1/2 gate, constraint-based
+synthesis, capability vocabulary, patterns, file-decomposition, evolution rules). Then load only what the task
+needs: `references/site-profiles.md` (priors per site type) and `references/learning-sites.md` (the deep,
+~60%-of-use profile); `references/large-static-sites.md` (a big or monolith file); `references/project-protocol.md`
+(the short `AGENTS.md` contract a build leaves so a routine agent continues **without** this skill);
+`references/problem-routing.md` (is a bug local or upstream?); `references/verification.md` (how to prove it
+works). Architecture is **never mandatory ceremony** — never impose `.agent/` or a folder tree on a build that
+doesn't need one.
+
+**Invocation boundary.** Reach for Web Builder when: starting a new site/page; assembling or designing
+significant UI; designing or refactoring architecture; adding a screen flow or a large capability; adding UI
+with no local equivalent; changing the shell / layout / design system; refactoring a monolith; investigating a
+bug that might be **upstream** in this library; or updating/packaging/releasing the skill. Routine work does
+**not** need it — copy/content edits, data/lesson updates, small local fixes, reusing a local component,
+changes inside an existing boundary, adding a local test, or resuming from a handoff. When inside an existing
+project, read its `AGENTS.md` first, reuse local solutions, and don't restructure just to match a Web Builder
+profile.
 
 ## The one rule that saves tokens
 
@@ -99,6 +135,7 @@ each app re-deriving the same piece. New to the shipped set since you last looke
 | `references/integration.md` | How the CSS + tokens + optional React wrappers plug into any app's stack (React/Vite/Tailwind/shadcn/next-themes as the worked example) | Wiring the library into a real app |
 | `references/bootstrap-comparison.md` | Coverage vs Bootstrap 5.3 (what we have / skip / do differently), the popup set, the layout-foundation decision, and BOC structure | Deciding whether to add a component, or "do we have X?" |
 | `references/docs-site.md` | How the docs **site** is built — SPA architecture (index.html shell + app.js `SECTIONS`/router + docs.css chrome), the page-grammar skeleton, the docs-chrome class inventory, and the Config/search/dual-preview/theme features | Rebuilding or extending the docs site itself (not a component). The docs **never ship**, but the skill stays self-sufficient to recreate them at the same quality |
+| `references/project-architecture.md` | **Architecture knowledge** (hub) — the Level 0/1/2 complexity gate, constraint-based synthesis, capability vocabulary, patterns, file-decomposition, evolution rules; routes to `site-profiles` · `learning-sites` · `large-static-sites` · `project-protocol` · `problem-routing` · `verification` | Deciding how a **Level 1/2** project is organized — **skip for a one-file build** |
 
 ## The colour ladder (summary — full version in design-principles.md)
 

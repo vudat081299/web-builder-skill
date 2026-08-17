@@ -1,7 +1,8 @@
 <div class="wb-page-head">
   <div class="wb-eyebrow">Project &amp; skill</div>
   <h2>AI làm gì với repo này</h2>
-  <p>Sáu việc thường gặp — tất cả đều xoay quanh giữ cho skill dày lên và không lệch.</p>
+  <p>Những việc thường gặp — dựng UI, giữ cho skill dày lên và không lệch, <b>và</b> chọn đúng mức kiến trúc cho
+  project (thích ứng, không nghi thức).</p>
 </div>
 
 <section class="wb-section wb-section--flush">
@@ -23,7 +24,7 @@
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">Sync docs ↔ lib ↔ skill</p>
       <p class="wb-card__sub">Giữ <code>components-catalog.md</code>, <code>SKILL.md</code>, CSS và demo khớp nhau — lệch một nơi là skill
-      nói dối AI kế tiếp; <code>validate-sync.sh</code> gác cổng khi commit.</p>
+      nói dối AI kế tiếp; core <code>scripts/verify.sh</code> (qua adapter) gác cổng khi commit.</p>
     </div>
     <div class="wb-card wb-card--pad">
       <p class="wb-card__title">So với lib khác</p>
@@ -34,6 +35,16 @@
       <p class="wb-card__title">Tích hợp vào app thật</p>
       <p class="wb-card__sub">Class lo phần nhìn; map sang engine hành vi (Radix, Recharts, dnd-kit) mà vẫn giữ nguyên pixel —
       xem <code>integration.md</code>.</p>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title">Chọn kiến trúc project</p>
+      <p class="wb-card__sub">Chạy complexity gate: web nhỏ → <b>one-file fast path</b>; web lớn/dài hạn → synthesize
+      cây tối thiểu vừa đủ. Không nghi thức thừa — xem <a href="#/architecture">Architecture</a>.</p>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title">Đưa finding về upstream</p>
+      <p class="wb-card__sub">Bug downstream repro trên skill stock = <b>skill-bug</b>; primitive tái dùng =
+      <b>upstream-candidate</b> → <i>báo cáo</i>, không tự vá. Phân loại: <code>problem-routing.md</code> · <code>/wb-intake</code>.</p>
     </div>
   </div>
 </section>

@@ -1,0 +1,6 @@
+{ "name": "Long-lived learning/course site (many lessons)", "scenario": "FT7",
+  "routes": 20, "loc": 6000, "kb": 300, "behaviors": 5,
+  "backend_api": false, "auth": false, "database": false,
+  "router": true, "build": false, "ssr": false,
+  "content_units": true, "complex_state": true, "recurring_maintenance": true,
+  "cohesive": true, "expect": "L2", "note": "deepest profile (learning-sites.md) — still gated, not a default" }

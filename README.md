@@ -23,7 +23,7 @@ leaves the shipped skill better and coherent.
 | Part | Where | What it does |
 |---|---|---|
 | **1 · Skill** (for an AI) | `web-builder/SKILL.md` + `web-builder/references/` | Instructions + a component catalog an AI reads so it builds web UI from `wb-*` parts instead of inventing styles. |
-| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **65 pages**, light/dark, browsable (incl. `#/principles` rendering §1–25 in full, `#/templates` for the seven page templates + the page-review rubric, `#/tooling` for serve/verify/hooks, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css` + `templates/`. |
+| **2 · Docs** (for a human) | `web-builder/assets/` | A living component gallery — **66 pages**, light/dark, browsable (incl. `#/principles` rendering §1–25 in full, `#/templates` for the seven page templates + the page-review rubric, `#/architecture` for the Level 0/1/2 gate + synthesis, `#/tooling` for serve/verify/hooks/packaging, and `#/decisions` mirroring the trade-offs). Ships `web-builder.css` + `templates/`. |
 | **3 · Code docs** (inside the docs) | every page + the source | Each page shows its copy-paste markup; the source (`web-builder.css`, `app.js`, `docs.css`) is heavily commented. |
 
 ### What each part contains
@@ -57,6 +57,68 @@ cd web-builder/assets && python3 serve.py        # → http://127.0.0.1:8777   (
 `serve.py` sends `Cache-Control: no-store`, so a **normal reload shows your edits** (no hard-refresh).
 Deep-link to a page with the hash: `#/tables`, `#/receipt`, `#/charts`. The docs load Google Fonts
 (Material Symbols icons + font picker), so keep internet on.
+
+---
+
+## Two jobs: beautiful UI, and the right amount of architecture
+
+The skill is a **UI builder first** — assemble approved `wb-*` parts so a build looks consistent and takes few
+tokens. On top of that it now helps an agent **choose how the project itself is organized**, as an *adaptive*
+capability — never mandatory ceremony. The full logic is in `web-builder/SKILL.md` (the router) and
+`web-builder/references/project-architecture.md` (the hub); the summary:
+
+### The one-file fast path (the default)
+Most builds are small. **Default to a single `index.html`** (markup + one `<link>` to `web-builder.css` + a
+little inline JS) when it's one page, ≲ 1,000 lines / 100 KB, ≤ 3 small behaviours, and has no
+backend/auth/db, no router/build, no independently-updated content collection, and isn't maintained
+feature-by-feature across sessions. At this level there is **no `.agent/`, no architecture docs, no ADRs, no
+folders "for later."** Architecture you don't need is friction, not future-proofing. (The line/KB numbers are
+a *heuristic, not a split law* — a cohesive 10,000-line file can be right; you evaluate, you don't auto-split.)
+
+### Three complexity levels
+- **Level 0 — one-file fast path.** The default above.
+- **Level 1 — compact long-lived.** Small but maintained regularly: a small tree following the framework's
+  conventions + one short `AGENTS.md` as the discovery map.
+- **Level 2 — structured/complex.** Many independently-changing units, real API/state/persistence, or a clear
+  handoff need: `AGENTS.md` + `.agent/` + `docs/architecture` / ADRs **as needed** (nothing is mandatory just
+  because it's Level 2). Pick the **smallest level that solves the real need**.
+
+### Constraint-based synthesis (no universal tree)
+There is **no** canonical folder layout to reach for. An architecture is synthesized from the forces —
+requirements, responsibilities, units of change, source-of-truth, framework conventions, the existing repo,
+runtime constraints, agent discoverability, verification. What's standardized is the **semantic discovery
+contract** (what/where/how, captured in `AGENTS.md`), not the physical tree. `site-profiles.md` gives priors
+per site type (learning sites are the deepest — `learning-sites.md`), but a profile is a starting point, not a
+preset, and synthesizing a new tree is normal.
+
+### Invocation boundary
+Reach for Web Builder for a new site/page, significant UI, architecture design/refactor, a screen flow or
+large capability, UI with no local equivalent, a shell/design-system change, a monolith refactor, a suspected
+**upstream** bug, or packaging/releasing the skill. **Routine work does not need it** — content/copy edits,
+data/lesson updates, small local fixes, reusing a local component, resuming a handoff. Inside an existing
+project, read its `AGENTS.md` first and reuse local solutions.
+
+### Two lifecycles (upstream ⇄ downstream)
+- **Upstream** = this repo, the source of truth for the skill, the design system, the architecture knowledge,
+  the protocols, and the packaging/release tooling.
+- **Downstream** = a site the skill builds. It picks its own level, keeps its own `AGENTS.md`, and lets a
+  *routine* agent continue **without** loading Web Builder. When a downstream finding looks reusable or like a
+  library bug, it's **classified** (`problem-routing.md`) and, if genuinely upstream, **reported** (never
+  auto-patched) via a `WEB-BUILDER UPSTREAM REQUIRED` block → intake → a skill change → verify → package →
+  reinstall. That loop is how the skill compounds.
+
+### Repository source-of-truth map & commands
+`AGENTS.md` is the agent entrypoint (map + commands). The canonical sources: components →
+`components-catalog.md`; design rules → `design-principles.md`; nav/routes → `app.js` `SECTIONS`; version →
+`--wb-version` in `web-builder.css`; what ships in the `.skill` → `scripts/skill-manifest.txt`; trade-offs →
+the `T#` list below. Core commands (all agent-agnostic, runnable outside Claude):
+
+```bash
+bash scripts/verify.sh            # all deterministic checks (docs site + skill + architecture/forward-tests)
+bash tests/forward-tests.sh       # the architecture forward tests on their own
+bash scripts/release-skill.sh     # verify → package (deterministic) → verify-package (parity + stale + checksum)
+bash scripts/install-skill.sh     # dry-run by default; --target DIR / --apply (an explicit act)
+```
 
 ---
 
@@ -106,16 +168,25 @@ One command runs every deterministic check — you rarely need it by hand (the c
 but here it is:
 
 ```bash
-bash .claude/hooks/validate-sync.sh    # exit 0 = OK · exit 2 + a "BLOCK ·" reason = drift to fix
+bash scripts/verify.sh    # exit 0 = OK · exit 2 + a "BLOCK ·" reason = drift to fix
 ```
 
-It validates **both halves**. Docs site: routes == pages · pages are markup-only (no `<style>`) · `app.js`
-parses. Shipped skill: `SKILL.md` frontmatter + trigger length · `SKILL.md` scope names every component `group` ·
-every `references/*.md` exists · the catalog never documents a `wb-*` class the CSS lacks · `web-builder.css`
-braces balance · every **"§N"** cited anywhere resolves to a real design principle, the overview page indexes
-them all, **and** `pages/principles.html` renders every §N in full · every README trade-off **`T#`** is mirrored
-on `pages/decisions.html` (the docs site stays self-contained — §23; an advisory also flags any page that punts
-content to a raw `.md`). A failing check prints a `BLOCK ·` line saying exactly what drifted.
+The **agent-agnostic core** lives at `scripts/verify.sh` so any harness (CI, a bare shell) runs it; the
+`.claude/hooks/validate-sync.sh` you may remember is now a thin **adapter** that just forwards to it (T3).
+
+It validates **all three halves**. *Docs site:* routes == pages · pages are markup-only (no `<style>`) ·
+`app.js` parses. *Shipped skill:* `SKILL.md` frontmatter + trigger length **+ stays < 500 lines** · `SKILL.md`
+scope names every component `group` · every `references/*.md` exists · the catalog never documents a `wb-*`
+class the CSS lacks · `web-builder.css` braces balance · every **"§N"** cited anywhere resolves to a real
+design principle, the overview page indexes them all, **and** `pages/principles.html` renders every §N in
+full · every README trade-off **`T#`** is mirrored on `pages/decisions.html` (docs stay self-contained — §23).
+*Architecture layer:* the seven architecture references exist · every core script parses · the ship manifest
+resolves · the **forward tests** pass (`tests/forward-tests.sh` — the Level 0/1/2 gate and local/upstream
+routing can't silently regress). A failing check prints a `BLOCK ·` line saying exactly what drifted.
+
+Packaging has its own trio (run by `scripts/release-skill.sh`): `package-skill.sh` builds `web-builder.skill`
+**deterministically** from `scripts/skill-manifest.txt`, and `verify-package.sh` checks two-way manifest
+parity, **detects a stale artifact** (packaged content must match source), and reports version + checksum.
 
 ### Prompting Claude in this repo — do I invoke a skill?
 
@@ -126,11 +197,24 @@ around it is automatic too:
 
 - `CLAUDE.md` is loaded **every turn**, so the AI always knows the rules even without any skill.
 - Two `.claude/` **hooks** run on their own: a nudge injecting the 6-place checklist the moment `web-builder.css`
-  is edited, and a commit/push **gate** that runs `validate-sync.sh` and blocks on drift.
+  is edited, and a commit/push **gate** that runs `scripts/verify.sh` (via the adapter) and blocks on drift.
 
 So the flow is: *describe the change in plain language* → the skill + hooks engage → the 6-place sync + guardrails
 follow. (Just "use the library to build UI" does **not** trigger `/wb-change` — that's the separate `web-builder`
 skill; `/wb-change` is only for changing the library itself.)
+
+**The workflow family (non-overlapping triggers).** `/wb-change` is one of four repo workflows, each
+auto-triggering on its own description — you rarely type them:
+
+| Workflow | For |
+|---|---|
+| `/wb-change` | Add/modify a `wb-*` component or token; restructure the library (the 6-place cascade). |
+| `/wb-architect` | Bootstrap a site, design/refactor architecture, migrate a monolith (the project's shape). |
+| `/wb-intake` | Classify a downstream finding as local vs upstream and route it. |
+| `/wb-release` | Validate, package, verify, and prepare install of the `web-builder.skill` artifact. |
+
+Their agent-agnostic logic lives in `scripts/`; the `.claude/skills/` files are thin adapters that orchestrate
+and point at the references. Building UI with the library needs no workflow — that's the `web-builder` skill.
 
 ## Conventions (the short list)
 
@@ -161,10 +245,12 @@ here isn't rendered there, so this list can't silently go missing from the site 
 - **T2 · The CSS `@import`s Material Symbols from Google Fonts (one external request).** *Kept, documented.* Docs
   and most apps are online-first; a self-host path for offline/air-gapped/privacy is written up in
   `integration.md` ("Offline / privacy"). Not removed by default so the drop-in stays literally one line.
-- **T3 · `web-builder.skill` (the packaged artifact) is built manually — gitignored, no build script, no
-  source↔artifact check.** *Deferred.* The source (`web-builder/`) is the truth; the `.skill` is a zip
-  snapshot repackaged on demand. A build+verify pipeline is low ROI against the maintenance surface it adds;
-  revisit if packaging ever needs to be automated/released on a cadence.
+- **T3 · `web-builder.skill` packaging — now a deterministic pipeline (was: manual, deferred).** *Resolved.*
+  The former hand-built zip is replaced by `scripts/package-skill.sh` (a deterministic build from an explicit
+  manifest, `scripts/skill-manifest.txt`), `scripts/verify-package.sh` (two-way parity + stale detection +
+  checksum), and `scripts/release-skill.sh` (verify → package → verify). The source (`web-builder/`) is still
+  the truth and the `.skill` stays gitignored + generated on demand — but it can no longer drift silently (the
+  old artifact was stale: it over-shipped the docs app and lagged 21 source files).
 - **T4 · `CLAUDE.md` doesn't inline a manual `/wb-change` step-by-step for non–Claude-Code humans.**
   *Deferred (minor).* The "Adding a primitive" section above, the trigger note, and the docs-site `#/tooling`
   + overview workflow pages already lay out the manual flow, the hooks, and the verify checks for a human.
@@ -191,3 +277,19 @@ here isn't rendered there, so this list can't silently go missing from the site 
   `.wb-scrollbars--os` (an element **and** its subtree back to the native bar). Cost accepted: an app that
   wanted the OS bar on most of the page now opts *out* instead of in. Revisit if a real integration needs the
   native bar as the default.
+- **T7 · The `.skill` ships the agent payload only — the docs SPA shell is excluded.** *Chosen.* The manifest
+  (`scripts/skill-manifest.txt`) ships `SKILL.md` + `CHANGELOG.md` + `references/` + `web-builder.css` +
+  `templates/` + `pages/` (the exact markup `SKILL.md` tells an agent to open). It **omits** `index.html` /
+  `app.js` / `docs.css` / `serve.py`: the docs *app* renders the human gallery and is repository-only
+  instrumentation — an agent building a site never needs it (interactive behaviour is wired via an external
+  engine per `integration.md`, never by copying `app.js`). Decided by the *real dependency of the installed
+  skill*, enforced two-ways by `verify-package.sh`. Cost accepted: an installed skill can't self-render its
+  gallery — browse the docs from the repo. Revisit if an install target ever needs the rendered site inline.
+- **T8 · Architecture is an adaptive capability, not a standardized project tree.** *Chosen.* The skill does
+  **not** impose a canonical folder layout or mandate `.agent/`. Small builds take the one-file fast path
+  (Level 0); structure appears only when the complexity gate says a site is large/long-lived, and is then
+  *synthesized* from the project's constraints — what's standardized is the semantic discovery contract in
+  `AGENTS.md`, not the physical tree (`references/project-architecture.md`). Chosen over a fixed scaffold
+  because a universal tree becomes ceremony on the small builds that dominate real use; the trade-off is that
+  there's no single "correct" layout to check against — the quality bar is discoverability + verification, not
+  tree conformance. Revisit only if a concrete site type proves it needs a locked structure.

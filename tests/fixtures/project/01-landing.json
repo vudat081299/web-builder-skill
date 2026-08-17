@@ -1,0 +1,6 @@
+{ "name": "Marketing landing page (~600 lines)", "scenario": "FT1",
+  "routes": 1, "loc": 600, "kb": 45, "behaviors": 2,
+  "backend_api": false, "auth": false, "database": false,
+  "router": false, "build": false, "ssr": false,
+  "content_units": false, "complex_state": false, "recurring_maintenance": false,
+  "cohesive": true, "expect": "L0" }

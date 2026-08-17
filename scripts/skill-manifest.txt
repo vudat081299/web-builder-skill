@@ -1,0 +1,34 @@
+# =============================================================================
+# web-builder.skill — SHIP MANIFEST (single source of truth for packaging)
+# -----------------------------------------------------------------------------
+# scripts/package-skill.sh ships EXACTLY the paths below and nothing else.
+# scripts/verify-package.sh enforces this two-way (no extra files, none missing)
+# and detects staleness (packaged content must match source byte-for-byte).
+#
+# FORMAT: one path per line, relative to the repo root. A line ending in `*.EXT`
+# is a non-recursive glob. `#` starts a comment. Blank lines ignored. Paths are
+# expanded in sorted order so the archive is DETERMINISTIC.
+#
+# WHAT SHIPS = the "agent skill artifact" (section 14 taxonomy): everything an
+# agent needs to build UI + choose architecture with this skill —
+#   • SKILL.md + CHANGELOG.md            (instructions + what changed)
+#   • references/*.md                    (component knowledge + architecture layer)
+#   • assets/web-builder.css             (the ONLY file that ships to a running app)
+#   • assets/templates/*.html            (copy-source scaffolds for whole screens)
+#   • assets/pages/*.html                (the exact-markup reference SKILL.md tells
+#                                         the agent to open per component)
+#
+# WHAT DOES NOT SHIP = "repository-only instrumentation" (section 14): the docs
+# SPA shell (index.html, app.js, docs.css) and the dev server (serve.py) render
+# the human docs SITE and are never needed to build an app — integration.md wires
+# behaviour via an external engine, it never copies app.js. Also excluded: the
+# repo docs (README/CLAUDE/HANDOFF/AGENTS), .claude/, root scripts/, tests/,
+# and any .DS_Store / *.log / *.skill / *.zip. See README trade-off T7.
+# =============================================================================
+
+web-builder/SKILL.md
+web-builder/CHANGELOG.md
+web-builder/references/*.md
+web-builder/assets/web-builder.css
+web-builder/assets/templates/*.html
+web-builder/assets/pages/*.html

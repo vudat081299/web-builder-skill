@@ -1,0 +1,4 @@
+{ "name": "Chart colours wrong — only with project's own --wb-* overrides", "scenario": "FT12",
+  "reproduces_on_shipped": false, "disappears_without_custom": true,
+  "is_business_rule": false, "is_reusable_primitive": false, "is_framework_integration": false,
+  "expect": "project-local" }

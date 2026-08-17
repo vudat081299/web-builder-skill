@@ -142,9 +142,36 @@
       </div>
       <div class="wb-card wb-card--pad">
         <p class="wb-card__title">PreToolUse — cổng commit</p>
-        <p class="wb-card__sub"><code>git commit</code>/<code>push</code> bị chặn nếu <code>validate-sync.sh</code> fail (routes==pages ·
-        SKILL.md có frontmatter · catalog không khai class CSS thiếu · CSS cân ngoặc…).</p>
+        <p class="wb-card__sub"><code>git commit</code>/<code>push</code> bị chặn nếu deterministic checks fail —
+        core <code>scripts/verify.sh</code> (hook <code>.claude</code> chỉ là adapter): routes==pages · SKILL.md
+        &lt;500 dòng + frontmatter · catalog không khai class CSS thiếu · CSS cân ngoặc · arch refs + forward-tests…</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Họ workflow — trigger không chồng lấn</h3>
+  <p class="wb-section__desc"><code>/wb-change</code> lo <b>component</b>; ba workflow anh em lo phần còn lại. Logic
+  deterministic nằm ở <code>scripts/</code>; các skill <code>.claude</code> chỉ là adapter điều phối gọi core đó.</p>
+  <div class="wb-grid wb-grid--auto" style="--wb-grid-min:230px">
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title"><code>/wb-change</code></p>
+      <p class="wb-card__sub">Thêm/sửa component <code>wb-*</code> hay token; restructure thư viện (cascade — pipeline ở trên).</p>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title"><code>/wb-architect</code></p>
+      <p class="wb-card__sub">Bootstrap site, thiết kế/refactor kiến trúc, migrate monolith — hình dạng project
+      (<a href="#/architecture">Architecture</a>).</p>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title"><code>/wb-intake</code></p>
+      <p class="wb-card__sub">Phân loại finding downstream (local vs upstream) rồi định tuyến — không tự vá repo khác.</p>
+    </div>
+    <div class="wb-card wb-card--pad">
+      <p class="wb-card__title"><code>/wb-release</code></p>
+      <p class="wb-card__sub">Validate → package (deterministic) → verify-package (parity + stale) → chuẩn bị install.
+      Xem <a href="#/tooling">Tooling</a>.</p>
     </div>
   </div>
 </section>

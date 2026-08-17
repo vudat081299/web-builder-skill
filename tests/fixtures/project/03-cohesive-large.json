@@ -1,0 +1,7 @@
+{ "name": "Cohesive static/content file, ~3000 lines", "scenario": "FT3",
+  "routes": 1, "loc": 3000, "kb": 180, "behaviors": 1,
+  "backend_api": false, "auth": false, "database": false,
+  "router": false, "build": false, "ssr": false,
+  "content_units": false, "complex_state": false, "recurring_maintenance": false,
+  "cohesive": true, "tool_lag": false,
+  "expect": "L0-cohesive", "note": "over the heuristic but one cohesive body -> evaluate, do NOT auto-split" }

@@ -42,17 +42,35 @@ README `T#` isn't rendered on `#/decisions`.)
   reload shows edits). Drive the SPA by setting the hash, e.g. `#/receipt`; after editing `app.js`, do a
   full reload (its in-memory `SECTIONS`/`ROUTES` is stale until then).
 
+## Two jobs: build UI, and pick the right architecture
+
+The skill builds **beautiful UI** (above) and, as an *adaptive* capability, helps choose **how a project is
+organized** — **never mandatory ceremony.** Most builds are small → the **one-file fast path** (a single
+`index.html`, no `.agent/`, no architecture docs). Structure appears only when a complexity gate says a site
+is large/long-lived (Level 1/2), and is *synthesized from constraints*, not a fixed tree (what's standardized
+is the semantic discovery contract in `AGENTS.md`, not the physical layout). Knowledge: `web-builder/SKILL.md`
+(router) + `web-builder/references/project-architecture.md` (hub → `site-profiles` · `learning-sites` ·
+`large-static-sites` · `project-protocol` · `problem-routing` · `verification`). **Invocation boundary:** reach
+for Web Builder for new sites, significant UI, architecture, or a suspected upstream bug; **routine work
+(content/data edits, small local fixes, local reuse) does NOT need it.** Two lifecycles: this repo is
+**upstream** (source of truth); a built site is **downstream**, and a reusable finding is *reported* upstream
+(`problem-routing.md`), never auto-patched. Root `AGENTS.md` is the agent entrypoint (map + commands).
+
 ## The change workflow (`/wb-change`) + guardrails
 
 A component/token change touches many files, so run **`/wb-change`** — it orchestrates the full flow
 (discover → plan → confirm → implement → sync the 7 places below → verify in the browser → `/code-review`
 → commit + push), pushing heavy reads to subagents to save tokens. Two hooks in `.claude/` back it up:
 a **PostToolUse** nudge injects the sync checklist the moment you edit `web-builder.css`, and a
-**PreToolUse** gate blocks `git commit`/`git push` when `.claude/hooks/validate-sync.sh` fails. For discovery,
+**PreToolUse** gate blocks `git commit`/`git push` when the deterministic checks fail — the core is
+`scripts/verify.sh` (agent-agnostic, runnable in any harness); `.claude/hooks/validate-sync.sh` is now a thin
+**adapter** that forwards to it. For discovery,
 a read-only helper `.claude/tools/wb.sh locate <class>` prints ready-to-run `Read` offset/limit clusters +
 a blast-radius map, so you never read the whole CSS. (Automating §18/coherence as a *gate* was tried and
-dropped — too noisy on the real CSS; they stay eyeball checks. See README § *Deliberate trade-offs*.) The full
-workflow lives in the skill/hooks (loaded on demand), not here — this file stays a lean pointer.
+dropped — too noisy on the real CSS; they stay eyeball checks. See README § *Deliberate trade-offs*.)
+`/wb-change` is the **component** workflow; siblings `/wb-architect` (project shape), `/wb-intake` (local vs
+upstream), and `/wb-release` (package/verify/install) have non-overlapping triggers and call the same core
+`scripts/`. The full workflow lives in the skill/hooks (loaded on demand), not here — this file stays a lean pointer.
 
 ## Adding or changing a component — sync ALL of these in one change
 

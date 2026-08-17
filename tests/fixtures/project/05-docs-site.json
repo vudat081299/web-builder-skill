@@ -1,0 +1,6 @@
+{ "name": "Long-lived documentation/reference site", "scenario": "FT5",
+  "routes": 12, "loc": 4000, "kb": 220, "behaviors": 3,
+  "backend_api": false, "auth": false, "database": false,
+  "router": true, "build": false, "ssr": false,
+  "content_units": true, "complex_state": false, "recurring_maintenance": true,
+  "cohesive": true, "expect": "L2" }

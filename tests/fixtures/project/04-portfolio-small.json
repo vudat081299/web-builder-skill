@@ -1,0 +1,6 @@
+{ "name": "Small personal portfolio, one page, few pieces", "scenario": "FT4",
+  "routes": 1, "loc": 500, "kb": 40, "behaviors": 2,
+  "backend_api": false, "auth": false, "database": false,
+  "router": false, "build": false, "ssr": false,
+  "content_units": false, "complex_state": false, "recurring_maintenance": false,
+  "cohesive": true, "expect": "L0" }

@@ -1,0 +1,6 @@
+{ "name": "Dashboard / data-visualization app", "scenario": "FT6",
+  "routes": 4, "loc": 3500, "kb": 200, "behaviors": 6,
+  "backend_api": true, "auth": true, "database": true,
+  "router": true, "build": true, "ssr": false,
+  "content_units": false, "complex_state": true, "recurring_maintenance": true,
+  "cohesive": true, "expect": "L2" }

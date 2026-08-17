@@ -1,0 +1,4 @@
+{ "name": "Re-implemented stat-card-with-sparkline across projects", "scenario": "FT-bonus",
+  "reproduces_on_shipped": false, "disappears_without_custom": false,
+  "is_business_rule": false, "is_reusable_primitive": true, "is_framework_integration": false,
+  "expect": "upstream-candidate" }

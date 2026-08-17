@@ -8,3 +8,6 @@
 # Build artifacts (packaged skill)
 *.zip
 *.skill
+
+# Local, per-machine install target for scripts/install-skill.sh (example is committed)
+scripts/install-config.local.sh

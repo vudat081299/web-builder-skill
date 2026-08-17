@@ -1,0 +1,6 @@
+{ "name": "One-page tool, <1000 lines, with auth + API", "scenario": "FT2",
+  "routes": 1, "loc": 900, "kb": 70, "behaviors": 3,
+  "backend_api": true, "auth": true, "database": false,
+  "router": false, "build": false, "ssr": false,
+  "content_units": false, "complex_state": false, "recurring_maintenance": false,
+  "cohesive": true, "expect": "L1", "note": "KEY: auth/API forbids Level 0 even at one page" }

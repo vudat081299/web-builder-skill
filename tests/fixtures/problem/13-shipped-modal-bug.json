@@ -1,0 +1,4 @@
+{ "name": "Stock modal dismisses on press-inside/release-on-backdrop", "scenario": "FT13",
+  "reproduces_on_shipped": true, "disappears_without_custom": false,
+  "is_business_rule": false, "is_reusable_primitive": false, "is_framework_integration": false,
+  "expect": "skill-bug" }

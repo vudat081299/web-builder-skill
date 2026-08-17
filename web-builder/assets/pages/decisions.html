@@ -77,5 +77,32 @@
         vì opt-in. Xét lại nếu có tích hợp thật cần bar native làm mặc định.</p>
       </div>
     </details>
+    <details class="wb-accordion__item">
+      <summary>T7 · <code>.skill</code> chỉ đóng gói payload cho agent — không kèm docs SPA — <b>Chọn</b></summary>
+      <div class="wb-accordion__body">
+        <p style="margin:0 0 10px">Manifest (<code>scripts/skill-manifest.txt</code>) ship <code>SKILL.md</code> +
+        <code>CHANGELOG.md</code> + <code>references/</code> + <code>web-builder.css</code> + <code>templates/</code>
+        + <code>pages/</code> (đúng phần markup mà <code>SKILL.md</code> bảo agent mở). <b>Bỏ</b>
+        <code>index.html</code>/<code>app.js</code>/<code>docs.css</code>/<code>serve.py</code>: docs <i>app</i>
+        render gallery cho người — là instrumentation của repo, agent dựng site không cần (behaviour nối qua một
+        engine ngoài theo <code>integration.md</code>, không phải chép <code>app.js</code>).</p>
+        <p style="margin:0"><b>Trade-off:</b> skill đã cài không tự render được gallery — xem docs từ repo. Quyết
+        theo <i>dependency thật của skill đã cài</i>, <code>verify-package.sh</code> gác hai chiều. Xét lại nếu một
+        target cài thật cần site render kèm.</p>
+      </div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary>T8 · Kiến trúc là năng lực <b>thích ứng</b>, không phải cây project chuẩn hoá — <b>Chọn</b></summary>
+      <div class="wb-accordion__body">
+        <p style="margin:0 0 10px">Skill <b>không</b> áp một layout thư mục cố định hay bắt buộc <code>.agent/</code>.
+        Build nhỏ đi <b>one-file fast path</b> (Level 0); cấu trúc chỉ xuất hiện khi complexity gate nói site
+        lớn/dài hạn (Level 1/2), và được <i>synthesize từ ràng buộc</i> — thứ chuẩn hoá là <b>hợp đồng khám phá
+        ngữ nghĩa</b> trong <code>AGENTS.md</code>, không phải cây vật lý (xem <a href="#/architecture">Architecture</a>).</p>
+        <p style="margin:0"><b>Trade-off:</b> chọn thay cho một scaffold cố định, vì cây phổ quát biến thành nghi
+        thức trên chính những build nhỏ chiếm đa số; đổi lại không có một layout "đúng" duy nhất để đối chiếu —
+        thước đo là discoverability + verification, không phải sự tuân theo cây. Xét lại nếu một loại site chứng
+        minh cần cấu trúc khoá cứng.</p>
+      </div>
+    </details>
   </div>
 </section>
