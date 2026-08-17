@@ -397,6 +397,189 @@ if [ -f "$MANIFEST" ]; then
   done < "$MANIFEST"
 fi
 
+# --- CHECK 20 (hard): no tool-call scaffolding leaked into an authored file -----
+# An agent that writes files through a tool call can leave the call's own closing
+# tag in the payload — `</content>`, `</invoke>`, `</parameter>`… It looks like
+# nothing in a diff and every other check passes, but references/*.md SHIP
+# (scripts/skill-manifest.txt), so the garbage is distributed to consumers inside
+# web-builder.skill. This landed once across 11 files (7 of them shipped) and no
+# guardrail saw it — packaging even verified the bad bytes faithfully. Anchored to
+# a line that is ONLY the tag, so prose or code that legitimately discusses the
+# pattern (a fenced example, this comment) is never a false positive.
+scaffold="$(grep -rn --include='*.md' --include='*.html' --include='*.js' --include='*.css' --include='*.sh' \
+             -E '^[[:space:]]*</(content|invoke|parameter|function_calls|antml:[a-z_]+)>[[:space:]]*$' . 2>/dev/null \
+             | grep -v '^\./\.git/' || true)"
+if [ -n "$scaffold" ]; then
+  { echo "BLOCK · tool-call scaffolding leaked into authored file(s) — delete the stray tag line(s):"
+    printf '%s\n' "$scaffold" | head -20 | sed 's/^/    /'
+    echo "    (references/*.md ship in web-builder.skill — this reaches consumers.)"; } >&2
+  fail=1
+fi
+
+# --- CHECK 21 (hard): the complexity gate's DOC and its CODE agree --------------
+# The component half of this library is anchored to a machine-checkable artifact —
+# prose can't lie about a wb-* class for long because CHECK 8 diffs it against the
+# CSS. The architecture half had no such anchor: patterns, profiles and the gate are
+# prose, and the one piece of executable truth (classify-project.sh) was free to
+# drift from the reference it claims to encode. It did — `multi_contributor` and
+# `tool_lag` were "stop being Level 0" signals in the doc that l0_ok never gated on,
+# and 29 forward tests stayed green through it, because they test the classifier
+# against itself. This check gives the architecture layer the anchor it was missing:
+# for every row of the classifier's signal registry, l0_ok must gate on the variable
+# AND project-architecture.md must name the signal. Neither side can move alone.
+CLS="scripts/classify-project.sh"
+ARCH="web-builder/references/project-architecture.md"
+if [ -f "$CLS" ] && [ -f "$ARCH" ]; then
+  # l0_ok spans several lines; flatten it so the gate reads as one string.
+  l0src="$(sed -n '/^l0_ok = (/,/)$/p' "$CLS" | tr '\n' ' ' | tr -s ' ')"
+  if [ -z "$l0src" ]; then
+    { echo "BLOCK · CHECK 21 cannot find the l0_ok gate in $CLS — the classifier's shape changed."
+      echo "    Keep the gate as a single 'l0_ok = ( … )' block, or update this check."; } >&2
+    fail=1
+  else
+    ungated=""; undocumented=""
+    while IFS='|' read -r key var phrase; do
+      [ -z "$key" ] && continue
+      # Boolean signals must appear negated; the numeric ones as a bound (routes <= 1 …).
+      printf '%s' "$l0src" | grep -qE "(not $var\b|$var <=)" || ungated="${ungated}    ${key} (var: ${var})"$'\n'
+      grep -qF "$phrase" "$ARCH" || undocumented="${undocumented}    ${key} — no \"${phrase}\" in the reference"$'\n'
+    done <<EOF
+$(bash "$CLS" --signals)
+EOF
+    if [ -n "$ungated" ]; then
+      { echo "BLOCK · complexity-gate drift — signal(s) the reference names but l0_ok does NOT gate on:"
+        printf '%s' "$ungated"
+        echo "    A project carrying one of these would be classified Level 0 anyway. Add it to l0_ok in $CLS."; } >&2
+      fail=1
+    fi
+    if [ -n "$undocumented" ]; then
+      { echo "BLOCK · complexity-gate drift — signal(s) the classifier reads that $ARCH never names:"
+        printf '%s' "$undocumented"
+        echo "    Document the signal in § The complexity gate, or fix the anchor phrase in the registry ($CLS)."; } >&2
+      fail=1
+    fi
+  fi
+fi
+
+# --- CHECK 22 (hard): the routing DOC and its CODE offer the same classes --------
+# Same failure mode as CHECK 21, one reference over: problem-routing.md's table
+# declared `project-architecture` but classify-problem.sh had no branch that could
+# return it, so a finding with complete evidence fell through to `needs-triage`
+# ("keep investigating") and a downstream agent would go looking for evidence it
+# already had. Diff the doc's table against the classifier's registry, both ways.
+PRT="web-builder/references/problem-routing.md"
+CLP="scripts/classify-problem.sh"
+if [ -f "$PRT" ] && [ -f "$CLP" ]; then
+  # Doc classes: the first cell of each row in the `| Class | Condition |` table.
+  doc_cls="$(grep -oE '^\| `[a-z-]+` \|' "$PRT" | grep -oE '[a-z-]+' | grep -v '^Class$' | LC_ALL=C sort -u)"
+  code_cls="$(bash "$CLP" --classes | LC_ALL=C sort -u)"
+  if [ -z "$doc_cls" ]; then
+    { echo "BLOCK · CHECK 22 found no class table in $PRT — keep the '| \`class\` | condition |' rows."; } >&2
+    fail=1
+  else
+    unreachable="$(comm -23 <(printf '%s\n' "$doc_cls") <(printf '%s\n' "$code_cls"))"
+    undocumented_cls="$(comm -13 <(printf '%s\n' "$doc_cls") <(printf '%s\n' "$code_cls"))"
+    if [ -n "$unreachable" ]; then
+      { echo "BLOCK · routing drift — class(es) $PRT promises that $CLP can never emit:"
+        printf '%s\n' "$unreachable" | sed 's/^/    /'
+        echo "    A finding of this kind would silently fall through to needs-triage. Add the branch, or drop the row."; } >&2
+      fail=1
+    fi
+    if [ -n "$undocumented_cls" ]; then
+      { echo "BLOCK · routing drift — class(es) $CLP can emit that $PRT never documents:"
+        printf '%s\n' "$undocumented_cls" | sed 's/^/    /'
+        echo "    Add a row to the class table, or remove the branch."; } >&2
+      fail=1
+    fi
+  fi
+fi
+
+# --- CHECK 23 (hard): demo pages / templates use no wb-* class the CSS lacks -----
+# CHECK 8 guards one direction — the catalog can't DOCUMENT a class the CSS lacks.
+# The other direction was open, and it is the more damaging one: SKILL.md tells the
+# next agent to open pages/*.html for exact markup, and pages/ + templates/ both
+# SHIP (scripts/skill-manifest.txt). A page writing `wb-input--sm` when no such
+# modifier exists teaches a class that silently does nothing — the agent copies it,
+# gets default styling, and has no way to tell. (Found exactly that in shell.html.)
+# "Defined" is resolved the same way CHECK 8 resolves it — the `.wb-<name>` prefix
+# extracted from the CSS — so a JS behaviour hook whose styled children exist (e.g.
+# `wb-theme-toggle`, styled via `__to-dark` / `__to-light`) passes without needing
+# an allowlist that would rot.
+if [ -f "$A/web-builder.css" ]; then
+  css_defined="$(grep -oE '\.wb-[a-z0-9-]+' "$A/web-builder.css" | sed 's/^\.//' | LC_ALL=C sort -u)"
+  # tests/examples/ is in scope too: those files are the canonical Level 0 / Level 2
+  # reference builds the forward tests point at, so a fake class there models wrong
+  # usage just as loudly as one in a demo page (it had three).
+  markup_used="$(grep -rhoE 'class="[^"]*"' "$A"/pages/*.html "$A"/templates/*.html tests/examples 2>/dev/null \
+                  | tr ' "' '\n\n' | grep -E '^wb-[a-z0-9-]+$' | LC_ALL=C sort -u)"
+  phantom_used="$(comm -13 <(printf '%s\n' "$css_defined") <(printf '%s\n' "$markup_used"))"
+  if [ -n "$phantom_used" ]; then
+    { echo "BLOCK · demo page/template uses wb-* class(es) web-builder.css does not define:"
+      printf '%s\n' "$phantom_used" | sed 's/^/    /'
+      echo "    These ship, and SKILL.md sends the next AI to this markup — the class would silently do nothing."
+      echo "    Where each is used:"
+      for c in $phantom_used; do
+        grep -rn "class=\"[^\"]*\b$c\b" "$A"/pages/*.html "$A"/templates/*.html 2>/dev/null | sed 's/^/      /' | head -4
+      done
+      echo "    Fix the markup, or add the rule to web-builder.css (that is a /wb-change: 7-place sync)."; } >&2
+    fail=1
+  fi
+  # Same rule for the docs-chrome namespace. It never ships, so the stakes are lower,
+  # but the failure is identical and just as invisible: `doc-list` sat on 13 lists in
+  # principles.html with no rule behind it anywhere, reading as styling that existed.
+  if [ -f "$A/docs.css" ]; then
+    doc_defined="$(grep -oE '\.doc-[a-z0-9-]+' "$A/docs.css" | sed 's/^\.//' | LC_ALL=C sort -u)"
+    doc_used="$(grep -rhoE 'class="[^"]*"' "$A"/pages/*.html "$A/index.html" 2>/dev/null \
+                 | tr ' "' '\n\n' | grep -E '^doc-[a-z0-9-]+$' | LC_ALL=C sort -u)"
+    doc_phantom="$(comm -13 <(printf '%s\n' "$doc_defined") <(printf '%s\n' "$doc_used"))"
+    if [ -n "$doc_phantom" ]; then
+      { echo "BLOCK · docs page(s) use doc-* chrome class(es) docs.css does not define:"
+        printf '%s\n' "$doc_phantom" | sed 's/^/    /'
+        echo "    Add the rule to docs.css, or drop the attribute — a class with nothing behind it reads as styling that exists."; } >&2
+      fail=1
+    fi
+  fi
+fi
+
+# --- CHECK 24 (hard): prose that COUNTS the templates matches the template count --
+# CHECK 14 already proves recipe <-> template parity, but the docs also state the
+# count in words, and that is what an AI reads first. `landing.html` was added as a
+# seventh template and the catalog gained its recipe, while SKILL.md, CLAUDE.md and
+# bootstrap-comparison.md kept saying "six finished screens" — so the SHIPPED router
+# told the next agent a landing template did not exist, which is precisely the miss
+# CLAUDE.md's sync step 5 exists to prevent. Anchored on the phrasings actually used;
+# a full reword would go unchecked, but the realistic drift (a template lands, the
+# numerals go stale) is caught.
+if [ -d "$A/templates" ]; then
+  tpl_n="$(ls "$A"/templates/*.html 2>/dev/null | grep -c .)"
+  countfiles="web-builder/SKILL.md CLAUDE.md README.md web-builder/references/bootstrap-comparison.md web-builder/references/components-catalog.md"
+  badcount="$(python3 - "$tpl_n" $countfiles <<'PY' 2>/dev/null
+import re, sys
+n = int(sys.argv[1])
+words = {1:"one",2:"two",3:"three",4:"four",5:"five",6:"six",7:"seven",8:"eight",9:"nine",10:"ten",11:"eleven",12:"twelve"}
+ok = {words.get(n, ""), str(n)}
+# Only a real number word (or digit) counts as a count. Matching any word here made
+# the prose "**finished page templates**" read as the number "finished" — a false
+# positive on a sentence that was correct.
+NUM = "|".join(list(words.values()) + [r"\d+"])
+pat = re.compile(rf"\b({NUM})\s+(?:finished\s+screens|page\s+templates|screens\s+on\s+the\s+shipped)", re.I)
+for f in sys.argv[2:]:
+    try: t = open(f, encoding="utf-8").read()
+    except OSError: continue
+    for m in pat.finditer(t):
+        if m.group(1).lower() not in ok:
+            line = t[:m.start()].count("\n") + 1
+            print(f"{f}:{line}: says \"{m.group(0).strip()}\" but there are {n} templates")
+PY
+)"
+  if [ -n "$badcount" ]; then
+    { echo "BLOCK · a doc counts the page templates wrongly (there are $tpl_n in $A/templates/):"
+      printf '%s\n' "$badcount" | sed 's/^/    /'
+      echo "    Update the wording — SKILL.md is the copy the next AI trusts, so a stale count hides a template."; } >&2
+    fail=1
+  fi
+fi
+
 # --- Forward tests (architecture classifier + fixtures) — run if present --------
 # Kept in tests/ so they can run standalone; folded into the gate so the L0/L1/L2
 # gate and local/upstream routing can't silently regress. Fast + deterministic.
@@ -416,6 +599,6 @@ fi
 # Quiet as a hook (stdout is piped); informative when run by hand in a terminal.
 if [ -t 1 ]; then
   n="$(printf '%s\n' "$routes" | grep -c .)"
-  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md(<500) + references + catalog<->CSS + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes & principles renders §1..§${maxp:-?} + README trade-offs (T#) mirrored on #/decisions + recipe<->template parity · arch: refs complete + scripts parse + manifest resolves + forward-tests coherent."
+  echo "web-builder guardrails OK · docs: ${n} routes == ${n} pages · no stray <style> · app.js parses · skill: SKILL.md(<500) + references + catalog<->CSS both ways (nothing documented that the CSS lacks, nothing used that it lacks) + CSS braces + scope==NAV-groups + §-refs resolve & overview indexes & principles renders §1..§${maxp:-?} + README trade-offs (T#) mirrored on #/decisions + recipe<->template parity · arch: refs complete + scripts parse + manifest resolves + no tool-call scaffolding + gate doc<->classifier parity + routing doc<->classifier parity + forward-tests coherent."
 fi
 exit 0

@@ -72,8 +72,10 @@
         <li>Đổi shell / layout / design-system.</li>
         <li>Refactor monolith / site lớn.</li>
         <li>Điều tra bug nghi thuộc <b>upstream</b>.</li>
-        <li>Update / đóng gói / release skill.</li>
       </ul>
+      <p class="wb-section__desc">Là <b>cấu trúc của chính web project</b> — <b>không</b> phải skill kiến trúc
+      hệ thống: backend / service / data-platform thuộc skill khác. Đóng gói &amp; release Web Builder là việc
+      <b>upstream repo</b> (<b>/wb-release</b>), không phải trigger của skill ship đi.</p>
     </article>
     <article class="wb-card wb-card--pad">
       <h4 class="wb-card__title"><span class="wb-ico">check_circle</span> Routine — KHÔNG cần</h4>
@@ -148,12 +150,91 @@
 </section>
 
 <section class="wb-section">
-  <div class="wb-alert wb-alert--info doc-note">
-    <span class="wb-ico" style="color:var(--wb-info-text)">menu_book</span>
-    <div>Đọc sâu (AI-facing, nạp khi cần): <code>project-architecture.md</code> (hub) →
-    <code>site-profiles.md</code> · <code>learning-sites.md</code> · <code>large-static-sites.md</code> ·
-    <code>project-protocol.md</code> · <code>problem-routing.md</code> · <code>verification.md</code>. Workflow:
-    <b>/wb-architect</b> (dựng/kiến trúc), <b>/wb-intake</b> (phân loại finding), <b>/wb-release</b> (đóng gói) —
-    xem <a href="#/workflow">Workflow</a> và <a href="#/tooling">Tooling</a>.</div>
+  <h3>Sáu reference anh em — nội dung, không chỉ tên file</h3>
+  <p class="wb-section__desc"><code>project-architecture.md</code> là hub; sáu file dưới là sáu chủ đề, agent
+  <b>nạp khi cần</b> (đó là token thrift của lớp AI-facing). Bản người đọc thì ở ngay đây — mở ra là thấy đủ ý,
+  không phải đi tìm file <code>.md</code> thô.</p>
+  <div class="wb-accordion">
+    <details class="wb-accordion__item">
+      <summary><code>site-profiles.md</code> — prior theo loại site</summary>
+      <div class="wb-accordion__body">
+        <p>Mỗi loại site (landing · portfolio · docs · dashboard · CRUD · content/blog · learning) có một
+        <b>prior</b>: capability thường có, capability thường <i>không</i> có, và Level hay rơi vào. Prior là
+        <b>điểm khởi đầu để đối chiếu, không phải preset để áp</b> — dùng nó để hỏi "project này khác prior ở
+        chỗ nào, và vì sao", rồi đi theo ràng buộc thật.</p>
+        <p>Không profile nào khớp là <b>chuyện bình thường</b>, không phải lỗi: khi đó synthesize cây mới từ
+        các lực (xem mục <i>Synthesize từ ràng buộc</i> ở trên) — đúng như fixture <code>08-no-profile-hybrid</code>
+        trong forward tests.</p>
+      </div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary><code>learning-sites.md</code> — profile sâu nhất (course / lesson site)</summary>
+      <div class="wb-accordion__body">
+        <p>Profile được viết kỹ nhất vì đây là ca dùng nhiều nhất và cũng dễ làm sai nhất. Điểm cốt lõi:
+        <b>lesson là unit đổi độc lập</b>, nên <code>content/</code> + một <b>manifest</b> là source of truth;
+        trang được <i>dẫn xuất</i> từ manifest, không hard-code. Thêm một bài = <b>một entry manifest + một file
+        nội dung</b>, không sửa gì khác.</p>
+        <p>Tiến độ học (progress) đi qua <b>một storage adapter</b> có versioning để còn migrate được, chứ không
+        rải <code>localStorage</code> khắp nơi. Khi tách một course monolith, thứ tự là: baseline verify → tách
+        <b>lesson content trước</b> (bề mặt đổi nhiều nhất) → progress adapter → feature module → routes cuối
+        cùng, verify parity sau mỗi bước.</p>
+      </div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary><code>large-static-sites.md</code> — file khổng lồ &amp; migrate tăng dần</summary>
+      <div class="wb-accordion__body">
+        <p>Một file lớn <b>không tự động là nợ kỹ thuật</b>. Bằng chứng để tách là <b>trách nhiệm bị trộn</b>,
+        ownership mờ, khó tìm chỗ sửa, tool lag, unit độc lập sống chung — chứ không phải con số dòng. Cohesive
+        10.000 dòng có thể giữ; 1.000 dòng trộn layout + content + CSS + state thì nên tách.</p>
+        <p>Khi đã quyết tách: <b>tăng dần, không bao giờ big-bang</b>. Thứ tự — dựng <b>baseline làm parity
+        oracle</b> → tách content đổi độc lập → tách styling → tách behaviour theo feature → tách routes
+        <b>cuối cùng</b> → verify parity sau <i>từng</i> bước. Ba cái bẫy: file chỉ để forward (boundary rỗng),
+        <b>source of truth bị nhân đôi</b> "trong lúc migrate", và bỏ qua baseline nên không biết bước nào làm hỏng.</p>
+      </div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary><code>project-protocol.md</code> — hợp đồng để agent routine đi tiếp</summary>
+      <div class="wb-accordion__body">
+        <p>Thứ được chuẩn hoá là <b>hợp đồng khám phá ngữ nghĩa</b>, không phải cây thư mục. Một
+        <code>AGENTS.md</code> ngắn trả lời: project này là gì · trách nhiệm X nằm đâu · <b>đâu là source of
+        truth</b> · chạy và verify thế nào · chính sách reuse · <b>việc nào KHÔNG cần Web Builder</b> (sửa
+        content, update data, fix nhỏ local) và <b>việc nào thì cần</b> (UI lớn, đổi architecture, nghi bug
+        upstream).</p>
+        <p><code>.agent/</code> (task · handoff · decision · learning) tạo <b>theo nhu cầu</b>, không theo
+        checklist. Ghi một decision khi nó <b>lâu dài</b>, có <b>vài phương án hợp lý</b>, hoặc là <b>quyết định
+        của user</b> — để session sau không mở lại tranh luận đã chốt. Handoff phải có <i>bước kế tiếp cụ thể</i>
+        và <i>đừng quyết lại cái gì</i>. Ba điều cấm: nhân đôi source of truth, để hợp đồng <b>stale</b> (sai còn
+        tệ hơn không có), và <b>tự sửa repo khác</b>.</p>
+      </div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary><code>problem-routing.md</code> — local hay upstream?</summary>
+      <div class="wb-accordion__body">
+        <p>Phân loại <b>dựa trên bằng chứng</b>, không đoán từ mô tả. Bốn nhánh: <b>project-local</b> (CSS/logic
+        tự viết, business rule của project — sửa tại chỗ); <b>skill-bug</b> (lỗi tái hiện được trong component
+        đã ship); <b>skill-integration</b> (đúng với mọi app cùng stack, ví dụ hydration mismatch của
+        <code>wb-shell</code> trên Next.js); <b>upstream-candidate</b> (primitive mới đủ tổng quát để tái dùng).</p>
+        <p>Chỉ khi thật sự cần upstream, session downstream mới in khối
+        <code>WEB-BUILDER UPSTREAM REQUIRED</code> ở <b>final response</b> để repo này intake. <b>Không bao giờ
+        tự vá</b> repo khác từ một session downstream — đó là cách vòng lặp chất lượng khép lại mà không mất
+        kiểm soát.</p>
+      </div>
+    </details>
+    <details class="wb-accordion__item">
+      <summary><code>verification.md</code> — chứng minh, đừng tuyên bố</summary>
+      <div class="wb-accordion__body">
+        <p><b>Downstream</b> (site vừa dựng): render thật, <b>không lỗi console</b>, mọi behaviour đã hứa chạy
+        được, responsive + a11y, và — nếu vừa migrate — <b>parity với baseline</b>.</p>
+        <p><b>Upstream</b> (repo này): <code>bash scripts/verify.sh</code> chạy toàn bộ check tất định (docs site
+        + skill deliverable), <code>bash scripts/verify-package.sh</code> chạy sau khi đóng gói (unpack · parity ·
+        stale-detect · checksum). Xem <a href="#/tooling">Tooling</a>.</p>
+        <p>Hai nguyên tắc: <b>chất lượng thị giác là review, không phải gate cứng</b> — đừng cố cơ giới hoá phần
+        thuộc về phán đoán; và <b>đưa bằng chứng, đừng khẳng định suông</b> — screenshot, output pass, kết quả
+        parity. <b>Bỏ qua bước nào thì nói rõ là đã bỏ qua.</b></p>
+      </div>
+    </details>
   </div>
+  <p class="wb-section__desc" style="margin-top:12px">Workflow tương ứng: <b>/wb-architect</b> (dựng/kiến trúc),
+  <b>/wb-intake</b> (phân loại finding), <b>/wb-release</b> (đóng gói) — xem <a href="#/workflow">Workflow</a> và
+  <a href="#/tooling">Tooling</a>.</p>
 </section>

@@ -36,4 +36,3 @@ maintenance — see `project-architecture.md` in the web-builder skill).
   when accounts are needed (the adapter is why that stays cheap).
 - Split/restructure when: a second interaction type appears (add `features/<type>.js`), or a lesson file
   starts mixing unrelated topics.
-</content>

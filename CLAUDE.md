@@ -51,8 +51,11 @@ is large/long-lived (Level 1/2), and is *synthesized from constraints*, not a fi
 is the semantic discovery contract in `AGENTS.md`, not the physical layout). Knowledge: `web-builder/SKILL.md`
 (router) + `web-builder/references/project-architecture.md` (hub → `site-profiles` · `learning-sites` ·
 `large-static-sites` · `project-protocol` · `problem-routing` · `verification`). **Invocation boundary:** reach
-for Web Builder for new sites, significant UI, architecture, or a suspected upstream bug; **routine work
-(content/data edits, small local fixes, local reuse) does NOT need it.** Two lifecycles: this repo is
+for Web Builder for new sites, significant UI, **the web project's own file structure**, or a suspected
+upstream bug; **routine work (content/data edits, small local fixes, local reuse) does NOT need it**, and it is
+**not** a system-architecture skill (backend/service/data-platform design belongs elsewhere). Packaging and
+releasing the skill is upstream-repo work (`/wb-release`) — deliberately *not* part of the shipped trigger, so
+a consumer never auto-loads Web Builder for a release flow they don't have. Two lifecycles: this repo is
 **upstream** (source of truth); a built site is **downstream**, and a reusable finding is *reported* upstream
 (`problem-routing.md`), never auto-patched. Root `AGENTS.md` is the agent entrypoint (map + commands).
 
@@ -74,8 +77,8 @@ upstream), and `/wb-release` (package/verify/install) have non-overlapping trigg
 
 ## Adding or changing a component — sync ALL of these in one change
 
-> **Whole screens start from a template.** `web-builder/assets/templates/*.html` ships six finished screens
-> (dashboard · list · form · detail · settings · auth) on the scaffold; SKILL.md makes starting there a hard
+> **Whole screens start from a template.** `web-builder/assets/templates/*.html` ships seven finished screens
+> (dashboard · list · form · detail · settings · auth · landing) on the scaffold; SKILL.md makes starting there a hard
 > rule. They ship *as source you copy* — the runtime payload is still exactly one CSS file. A change to the
 > shell, the page rhythm, or anything every screen carries must land in the affected templates too (step 7),
 > and a new page recipe means a catalog row **and** a template file (CHECK 14 locks both directions).
@@ -102,9 +105,24 @@ If these drift, the skill misleads the next AI. Verify with `.claude/hooks/valid
 both the **docs site** (routes == pages · no per-page `<style>` · `app.js` parses) **and the skill
 deliverable** (SKILL.md frontmatter + trigger description · SKILL.md scope names every component `group` · every
 `references/*.md` exists · the catalog never documents a class the CSS lacks · `web-builder.css` braces
-balanced · every catalog recipe has a real template and every template has a recipe · **one version string**
+balanced · **and the reverse of that catalog rule** — no `pages/*.html`, `templates/*.html` or
+`tests/examples/` file uses a `wb-*` class the CSS lacks (nor a `doc-*` class `docs.css` lacks), the more
+damaging direction since SKILL.md sends the next AI to that markup and those directories ship · every catalog
+recipe has a real template and every template has a recipe, **and the prose that counts the templates matches
+how many there are** (a seventh template landed while three docs still said "six") · **one version string**
 — `--wb-version` agrees with the newest cut release in `CHANGELOG.md`, the CSS header, SKILL.md and both
-docs-chrome strings). The commit gate runs it for you.
+docs-chrome strings · **no tool-call scaffolding** — a line that is only `</content>` / `</invoke>` — survives
+in an authored file, because `references/*.md` ship and that garbage reaches consumers · **the architecture
+references and their classifiers agree**: every "stop being Level 0" signal is both gated in
+`classify-project.sh` and named in `project-architecture.md`, and `problem-routing.md`'s class table matches
+what `classify-problem.sh` can emit). The commit gate runs it for you.
+
+**Why those last two exist:** the component half is anchored to a machine-checkable artifact — prose can't lie
+about a `wb-*` class for long because CHECK 8 diffs the catalog against the CSS. The architecture half is
+prose, and its one piece of executable truth (the classifiers) was free to drift from the references it claims
+to encode. It did, twice, while every test stayed green — because the tests checked each classifier *against
+itself*. CHECK 21/22 are that missing anchor. Add an input or a class to a classifier and you must update its
+registry, its gate, and the reference — any one missing is a blocked commit.
 
 ## Conventions to keep
 

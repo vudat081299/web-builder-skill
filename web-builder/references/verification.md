@@ -77,4 +77,3 @@ Record the project's canonical verify command in `AGENTS.md` so a routine agent 
   measurable anchors — don't try to mechanize the other five into a blocking check.
 - **Prove it, don't claim it.** Show the screenshot / the passing output / the parity result. If a check was
   skipped, say so.
-</content>

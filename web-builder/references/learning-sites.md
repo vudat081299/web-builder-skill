@@ -150,4 +150,3 @@ A big single-file study site (content + styles + behaviour + progress in one ~20
 order: baseline verification → extract the **lesson content** into `content/` + a manifest first (the highest
 independent-change surface) → extract **progress** into an adapter → extract **interactions** into feature
 modules → extract routes last. Verify parity after every step.
-</content>

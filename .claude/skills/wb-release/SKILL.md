@@ -38,6 +38,8 @@ Nếu báo **STALE**/parity lỗi → `package-skill.sh` lại (đừng sửa b�
 (`--target` > `$WB_SKILL_INSTALL_DIR` > `scripts/install-config.local.sh`) và báo sẽ cài đâu, không đụng gì.
 Chỉ `--apply` mới copy — đó là **hành động rõ ràng của user**. **Agent KHÔNG tự chạy `--apply`, không commit,
 không push** nếu user chưa cho phép trong phiên (nó ghi ra ngoài repo).
+Đích cài bị **kiểm trước khi xoá**: chỉ chấp nhận path vắng, rỗng, hoặc có `SKILL.md` (bản cài trước). Đích lạ
+có nội dung → **từ chối**, phải `--force` mới ghi đè. Dry-run cũng in trạng thái đích, nên soi trước khi apply.
 
 **4 · Version.** Repo giữ **một** chuỗi version = `--wb-version` trong CSS (protected). CHECK 15 khoá nó khớp
 CHANGELOG + header CSS + SKILL.md + docs chrome. `/wb-release` không tự bump version; đổi version là việc của

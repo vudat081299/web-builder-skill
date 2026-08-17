@@ -20,4 +20,3 @@ localStorage limits, or accounts/sync become a requirement — then add a layer 
 rewrite call sites.
 
 > A resuming agent that reads this does **not** re-ask "how should we store progress?" — it's settled here.
-</content>

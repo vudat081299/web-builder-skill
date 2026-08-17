@@ -21,9 +21,55 @@ can tell whether a part it needs already exists. Newest first.
     `problem-routing.md`, `verification.md`.
   - **`SKILL.md`** gained the one-file gate, the invocation boundary, and architecture routing; its trigger
     description now also covers new-site / architecture / restructure. Still < 500 lines.
+  - **Scope of the architecture half:** it shapes **the web project's own files**. It is deliberately *not* a
+    system-architecture skill (backend / service / data-platform design belongs elsewhere), and packaging or
+    releasing Web Builder itself is upstream-repo work — kept **out** of the shipped trigger so a consumer never
+    auto-loads the skill for a release flow they don't have.
   - **Repo tooling (does NOT ship):** agent-agnostic `scripts/` (verify · package · verify-package · install ·
     release + project/problem classifiers), workflows `/wb-architect` · `/wb-intake` · `/wb-release`, and
     `tests/forward-tests.sh`. No component, template, runtime, or component doc changed.
+
+### Fixed
+- **Tool-call scaffolding had leaked into 11 authored files** — a trailing line that was only `</content>` (and
+  one `</invoke>`). Seven of them are shipped `references/*.md`, so the garbage was being packaged into
+  `web-builder.skill` and distributed. Stripped, and **CHECK 20** in `scripts/verify.sh` now blocks any commit
+  that reintroduces it — every other check had passed on the bad bytes, and packaging verified them faithfully.
+- **The Level 0/1/2 classifier contradicted the reference it encodes.** `classify-project.sh` omitted two of
+  `project-architecture.md`'s own "stop being Level 0" signals (a contributor needing a handoff; tooling lag),
+  so a one-page site with a handoff need classified **L0**. A lone handoff need now escalates to **L1** — not
+  L2, per *"one signal ≠ maximal architecture"* — and a large **non-cohesive** single file is now recognised as
+  split evidence and routed to incremental migration instead of being reported as *"no signals"* and called
+  *small*. Two fixtures (`10-onepage-handoff`, `11-tangled-oversize`) lock both directions.
+- **`problem-routing.md` promised a routing class nothing could produce.** Its table declares
+  `project-architecture` ("a workaround forced by *this project's* architecture"), but `classify-problem.sh`
+  had no branch returning it — so a finding with **complete** evidence fell through to `needs-triage`
+  (*"keep investigating"*), sending a downstream agent to look for evidence it already had. The class is now
+  reachable, ordered ahead of `upstream-candidate` so an architecture-forced workaround is never reported
+  upstream as a missing primitive. Also fixed in the same reference: *"The **two** that flow upstream"*
+  followed by a list of **three**.
+- **`SKILL.md` hid the landing template from the next AI.** `landing.html` shipped as a seventh page template
+  and the catalog gained its recipe, but `SKILL.md`, `CLAUDE.md` and `bootstrap-comparison.md` still said
+  **"six finished screens"** — and `SKILL.md` contradicted *itself* (two places said seven, one said six). An
+  agent trusting the router would conclude no landing template existed and compose one from scratch, which is
+  exactly what starting-from-a-template is supposed to prevent. Corrected everywhere, and **CHECK 24** now
+  compares the counted prose against the actual number of template files.
+- **The Level 0 / Level 2 reference examples used three classes that don't exist.** `tests/examples/` models
+  correct usage — the forward tests point at it — yet the Level 0 landing wrote `wb-btn--primary` (plain
+  `wb-btn` *is* the primary button), `wb-cap--soft-success` (the soft tier is `wb-cap wb-cap--success`) and
+  `wb-text-muted` (the muted-text utility is `wb-help`). All three rendered as nothing. Fixed, and CHECK 23
+  now covers `tests/examples/` too.
+- **A shipped demo page taught a class that does not exist.** `pages/shell.html` wrote
+  `<input class="wb-input wb-input--sm">`, but `web-builder.css` has no input size modifier — so the input
+  rendered at default size and any agent copying that markup (which `SKILL.md` explicitly tells it to do)
+  inherited a class that silently does nothing. Removed. **CHECK 23** now closes this direction permanently:
+  CHECK 8 already stopped the *catalog* from documenting a class the CSS lacks, but nothing stopped
+  `pages/*.html` or `templates/*.html` — both of which **ship** — from *using* one.
+- **Guardrails for the architecture layer itself.** The component half is anchored to a machine-checkable
+  artifact (CHECK 8 diffs the catalog against the real CSS); the architecture half was unanchored prose, and
+  both drifts above survived a fully green test suite — because the tests check each classifier *against
+  itself*. **CHECK 21** now proves every complexity-gate signal is both gated in `classify-project.sh` and
+  named in `project-architecture.md`; **CHECK 22** proves `problem-routing.md`'s class table and
+  `classify-problem.sh` offer the same set. Both directions, both files, hard-blocking.
 
 ### Changed
 - **The theme-aware scrollbar is now a page-wide default, declared once** (CSS section 27). It used to be an **opt-in

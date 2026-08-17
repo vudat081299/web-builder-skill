@@ -83,7 +83,7 @@
       <summary>§2 · Bóng &amp; tương phản trung tính — dark lật sáng</summary>
       <div class="wb-accordion__body">
         <p>Chữ ký thị giác cho phần tử trung tính:</p>
-        <ul class="doc-list">
+        <ul>
           <li><b>Nền sáng:</b> phần tử trắng/sáng (<code>.wb-cap--elevated</code>, <code>.wb-card</code>) nằm trên
           bề mặt với <b>bóng xám mềm</b> (mực tối alpha thấp), <b>viền hairline xám</b>, chữ <b>gần đen</b>. Không
           bao giờ <code>#000</code> thuần — dùng <code>--wb-gray-900</code>.</li>
@@ -101,7 +101,7 @@
     <details class="wb-accordion__item">
       <summary>§3 · Con số là dữ liệu tài chính — xử lý cho đúng</summary>
       <div class="wb-accordion__body">
-        <ul class="doc-list">
+        <ul>
           <li>Căn <b>phải</b> mọi cột số/tiền: thêm <code>wb-num</code> vào <code>&lt;th&gt;</code> và <code>&lt;td&gt;</code>.</li>
           <li><code>wb-num</code> bật <code>tabular-nums</code> để chữ số thẳng cột theo cột. Giữ nó.</li>
           <li>Nhấn không cần màu: <code>.wb-num--strong</code> (chỉ weight). Có nghĩa: <code>.wb-num--pos</code>
@@ -114,7 +114,7 @@
     <details class="wb-accordion__item">
       <summary>§4 · Typography &amp; mật độ</summary>
       <div class="wb-accordion__body">
-        <ul class="doc-list">
+        <ul>
           <li>Một họ chữ (<code>--wb-font</code>, system stack). Đừng thêm font mới tuỳ tiện.</li>
           <li>Phân cấp bằng <b>weight + màu</b>, không phải bằng cỡ chữ nổ tung: mạnh = <code>--wb-fg</code> @ 600–650,
           phụ = <code>--wb-fg-muted</code>, cấp ba/label = <code>--wb-fg-subtle</code>.</li>
@@ -131,7 +131,7 @@
     <details class="wb-accordion__item">
       <summary>§5 · Elevation &amp; hình khối</summary>
       <div class="wb-accordion__body">
-        <ul class="doc-list">
+        <ul>
           <li>Bo góc từ token: <code>--wb-radius-sm|radius|radius-lg</code>, và <code>--wb-radius-pill</code> cho
           capsule. Capsule mặc định là viên thuốc (pill) — đúng "capsule" user yêu cầu.</li>
           <li>Chỉ <b>hai mức bóng</b>: <code>--wb-shadow-sm</code> (card/bảng nghỉ) và <code>--wb-shadow-md</code>
@@ -143,7 +143,7 @@
     <details class="wb-accordion__item">
       <summary>§6 · Theming — mọi màu từ token, coi chừng bẫy dark</summary>
       <div class="wb-accordion__body">
-        <ul class="doc-list">
+        <ul>
           <li>Sáng là mặc định (<code>:root</code>). Tối là class <code>.dark</code> trên phần tử gốc — đúng model
           của mọi theme toggle theo class (vd next-themes), nên lib và app đồng ý với nhau.</li>
           <li>Mọi màu phải từ token để cả hai theme đúng. Cần màu mới → thêm token vào <b>cả</b> <code>:root</code> và
@@ -162,7 +162,7 @@
     <details class="wb-accordion__item">
       <summary>§7 · Khi cần thứ lib chưa có</summary>
       <div class="wb-accordion__body">
-        <ol class="doc-list">
+        <ol>
           <li>Trước hết tra <code>components-catalog.md</code> — có thể đã tồn tại.</li>
           <li>Chưa có thì dựng <b>từ token sẵn có, đúng tinh thần sẵn có</b> (trung tính trước, màu chỉ cho nghĩa).
           Thêm vào <code>web-builder.css</code> với prefix <code>wb-</code> + một demo + snippet, rồi ghi vào catalog.</li>
@@ -265,7 +265,7 @@
       <summary>§13 · Vùng cuộn — thanh cuộn theo theme + chừa đuôi</summary>
       <div class="wb-accordion__body">
         <p>Mọi vùng cuộn theo hai thói quen (đều nướng sẵn trong <code>.wb-scroll-y</code>):</p>
-        <ol class="doc-list">
+        <ol>
           <li><b>Thanh cuộn theo theme</b> — thanh mảnh, <b>track trong suốt</b>, thumb viền trung tính, để nó theo
           theme thay vì hiện thanh OS sáng chói chọi trên nền tối hoặc đọc như một divider thứ hai. Đây là
           <b>mặc định toàn trang</b>, khai báo <b>một lần</b> ở mục 27 của stylesheet: thanh viewport, các vùng cuộn dựng
@@ -285,7 +285,7 @@
       <summary>§14 · Disabled ≠ locked — hai trạng thái khác nhau</summary>
       <div class="wb-accordion__body">
         <p>Cả hai đều là "giờ bạn không đổi được", nhưng nói điều khác nhau và trông khác nhau:</p>
-        <ul class="doc-list">
+        <ul>
           <li><b>Disabled</b> = <i>không áp dụng ở đây.</i> Control đọc là trơ: track trung tính mờ (không bao giờ
           màu on/off), <code>cursor: not-allowed</code>. Nó không tự nhận là đang giữ một giá trị có nghĩa.</li>
           <li><b>Locked</b> (<code>--locked</code>) = <i>có giá trị thật mà bạn không được đổi</i> (chặn bởi gói,
@@ -329,7 +329,7 @@
         <p>Bootstrap biến <b>layout thành nền tảng</b>: lưới 12 cột responsive (<code>.container</code> →
         <code>.row</code> → <code>.col-*</code>), năm breakpoint (sm–xxl), và tiện ích gutter mà bạn scaffold hầu hết
         trang lên đó. Web Builder cố ý <b>không</b> chép, vì ba lý do:</p>
-        <ol class="doc-list">
+        <ol>
           <li><b>Nền 12-cột là phản-tối-giản.</b> Năm breakpoint × mười hai cột × gutter là một từ vựng lớn để mang
           trong một lib mà mục đích là <i>ít hơn</i>. Lớp layout của WB giữ năm utility một-mục-đích — và chúng
           <b>tự đủ</b>: không cần Tailwind, Bootstrap hay framework nào để dựng một trang thật.</li>
@@ -348,7 +348,7 @@
         không đồng nghĩa bỏ trống cấp-cả-trang — mà đã có thời gian dài nó bị bỏ trống, và đó chính là lý do một bản
         build ráp từ component đúng vẫn không giống hệ thống này: nó phải tự nghĩ ra khung và khoảng cách riêng.
         Hai luật đi kèm lớp đó:</p>
-        <ul class="doc-list">
+        <ul>
           <li><b>Nhịp dọc giữa các phần của trang là của scaffold, không bao giờ là margin nhặt tay.</b> Lồng ba mức
           tiêu đề đúng thứ tự là khoảng cách đã đúng. Thấy sai thì dịch token (<code>--wb-section-gap</code> /
           <code>--wb-block-gap</code> / <code>--wb-page-pad-*</code>), đừng thêm <code>style="margin-top:…"</code> cho
@@ -384,7 +384,7 @@
       <summary>§19 · Nền a11y (accessibility baseline)</summary>
       <div class="wb-accordion__body">
         <p>Style không được đánh đổi semantic. Sàn mà mọi component giữ:</p>
-        <ul class="doc-list">
+        <ul>
           <li><b>Control chỉ-icon mang <code>aria-label</code></b> (× đóng, nút ghost-icon, nút search) — glyph là
           một bức tranh, không phải một cái tên. Nút có chữ thì không cần.</li>
           <li><b>Dựng trên phần tử native</b> để bàn phím + role có sẵn: checkbox/radio/switch là
@@ -425,7 +425,7 @@
       <summary>§21 · Responsive — tự co duyên dáng, không kế toán breakpoint</summary>
       <div class="wb-accordion__body">
         <p>Component tự xuống cấp trên màn hẹp <b>một mình</b>, không cần một lưới-breakpoint để quản (§17). Các thói quen:</p>
-        <ul class="doc-list">
+        <ul>
           <li><b>Reflow, đừng cuộn:</b> <code>.wb-grid--auto/-2/-3</code> rớt xuống ít cột/một cột,
           <code>.wb-cluster</code> wrap, một <code>wb-breadcrumb</code> dài wrap xuống dòng mới — nội dung vẫn đọc
           được thay vì tràn ngang.</li>
@@ -536,7 +536,7 @@
       <div class="wb-accordion__body">
         <p>Một thư viện component được chấm bằng <b>màn hình</b> người ta dựng ra, không phải bằng component đứng
         một mình. Có hai lớp "vì sao docs đẹp" rất dễ nằm <b>ngoài</b> phần ship — và ở đây đã từng nằm ngoài cả hai:</p>
-        <ul class="doc-list">
+        <ul>
           <li><b>Nền tảng (baseline)</b> — box-sizing, font, màu nền/chữ, line-height, link không xanh mặc định
           trình duyệt. Nó nằm trong stylesheet riêng của docs, nên mọi build khác rơi về mặc định trình duyệt:
           chữ serif, link xanh gạch chân, line-height rộng, body thừa 8px margin. Đó là <b>lý do lớn nhất</b>

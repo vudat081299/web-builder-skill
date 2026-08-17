@@ -1,0 +1,22 @@
+{
+  "name": "Large single file mixing responsibilities, no structural signals",
+  "scenario": "FT18",
+  "routes": 1,
+  "loc": 10000,
+  "kb": 900,
+  "behaviors": 2,
+  "backend_api": false,
+  "auth": false,
+  "database": false,
+  "router": false,
+  "build": false,
+  "ssr": false,
+  "content_units": false,
+  "complex_state": false,
+  "recurring_maintenance": false,
+  "cohesive": false,
+  "tool_lag": false,
+  "expect": "L1",
+  "expect_migrate": "incremental",
+  "note": "KEY: the contrast to 03-cohesive-large — same size, NOT cohesive. Split evidence is responsibility mixing, so this migrates incrementally; it must not be reported as 'no signals' or called small"
+}

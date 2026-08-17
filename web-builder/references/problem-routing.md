@@ -30,8 +30,8 @@ Assign exactly one class:
 | `project-architecture` | A workaround forced by **this project's** current architecture, not the library. |
 | `needs-triage` | Not enough evidence yet — reduce it first (below). |
 
-The two that flow upstream are `skill-bug`, `upstream-candidate`, and `skill-integration`. `project-local` and
-`project-architecture` stay in the project. `needs-triage` means *keep investigating*.
+The three that flow upstream are `skill-bug`, `upstream-candidate`, and `skill-integration`. `project-local`
+and `project-architecture` stay in the project. `needs-triage` means *keep investigating*.
 
 ## The reproduction test
 
@@ -80,4 +80,3 @@ edit the upstream repo from here.
   render — true for any Next app using the shell → `skill-integration`. Report with the SSR-safe fix.
 - A debt-calculation rounding rule is wrong → `project-local` (business rule), never upstream.
 - The shell needs an extra slot that only this dashboard uses → `project-architecture`; solve it locally.
-</content>

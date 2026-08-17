@@ -161,4 +161,3 @@ patterns (*Patterns*), and produce the smallest tree
 that carries the load. Record it in `AGENTS.md` with the omitted capabilities and evolution triggers
 (`project-protocol.md`). A synthesized architecture that fits the real forces beats any profile applied by
 reflex.
-</content>

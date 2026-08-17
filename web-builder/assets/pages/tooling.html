@@ -71,7 +71,7 @@ bash .claude/hooks/validate-sync.sh    # adapter cũ — vẫn chạy, chỉ for
   </div>
 
   <div class="wb-block">
-    <h4>Nửa skill deliverable — CHECK 6 → 11, 14–15</h4>
+    <h4>Nửa skill deliverable — CHECK 6 → 11, 14–15, 23–24</h4>
     <table class="wb-table wb-table--bordered">
       <thead><tr><th style="width:74px">CHECK</th><th>Bảo đảm điều gì</th><th style="width:96px">Loại</th></tr></thead>
       <tbody>
@@ -83,12 +83,14 @@ bash .claude/hooks/validate-sync.sh    # adapter cũ — vẫn chạy, chỉ for
         <tr><td><b>11</b></td><td>Mọi <b>"§N"</b> trích dẫn khắp repo đều resolve về một <code>## N.</code> trong <code>design-principles.md</code>; <code>overview.html</code> <b>index</b> đủ §1…§max; và <code>principles.html</code> <b>render đầy đủ</b> §1…§max (không chỉ index — docs site tự chứa, §23).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>14</b></td><td><b>Recipe ↔ template khớp hai chiều</b>: mỗi <i>Named recipe</i> trong catalog phải có file <code>assets/templates/&lt;tên&gt;.html</code> thật, và mỗi template phải được một recipe trỏ tới. Thêm nữa, mỗi template phải <b>chạy được ngay</b>: có <code>&lt;!doctype html&gt;</code>, có link <code>web-builder.css</code>, có <code>class="wb-app"</code> trên <code>&lt;body&gt;</code>. Recipe cố ý không có template thì viết <code>—</code> kèm lý do.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>15</b></td><td><b>Một chuỗi version, thống nhất mọi nơi</b>: token <code>--wb-version</code> trong CSS là source-of-truth; bản release mới nhất trong <code>CHANGELOG.md</code>, header của file CSS, <code>SKILL.md</code>, brand ở topbar và footer docs phải cùng nói một số. (Mục <code>## Unreleased (vX.Y-dev)</code> nằm trên bản đã cắt thì được bỏ qua — docs hiển thị bản <b>đã cắt</b> gần nhất trong khi bản kế còn đang làm.)</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>23</b></td><td><b>Chiều ngược của CHECK 8</b>: <code>pages/*.html</code> và <code>templates/*.html</code> <b>không được dùng</b> một class <code>wb-*</code> mà CSS không định nghĩa. Đây mới là chiều nguy hiểm hơn — SKILL.md bảo AI kế tiếp <b>mở đúng những trang này để lấy markup</b>, và cả hai thư mục đều <b>ship</b>. Một trang viết <code>wb-input--sm</code> trong khi không có modifier đó thì dạy một class <b>im lặng không làm gì</b>: agent chép về, nhận style mặc định, không có cách nào biết. (Bắt được đúng ca đó ở <code>shell.html</code>.) JS hook có con được style — <code>wb-theme-toggle</code> qua <code>__to-dark</code>/<code>__to-light</code> — vẫn hợp lệ, không cần allowlist. Áp cả cho <code>tests/examples/</code> (bản mẫu L0/L2 mà forward tests trỏ tới — đã có 3 class ma ở đó) và cho namespace chrome <code>doc-*</code> đối chiếu <code>docs.css</code> (<code>doc-list</code> nằm trên 13 danh sách mà không có rule nào phía sau).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>24</b></td><td><b>Đếm template trong prose phải khớp thực tế</b>. CHECK 14 đã khoá recipe ↔ template, nhưng docs còn <i>đếm</i> bằng chữ — và đó là thứ AI đọc trước. <code>landing.html</code> được thêm làm template thứ bảy, catalog có recipe của nó, nhưng <code>SKILL.md</code> · <code>CLAUDE.md</code> · <code>bootstrap-comparison.md</code> vẫn viết "six finished screens" — tức <b>router ship đi</b> nói với agent kế tiếp rằng không có template landing. Đúng cái miss mà sync bước 5 trong CLAUDE.md sinh ra để chặn.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="wb-block">
-    <h4>Nửa kiến trúc / tooling — CHECK 16 → 19 + forward-tests</h4>
+    <h4>Nửa kiến trúc / tooling — CHECK 16 → 22 + forward-tests</h4>
     <table class="wb-table wb-table--bordered">
       <thead><tr><th style="width:74px">CHECK</th><th>Bảo đảm điều gì</th><th style="width:96px">Loại</th></tr></thead>
       <tbody>
@@ -96,6 +98,9 @@ bash .claude/hooks/validate-sync.sh    # adapter cũ — vẫn chạy, chỉ for
         <tr><td><b>17</b></td><td>Bộ <b>7 reference kiến trúc</b> tồn tại đủ (<code>project-architecture.md</code> + 6 sibling).</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>18</b></td><td>Mọi <code>scripts/*.sh</code> <b>parse</b> (<code>bash -n</code>) — máy release không vỡ âm thầm.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>19</b></td><td><b>Manifest</b> (<code>scripts/skill-manifest.txt</code>) mọi rule resolve về file thật.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>20</b></td><td><b>Không có rác tool-call</b> lọt vào file người viết: một dòng chỉ chứa <code>&lt;/content&gt;</code>, <code>&lt;/invoke&gt;</code>, <code>&lt;/parameter&gt;</code>… Agent ghi file qua tool call có thể để sót thẻ đóng của chính lời gọi đó — diff nhìn như không có gì, mọi check khác vẫn xanh, nhưng <code>references/*.md</code> <b>ship</b> nên rác đi thẳng tới người dùng trong <code>web-builder.skill</code>. Đã xảy ra một lần ở 11 file (7 file ship) mà không guardrail nào thấy.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>21</b></td><td><b>Gate complexity: doc ↔ code khớp</b>. Nửa component neo vào một artifact máy kiểm được (CHECK 8 đối chiếu catalog với CSS thật); nửa kiến trúc <b>không có neo nào</b> — và đã trôi: <code>multi_contributor</code>, <code>tool_lag</code> là tín hiệu "thoát Level 0" trong <code>project-architecture.md</code> mà <code>l0_ok</code> chưa bao giờ chặn, 29 forward test vẫn xanh vì chúng test classifier <i>với chính nó</i>. Giờ mỗi dòng trong <b>signal registry</b> của <code>classify-project.sh</code> phải (a) được <code>l0_ok</code> chặn thật và (b) được reference gọi tên. Không bên nào đi một mình được.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
+        <tr><td><b>22</b></td><td><b>Routing: doc ↔ code cùng bộ class</b>. Cùng kiểu lỗi, khác file: bảng trong <code>problem-routing.md</code> khai <code>project-architecture</code> nhưng <code>classify-problem.sh</code> không có nhánh nào trả về nó — finding <i>đủ bằng chứng</i> rơi xuống <code>needs-triage</code> ("điều tra thêm"), agent downstream đi tìm thứ nó đã có. Diff hai chiều giữa bảng class và registry của classifier.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
         <tr><td><b>FT</b></td><td><code>tests/forward-tests.sh</code> pass: gate Level 0/1/2 + định tuyến local/upstream không âm thầm trôi.</td><td><span class="wb-cap wb-cap--solid">cứng</span></td></tr>
       </tbody>
     </table>
@@ -228,7 +233,7 @@ bash scripts/install-skill.sh     # dry-run; --target DIR / --apply (hành độ
     <tbody>
       <tr><td><code>scripts/verify.sh</code></td><td><b>Core</b> agent-agnostic: 19 check + forward-tests (docs + skill + kiến trúc). Chạy ở mọi harness.</td></tr>
       <tr><td><code>scripts/package-skill.sh</code> · <code>verify-package.sh</code> · <code>release-skill.sh</code></td><td>Đóng gói deterministic · parity + stale + checksum · orchestrate.</td></tr>
-      <tr><td><code>scripts/install-skill.sh</code> (+ <code>install-config.example.sh</code>)</td><td>Cài vào skills dir: dry-run mặc định, <code>--apply</code> mới copy; target configurable, không hardcode path.</td></tr>
+      <tr><td><code>scripts/install-skill.sh</code> (+ <code>install-config.example.sh</code>)</td><td>Cài vào skills dir: dry-run mặc định, <code>--apply</code> mới copy; target configurable, không hardcode path. Đây là <b>chỗ duy nhất trong repo xoá thứ nằm ngoài repo</b>, nên trước khi <code>rm -rf</code> nó bắt đích phải <b>chứng minh được là thư mục web-builder</b>: vắng, rỗng, hoặc có <code>SKILL.md</code> của bản cài trước. Một <code>--target</code> gõ nhầm mà tình cờ có thư mục <code>web-builder/</code> của người khác thì bị <b>từ chối</b>, không bị xoá — <code>--force</code> mới ghi đè.</td></tr>
       <tr><td><code>scripts/skill-manifest.txt</code></td><td>Source-of-truth: file nào ship trong <code>web-builder.skill</code>.</td></tr>
       <tr><td><code>scripts/classify-project.sh</code> · <code>classify-problem.sh</code></td><td>Gate Level 0/1/2 · định tuyến local/upstream (deterministic, có test).</td></tr>
       <tr><td><code>tests/forward-tests.sh</code> · <code>tests/fixtures/</code> · <code>tests/examples/</code></td><td>Forward tests + fixtures 16 kịch bản + ví dụ project L0/L2.</td></tr>

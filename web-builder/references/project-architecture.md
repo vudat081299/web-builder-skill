@@ -376,5 +376,3 @@ If a proposed structure doesn't beat "one file" on several of these, it isn't wo
 - A bug/finding that might belong **upstream** in Web Builder → `problem-routing.md`.
 - **Proving** the build works → `verification.md`.
 - The **UI** itself (always) → `SKILL.md` + `components-catalog.md` + `design-principles.md`.
-</content>
-</invoke>

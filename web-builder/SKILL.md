@@ -1,17 +1,16 @@
 ---
 name: web-builder
 description: >-
-  Thư viện component CSS + design system tối giản (trắng-đen-xám, có dark mode, zero-build, prefix
+  Thư viện component CSS + design system tối giản (trắng-đen-xám, dark mode, zero-build, prefix
   wb-*) để build giao diện web ĐẸP và NHẤT QUÁN — ráp từ thành phần đã duyệt (class wb-* + design
-  tokens) thay vì thiết kế lại từ đầu (tốn token, lệch phong cách). Ngoài dựng UI, skill còn giúp
-  CHỌN mức tổ chức project: web nhỏ/một trang đi one-file fast path (một index.html, không kiến trúc
-  thừa); web lớn/dài hạn/nhiều route/có backend mới synthesize architecture ở mức tối thiểu vừa đủ.
-  Dùng khi: bắt đầu website/trang mới; ráp hoặc thiết kế UI đáng kể; thiết kế/refactor architecture;
-  thêm screen-flow/tính năng lớn; đổi shell/layout/design-system; refactor monolith; điều tra bug
-  nghi thuộc Web Builder; hoặc update/đóng gói/release skill. Mạnh nhất cho finance UI và learning
-  site, dùng tốt cho web bất kỳ (landing, portfolio, docs, dashboard, CRUD, content). KHÔNG
-  auto-trigger khi chỉ sửa copy/nội dung, update data/lesson, fix bug nhỏ local, tái dùng component
-  local, hay backend/logic không liên quan giao diện.
+  tokens) thay vì thiết kế lại từ đầu (tốn token, lệch phong cách). Kèm theo: chọn mức tổ chức cho
+  chính project web đó — web nhỏ/một trang đi one-file fast path (một index.html, không kiến trúc
+  thừa); web lớn/dài hạn/nhiều route mới dựng cấu trúc tối thiểu vừa đủ. Dùng khi: bắt đầu
+  website/trang mới; ráp hoặc thiết kế UI đáng kể; đổi shell/layout/design-system; thêm screen-flow
+  lớn; chọn lại cấu trúc file của một site; điều tra bug nghi thuộc thư viện này. Mạnh nhất cho
+  finance UI và learning site, dùng tốt cho web bất kỳ (landing, portfolio, docs, dashboard, CRUD,
+  content). KHÔNG dùng khi: chỉ sửa copy/nội dung, update data/lesson, fix bug nhỏ local, tái dùng
+  component local, thiết kế kiến trúc backend/hệ thống, hay backend/logic không liên quan giao diện.
 ---
 
 # Web Builder
@@ -57,13 +56,15 @@ works). Architecture is **never mandatory ceremony** — never impose `.agent/` 
 doesn't need one.
 
 **Invocation boundary.** Reach for Web Builder when: starting a new site/page; assembling or designing
-significant UI; designing or refactoring architecture; adding a screen flow or a large capability; adding UI
-with no local equivalent; changing the shell / layout / design system; refactoring a monolith; investigating a
-bug that might be **upstream** in this library; or updating/packaging/releasing the skill. Routine work does
-**not** need it — copy/content edits, data/lesson updates, small local fixes, reusing a local component,
-changes inside an existing boundary, adding a local test, or resuming from a handoff. When inside an existing
-project, read its `AGENTS.md` first, reuse local solutions, and don't restructure just to match a Web Builder
-profile.
+significant UI; shaping or reshaping **how the web project's own files are organized**; adding a screen flow or
+a large capability; adding UI with no local equivalent; changing the shell / layout / design system;
+refactoring a monolithic site file; or investigating a bug that might be **upstream** in this library.
+Routine work does **not** need it — copy/content edits, data/lesson updates, small local fixes, reusing a
+local component, changes inside an existing boundary, adding a local test, or resuming from a handoff. It is also
+**not** a system-architecture skill: backend/service/data-platform design belongs to whatever skill your
+project uses for that. (Packaging and releasing Web Builder itself is upstream-repo work — see the repo's
+`/wb-release`, not this skill.) When inside an existing project, read its `AGENTS.md` first, reuse local
+solutions, and don't restructure just to match a Web Builder profile.
 
 ## The one rule that saves tokens
 
@@ -173,7 +174,7 @@ sync per-component, so it never drifts here):
   canvas/ink colours, `line-height`, links that inherit instead of going browser-blue — `.wb-shell` implies it,
   a shell-less screen must say it or it falls through to the browser's serif default), the colour ladder,
   tokens, typography scale, fonts guidance (system stack by default, swap `--wb-font`), border & radius,
-  **page templates** (`assets/templates/*.html` — six finished screens; start any whole-screen build there),
+  **page templates** (`assets/templates/*.html` — seven finished screens; start any whole-screen build there),
   and a live **Config** playground that edits tokens and exports a `.md`.
 - **Layout & utilities** — the **app shell & page scaffold** (`.wb-shell` + `__body`/`__side`/`__main` — the frame of a
   whole screen: sticky bar, a rail slot that sticks and folds to an off-canvas drawer + scrim below 900px via

@@ -92,11 +92,17 @@ per site type (learning sites are the deepest — `learning-sites.md`), but a pr
 preset, and synthesizing a new tree is normal.
 
 ### Invocation boundary
-Reach for Web Builder for a new site/page, significant UI, architecture design/refactor, a screen flow or
-large capability, UI with no local equivalent, a shell/design-system change, a monolith refactor, a suspected
-**upstream** bug, or packaging/releasing the skill. **Routine work does not need it** — content/copy edits,
-data/lesson updates, small local fixes, reusing a local component, resuming a handoff. Inside an existing
-project, read its `AGENTS.md` first and reuse local solutions.
+Reach for Web Builder for a new site/page, significant UI, **the web project's own file structure**, a screen
+flow or large capability, UI with no local equivalent, a shell/design-system change, a monolith refactor, or a
+suspected **upstream** bug. **Routine work does not need it** — content/copy edits, data/lesson updates, small
+local fixes, reusing a local component, resuming a handoff. Inside an existing project, read its `AGENTS.md`
+first and reuse local solutions.
+
+Two things are deliberately **outside** the boundary, because a shipped skill's trigger is a scarce resource:
+it is **not a system-architecture skill** (backend / service / data-platform design belongs to whatever skill
+you use for that), and packaging or releasing Web Builder itself is **upstream-repo work** (`/wb-release`) —
+kept out of the shipped description so a consumer never auto-loads the library for a release flow they don't
+have.
 
 ### Two lifecycles (upstream ⇄ downstream)
 - **Upstream** = this repo, the source of truth for the skill, the design system, the architecture knowledge,
@@ -177,12 +183,24 @@ The **agent-agnostic core** lives at `scripts/verify.sh` so any harness (CI, a b
 It validates **all three halves**. *Docs site:* routes == pages · pages are markup-only (no `<style>`) ·
 `app.js` parses. *Shipped skill:* `SKILL.md` frontmatter + trigger length **+ stays < 500 lines** · `SKILL.md`
 scope names every component `group` · every `references/*.md` exists · the catalog never documents a `wb-*`
-class the CSS lacks · `web-builder.css` braces balance · every **"§N"** cited anywhere resolves to a real
+class the CSS lacks — **and the reverse**, no demo page, template or reference example *uses* a `wb-*` class
+the CSS lacks (the more damaging direction: `SKILL.md` sends the next AI to that markup, and those directories
+ship) · the prose that **counts** the page templates matches how many exist ·
+`web-builder.css` braces balance · every **"§N"** cited anywhere resolves to a real
 design principle, the overview page indexes them all, **and** `pages/principles.html` renders every §N in
 full · every README trade-off **`T#`** is mirrored on `pages/decisions.html` (docs stay self-contained — §23).
 *Architecture layer:* the seven architecture references exist · every core script parses · the ship manifest
-resolves · the **forward tests** pass (`tests/forward-tests.sh` — the Level 0/1/2 gate and local/upstream
-routing can't silently regress). A failing check prints a `BLOCK ·` line saying exactly what drifted.
+resolves · **no tool-call scaffolding** (a line that is only `</content>` / `</invoke>`) survives in an
+authored file — `references/*.md` ship, so that garbage would reach consumers · **each classifier agrees with
+the reference it encodes** (every "stop being Level 0" signal is both gated in `classify-project.sh` and named
+in `project-architecture.md`; `problem-routing.md`'s class table matches what `classify-problem.sh` can emit)
+· the **forward tests** pass (`tests/forward-tests.sh` — the Level 0/1/2 gate and local/upstream routing can't
+silently regress). A failing check prints a `BLOCK ·` line saying exactly what drifted.
+
+That classifier-parity pair earns its place: the component half is anchored to a machine-checkable artifact —
+prose can't lie about a `wb-*` class for long, because the catalog gets diffed against the real CSS. The
+architecture half is prose, and its one piece of executable truth was free to drift from the references it
+claims to encode. It did, twice, with every test green — the tests checked each classifier *against itself*.
 
 Packaging has its own trio (run by `scripts/release-skill.sh`): `package-skill.sh` builds `web-builder.skill`
 **deterministically** from `scripts/skill-manifest.txt`, and `verify-package.sh` checks two-way manifest

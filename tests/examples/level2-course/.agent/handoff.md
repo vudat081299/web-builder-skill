@@ -17,4 +17,3 @@
 
 ## Do NOT re-decide
 - Progress storage → decided in `.agent/decisions/0001-progress-storage.md` (localStorage behind the adapter).
-</content>

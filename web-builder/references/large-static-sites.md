@@ -101,4 +101,3 @@ learning-site target shape (`learning-sites.md`).
 - **Duplicated source of truth** — content copied into both the old file and the new one "during migration";
   keep exactly one authoritative copy at every step.
 - **Skipping the baseline** — migrating with no parity oracle, so you can't tell what a step broke.
-</content>

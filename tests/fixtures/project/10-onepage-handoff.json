@@ -1,0 +1,21 @@
+{
+  "name": "One page, small, but a second agent must pick it up",
+  "scenario": "FT17",
+  "routes": 1,
+  "loc": 300,
+  "kb": 30,
+  "behaviors": 2,
+  "backend_api": false,
+  "auth": false,
+  "database": false,
+  "router": false,
+  "build": false,
+  "ssr": false,
+  "content_units": false,
+  "complex_state": false,
+  "recurring_maintenance": false,
+  "multi_contributor": true,
+  "cohesive": true,
+  "expect": "L1",
+  "note": "KEY: a handoff need forbids Level 0 even at one small page — project-architecture.md lists it as a stop-Level-0 signal, so the classifier must agree (it did not, once)"
+}

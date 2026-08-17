@@ -16,6 +16,12 @@
 #   bash scripts/install-skill.sh                 # dry-run: resolve + report only
 #   bash scripts/install-skill.sh --target DIR    # dry-run into DIR
 #   bash scripts/install-skill.sh --apply         # actually copy (your explicit act)
+#   bash scripts/install-skill.sh --apply --force # ... even if the destination is unrecognised
+#
+# The install replaces <target>/web-builder, so it checks the destination first and
+# only proceeds when that path is absent, empty, or holds a previous install (it has
+# a SKILL.md). Anything else is refused — a mistyped --target does not get wiped —
+# and --force is the deliberate override. Dry-run prints the destination's state too.
 #
 # NOTE: an agent must NOT run --apply on the user's behalf without explicit
 # in-session permission — it writes outside this repo.
@@ -27,12 +33,17 @@ cd "$ROOT" || exit 1
 ART="web-builder.skill"
 CSS="web-builder/assets/web-builder.css"
 APPLY=0
+FORCE=0
 TARGET=""
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --apply) APPLY=1 ;;
-    --target) shift; TARGET="${1:-}" ;;
+    --force) FORCE=1 ;;
+    # A bare trailing `--target` used to shift into nothing and silently leave TARGET
+    # empty, so the run fell back to the env/config target — a typo could install
+    # somewhere the caller never named. Make it an error instead.
+    --target) shift; [ $# -gt 0 ] || { echo "ERROR: --target needs a directory" >&2; exit 1; }; TARGET="$1" ;;
     --target=*) TARGET="${1#*=}" ;;
     -h|--help) grep -E '^#( |$)' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "unknown arg: $1" >&2; exit 1 ;;
@@ -78,12 +89,45 @@ if [ -z "$TARGET" ]; then
 fi
 
 DEST="$TARGET/web-builder"
+
+# The install ends in `rm -rf "$DEST"` — the only line in this repo that destroys
+# something outside it. So DEST must be provably a web-builder install directory
+# before we touch it: absent, empty, or carrying a SKILL.md we are replacing. A
+# mistyped --target that happens to have a `web-builder/` subdirectory full of
+# someone else's work is refused rather than silently wiped. --force overrides,
+# for the caller who really does mean "replace whatever is there".
+dest_state="absent"
+if [ -e "$DEST" ]; then
+  if [ ! -d "$DEST" ]; then dest_state="not-a-directory"
+  elif [ -f "$DEST/SKILL.md" ]; then dest_state="existing web-builder install (will be replaced)"
+  elif [ -z "$(ls -A "$DEST" 2>/dev/null)" ]; then dest_state="empty directory"
+  else dest_state="UNRECOGNISED — has content but no SKILL.md"
+  fi
+fi
+echo "  dest:      $DEST [$dest_state]"
+
+unsafe=0
+case "$dest_state" in "not-a-directory"|"UNRECOGNISED"*) unsafe=1 ;; esac
+
 if [ "$APPLY" -ne 1 ]; then
   echo ""
   echo "DRY RUN — would install to: $DEST"
-  echo "  (replacing any existing web-builder/ there with the packaged skill)"
-  echo "Re-run with --apply to perform the copy. Verified fresh; safe to apply."
+  if [ "$unsafe" -eq 1 ]; then
+    echo "  REFUSED without --force: '$DEST' is not a web-builder install, and applying"
+    echo "  would delete it. Check the target, or pass --force if you really mean it."
+  else
+    echo "  (replacing any existing web-builder/ there with the packaged skill)"
+    echo "Re-run with --apply to perform the copy. Verified fresh; safe to apply."
+  fi
   exit 0
+fi
+
+if [ "$unsafe" -eq 1 ] && [ "$FORCE" -ne 1 ]; then
+  { echo ""
+    echo "ERROR: refusing to delete '$DEST' — it is $dest_state."
+    echo "       This script only replaces a previous web-builder install (a dir with SKILL.md)"
+    echo "       or an empty/absent path. Verify the target; pass --force to override."; } >&2
+  exit 1
 fi
 
 # --apply: perform the install (the invoker's explicit act).
@@ -91,6 +135,8 @@ command -v unzip >/dev/null 2>&1 || { echo "ERROR: 'unzip' not found" >&2; exit 
 mkdir -p "$TARGET" || { echo "ERROR: cannot create target '$TARGET'" >&2; exit 1; }
 TMP="$(mktemp -d "${TMPDIR:-/tmp}/wb-install.XXXXXX")"; trap 'rm -rf "$TMP"' EXIT
 unzip -q "$ART" -d "$TMP" || { echo "ERROR: unpack failed" >&2; exit 1; }
+# Unpack must have produced the payload before anything is destroyed.
+[ -d "$TMP/web-builder" ] || { echo "ERROR: artifact has no web-builder/ payload — nothing installed" >&2; exit 1; }
 rm -rf "$DEST"
 mkdir -p "$DEST"
 cp -R "$TMP/web-builder/." "$DEST/" || { echo "ERROR: copy failed" >&2; exit 1; }

@@ -26,7 +26,7 @@ CPR="bash scripts/classify-problem.sh"
 result_of() { printf '%s\n' "$1" | awk -F': ' '/^RESULT:/{print $2; exit}'; }
 migrate_of(){ printf '%s\n' "$1" | awk -F': ' '/^MIGRATE:/{print $2; exit}'; }
 
-echo "== Project complexity gate (FT1–FT9) =="
+echo "== Project complexity gate (FT1–FT9 + FT17/FT18 doc-vs-classifier parity) =="
 for j in tests/fixtures/project/*.json; do
   exp="$(python3 -c "import json;print(json.load(open('$j')).get('expect',''))")"
   expm="$(python3 -c "import json;print(json.load(open('$j')).get('expect_migrate',''))")"
@@ -45,9 +45,15 @@ done
 
 echo "== Invocation boundary (FT10 routine=no-WB · FT11 major=WB) =="
 S="web-builder/SKILL.md"; PP="web-builder/references/project-protocol.md"
-grep -q "Routine work does" "$S" && ok "FT10 SKILL.md: routine work does not need Web Builder" || bad "FT10 SKILL.md routine-no-WB missing"
+# Assert on the FLATTENED text: these are prose properties, so re-wrapping a paragraph
+# must not fail the test (it did once — a line break landed mid-phrase and the literal
+# grep reported the boundary rule "missing" when the rule was intact).
+flat() { tr '\n' ' ' < "$1" | tr -s ' '; }
+S_FLAT="$(flat "$S")"
+has() { printf '%s' "$1" | grep -qF "$2"; }
+has "$S_FLAT" "Routine work does" && ok "FT10 SKILL.md: routine work does not need Web Builder" || bad "FT10 SKILL.md routine-no-WB missing"
 grep -q "copy/content edits" "$PP" && ok "FT10 project-protocol: routine work list present" || bad "FT10 project-protocol routine list missing"
-grep -q "screen flow" "$S" && ok "FT11 SKILL.md: major screen flow / capability -> Web Builder" || bad "FT11 SKILL.md major-capability trigger missing"
+has "$S_FLAT" "screen flow" && ok "FT11 SKILL.md: major screen flow / capability -> Web Builder" || bad "FT11 SKILL.md major-capability trigger missing"
 grep -q "screen flow or a large capability" "$PP" && ok "FT11 project-protocol: major-capability trigger present" || bad "FT11 project-protocol major trigger missing"
 
 echo "== Level-0 vs Level-2 contrast (FT1/FT4 structural) =="

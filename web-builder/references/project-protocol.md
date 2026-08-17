@@ -131,4 +131,3 @@ bug that might be upstream, and updating/packaging/releasing Web Builder itself.
 - **Don't leave a stale contract** — a wrong `AGENTS.md` is worse than none. Update it when the shape changes.
 - **Don't auto-edit another repository.** A finding that belongs upstream is *reported*, not silently patched
   (`problem-routing.md`).
-</content>

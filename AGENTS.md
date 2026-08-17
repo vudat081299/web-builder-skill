@@ -69,4 +69,3 @@ bash scripts/install-skill.sh [--target DIR] [--apply]   # dry-run by default; -
 ## Verify before you commit
 The pre-commit hook blocks on drift. Run `bash scripts/verify.sh` yourself first; for a release, `bash
 scripts/release-skill.sh`. Nothing commits, pushes, or installs without an explicit act.
-</content>

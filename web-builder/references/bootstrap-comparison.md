@@ -120,7 +120,7 @@ the layout decision above. **Structure** then holds only
 the structural pieces: the drag-and-drop tree + sortable.
 
 One thing neither Bootstrap nor Tailwind ships, and Web Builder now does: **finished page templates**
-(`assets/templates/*.html`, six screens on the shipped scaffold). Bootstrap has *Examples* — a separate
+(`assets/templates/*.html`, seven screens on the shipped scaffold). Bootstrap has *Examples* — a separate
 download, not part of the library, and explicitly "not production-ready". Here they are part of the skill
 and starting from one is a **hard rule** in `SKILL.md`, guarded both ways by `validate-sync.sh` CHECK 14.
 The bet is the opposite of Bootstrap's: a consumer of this library is usually an AI, and an AI given a parts

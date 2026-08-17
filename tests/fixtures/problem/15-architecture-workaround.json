@@ -1,0 +1,12 @@
+{
+  "name": "Shell needs an extra slot only this dashboard uses",
+  "scenario": "FT19",
+  "reproduces_on_shipped": false,
+  "disappears_without_custom": false,
+  "is_business_rule": false,
+  "is_reusable_primitive": false,
+  "is_framework_integration": false,
+  "is_architecture_workaround": true,
+  "expect": "project-architecture",
+  "note": "KEY: problem-routing.md declares this class in its table but nothing could emit it — the evidence is complete, so it must not fall through to needs-triage"
+}
