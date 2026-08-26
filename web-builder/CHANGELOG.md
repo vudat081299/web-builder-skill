@@ -11,6 +11,13 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.7-dev)
 
 ### Added
+- **Print stylesheet — `@media print` (CSS section 54).** Finance UIs get printed (receipts, debt tables,
+  statements) and the library had zero print rules. Now it prints on a **white, ink-saving page in any theme**
+  (dark mode re-declares the core surface/ink/border tokens to light for print), drops shadows and
+  navigation/transient chrome (navbar · sidenav · shell rail · drawer · toast · tooltip · pager · pagination),
+  keeps `wb-card` / `wb-receipt` / `wb-stat` / table rows from splitting across a page fold, and repeats a
+  table's `thead` on every page. Documented as design-principles §26. CSS only — no class or token added
+  (reuses existing tokens).
 - **Table row selection + bulk actions — `wb-table__check` + `wb-table-bulk`.** The other half of a real list
   screen (pairs with the filter bar): a leading checkbox column with a **select-all** header box (tri-state:
   checked / indeterminate / empty), an `is-selected` neutral row tint (new `--wb-row-selected` token —

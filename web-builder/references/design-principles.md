@@ -523,3 +523,19 @@ inside the docs, because the docs had already patched around all three in a file
 
 Corollary for anything you add: if a rule is needed to make the library's own showcase look right, it
 belongs **in the library**. A rule that lives only in the showcase is a rule the next build will not get.
+
+## 26. Print is a real output — finance UIs get printed
+
+Receipts (hoá đơn), debt tables and statements are printed and shared on paper, so the library ships a
+`@media print` block (CSS section 54) instead of leaving each build to rediscover it:
+
+- **Print on white with black ink whatever the screen theme is** — the block re-declares the core
+  surface/ink/border tokens to light values under `:root, :root.dark`, so a user reading in dark mode still
+  gets an ink-saving white page, not a black rectangle.
+- **Shadows off, chrome gone.** `--wb-shadow-*` collapse to `none`; navigation and transient UI (`wb-navbar`,
+  `wb-sidenav`, the shell rail, `wb-drawer`, `wb-toast`, `wb-tooltip`, `wb-pager`, `wb-pagination`) are
+  hidden — none of it means anything on paper.
+- **Don't split content across a fold.** `wb-card` / `wb-receipt` / `wb-stat` / a table row carry
+  `break-inside: avoid`, and `thead` repeats on every page (`display: table-header-group`).
+- **Backgrounds stay off by default** (the browser's ink-saving) — status still reads from a capsule's *text*,
+  not only its tint, so meaning survives a mono print.

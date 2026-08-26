@@ -1,6 +1,6 @@
 <div class="wb-page-head">
   <p class="wb-eyebrow">Foundation</p>
-  <h2>Nguyên tắc thiết kế (§1 → §25)</h2>
+  <h2>Nguyên tắc thiết kế (§1 → §26)</h2>
   <p>Những quyết định thẩm mỹ đã <b>chốt sẵn</b>, để không phải review lại trên từng trang. Mỗi nguyên tắc mang
   một số hiệu <b>§N</b> — bất cứ đâu trong repo nhắc "§N" là trỏ về đúng mục ở đây. Đây là <b>bản đầy đủ, đọc
   ngay trên site</b> (không phải bản tóm tắt): mỗi § là một mục mở/gập bằng <a href="#/accordion">accordion</a>,
@@ -472,7 +472,7 @@
         "đọc bản đầy đủ ở <code>X.md</code>" / "roster đầy đủ ở <code>X.md</code>" như một <i>thứ thay cho nội
         dung</i> — đó là bẫy docs-thiếu (chính cái từng làm bản đồ §N của overview thành một teaser trỏ về file này).
         Lo trang dài? Đó là việc của primitive ẩn/hiện: bỏ nội dung đầy đủ vào <code>&lt;details&gt;</code>/accordion
-        hoặc một trang riêng và link <b>in-site</b> — như §1–§25 giờ nằm đầy đủ (gập được) ở chính trang này, còn
+        hoặc một trang riêng và link <b>in-site</b> — như §1–§26 giờ nằm đầy đủ (gập được) ở chính trang này, còn
         overview chỉ giữ index gọn trỏ tới. Link sang một <b>trang in-site khác</b> là điều hướng, không phải
         deferral; đẩy người đọc ra một file reference thô để lấy nội dung mà site đã nhận phụ trách mới là anti-pattern.</p>
         <p>Vẫn được phép <b>nêu tên</b> một <code>.md</code> như bản song song cho AI ("cùng luật, cho AI, ở
@@ -555,6 +555,28 @@
         nhìn thấy được từ bên trong docs, vì docs đã vá sẵn cả ba trong một file không bao giờ ship.</p>
         <p>Hệ quả cho mọi thứ bạn thêm: nếu một luật là <b>cần thiết để chính showroom của thư viện trông đúng</b>,
         luật đó thuộc về <b>thư viện</b>. Luật chỉ sống trong showroom là luật mà build kế tiếp sẽ không nhận được.</p>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§26 · In ấn là một đầu ra thật — UI tài chính hay được in</summary>
+      <div class="wb-accordion__body">
+        <p>Hoá đơn, bảng công nợ và sao kê hay được in ra giấy, nên thư viện ship sẵn một khối
+        <code>@media print</code> (CSS section 54) thay vì để mỗi build tự phát hiện lại:</p>
+        <ul>
+          <li><b>In nền trắng, mực đen bất kể theme màn hình.</b> Khối này khai báo lại các token nền/chữ/viền
+          cốt lõi về giá trị sáng dưới <code>:root, :root.dark</code>, nên người đang xem ở dark mode vẫn in ra
+          trang trắng tiết kiệm mực, không phải một khối đen.</li>
+          <li><b>Tắt bóng, ẩn chrome.</b> <code>--wb-shadow-*</code> về <code>none</code>; điều hướng và UI tạm
+          thời (<code>wb-navbar</code>, <code>wb-sidenav</code>, rail của shell, <code>wb-drawer</code>,
+          <code>wb-toast</code>, <code>wb-tooltip</code>, <code>wb-pager</code>, <code>wb-pagination</code>) bị
+          ẩn — chẳng cái nào có nghĩa trên giấy.</li>
+          <li><b>Không cắt nội dung giữa hai trang.</b> <code>wb-card</code> / <code>wb-receipt</code> /
+          <code>wb-stat</code> / hàng bảng mang <code>break-inside: avoid</code>, và <code>thead</code> lặp lại ở
+          mỗi trang (<code>display: table-header-group</code>).</li>
+          <li><b>Nền để trình duyệt tự bỏ</b> (tiết kiệm mực mặc định) — trạng thái vẫn đọc được từ <i>chữ</i>
+          trên capsule, không chỉ từ mảng nền, nên nghĩa vẫn còn khi in đen trắng.</li>
+        </ul>
       </div>
     </details>
 

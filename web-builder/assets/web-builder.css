@@ -3360,3 +3360,30 @@
    distinguished by weight or underline, never by a stock blue. Zero specificity,
    so .wb-nav__link / .wb-footer__link / an app's own rule all still win. */
 :where(.wb-app, .wb-shell) :where(a) { color: inherit; }
+
+/* -----------------------------------------------------------------------------
+   54. PRINT  (receipts · debt tables · statements — print on white, save ink)
+   -----------------------------------------------------------------------------
+   Finance UIs get printed. Force a light, shadowless render whatever the on-screen
+   theme is, drop the navigational / transient chrome, and keep cards and rows from
+   splitting across a page fold. Backgrounds are left to the browser's default
+   ink-saving (status still reads from the capsule's text, not just a tint). */
+@media print {
+  /* Print on white with black ink even when the app is in dark mode. */
+  :root, :root.dark {
+    --wb-canvas: #fff; --wb-surface: #fff; --wb-surface-2: #fff; --wb-surface-hover: #fff;
+    --wb-fg: #000; --wb-fg-muted: #333; --wb-fg-subtle: #555;
+    --wb-border: #bbb; --wb-border-strong: #888;
+    --wb-shadow-sm: none; --wb-shadow-md: none;
+  }
+  body, .wb-app { background: #fff; color: #000; }
+  /* Navigation + transient overlays have no meaning on paper. */
+  .wb-navbar, .wb-sidenav, .wb-shell__side, .wb-drawer,
+  .wb-toast, .wb-tooltip, .wb-pager, .wb-pagination { display: none !important; }
+  /* Don't split a card, a receipt, a stat or a row across two pages. */
+  .wb-card, .wb-receipt, .wb-stat, .wb-table tbody tr { break-inside: avoid; }
+  /* Repeat the table header on every printed page. */
+  .wb-table thead { display: table-header-group; }
+  /* A link prints as its label, not a coloured underline. */
+  a { color: inherit; text-decoration: none; }
+}

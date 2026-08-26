@@ -234,7 +234,8 @@ pre-paint boot script sets `.dark` from `prefers-color-scheme` — and the toggl
 this exact wiring (design-principles §6). The thin **theme-aware scrollbar is page-wide by default** — CSS section 27 declares it once on `:root` + `*`,
 so the viewport bar, the built-in table/menu areas, a hand-written `overflow:auto` div and a third-party widget
 all follow the theme with **no class to add** (`.wb-scrollbars--os` opts a subtree back to the OS bar); pair it
-with **tail room** (`.wb-scroll-y`/`-x`, `--pad`) so the last item scrolls clear and the bar doesn't clash. **Disabled** and **locked**
+with **tail room** (`.wb-scroll-y`/`-x`, `--pad`) so the last item scrolls clear and the bar doesn't clash. **Print** is handled too — a
+`@media print` block (CSS section 54) prints receipts/tables on a white ink-saving page in any theme, hides nav/transient chrome, and avoids page-break splits (design-principles §26). **Disabled** and **locked**
 are distinct states: *disabled* reads inert (dim neutral track, `not-allowed`); *locked* keeps the real
 on/off value but puts a lock **beside** the control that **shakes** when a blocked change is attempted —
 **never overlay** a lock on the control itself. A dismiss **×** always sits **top-right**

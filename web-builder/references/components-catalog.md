@@ -915,6 +915,13 @@ so there's never a clipped half-notch at either end); plus `--wb-receipt-side-d`
 ```
 The shadow lives on the wrapper by design — a mask would clip a shadow set on the paper itself. Static, no JS.
 
+**Printing.** Receipts, debt tables and statements are meant to be printed, and the library ships a
+`@media print` block (CSS section 54) so you don't wire one per build: it forces a **white, ink-saving page in
+any theme** (dark mode included), drops shadows + navigation/transient chrome (`wb-navbar` · `wb-sidenav` ·
+shell rail · `wb-drawer` · `wb-toast` · `wb-tooltip` · `wb-pager` · `wb-pagination`), keeps `wb-card` /
+`wb-receipt` / `wb-stat` / table rows from splitting across a page fold, and repeats a table's `thead` on every
+page. Nothing to add — just print. See design-principles §26.
+
 ## Dropdown / Menu
 
 `.wb-dropdown` wraps a trigger + `.wb-dropdown__menu`; toggle `.is-open`. The trigger caret is a
