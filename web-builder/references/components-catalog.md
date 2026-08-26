@@ -95,6 +95,7 @@ for the look (see `integration.md`).
 | Reorder a flat list or grid of cards (drag) | **Sortable** | [Sortable](#sortable-list--grid) |
 | Reorder rows inside a data table (drag) | **Sortable table** (`--sortable`) | [Sortable](#sortable-list--grid) |
 | **Sort** a data table by a column (click the header, asc ⇄ desc) | **Sortable header** (`wb-th-sort` + `aria-sort`) | [Tables](#tables) |
+| **Select** table rows and act on many at once (checkboxes + bulk bar) | **Row selection** (`wb-table__check` + `wb-table-bulk`) | [Tables](#tables) |
 | Place items in a **fixed grid/list**, keep empty slots between them (drag → any slot, swap) | **Slot grid** (`.wb-slotgrid`) | [Slot grid](#slot-grid) |
 | The frame of a whole screen (top bar + rail + scrolling content + footer) | **App shell** (`.wb-shell`) | [App shell](#app-shell--page-scaffold) |
 | A page title / section heading / sub-block, and the spacing between them | **Page scaffold** (`.wb-page-head` / `.wb-section` / `.wb-block`) | [App shell](#app-shell--page-scaffold) |
@@ -474,6 +475,43 @@ via `localeCompare(…, "vi")`, and an **ISO date** (`2026-07-14`) is *deliberat
 chronologically — put that ISO string in `data-sort-value` and show `14/07` in the cell. The docs driver lives
 in `assets/app.js` (a delegated `th.wb-th-sort` click handler, ~25 lines, dependency-free) — copy it, or wire
 your framework's own sort to the same `aria-sort` contract.
+
+### Row selection & bulk actions — `wb-table__check` + `wb-table-bulk`
+
+The other half of a real list screen (pairs with the [filter bar](#filter-bar)). A narrow leading
+`wb-table__check` column holds a `wb-check` box per row plus a **select-all** box in the header; picked rows get
+the neutral `is-selected` tint (`--wb-row-selected` — selection is classification, **not** status, so no colour).
+A `.wb-table-bulk` bar sits at the top of the `.wb-card` and appears (`.is-active`) once anything is picked,
+showing a live count + the batch actions.
+
+```html
+<div class="wb-card">
+  <div class="wb-table-bulk" data-bulk>                     <!-- hidden until ≥1 row picked -->
+    <span class="wb-table-bulk__count"><b data-bulk-count>0</b> đã chọn</span>
+    <div class="wb-table-bulk__actions">
+      <button class="wb-btn wb-btn--ghost wb-btn--sm">Gắn nhãn</button>
+      <button class="wb-btn wb-btn--danger wb-btn--sm">Xoá</button>
+      <button class="wb-btn wb-btn--ghost wb-btn--sm" data-bulk-clear>Bỏ chọn</button>
+    </div>
+  </div>
+  <table class="wb-table">
+    <thead><tr>
+      <th class="wb-table__check"><label class="wb-check"><input type="checkbox" data-select-all></label></th>
+      <th>Nội dung</th> …
+    </tr></thead>
+    <tbody><tr>
+      <td class="wb-table__check"><label class="wb-check"><input type="checkbox" data-row-select></label></td>
+      <td>Lương tháng 7</td> …
+    </tr></tbody>
+  </table>
+</div>
+```
+
+Wire it with the docs driver in `assets/app.js` (delegated `change`/`click`): mark each row box
+`data-row-select`, the header box `data-select-all`, and the bar `data-bulk` with a `[data-bulk-count]` slot
+(+ optional `[data-bulk-clear]`). The driver keeps `tr.is-selected` in sync, drives the select-all
+**tri-state** (checked / **indeterminate** / empty), and toggles the bar with a live count — copy it or wire
+your framework to the same hooks.
 
 ### Snippet — debt / receivables (meaningful colour)
 

@@ -1541,6 +1541,46 @@ document.addEventListener("click", (e) => {
   tbody.appendChild(frag);                                // one reflow, not one per row
 });
 
+/* ---- Table row selection + bulk bar (docs driver; an app can copy this) -----
+   Mark each row checkbox `data-row-select`, the header one `data-select-all`, and
+   put a `.wb-table-bulk[data-bulk]` bar in the same .wb-card (with a
+   `[data-bulk-count]` slot and an optional `[data-bulk-clear]` button). The
+   driver keeps `tr.is-selected` in sync, drives the select-all tri-state
+   (checked / indeterminate / empty) and reveals the bulk bar with a live count. */
+function tableSelSync(table) {
+  const boxes = Array.prototype.slice.call(table.querySelectorAll("tbody [data-row-select]"));
+  const picked = boxes.filter((b) => b.checked);
+  boxes.forEach((b) => b.closest("tr").classList.toggle("is-selected", b.checked));
+  const all = table.querySelector("[data-select-all]");
+  if (all) {
+    all.checked = picked.length > 0 && picked.length === boxes.length;
+    all.indeterminate = picked.length > 0 && picked.length < boxes.length;
+  }
+  const card = table.closest(".wb-card") || table.parentElement;
+  const bulk = card && card.querySelector("[data-bulk]");
+  if (bulk) {
+    bulk.classList.toggle("is-active", picked.length > 0);
+    const c = bulk.querySelector("[data-bulk-count]");
+    if (c) c.textContent = picked.length;
+  }
+}
+document.addEventListener("change", (e) => {
+  const table = e.target.closest("table.wb-table");
+  if (!table) return;
+  if (e.target.matches("[data-select-all]")) {
+    table.querySelectorAll("tbody [data-row-select]").forEach((b) => { b.checked = e.target.checked; });
+  } else if (!e.target.matches("[data-row-select]")) return;
+  tableSelSync(table);
+});
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("[data-bulk-clear]")) return;
+  const card = e.target.closest(".wb-card");
+  const table = card && card.querySelector("table.wb-table");
+  if (!table) return;
+  table.querySelectorAll("[data-row-select], [data-select-all]").forEach((b) => { b.checked = false; b.indeterminate = false; });
+  tableSelSync(table);
+});
+
 /* ---- Search: full-text over every page (docs-only). The index is built lazily on
    first open and cached; matching is a case-insensitive substring (label first,
    then body). A command-palette dialog: ↑/↓ move the highlighted row, ↵ opens it. */

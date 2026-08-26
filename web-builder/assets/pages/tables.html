@@ -275,6 +275,65 @@
 </section>
 
 <section class="wb-section">
+  <h3>Chọn dòng &amp; thao tác hàng loạt</h3>
+  <p class="wb-section__desc">Ô chọn mỗi dòng + ô <b>chọn tất cả</b> (có trạng thái <em>một phần</em> khi chọn dở).
+  Có dòng được chọn thì thanh <code>wb-table-bulk</code> hiện ra: số lượng + nút thao tác + “Bỏ chọn”.
+  Dòng đã chọn tô nền <b>trung tính</b> (<code>--wb-row-selected</code>) — chọn là phân loại, không phải trạng thái, nên không dùng màu.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div class="wb-card">
+        <div class="wb-table-bulk" data-bulk>
+          <span class="wb-table-bulk__count"><b data-bulk-count>0</b> đã chọn</span>
+          <div class="wb-table-bulk__actions">
+            <button class="wb-btn wb-btn--ghost wb-btn--sm">Gắn nhãn</button>
+            <button class="wb-btn wb-btn--danger wb-btn--sm">Xoá</button>
+            <button class="wb-btn wb-btn--ghost wb-btn--sm" data-bulk-clear>Bỏ chọn</button>
+          </div>
+        </div>
+        <div class="wb-table-scroll">
+          <table class="wb-table">
+            <thead>
+              <tr>
+                <th class="wb-table__check"><label class="wb-check"><input type="checkbox" data-select-all aria-label="Chọn tất cả"></label></th>
+                <th>Nội dung</th><th>Danh mục</th><th class="wb-num">Số tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="wb-table__check"><label class="wb-check"><input type="checkbox" data-row-select aria-label="Chọn dòng"></label></td>
+                <td>Lương tháng 7</td><td><span class="wb-cap wb-cap--success">Thu nhập</span></td><td class="wb-num wb-num--pos">+25.000.000&nbsp;₫</td>
+              </tr>
+              <tr>
+                <td class="wb-table__check"><label class="wb-check"><input type="checkbox" data-row-select aria-label="Chọn dòng"></label></td>
+                <td>Đi chợ</td><td><span class="wb-cap">Ăn uống</span></td><td class="wb-num">−480.000&nbsp;₫</td>
+              </tr>
+              <tr>
+                <td class="wb-table__check"><label class="wb-check"><input type="checkbox" data-row-select aria-label="Chọn dòng"></label></td>
+                <td>Tiền điện</td><td><span class="wb-cap">Hoá đơn</span></td><td class="wb-num">−1.240.000&nbsp;₫</td>
+              </tr>
+              <tr>
+                <td class="wb-table__check"><label class="wb-check"><input type="checkbox" data-row-select aria-label="Chọn dòng"></label></td>
+                <td>Cà phê</td><td><span class="wb-cap">Ăn uống</span></td><td class="wb-num">−65.000&nbsp;₫</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;div class="wb-card"&gt;
+  &lt;div class="wb-table-bulk" data-bulk&gt;                        &lt;!-- hidden until ≥1 row picked --&gt;
+    &lt;span class="wb-table-bulk__count"&gt;&lt;b data-bulk-count&gt;0&lt;/b&gt; đã chọn&lt;/span&gt;
+    &lt;div class="wb-table-bulk__actions"&gt;… &lt;button data-bulk-clear&gt;Bỏ chọn&lt;/button&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;table class="wb-table"&gt;
+    &lt;thead&gt;&lt;tr&gt;&lt;th class="wb-table__check"&gt;&lt;label class="wb-check"&gt;&lt;input type="checkbox" data-select-all&gt;&lt;/label&gt;&lt;/th&gt; … &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;&lt;tr&gt;&lt;td class="wb-table__check"&gt;&lt;label class="wb-check"&gt;&lt;input type="checkbox" data-row-select&gt;&lt;/label&gt;&lt;/td&gt; … &lt;/tr&gt;&lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="wb-section">
   <h3>Công nợ — dùng màu có chủ đích</h3>
   <p class="wb-section__desc">Ví dụ khi màu <em>đáng</em> dùng: hàng quá hạn/nợ xấu nền đỏ rất nhạt;
   sắp đến hạn vàng; đã trả xanh. Phần còn lại vẫn trung tính.</p>

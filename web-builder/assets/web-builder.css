@@ -113,6 +113,9 @@
   --wb-row-danger:  rgba(220, 38, 38, .045);
   --wb-row-warning: rgba(217, 119, 6, .055);
   --wb-row-success: rgba(22, 163, 74, .05);
+  /* Selection is NOT status → a neutral tint, a touch stronger than row hover so a
+     picked row stays legible under the cursor and across a page of selections. */
+  --wb-row-selected: rgba(0, 0, 0, .075);
 
   /* Chart palette — a categorical set for slices/series (donut, bars, legend).
      Muted-but-distinct hues that sit calmly next to the neutral UI. Income/expense
@@ -255,6 +258,7 @@
   --wb-row-danger:  rgba(239, 68, 68, .09);
   --wb-row-warning: rgba(245, 158, 11, .09);
   --wb-row-success: rgba(34, 197, 94, .09);
+  --wb-row-selected: rgba(255, 255, 255, .09);
 
   /* Brighter chart hues so series survive the dark canvas. */
   --wb-chart-1: #818cf8;
@@ -637,6 +641,25 @@
   border-top: 0;
   border-bottom: 5px solid currentColor;
 }
+
+/* --- Row selection + bulk actions ----------------------------------------- */
+/* A picked row carries the neutral --wb-row-selected tint (selection isn't
+   status). The second rule keeps the tint under the cursor — it must out-rank
+   the tr:hover rule, so it repeats the full hover selector plus .is-selected. */
+.wb-table tbody tr.is-selected { background: var(--wb-row-selected); }
+.wb-table:not(.wb-table--no-hover) tbody tr.is-selected:hover { background: var(--wb-row-selected); }
+/* The narrow leading checkbox column (header + body). */
+.wb-table th.wb-table__check,
+.wb-table td.wb-table__check { width: 44px; text-align: center; padding-left: 12px; padding-right: 12px; }
+.wb-table__check .wb-check { gap: 0; }        /* a bare box, no label text */
+
+/* Bulk action bar — reveal it (add .is-active) when ≥1 row is selected. Sits at
+   the top of the .wb-card, same rhythm as .wb-table-head. */
+.wb-table-bulk { display: none; align-items: center; gap: 12px; padding: 10px 18px;
+  background: var(--wb-surface-2); border-bottom: var(--wb-bw) solid var(--wb-border); }
+.wb-table-bulk.is-active { display: flex; }
+.wb-table-bulk__count { font-size: 13px; font-weight: 650; color: var(--wb-fg); }
+.wb-table-bulk__actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
 
 /* Numeric cells — right-aligned with tabular figures so digits line up. */
 .wb-num {

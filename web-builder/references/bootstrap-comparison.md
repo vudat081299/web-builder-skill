@@ -45,7 +45,8 @@ Tailwind note below).
 `wb-page-head`/`wb-section`/`wb-block` heading rhythm — Bootstrap ships example *templates* you copy, not a
 shell primitive with a mobile rail baked in), tags (`#` category chips), stat/KPI cards,
 charts (line/bars/combo/donut/sparkline + budget), category **tree** (drag reorder/reparent), **sortable**
-list/grid/rows, **column-sort tables** (`wb-th-sort` + `aria-sort` — Bootstrap has none), **receipt** (hoá đơn — torn-paper slip), tinted category capsules, social-login buttons,
+list/grid/rows, **column-sort tables** (`wb-th-sort` + `aria-sort` — Bootstrap has none), **row selection +
+bulk bar** (`wb-table__check` + `wb-table-bulk`, tri-state select-all), **receipt** (hoá đơn — torn-paper slip), tinted category capsules, social-login buttons,
 a **steps/stepper** (`wb-steps` — wizard · timeline; Bootstrap has none), a **media object** (`wb-media` —
 figure + body; Bootstrap 5 dropped its `.media`), a **calendar / date-range picker** (`wb-calendar`) and a
 **time picker** (`wb-timepicker`) — Bootstrap 5 ships *neither* (it points at the native

@@ -11,6 +11,13 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.7-dev)
 
 ### Added
+- **Table row selection + bulk actions — `wb-table__check` + `wb-table-bulk`.** The other half of a real list
+  screen (pairs with the filter bar): a leading checkbox column with a **select-all** header box (tri-state:
+  checked / indeterminate / empty), an `is-selected` neutral row tint (new `--wb-row-selected` token —
+  selection is classification, not status, so no colour), and a `.wb-table-bulk` bar that reveals a live count
+  + batch actions once anything is picked. Dependency-free docs driver in `app.js` (delegated `change`/`click`
+  on `data-row-select` / `data-select-all` / `data-bulk`). New: catalog *Row selection & bulk actions* section
+  + a `#/tables` demo.
 - **Table column sort — `wb-th-sort` + `aria-sort`.** Click a header to sort the rows ascending ⇄ descending.
   This is genuinely *column sort*, distinct from `wb-table--sortable` (drag-to-reorder whole rows), which used
   to be the only "sortable" the library had. State lives on the accessible `aria-sort` attribute (no extra
