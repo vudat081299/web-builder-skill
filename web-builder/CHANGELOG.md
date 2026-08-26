@@ -11,6 +11,14 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.7-dev)
 
 ### Added
+- **Accessibility: `forced-colors` + `prefers-contrast` support (CSS section 57).** `:focus-visible` and
+  `prefers-reduced-motion` were already handled; these close the last two gaps. Every focus ring is a
+  `box-shadow`, which **forced-colors (Windows High Contrast) strips** — so keyboard focus was invisible there;
+  a `@media (forced-colors: active)` block now restores a real `outline: 2px solid CanvasText` on every control
+  that used the shadow ring. `@media (prefers-contrast: more)` promotes the hairline border tokens to inked
+  ones so boundaries read stronger. Documented in design-principles §19. **RTL is recorded as a deliberate
+  non-goal** there (VN-first is LTR; supporting RTL is a logical-properties sweep with no user today) rather
+  than half-built.
 - **Shared counter badge — `.wb-badge` (CSS section 56).** A count / notification badge previously existed
   only as `wb-sidenav__badge` (sidebar-only). `.wb-badge` is the shared one for nav items, tabs, buttons,
   icon buttons and avatars: neutral by default (a count is information, not status — colour ladder §1), with

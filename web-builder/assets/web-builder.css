@@ -3440,3 +3440,30 @@ pre.wb-code code { font: inherit; color: inherit; background: none; border: 0; p
 /* Pin to the top-right corner of a positioned host; the ring lifts it off the icon. */
 .wb-badge-host { position: relative; display: inline-flex; }
 .wb-badge--float { position: absolute; top: -5px; right: -5px; box-shadow: 0 0 0 2px var(--wb-surface); }
+
+/* -----------------------------------------------------------------------------
+   57. ACCESSIBILITY MEDIA  (forced-colors · prefers-contrast)
+   -----------------------------------------------------------------------------
+   :focus-visible + prefers-reduced-motion are handled inline on the components.
+   These two global queries close the remaining gaps. */
+
+/* Windows High Contrast / forced-colors: the OS overrides colours AND strips
+   box-shadow — and every focus ring here is a box-shadow (outline:none +
+   box-shadow ring), so keyboard focus would vanish. Restore a real `outline`
+   (honoured in this mode) on each control that used the shadow ring. CanvasText
+   maps to the user's system text colour. */
+@media (forced-colors: active) {
+  /* Blanket outline (with !important to beat the components' own `outline:none`)
+     so EVERY focusable — including any control added later — keeps a visible
+     focus ring here, not just today's list. */
+  :focus-visible { outline: 2px solid CanvasText !important; outline-offset: 2px; }
+  /* The switch shows its ring on the sibling track, not the (hidden) input. */
+  .wb-switch input:focus-visible + .wb-switch__track { outline: 2px solid CanvasText; outline-offset: 2px; }
+}
+
+/* prefers-contrast: more — promote the hairline borders to inked ones so
+   boundaries (cards, tables, inputs, capsules) read at a stronger contrast.
+   One token swap cascades everywhere; light + dark both covered. */
+@media (prefers-contrast: more) {
+  :root, :root.dark { --wb-border: var(--wb-fg-muted); --wb-border-strong: var(--wb-fg); }
+}

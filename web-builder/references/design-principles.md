@@ -370,6 +370,19 @@ Style must not cost semantics. The floor every component holds to:
   the focus trap and keyboard nav (§8) — the `wb-*` classes must never fight it (no `tabindex` traps, no
   `outline:none` without a replacement focus ring). Respect `prefers-reduced-motion` for anything that animates
   (the divider ray already does).
+- **`forced-colors` (Windows High Contrast).** The focus ring is a `box-shadow` (`outline:none` + shadow) —
+  and forced-colors **strips box-shadow**, so a `@media (forced-colors: active)` block (CSS section 57) restores
+  a real focus ring with a **blanket** `:focus-visible { outline: 2px solid CanvasText !important }` — future
+  controls are covered automatically, no per-component maintenance (the switch, whose ring rides its sibling
+  track, has one extra rule).
+- **`prefers-contrast: more`.** One media query (CSS section 57) promotes the hairline `--wb-border` to
+  `--wb-fg-muted` and `--wb-border-strong` to `--wb-fg`, so every boundary reads stronger — a single token swap,
+  not per-component work.
+- **RTL is a deliberate non-goal.** The library is Vietnamese-first (§20), a left-to-right language, so it uses
+  physical properties freely (`margin-left`, `right`, `text-align:left`). Supporting right-to-left would mean a
+  sweep to logical properties (`margin-inline-start`, `inset-inline`, `text-align:start`) and `dir`-aware
+  components — real work with no user today. If an RTL locale is ever needed, that sweep is the task; until
+  then, don't scatter half-measures.
 
 The rule: if removing the styling would leave a usable, operable control, the styling is correct; if it
 leaves an unlabelled or unreachable one, fix the markup, not the CSS.
