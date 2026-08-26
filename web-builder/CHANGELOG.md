@@ -11,6 +11,13 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.7-dev)
 
 ### Added
+- **Table column sort — `wb-th-sort` + `aria-sort`.** Click a header to sort the rows ascending ⇄ descending.
+  This is genuinely *column sort*, distinct from `wb-table--sortable` (drag-to-reorder whole rows), which used
+  to be the only "sortable" the library had. State lives on the accessible `aria-sort` attribute (no extra
+  class), the caret flows inline so it never overlaps a right-aligned `wb-num` header, and the sort key is
+  `data-sort-value` if present else the cell text (numeric auto-detected, otherwise Vietnamese-aware compare).
+  A ~20-line dependency-free driver ships in the docs `app.js` to copy. New: catalog *Sort by column* section +
+  a `#/tables` demo. CSS/JS only — no token added.
 - **Architecture layer — AI-native project organization.** Beside building UI, the skill now helps an agent
   choose *how a project is organized* — an **adaptive** capability, never mandatory ceremony. Small builds take
   a **one-file fast path** (a single `index.html`, no `.agent/`); structure appears only when a complexity gate

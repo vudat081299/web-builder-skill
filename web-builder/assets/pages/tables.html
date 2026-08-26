@@ -240,6 +240,41 @@
 </section>
 
 <section class="wb-section">
+  <h3>Sắp xếp theo cột</h3>
+  <p class="wb-section__desc">Thêm <code>wb-th-sort</code> vào ô tiêu đề cần sắp xếp — bấm để đảo tăng ⇄ giảm.
+  Trạng thái nằm ở thuộc tính <code>aria-sort</code> (đọc được cho screen reader); cột số nhận diện tự động,
+  cột ngày dùng <code>data-sort-value</code> (ISO) để sắp đúng thứ tự. Mũi tên bám sát nhãn, không đè cột <code>wb-num</code>.</p>
+  <div class="demo">
+    <div class="demo__stage">
+      <div class="wb-card">
+        <div class="wb-table-scroll">
+          <table class="wb-table">
+            <thead>
+              <tr>
+                <th class="wb-th-sort" aria-sort="none">Ngày</th>
+                <th class="wb-th-sort" aria-sort="none">Nội dung</th>
+                <th class="wb-th-sort" aria-sort="none">Danh mục</th>
+                <th class="wb-num wb-th-sort" aria-sort="none">Số tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="wb-cell-muted" data-sort-value="2026-07-02">02/07</td><td>Lương tháng 7</td><td><span class="wb-cap wb-cap--success">Thu nhập</span></td><td class="wb-num wb-num--pos">+25.000.000&nbsp;₫</td></tr>
+              <tr><td class="wb-cell-muted" data-sort-value="2026-07-14">14/07</td><td>Đi chợ</td><td><span class="wb-cap">Ăn uống</span></td><td class="wb-num">−480.000&nbsp;₫</td></tr>
+              <tr><td class="wb-cell-muted" data-sort-value="2026-07-09">09/07</td><td>Tiền điện</td><td><span class="wb-cap">Hoá đơn</span></td><td class="wb-num">−1.240.000&nbsp;₫</td></tr>
+              <tr><td class="wb-cell-muted" data-sort-value="2026-07-21">21/07</td><td>Cà phê</td><td><span class="wb-cap">Ăn uống</span></td><td class="wb-num">−65.000&nbsp;₫</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;th class="wb-th-sort" aria-sort="none"&gt;Nội dung&lt;/th&gt;            &lt;!-- text --&gt;
+&lt;th class="wb-num wb-th-sort" aria-sort="none"&gt;Số tiền&lt;/th&gt;      &lt;!-- numeric, auto-detected --&gt;
+&lt;td data-sort-value="2026-07-02"&gt;02/07&lt;/td&gt;                     &lt;!-- sort a date by an ISO key --&gt;
+&lt;!-- the app (or docs app.js) toggles aria-sort + reorders the tbody rows --&gt;</code></pre></div>
+  </div>
+</section>
+
+<section class="wb-section">
   <h3>Công nợ — dùng màu có chủ đích</h3>
   <p class="wb-section__desc">Ví dụ khi màu <em>đáng</em> dùng: hàng quá hạn/nợ xấu nền đỏ rất nhạt;
   sắp đến hạn vàng; đã trả xanh. Phần còn lại vẫn trung tính.</p>

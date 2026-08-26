@@ -1499,6 +1499,48 @@ function toggleTheme() {
 /* While no explicit choice is stored, track OS light/dark changes live. */
 themeMQ.addEventListener("change", () => { if (!storedTheme()) applyTheme(); });
 
+/* ---- Table column sort (docs driver; an app can copy this or use its own) ---
+   Click a `th.wb-th-sort` to sort its table's tbody by that column, toggling
+   ascending ⇄ descending. State is the accessible `aria-sort` attribute; the
+   other sortable headers in the same table reset to "none". Sort key: the
+   cell's [data-sort-value] if present (use it for dates / hidden keys), else its
+   text — numeric when every value in the column parses as a number (currency,
+   spaces and thousands separators stripped), otherwise Vietnamese-aware text. */
+function tableSortKey(cell) {
+  if (cell && cell.hasAttribute("data-sort-value")) return cell.getAttribute("data-sort-value");
+  return cell ? cell.textContent.trim() : "";
+}
+function tableSortNum(v) {
+  /* Vietnamese money format: "." groups thousands, "," is the decimal, and "−"
+     (U+2212) is a real minus. A value counts as numeric only if it reduces to a
+     clean number — so an ISO date like "2026-07-14" (internal hyphens) is NOT
+     numeric and sorts as text instead (ISO text already sorts chronologically). */
+  let s = String(v).replace(/−/g, "-").replace(/[^\d.,-]/g, "");
+  s = s.replace(/\./g, "").replace(",", ".");
+  return /^-?\d+(\.\d+)?$/.test(s) ? parseFloat(s) : null;
+}
+document.addEventListener("click", (e) => {
+  const th = e.target.closest("th.wb-th-sort");
+  if (!th) return;
+  const table = th.closest("table.wb-table");
+  const tbody = table && table.querySelector("tbody");
+  if (!tbody) return;
+  const col = Array.prototype.indexOf.call(th.parentElement.children, th);
+  const dir = th.getAttribute("aria-sort") === "ascending" ? "descending" : "ascending";
+  table.querySelectorAll("th.wb-th-sort").forEach((h) => h.setAttribute("aria-sort", "none"));
+  th.setAttribute("aria-sort", dir);
+  const sign = dir === "ascending" ? 1 : -1;
+  const rows = Array.prototype.slice.call(tbody.querySelectorAll(":scope > tr"));
+  const numeric = rows.every((r) => tableSortNum(tableSortKey(r.children[col])) !== null);
+  rows.sort((a, b) => {
+    const av = tableSortKey(a.children[col]), bv = tableSortKey(b.children[col]);
+    return sign * (numeric ? tableSortNum(av) - tableSortNum(bv) : av.localeCompare(bv, "vi"));
+  });
+  const frag = document.createDocumentFragment();
+  rows.forEach((r) => frag.appendChild(r));
+  tbody.appendChild(frag);                                // one reflow, not one per row
+});
+
 /* ---- Search: full-text over every page (docs-only). The index is built lazily on
    first open and cached; matching is a case-insensitive substring (label first,
    then body). A command-palette dialog: ↑/↓ move the highlighted row, ↵ opens it. */

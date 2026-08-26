@@ -608,6 +608,36 @@
 /* --- MODIFIER: sticky header (needs a height-bounded .wb-table-scroll) ---- */
 .wb-table--sticky thead th { position: sticky; top: 0; z-index: 2; }
 
+/* --- MODIFIER: sortable header (click a column to sort) -------------------- */
+/* State lives on the accessible `aria-sort` attribute ("ascending" /
+   "descending" / "none"), so a screen reader announces it for free; the app (or
+   the docs driver) sets `aria-sort` and reorders the rows. The caret flows
+   inline *after* the label, so a right-aligned .wb-num header (numeric column)
+   keeps its caret tight to the label instead of overlapping it. */
+.wb-table thead th.wb-th-sort { cursor: pointer; user-select: none; }
+.wb-table thead th.wb-th-sort:hover { color: var(--wb-fg); }
+.wb-th-sort::after {
+  content: "";
+  display: inline-block;
+  width: 0; height: 0;
+  margin-left: 6px;
+  vertical-align: middle;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;        /* resting: faint down caret = "sortable" */
+  opacity: .3;
+  transition: opacity .12s ease;
+}
+.wb-th-sort:hover::after { opacity: .6; }
+.wb-table thead th.wb-th-sort[aria-sort="ascending"],
+.wb-table thead th.wb-th-sort[aria-sort="descending"] { color: var(--wb-fg); }
+.wb-th-sort[aria-sort="ascending"]::after,
+.wb-th-sort[aria-sort="descending"]::after { opacity: 1; }
+.wb-th-sort[aria-sort="ascending"]::after {   /* flip to an up caret when ascending */
+  border-top: 0;
+  border-bottom: 5px solid currentColor;
+}
+
 /* Numeric cells — right-aligned with tabular figures so digits line up. */
 .wb-num {
   text-align: right;

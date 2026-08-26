@@ -94,6 +94,7 @@ for the look (see `integration.md`).
 | Nested categories (drag to reorder / reparent) | **Tree** | [Tree](#tree) |
 | Reorder a flat list or grid of cards (drag) | **Sortable** | [Sortable](#sortable-list--grid) |
 | Reorder rows inside a data table (drag) | **Sortable table** (`--sortable`) | [Sortable](#sortable-list--grid) |
+| **Sort** a data table by a column (click the header, asc ⇄ desc) | **Sortable header** (`wb-th-sort` + `aria-sort`) | [Tables](#tables) |
 | Place items in a **fixed grid/list**, keep empty slots between them (drag → any slot, swap) | **Slot grid** (`.wb-slotgrid`) | [Slot grid](#slot-grid) |
 | The frame of a whole screen (top bar + rail + scrolling content + footer) | **App shell** (`.wb-shell`) | [App shell](#app-shell--page-scaffold) |
 | A page title / section heading / sub-block, and the spacing between them | **Page scaffold** (`.wb-page-head` / `.wb-section` / `.wb-block`) | [App shell](#app-shell--page-scaffold) |
@@ -444,6 +445,35 @@ overdue debts, bad debt, over-budget, etc.
   <table class="wb-table wb-table--sticky wb-table--compact">…</table>
 </div>
 ```
+
+### Sort by column — `wb-th-sort` + `aria-sort`
+
+Click a header to sort the rows. **This is column sort — not the same thing as `wb-table--sortable`, which is
+drag-to-*reorder* whole rows** (see [Sortable](#sortable-list--grid)). Put `wb-th-sort` on each sortable `<th>`
+and seed `aria-sort="none"`; the app toggles `aria-sort` between `ascending`/`descending` and reorders the
+`<tbody>` rows. State lives on **`aria-sort`** so a screen reader announces it for free — no extra class. The
+caret flows inline after the label, so a right-aligned `wb-num` header keeps its arrow tight to the label.
+
+```html
+<thead>
+  <tr>
+    <th class="wb-th-sort" aria-sort="none">Nội dung</th>          <!-- text: Vietnamese-aware compare -->
+    <th class="wb-num wb-th-sort" aria-sort="none">Số tiền</th>   <!-- numeric: auto-detected -->
+  </tr>
+</thead>
+<tbody>
+  <tr><td data-sort-value="2026-07-02">02/07</td> … </tr>          <!-- sort a date by a hidden ISO key -->
+</tbody>
+```
+
+**Sort key** per cell: `data-sort-value` if present (use it whenever the display ≠ the sort order), else the
+cell text. A column is sorted numerically only when *every* value reduces to a clean number — Vietnamese money
+parses out of the box (`.` = thousands, `,` = decimal, `−`/U+2212 = minus, currency stripped), so
+`+25.000.000 ₫` and `−480.000 ₫` sort by value with no `data-sort-value` needed. Anything else sorts as text
+via `localeCompare(…, "vi")`, and an **ISO date** (`2026-07-14`) is *deliberately* treated as text so it sorts
+chronologically — put that ISO string in `data-sort-value` and show `14/07` in the cell. The docs driver lives
+in `assets/app.js` (a delegated `th.wb-th-sort` click handler, ~25 lines, dependency-free) — copy it, or wire
+your framework's own sort to the same `aria-sort` contract.
 
 ### Snippet — debt / receivables (meaningful colour)
 
