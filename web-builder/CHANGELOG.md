@@ -11,6 +11,12 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.7-dev)
 
 ### Added
+- **Code block primitive — `.wb-code` (CSS section 55).** The docs' own code block (`.demo__code`) is chrome
+  and never ships, so an app needing a monospace block had nothing to reach for (mildly against the §2 dogfood
+  stance). `.wb-code` ships it: an **inline** chip on `<code>`/`<span>` and a **block** on
+  `<pre class="wb-code">` (preserves whitespace, scrolls sideways on the page-wide themed scrollbar). Mono from
+  `--wb-font-mono`, neutral `--wb-surface-2` surface + hairline border. New `#/code` demo page + catalog *Code*
+  section + decision row. No JS.
 - **Print stylesheet — `@media print` (CSS section 54).** Finance UIs get printed (receipts, debt tables,
   statements) and the library had zero print rules. Now it prints on a **white, ink-saving page in any theme**
   (dark mode re-declares the core surface/ink/border tokens to light for print), drops shadows and

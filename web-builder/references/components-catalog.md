@@ -10,7 +10,7 @@ Scope so far: foundations (**colour**, **tokens**, **typography**, **fonts**, **
 **Buttons** (+ button-group), **Dropdown**; **inputs** — one primitive per
 page: **Text input**, **Select**, **Textarea**, **Checkbox/Radio**, **Switch**, **Range/Slider**,
 **File/Upload**, **Colour**; **Card**, **Tables**, **Filter bar**, **List group**, **Stat/KPI**, **Capsules**, **Tags**,
-**Avatar**; **Alert**, **Toast**, **Modal**, **Drawer/Offcanvas**, **Progress**, **Skeleton**,
+**Avatar**, **Code block**; **Alert**, **Toast**, **Modal**, **Drawer/Offcanvas**, **Progress**, **Skeleton**,
 **Empty state**, **Tooltip**, **Popover**; **Tabs** (underline / pill / boxed), **Breadcrumb**, **Pagination**,
 **Accordion**, **Collapse**, **Divider**; **Charts** (line/area, bars, **combo bar+line**, **horizontal ranked bars**,
 donut + thin/rounded + progress ring, budget, sparkline, mono/blue schemes + count-aware ramps); a
@@ -34,6 +34,7 @@ for the look (see `integration.md`).
 | Any clickable action (save, add, cancel, delete) | **Button** | [Buttons](#buttons) |
 | A sign-in-with-provider button (Apple / Google) | **Button** — social | [Buttons](#buttons) |
 | A status / category / method label inside a cell | **Capsule** | [Capsules](#capsules) |
+| Show a command, path, API key, or a config snippet (monospace) | **Code** (`wb-code` inline / `pre.wb-code` block) | [Code](#code) |
 | A free-form label a user pins to a transaction (`#…`) | **Tag** | [Tags](#tags) |
 | A dashboard KPI (balance, income, spend, change %) | **Stat card** | [Stat cards](#stat--kpi-cards) |
 | A list of accounts, categories, simple records | Table — basic | [Tables](#tables) |
@@ -303,6 +304,27 @@ colour is the delta — `--up` (green) for a rise, `--down` (red) for a drop, be
 
 The `__foot` can hold a delta, a plain caption, or a capsule (e.g. a danger capsule for
 "2 quá hạn"). Keep values in `tabular-nums` (the class already does this).
+
+---
+
+## Code
+
+`.wb-code` — the **shipped** monospace primitive (the docs' own `.demo__code` is chrome and never ships).
+Mono comes from `--wb-font-mono`; both forms use the neutral `--wb-surface-2` surface + a hairline border.
+
+- **Inline** — on a `<code>`/`<span>`: a small chip (`.9em`, `--wb-radius-sm`) for a command, path, key or token
+  mentioned mid-sentence.
+- **Block** — on a `<pre class="wb-code">`: preserves whitespace, scrolls sideways when long (the themed
+  scrollbar is page-wide), larger radius. A `<code>` nested inside is plain text, not a nested chip.
+
+```html
+Chạy <code class="wb-code">python3 serve.py</code> rồi mở trình duyệt.
+
+<pre class="wb-code">cp web-builder.css src/
+&lt;link rel="stylesheet" href="/src/web-builder.css"&gt;</pre>
+```
+
+No JS. For a **keyboard shortcut** hint use [`.wb-kbd`](#pager--footer) instead (a 3-D keycap, not a code chip).
 
 ---
 

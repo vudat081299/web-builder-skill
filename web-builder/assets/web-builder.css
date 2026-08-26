@@ -3387,3 +3387,32 @@
   /* A link prints as its label, not a coloured underline. */
   a { color: inherit; text-decoration: none; }
 }
+
+/* -----------------------------------------------------------------------------
+   55. CODE  (.wb-code — the app-facing monospace: inline chip + <pre> block)
+   -----------------------------------------------------------------------------
+   The docs' own code block (.demo__code) is docs chrome and never ships; this is
+   the shipped primitive an app reaches for. Inline on <code>/<span>; block on
+   <pre class="wb-code">. Mono comes from --wb-font-mono; the block scrolls
+   sideways (the themed scrollbar is page-wide) and preserves whitespace. */
+.wb-code {
+  font-family: var(--wb-font-mono);
+  font-size: .9em;
+  color: var(--wb-fg);
+  background: var(--wb-surface-2);
+  border: var(--wb-bw) solid var(--wb-border);
+  border-radius: var(--wb-radius-sm);
+  padding: .12em .4em;
+}
+pre.wb-code {
+  display: block;
+  margin: 0;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-x: auto;
+  border-radius: var(--wb-radius);
+}
+/* A <code> inside a block is just the text — never a nested chip. */
+pre.wb-code code { font: inherit; color: inherit; background: none; border: 0; padding: 0; }

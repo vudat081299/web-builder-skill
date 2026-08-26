@@ -198,7 +198,7 @@ sync per-component, so it never drifts here):
   stat/KPI cards, capsules/badges (incl. `--tinted` category hue + `--dashed` optional/add-new), tags, avatar, **media object**
   (`.wb-media` — a leading figure + title/text body: ranked rows, feature lists; pairs with card), **receipt**
   (hoá đơn — a torn-paper slip; **3 edge styles** scallop (default) / `--wave` / `--dashed`, plus `--bottom`/`--flat`/`--ticket` (vé xé — dashed tear + real half-circle side cuts), `__barcode`; geometry knobs `--wb-receipt-d`/`--wb-receipt-gap`; bill · transfer · voucher templates), and **charts** — line/area,
-  income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps.
+  income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps, and **code block** (`.wb-code` — inline chip on `<code>`, block on `<pre class="wb-code">`; the shipped monospace, ≠ docs-only `.demo__code`).
 - **Feedback** — alert/banner (tone outline, or `--plain` = no outline/flat), toast, progress (+ indeterminate/loading, status tones + `--info`), skeleton, empty state.
 - **Overlays** — modal/dialog, drawer/offcanvas (backdrop options on `.wb-overlay`: `--blur` /
   `--clear`, or `--pass` = **non-modal**, page below stays usable), tooltip, **popover** (click-toggled card w/ arrow + × — richer than tooltip, not a menu).

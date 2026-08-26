@@ -1,0 +1,39 @@
+<div class="wb-page-head">
+  <p class="wb-eyebrow">Data display</p>
+  <h2>Code block</h2>
+  <p><code class="wb-code">.wb-code</code> là primitive monospace <b>được ship</b> — cái mà một app
+  với tay tới khi cần hiện lệnh, đường dẫn, khoá API hay một đoạn cấu hình. Trước đây chỉ có <code class="wb-code">.demo__code</code>
+  của docs (chrome, không bao giờ ship). Dùng inline trên <code class="wb-code">&lt;code&gt;</code>/<code class="wb-code">&lt;span&gt;</code>,
+  dùng khối trên <code class="wb-code">&lt;pre class="wb-code"&gt;</code>.</p>
+</div>
+
+<section class="wb-section">
+  <h3>Inline</h3>
+  <p class="wb-section__desc">Một mẩu mã giữa dòng văn: chip mono nền <code class="wb-code">--wb-surface-2</code>, viền hairline,
+  bo <code class="wb-code">--wb-radius-sm</code>. Cỡ chữ <code class="wb-code">.9em</code> để hoà vào dòng.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <p>Chạy <code class="wb-code">python3 serve.py 8777</code> rồi mở đường dẫn, hoặc đặt biến
+      <code class="wb-code">--wb-font</code> để đổi font toàn hệ.</p>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>Chạy &lt;code class="wb-code"&gt;python3 serve.py 8777&lt;/code&gt; rồi mở…</code></pre></div>
+  </div>
+</section>
+
+<section class="wb-section">
+  <h3>Khối (block)</h3>
+  <p class="wb-section__desc">Đặt <code class="wb-code">wb-code</code> lên <code class="wb-code">&lt;pre&gt;</code>: giữ nguyên
+  khoảng trắng, cuộn ngang khi dài (thanh cuộn đã theo theme sẵn), bo góc lớn hơn. Một <code class="wb-code">&lt;code&gt;</code>
+  lồng bên trong chỉ là chữ, không thành chip.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <pre class="wb-code">npm create vite@latest my-app
+cd my-app
+cp web-builder.css src/          # một file duy nhất được ship
+&lt;link rel="stylesheet" href="/src/web-builder.css"&gt;</pre>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;pre class="wb-code"&gt;npm create vite@latest my-app
+cd my-app
+cp web-builder.css src/&lt;/pre&gt;</code></pre></div>
+  </div>
+</section>

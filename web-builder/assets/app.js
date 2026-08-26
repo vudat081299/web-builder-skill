@@ -25,7 +25,7 @@ const SECTIONS = [
     { id: "overview",   label: "Overview" },
     { id: "recipes",    label: "Page recipes" },
     { id: "templates",  label: "Page templates" },
-    { id: "principles", label: "Principles (§1–§25)" },
+    { id: "principles", label: "Principles (§1–§26)" },
     { id: "color",      label: "Colour philosophy" },
     { id: "tokens",     label: "Design tokens" },
     { id: "typography", label: "Typography" },
@@ -71,6 +71,7 @@ const SECTIONS = [
       { id: "tags",     label: "Tags (#)" },
       { id: "avatar",   label: "Avatar" },
       { id: "charts",   label: "Charts" },
+      { id: "code",     label: "Code block" },
     ]},
     { group: "Feedback", items: [
       { id: "alert",    label: "Alert / Banner" },
