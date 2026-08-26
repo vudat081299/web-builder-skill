@@ -71,6 +71,13 @@ can tell whether a part it needs already exists. Newest first.
     `tests/forward-tests.sh`. No component, template, runtime, or component doc changed.
 
 ### Fixed
+- **Popover dismissed on a drag that started inside it.** The popover/dropdown outside-click still ran on a bare
+  `click`, so pressing inside the card (a slider, a picker, selected text) and releasing outside dismissed it —
+  the same footgun already fixed for the modal backdrop. The popover now uses the **press+release guard**: it
+  closes only when *both* the `pointerdown` and the `pointerup` land outside it (toggle + × stay on `click`).
+  The **dropdown is deliberately left on bare `click`** (its items are click-to-select-and-close; documented as
+  an exception). The rule is now a numbered principle — **design-principles §27** — rendered in-site
+  (principles.html + overview §-map); catalog Popover/Dropdown sections updated.
 - **Tool-call scaffolding had leaked into 11 authored files** — a trailing line that was only `</content>` (and
   one `</invoke>`). Seven of them are shipped `references/*.md`, so the garbage was being packaged into
   `web-builder.skill` and distributed. Stripped, and **CHECK 20** in `scripts/verify.sh` now blocks any commit

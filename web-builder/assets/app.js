@@ -1099,24 +1099,24 @@ document.addEventListener("click", (e) => {
   });
   if (ddToggle) { ddToggle.closest(".wb-dropdown").classList.toggle("is-open"); return; }
 
-  /* Popover: click-toggled floating card. Close every open popover except the one
-     being toggled or the one whose panel was clicked (so buttons inside it work);
-     the × and any outside click close it. */
+  /* Popover: click-toggled floating card. Toggle is handled here; the × closes;
+     a click INSIDE the panel keeps it open. OUTSIDE-dismiss is NOT done on click
+     — it's the pointerdown+pointerup guard below (§27), so a drag that begins in
+     the card (a slider, a picker, selected text) and releases outside never
+     dismisses it. */
   const popToggle = e.target.closest("[data-pop-toggle]");
   const popPanel  = e.target.closest(".wb-popover__panel");
   const popClose  = e.target.closest(".wb-popover__panel .wb-close");
-  document.querySelectorAll(".wb-popover.is-open").forEach((p) => {
-    const keep = (popToggle && p === popToggle.closest(".wb-popover")) ||
-                 (popPanel && !popClose && p === popPanel.closest(".wb-popover"));
-    if (!keep) p.classList.remove("is-open");
-  });
   if (popToggle) {
     const pop = popToggle.closest(".wb-popover");
+    /* Opening one popover closes the others. */
+    document.querySelectorAll(".wb-popover.is-open").forEach((p) => { if (p !== pop) p.classList.remove("is-open"); });
     const opened = pop.classList.toggle("is-open");
     /* Seed the hosted picker from the field, then centre any time picker on its selection. */
     if (opened) { syncFieldToPicker(pop); pop.querySelectorAll("[data-timepicker]").forEach((tp) => tp._tpCenter && tp._tpCenter()); }
     return;
   }
+  if (popClose) { popClose.closest(".wb-popover").classList.remove("is-open"); return; }
   if (popPanel) return;   // a click inside the card (not ×) — leave it open
 
   /* Collapse: toggle the nearest show/hide region. */
@@ -1163,6 +1163,21 @@ document.addEventListener("pointerup", (e) => {
     e.target.classList.remove("is-open");
   }
   _wbOverlayDown = null;
+});
+
+/* Popover outside-dismiss: close an open popover only when BOTH the pointerdown
+   and the pointerup landed OUTSIDE it (§27) — the same press+release rule as the
+   modal backdrop. A bare "click" dismissed on a drag that began inside the card
+   (a slider, a picker, selected text) and released outside, because the click
+   targets the common ancestor of press and release. Toggling + the × are on
+   click above; this only handles dismissal. */
+let _wbPopDown = null;
+document.addEventListener("pointerdown", (e) => { _wbPopDown = e.target; });
+document.addEventListener("pointerup", (e) => {
+  const down = _wbPopDown; _wbPopDown = null;
+  document.querySelectorAll(".wb-popover.is-open").forEach((p) => {
+    if (!p.contains(down) && !p.contains(e.target)) p.classList.remove("is-open");
+  });
 });
 
 function spawnToast(d) {

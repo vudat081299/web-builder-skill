@@ -1,6 +1,6 @@
 <div class="wb-page-head">
   <p class="wb-eyebrow">Foundation</p>
-  <h2>Nguyên tắc thiết kế (§1 → §26)</h2>
+  <h2>Nguyên tắc thiết kế (§1 → §27)</h2>
   <p>Những quyết định thẩm mỹ đã <b>chốt sẵn</b>, để không phải review lại trên từng trang. Mỗi nguyên tắc mang
   một số hiệu <b>§N</b> — bất cứ đâu trong repo nhắc "§N" là trỏ về đúng mục ở đây. Đây là <b>bản đầy đủ, đọc
   ngay trên site</b> (không phải bản tóm tắt): mỗi § là một mục mở/gập bằng <a href="#/accordion">accordion</a>,
@@ -472,7 +472,7 @@
         "đọc bản đầy đủ ở <code>X.md</code>" / "roster đầy đủ ở <code>X.md</code>" như một <i>thứ thay cho nội
         dung</i> — đó là bẫy docs-thiếu (chính cái từng làm bản đồ §N của overview thành một teaser trỏ về file này).
         Lo trang dài? Đó là việc của primitive ẩn/hiện: bỏ nội dung đầy đủ vào <code>&lt;details&gt;</code>/accordion
-        hoặc một trang riêng và link <b>in-site</b> — như §1–§26 giờ nằm đầy đủ (gập được) ở chính trang này, còn
+        hoặc một trang riêng và link <b>in-site</b> — như §1–§27 giờ nằm đầy đủ (gập được) ở chính trang này, còn
         overview chỉ giữ index gọn trỏ tới. Link sang một <b>trang in-site khác</b> là điều hướng, không phải
         deferral; đẩy người đọc ra một file reference thô để lấy nội dung mà site đã nhận phụ trách mới là anti-pattern.</p>
         <p>Vẫn được phép <b>nêu tên</b> một <code>.md</code> như bản song song cho AI ("cùng luật, cho AI, ở
@@ -577,6 +577,30 @@
           <li><b>Nền để trình duyệt tự bỏ</b> (tiết kiệm mực mặc định) — trạng thái vẫn đọc được từ <i>chữ</i>
           trên capsule, không chỉ từ mảng nền, nên nghĩa vẫn còn khi in đen trắng.</li>
         </ul>
+      </div>
+    </details>
+
+    <details class="wb-accordion__item">
+      <summary>§27 · Đóng khi click ra ngoài <i>trọn vẹn</i>, không phải một cú kéo lỡ</summary>
+      <div class="wb-accordion__body">
+        <p>Một overlay đóng khi click ra ngoài chỉ được đóng khi <b>cả <code>pointerdown</code> lẫn
+        <code>pointerup</code> đều rơi bên ngoài</b> nó — không bao giờ dựa trên <code>click</code>. Sự kiện
+        <code>click</code> bắn ở tổ tiên chung gần nhất của điểm nhấn và điểm nhả, nên nhấn <i>bên trong</i> bề
+        mặt (bôi đen chữ, kéo slider hay picker) rồi nhả ra ngoài sẽ trỏ vào một tổ tiên bên ngoài và
+        <b>đóng nhầm</b>. Luật áp cho mọi bề mặt "click ngoài để đóng":</p>
+        <ul>
+          <li><b>Backdrop của modal / drawer</b> — cặp <code>pointerdown</code>+<code>pointerup</code> trên
+          <code>document</code> chỉ xoá <code>.is-open</code> khi cả hai rơi trên cùng một scrim
+          <code>.wb-overlay</code>.</li>
+          <li><b>Popover</b> — cùng cơ chế: một <code>.wb-popover</code> đang mở chỉ đóng khi cả điểm nhấn lẫn
+          điểm nhả đều không nằm trong nó. Toggle và nút × vẫn ở <code>click</code>; chỉ phần dismiss dùng
+          pointer guard.</li>
+          <li><b>Dropdown cố ý giữ nguyên <code>click</code> trần.</b> Item của nó là chọn-rồi-đóng (click
+          <i>bên trong</i> nên đóng), và không chứa nội dung kéo-thả — nên guard press+release sẽ phá hành vi
+          bình thường để đổi lấy một footgun không tồn tại ở đây. Là ngoại lệ có chủ đích, không phải sót.</li>
+        </ul>
+        <p>Hệ quả: mọi bề mặt "click ngoài để đóng" <b>mới</b> đều dùng pointer guard, không dùng
+        <code>click</code> trần — và ghi rõ trong catalog.</p>
       </div>
     </details>
 

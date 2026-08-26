@@ -978,6 +978,10 @@ its nested list in `.wb-menu__group`; the item gets `--expand` + a right-aligned
 is `.wb-menu__sub` > `.wb-menu__sub-inner`; toggle `.is-open` on the group (clicking it opens the sub, keeps
 the dropdown open).
 
+Outside-dismiss stays on a bare `click` **by design** (§27) — unlike the popover: a dropdown's items are
+click-to-select-and-close (a click inside *should* dismiss), and it holds no drag-interactive content, so the
+press+release guard would only get in the way. A documented exception, not an oversight.
+
 ```html
 <div class="wb-dropdown">
   <button class="wb-btn wb-btn--secondary" data-dd-toggle>Thao tác
@@ -1247,7 +1251,10 @@ App: Radix Tooltip when you need smart positioning / delay.
 A click-toggled floating **card** (title + body + optional actions), with a pointer arrow and a
 top-right `.wb-close`. Richer than a tooltip (hover, text-only), not a menu of actions (dropdown).
 Toggle `.is-open` on `.wb-popover` (docs use vanilla JS; a click inside the panel keeps it open,
-the × / an outside click closes it). Default floats **above**; `--bottom` / `--left` / `--right` flip it
+the × / an outside click closes it). **Outside-dismiss uses the press+release guard (§27), not a bare
+`click`:** the popover closes only when *both* the `pointerdown` and the `pointerup` land outside it, so a
+drag that starts inside the card — a slider, a picker, selected text — and releases outside does **not**
+dismiss it. Default floats **above**; `--bottom` / `--left` / `--right` flip it
 (the arrow follows).
 
 ```html

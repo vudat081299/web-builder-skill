@@ -552,3 +552,22 @@ Receipts (hoá đơn), debt tables and statements are printed and shared on pape
   `break-inside: avoid`, and `thead` repeats on every page (`display: table-header-group`).
 - **Backgrounds stay off by default** (the browser's ink-saving) — status still reads from a capsule's *text*,
   not only its tint, so meaning survives a mono print.
+
+## 27. Dismiss on a full click outside, not a stray drag
+
+An overlay that closes on an outside/backdrop click must close only when **both the `pointerdown` and the
+`pointerup` land outside it** — never on a `click`. A `click` fires on the nearest common ancestor of press and
+release, so pressing *inside* the surface (selecting text, dragging a slider or a picker) and releasing outside
+targets an outside ancestor and **wrongly dismisses** it. The rule applies to every click-outside-to-close
+surface:
+
+- **Modal / drawer backdrop** — a `pointerdown`+`pointerup` pair on `document` clears `.is-open` only when both
+  land on the same `.wb-overlay` scrim.
+- **Popover** — the same guard: an open `.wb-popover` closes only when neither the press nor the release is
+  inside it. Toggling and the × stay on `click`; dismissal is the pointer guard.
+- **Dropdown is deliberately left on bare `click`.** Its items are click-to-select-and-close (a click *inside*
+  should dismiss it), and it holds no drag-interactive content — so the press+release guard would break its
+  normal behaviour for a footgun that doesn't apply. A documented exception, not an oversight.
+
+Corollary: any *new* click-outside-to-close surface uses the pointer guard, not a bare `click`, and the catalog
+entry says so.
