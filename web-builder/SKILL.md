@@ -228,7 +228,10 @@ a capsule) — **no left-accent bars** on components (a documented non-default v
 form validation is a **state**, `.is-invalid` (not `--invalid`); border width is one knob (`--wb-bw`);
 lean on **dashed** borders for "empty / droppable / optional". On **dark**, shadows flip to a soft
 **light** lift (a black shadow is invisible on a dark canvas) — build with `--wb-shadow-*` and it's
-automatic. The thin **theme-aware scrollbar is page-wide by default** — CSS section 27 declares it once on `:root` + `*`,
+automatic. **Theme default** (asked for dark/light and nothing more): **first visit follows the OS** — a
+pre-paint boot script sets `.dark` from `prefers-color-scheme` — and the toggle is **2-state light⇄dark**
+(persisted in `localStorage["wb-theme"]`; **no "system" button state**); copy a `templates/*.html`, which ships
+this exact wiring (design-principles §6). The thin **theme-aware scrollbar is page-wide by default** — CSS section 27 declares it once on `:root` + `*`,
 so the viewport bar, the built-in table/menu areas, a hand-written `overflow:auto` div and a third-party widget
 all follow the theme with **no class to add** (`.wb-scrollbars--os` opts a subtree back to the OS bar); pair it
 with **tail room** (`.wb-scroll-y`/`-x`, `--pad`) so the last item scrolls clear and the bar doesn't clash. **Disabled** and **locked**

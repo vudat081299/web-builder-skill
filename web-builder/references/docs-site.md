@@ -214,7 +214,7 @@ The still-docs-only roster:
 | `doc-brand` · `__mark` · `__text` · `__name` · `__ver` | brand block in the **topbar** (logo tile + name + version); it **is** the sidebar toggle (`data-side-toggle` — click the W) |
 | `doc-tree` · `__group` (`--flat`) · `__head` · `__caret` · `__items` · `__link` · `__badge` | one section's nav tree; `__head` is a collapse button (caret on the RIGHT); a flat section renders one `--flat` headingless group; `__link.is-active` / `.is-coming` |
 | `doc-topbar` · `doc-topbar__cap` | hook on the shipped bar for the two docs deviations: a roomier gap/padding, and hiding the "Minimalist UI kit" cap on phones |
-| `theme-btn` · `doc-icon-btn` | pill theme cycler; round config icon-button |
+| `theme-btn` · `doc-icon-btn` | pill light⇄dark toggle; round config icon-button |
 | `doc-content` | consumer tuning of the shipped content column: `--wb-container-max: 980px` + roomier 32px side gutters (18px under 900px) |
 | `doc-note` | margin + top-aligned icon on the shipped info alert (page flow, not looks) |
 | `doc-sep` | neutral separator glyph (→ / ↔) between inline chips |
@@ -236,11 +236,14 @@ The still-docs-only roster:
 
 ## 6. App features to reproduce (spec, not code)
 
-**Theme cycling.** Three modes stored in `localStorage["wb-theme"]`: `system` (default, follows the OS via
-`matchMedia("(prefers-color-scheme: dark)")`), `light`, `dark`. The topbar `theme-btn` cycles
-system→light→dark; `.dark` on `<html>` is the switch. In `system` mode the app live-tracks OS changes via the
-media-query `change` event. **FOUC guard:** a tiny inline script in `index.html`'s `<head>` reads the stored
-mode *before paint* and adds `.dark` up front, so the page never flashes the wrong mode.
+**Theme toggle.** Two states only, `light` ⇄ `dark`, stored in `localStorage["wb-theme"]`. No stored value
+(or a legacy `"system"`) means **follow the OS** via `matchMedia("(prefers-color-scheme: dark)")` — there is
+deliberately **no** "system" button state to cycle back to; clearing the key returns to OS-follow. The topbar
+`theme-btn` flips the two; `.dark` on `<html>` is the switch. While nothing is stored the app live-tracks OS
+changes via the media-query `change` event. **FOUC guard:** a tiny inline script in `index.html`'s `<head>`
+reads the stored value *before paint* and adds `.dark` up front, so the page never flashes the wrong mode.
+This is the exact contract the shipped `templates/*.html` wire up — the default whenever a build asks for
+"dark/light" and nothing more.
 
 **Config playground.** A slide-in `.doc-config` drawer (opened from `#configBtn`) that edits docs-facing
 `--wb-*` tokens **live** by setting CSS custom properties on `:root` — it **never** touches `web-builder.css`,

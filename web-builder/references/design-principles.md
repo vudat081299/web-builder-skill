@@ -134,6 +134,14 @@ where a token exists.
 
 - Light is the default (`:root`). Dark is the `.dark` class on a root element — the same
   model any class-based theme toggle uses (e.g. next-themes), so the library and the app agree.
+- **The default theme UX (when a build asks for "dark/light" and nothing more): first visit
+  follows the OS, the toggle has two states.** No stored preference → read
+  `prefers-color-scheme` in a tiny **pre-paint** boot script and set `.dark` (never a CSS
+  `@media` block — the CSS stays purely class-based so an *explicit* choice always out-ranks the
+  OS). The toggle flips **light ⇄ dark only** and persists the pick under `localStorage["wb-theme"]`
+  (`'light'` | `'dark'`). There is deliberately **no "system"/"auto" position** on the button;
+  clearing the key returns to OS-follow, and while nothing is stored the app live-tracks OS changes.
+  The shipped `templates/*.html` wire exactly this — copy a template rather than re-deriving it.
 - Every colour must come from a token so both themes stay correct. If you need a new
   colour, add a token in **both** `:root` and `.dark`, then use the token.
 - **Don't let a dark base rule out-rank variant colours.** `.dark .wb-cap { color: … }`

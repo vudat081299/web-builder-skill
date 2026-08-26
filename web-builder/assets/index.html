@@ -15,12 +15,13 @@
     window.__v = Date.now();
     document.write('<link rel="stylesheet" href="web-builder.css?v=' + window.__v + '">');
     document.write('<link rel="stylesheet" href="docs.css?v=' + window.__v + '">');
-    /* Set theme before paint to avoid a flash of the wrong mode. Modes: 'system'
-       (default — follow the OS), 'light', 'dark'. */
+    /* Set theme before paint to avoid a flash of the wrong mode. Storage holds
+       only 'light' | 'dark'; anything else (unset / legacy 'system') means
+       follow the OS. There is no separate "system" mode to toggle back to. */
     try {
       var s = localStorage.getItem('wb-theme');
       var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (s === 'dark' || ((s === 'system' || !s) && sysDark)) document.documentElement.classList.add('dark');
+      if (s === 'dark' || (s !== 'light' && sysDark)) document.documentElement.classList.add('dark');
     } catch (e) {}
   </script>
 </head>
@@ -53,8 +54,8 @@
       <button class="doc-icon-btn" id="configBtn" aria-label="Tweak (Config)" title="Tweak">
         <span class="wb-ico">tune</span>
       </button>
-      <button class="theme-btn" id="themeBtn" title="Theme: Auto → Light → Dark" aria-label="Change theme">
-        <span id="themeIcon">◐</span> <span id="themeLabel">Auto</span>
+      <button class="theme-btn" id="themeBtn" title="Toggle theme (light / dark)" aria-label="Toggle light/dark theme">
+        <span id="themeIcon">☾</span> <span id="themeLabel">Dark</span>
       </button>
     </header>
 

@@ -72,6 +72,14 @@ can tell whether a part it needs already exists. Newest first.
   `classify-problem.sh` offer the same set. Both directions, both files, hard-blocking.
 
 ### Changed
+- **Theme default is now a documented contract: first visit follows the OS, the toggle is 2-state.** When a
+  build asks for "dark/light" and nothing more, ship: no stored preference → follow `prefers-color-scheme`
+  (via a pre-paint boot script, not a CSS `@media` block); the toggle flips **light ⇄ dark only** and persists
+  under `localStorage["wb-theme"]` (`'light'`|`'dark'`); there is **no "system"/"auto" button state** (clearing
+  the key returns to OS-follow). The shipped `templates/*.html` already wired this; now `SKILL.md`,
+  `design-principles.md` §6 and the catalog's theme-toggle section spell it out, and the templates use the
+  collision-safe key `wb-theme` (was the generic `theme`). The docs-site topbar toggle dropped its old 3-state
+  `system→light→dark` cycle to match. No CSS or component changed.
 - **The theme-aware scrollbar is now a page-wide default, declared once** (CSS section 27). It used to be an **opt-in
   name list** (`.wb-scroll-y` · `.wb-scroll-x` · `.wb-table-scroll` · `.wb-menu` · `.wb-textarea` ·
   `.wb-scrollbars`), so any *other* scroller — an `overflow:auto` div you wrote by hand, a third-party widget,

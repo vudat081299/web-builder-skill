@@ -966,6 +966,35 @@ gives a page-tab look. Active is a plain highlight (no left bar). Wire `.is-acti
 **`.wb-theme-toggle`** icon button (two glyphs: `dark_mode` moon +
 `light_mode` sun) swaps automatically with root `.dark` — the app only flips `.dark` (next-themes / one line of JS).
 
+**Default theme wiring (first visit follows the OS · 2-state toggle).** When a build asks for "dark/light" and
+nothing more, ship this exact contract: no stored preference → follow `prefers-color-scheme`; the toggle flips
+**light ⇄ dark only** and persists the pick under `localStorage["wb-theme"]`; there is **no "system" button
+state**. Two snippets — a pre-paint boot in `<head>` (kills the wrong-mode flash) and one click handler:
+
+```html
+<head>
+  <!-- Before paint: 'light'|'dark' wins; anything else (unset / legacy 'system') follows the OS. -->
+  <script>
+    try {
+      var s = localStorage.getItem('wb-theme');
+      if (s === 'dark' || (s !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches))
+        document.documentElement.classList.add('dark');
+    } catch (e) {}
+  </script>
+</head>
+<script>
+  /* One 2-state toggle for every .wb-theme-toggle on the page. */
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.wb-theme-toggle')) return;
+    var dark = document.documentElement.classList.toggle('dark');
+    try { localStorage.setItem('wb-theme', dark ? 'dark' : 'light'); } catch (err) {}
+  });
+</script>
+```
+
+(Copying any `templates/*.html` gives you this already. The boot script — not a CSS `@media` block — is what
+makes first-visit follow the OS, so an explicit choice always out-ranks the system.)
+
 **Responsive (built in):** the bar is a **container** — when it gets too narrow it collapses on its OWN width
 (not the viewport, so it works in any column). Add class `.wb-navbar__menu` to the `.wb-nav` and a leading
 `.wb-navbar__toggle` button (`data-navbar-toggle`, a `menu` ☰ icon): below ~640px the inline links hide, the

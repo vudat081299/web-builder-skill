@@ -21,7 +21,7 @@
 <script>
   /* Theme before first paint, so a dark user never sees a white flash. */
   try {
-    var t = localStorage.getItem('theme');
+    var t = localStorage.getItem('wb-theme');
     if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
       document.documentElement.classList.add('dark');
   } catch (e) {}
@@ -220,7 +220,7 @@
       shell.classList.toggle('is-side-open');
     } else if (e.target.closest('.wb-theme-toggle')) {
       var dark = document.documentElement.classList.toggle('dark');
-      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (err) {}
+      try { localStorage.setItem('wb-theme', dark ? 'dark' : 'light'); } catch (err) {}
     } else if (shell.classList.contains('is-side-open') && !e.target.closest('.wb-shell__side')) {
       shell.classList.remove('is-side-open');     /* tap the scrim → close */
     }

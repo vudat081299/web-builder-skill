@@ -1472,30 +1472,32 @@ function initConfig() {
   drawer.querySelector("[data-config-close]").addEventListener("click", () => drawer.classList.remove("is-open"));
 }
 
-/* ---- Theme: cycle System → Light → Dark (System follows the OS) ------------ */
+/* ---- Theme: 2-state light ⇄ dark; first visit follows the OS ----------------
+   Storage holds only 'light' | 'dark'. No stored value = follow the system
+   (prefers-color-scheme) — there is deliberately no "system" button state to
+   return to (clearing the key returns to system-follow). This is the exact
+   contract the shipped templates wire up. */
 const root = document.documentElement;
 const themeMQ = window.matchMedia("(prefers-color-scheme: dark)");
-function themeMode() { return localStorage.getItem("wb-theme") || "system"; }
-function applyTheme(mode) {
-  root.classList.toggle("dark", mode === "dark" || (mode === "system" && themeMQ.matches));
+function storedTheme() {
+  const s = localStorage.getItem("wb-theme");
+  return s === "light" || s === "dark" ? s : null;   // legacy 'system' / unset → null
 }
+function isDark() { return storedTheme() ? storedTheme() === "dark" : themeMQ.matches; }
 function applyThemeLabel() {
-  const map = { system: ["◐", "Auto"], light: ["☀", "Light"], dark: ["☾", "Dark"] };
-  const [icon, label] = map[themeMode()] || map.system;
-  document.getElementById("themeIcon").textContent = icon;
-  document.getElementById("themeLabel").textContent = label;
+  /* Show the ACTION (where a click goes), mirroring .wb-theme-toggle: in light
+     offer the moon → Dark; in dark offer the sun → Light. */
+  const dark = root.classList.contains("dark");
+  document.getElementById("themeIcon").textContent = dark ? "☀" : "☾";
+  document.getElementById("themeLabel").textContent = dark ? "Light" : "Dark";
 }
-function setTheme(mode) {
-  localStorage.setItem("wb-theme", mode);
-  applyTheme(mode);
-  applyThemeLabel();
+function applyTheme() { root.classList.toggle("dark", isDark()); applyThemeLabel(); }
+function toggleTheme() {
+  localStorage.setItem("wb-theme", root.classList.contains("dark") ? "light" : "dark");
+  applyTheme();
 }
-function cycleTheme() {
-  const next = { system: "light", light: "dark", dark: "system" };
-  setTheme(next[themeMode()] || "light");
-}
-/* In System mode, track OS light/dark changes live. */
-themeMQ.addEventListener("change", () => { if (themeMode() === "system") applyTheme("system"); });
+/* While no explicit choice is stored, track OS light/dark changes live. */
+themeMQ.addEventListener("change", () => { if (!storedTheme()) applyTheme(); });
 
 /* ---- Search: full-text over every page (docs-only). The index is built lazily on
    first open and cached; matching is a case-insensitive substring (label first,
@@ -1584,17 +1586,16 @@ function closeSearch() { document.getElementById("searchModal").classList.remove
 /* ---- Boot ----------------------------------------------------------------- */
 /* The switcher + tree are mounted by loadRoute() (below) for the initial route's
    section — no upfront renderNav() needed. */
-applyTheme(themeMode());
-applyThemeLabel();
+applyTheme();
 initConfig();
 /* Site footer (dogfoods .wb-footer) rendered once; [ / ] jump prev/next page. */
 const docFooterEl = document.getElementById("docfooter");
 if (docFooterEl) docFooterEl.innerHTML = renderFooter();
 document.addEventListener("keydown", onPagerKey);
-document.getElementById("themeBtn").addEventListener("click", cycleTheme);
+document.getElementById("themeBtn").addEventListener("click", toggleTheme);
 /* Any .wb-theme-toggle inside a demo (e.g. the navbar's) flips light ⇄ dark. */
 document.addEventListener("click", (e) => {
-  if (e.target.closest(".wb-theme-toggle")) setTheme(root.classList.contains("dark") ? "light" : "dark");
+  if (e.target.closest(".wb-theme-toggle")) toggleTheme();
 });
 /* Search: button + ⌘K / "/" to open, Esc to close; ↑/↓ move, ↵ opens; click navigates. */
 document.getElementById("searchBtn").addEventListener("click", openSearch);
