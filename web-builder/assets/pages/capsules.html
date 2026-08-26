@@ -223,3 +223,40 @@
     quá hạn/thất bại/nợ xấu → danger · đang xử lý → info.</div>
   </div>
 </section>
+
+<section class="wb-section">
+  <h3>Badge đếm (counter)</h3>
+  <p class="wb-section__desc"><code class="wb-code">.wb-badge</code> — badge đếm / thông báo <b>dùng chung</b> cho
+  nav · tab · button · avatar (trước đây chỉ có <code class="wb-code">wb-sidenav__badge</code> riêng cho sidebar).
+  Mặc định <b>trung tính</b> — đếm là thông tin, không phải trạng thái (thang màu §1); chỉ thêm tone
+  (<code class="wb-code">--danger</code> / <code class="wb-code">--success</code>) cho số cần chú ý (chưa đọc,
+  cảnh báo). Đặt cạnh nhãn, hoặc <code class="wb-code">--float</code> ghim vào góc icon/avatar (bọc host trong
+  <code class="wb-code">.wb-badge-host</code>). <code class="wb-code">--dot</code> = chấm, không số.</p>
+  <div class="demo demo--plain">
+    <div class="demo__stage">
+      <div class="wb-cluster">
+        <nav class="wb-nav">
+          <a class="wb-nav__link is-active">Hộp thư <span class="wb-badge wb-badge--danger">12</span></a>
+          <a class="wb-nav__link">Đã gửi <span class="wb-badge">3</span></a>
+        </nav>
+        <button class="wb-btn wb-btn--secondary">Giỏ hàng <span class="wb-badge">5</span></button>
+        <span class="wb-badge-host">
+          <button class="wb-btn wb-btn--ghost wb-btn--icon" aria-label="Thông báo"><span class="wb-ico">notifications</span></button>
+          <span class="wb-badge wb-badge--danger wb-badge--float">9</span>
+        </span>
+        <span class="wb-badge-host">
+          <span class="wb-avatar">DV</span>
+          <span class="wb-badge wb-badge--success wb-badge--dot wb-badge--float"></span>
+        </span>
+      </div>
+    </div>
+    <div class="demo__code"><button class="copy-btn">Copy</button><pre><code>&lt;a class="wb-nav__link"&gt;Hộp thư &lt;span class="wb-badge wb-badge--danger"&gt;12&lt;/span&gt;&lt;/a&gt;
+&lt;button class="wb-btn wb-btn--secondary"&gt;Giỏ hàng &lt;span class="wb-badge"&gt;5&lt;/span&gt;&lt;/button&gt;
+
+&lt;!-- ghim vào góc icon: host position:relative + --float --&gt;
+&lt;span class="wb-badge-host"&gt;
+  &lt;button class="wb-btn wb-btn--ghost wb-btn--icon"&gt;&lt;span class="wb-ico"&gt;notifications&lt;/span&gt;&lt;/button&gt;
+  &lt;span class="wb-badge wb-badge--danger wb-badge--float"&gt;9&lt;/span&gt;
+&lt;/span&gt;</code></pre></div>
+  </div>
+</section>

@@ -34,6 +34,7 @@ for the look (see `integration.md`).
 | Any clickable action (save, add, cancel, delete) | **Button** | [Buttons](#buttons) |
 | A sign-in-with-provider button (Apple / Google) | **Button** — social | [Buttons](#buttons) |
 | A status / category / method label inside a cell | **Capsule** | [Capsules](#capsules) |
+| A **count / unread** badge on a nav item, tab, button, icon or avatar | **Counter badge** (`wb-badge`) | [Capsules](#capsules) |
 | Show a command, path, API key, or a config snippet (monospace) | **Code** (`wb-code` inline / `pre.wb-code` block) | [Code](#code) |
 | A free-form label a user pins to a transaction (`#…`) | **Tag** | [Tags](#tags) |
 | A dashboard KPI (balance, income, spend, change %) | **Stat card** | [Stat cards](#stat--kpi-cards) |
@@ -371,6 +372,29 @@ DOT:   add <span class="wb-cap__dot"></span> as first child for a status dot
 Status → tone mapping (keep it consistent across the app):
 `Đã trả / Đã nhận / Hoàn tất` → **success** · `Chờ / Sắp đến hạn` → **warning** ·
 `Quá hạn / Thất bại / Nợ xấu` → **danger** · `Đang xử lý` → **info` · everything else → **neutral**.
+
+### Counter badge — `wb-badge`
+
+A shared **count / notification** badge for a nav item, tab, button, icon or avatar (a capsule labels a
+*state*; a badge counts). Neutral by default — a count is information, not status — so it stays grey unless the
+number demands attention (unread, alerts), where a solid tone fits. Distinct from `wb-sidenav__badge`, which is
+the sidebar's own inline count.
+
+- `wb-badge` — the base count pill (circular on a single digit, `tabular-nums`).
+- `wb-badge--danger` / `wb-badge--success` — solid attention tones (unread mail, live alerts).
+- `wb-badge--dot` — a bare dot, presence with no number.
+- `wb-badge--float` inside `.wb-badge-host` — pins the badge to the top-right corner of an icon button / avatar
+  (the host is `position: relative`; a ring lifts the badge off the glyph).
+
+```html
+<a class="wb-nav__link">Hộp thư <span class="wb-badge wb-badge--danger">12</span></a>
+<button class="wb-btn wb-btn--secondary">Giỏ hàng <span class="wb-badge">5</span></button>
+
+<span class="wb-badge-host">                       <!-- corner count on an icon button -->
+  <button class="wb-btn wb-btn--ghost wb-btn--icon"><span class="wb-ico">notifications</span></button>
+  <span class="wb-badge wb-badge--danger wb-badge--float">9</span>
+</span>
+```
 
 ---
 

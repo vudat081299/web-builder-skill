@@ -195,7 +195,7 @@ sync per-component, so it never drifts here):
 - **Data display** — card (`--dashed` / `--flat` / `--hover` / **`--pad`** = padding on the card itself for a
   one-part card with no `__head`/`__body`/`__foot`), tables (basic → transactions → striped/compact/bordered/sticky/debt; **column sort** via `wb-th-sort`+`aria-sort`; **row selection + bulk bar** via `wb-table__check`+`wb-table-bulk`; drag row-reorder via `--sortable`),
   **filter bar** (search + multi-field dropdown + removable tag/status/amount-range tokens), list group,
-  stat/KPI cards, capsules/badges (incl. `--tinted` category hue + `--dashed` optional/add-new), tags, avatar, **media object**
+  stat/KPI cards, capsules/badges (incl. `--tinted` category hue + `--dashed` optional/add-new; **counter badge** `.wb-badge` — count/unread on nav/tab/button/icon/avatar, `--dot` presence, `--float` corner-pin), tags, avatar, **media object**
   (`.wb-media` — a leading figure + title/text body: ranked rows, feature lists; pairs with card), **receipt**
   (hoá đơn — a torn-paper slip; **3 edge styles** scallop (default) / `--wave` / `--dashed`, plus `--bottom`/`--flat`/`--ticket` (vé xé — dashed tear + real half-circle side cuts), `__barcode`; geometry knobs `--wb-receipt-d`/`--wb-receipt-gap`; bill · transfer · voucher templates), and **charts** — line/area,
   income-vs-expense bars, combo bar+line, horizontal ranked bars, donut / thin donut / progress ring, budget progress, sparkline + finance palette, mono/blue schemes with count-aware ramps, and **code block** (`.wb-code` — inline chip on `<code>`, block on `<pre class="wb-code">`; the shipped monospace, ≠ docs-only `.demo__code`).

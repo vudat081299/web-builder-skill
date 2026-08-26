@@ -11,6 +11,12 @@ can tell whether a part it needs already exists. Newest first.
 ## Unreleased (v0.7-dev)
 
 ### Added
+- **Shared counter badge — `.wb-badge` (CSS section 56).** A count / notification badge previously existed
+  only as `wb-sidenav__badge` (sidebar-only). `.wb-badge` is the shared one for nav items, tabs, buttons,
+  icon buttons and avatars: neutral by default (a count is information, not status — colour ladder §1), with
+  solid `--danger` / `--success` attention tones, a `--dot` (presence, no number), and `--float` inside
+  `.wb-badge-host` to pin a count to the top-right corner of an icon/avatar. Documented on the Capsules /
+  Badges page + catalog. CSS only — reuses existing tone tokens.
 - **Code block primitive — `.wb-code` (CSS section 55).** The docs' own code block (`.demo__code`) is chrome
   and never ships, so an app needing a monospace block had nothing to reach for (mildly against the §2 dogfood
   stance). `.wb-code` ships it: an **inline** chip on `<code>`/`<span>` and a **block** on

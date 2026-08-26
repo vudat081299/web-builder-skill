@@ -3416,3 +3416,27 @@ pre.wb-code {
 }
 /* A <code> inside a block is just the text — never a nested chip. */
 pre.wb-code code { font: inherit; color: inherit; background: none; border: 0; padding: 0; }
+
+/* -----------------------------------------------------------------------------
+   56. BADGE  (.wb-badge — a shared count / notification badge for nav · tabs · buttons)
+   -----------------------------------------------------------------------------
+   Neutral by default — a count is information, not status (colour ladder §1);
+   add a tone (--danger / --success) only for a count that demands attention
+   (unread, alerts). Sits inline next to a label, or --float pins it to the
+   corner of an icon button / avatar (wrap the host in .wb-badge-host). */
+.wb-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  box-sizing: border-box; min-width: 18px; height: 18px; padding: 0 5px;
+  font-size: 11px; font-weight: 650; line-height: 1; font-variant-numeric: tabular-nums;
+  border-radius: var(--wb-radius-pill);
+  background: var(--wb-surface-2); color: var(--wb-fg-muted);
+  border: var(--wb-bw) solid var(--wb-border);
+}
+/* A bare status dot — presence, no number. */
+.wb-badge--dot { min-width: 0; width: 8px; height: 8px; padding: 0; }
+/* Attention tones (solid, like a --solid capsule) — unread mail, live alerts. */
+.wb-badge--danger  { background: var(--wb-danger);  color: var(--wb-danger-fg);  border-color: transparent; }
+.wb-badge--success { background: var(--wb-success); color: var(--wb-success-fg); border-color: transparent; }
+/* Pin to the top-right corner of a positioned host; the ring lifts it off the icon. */
+.wb-badge-host { position: relative; display: inline-flex; }
+.wb-badge--float { position: absolute; top: -5px; right: -5px; box-shadow: 0 0 0 2px var(--wb-surface); }
