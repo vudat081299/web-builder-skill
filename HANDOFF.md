@@ -50,15 +50,15 @@ moved to a `pointerdown`/`pointerup` pair on `document` that clears `.is-open` o
 on the same `.wb-overlay`. `references/components-catalog.md` (Modal / Dialog) now spells out the
 press+release rule and says to drive it with pointer events, not `click`.
 
-**Still open (judgment):**
-- Promote the rule to a numbered design principle (§15, "a dismiss × sits top-right", is the natural
-  neighbour). Left out of this pass to avoid the `principles.html` render-sync — do it next time
-  principles are touched.
-- **Popover / dropdown outside-click** (`assets/app.js`, the popover branch) still closes on the same
-  bare `click`: a drag that starts inside the card and releases outside can dismiss it. Lower stakes
-  (no full-screen scrim) and not fixed here — decide whether it deserves the same guard.
+**Tail resolved 2026-08-27** (moved to durable homes, per the rule at top):
+- The rule is now a numbered principle — **design-principles §27** ("Dismiss on a full click outside, not a
+  stray drag"), rendered in-site (`principles.html` accordion + the overview §-map). It reads wider than the
+  original §15-neighbour idea: it covers modal/drawer *and* popover, and records the dropdown exception.
+- **Popover** now uses the press+release guard (`assets/app.js`): an open `.wb-popover` closes only when
+  neither the `pointerdown` nor the `pointerup` is inside it. **Dropdown deliberately kept on bare `click`**
+  (click-to-select-and-close, no drag-interactive content) — documented as an exception in §27 + the catalog.
 - The docs site never ships, but `assets/app.js` **is** copied verbatim into live sites; any holder of
-  a copy needs the same two-part change. The one known copy has already been patched.
+  a copy needs the same change. (See `CHANGELOG.md` *Unreleased* → Fixed.)
 
 ---
 
@@ -200,27 +200,19 @@ misuse guard — an explicit, exhaustive modifier list per family so an AI can't
 
 ## 6. Other pending work found in the same review
 
-Independent of the kit question, ordered by value against the flagship use (money data):
+Independent of the kit question, ordered by value against the flagship use (money data).
 
-1. **Column sort on tables — missing.** `wb-table--sortable`
-   ([`web-builder.css:1751`](web-builder/assets/web-builder.css:1751)) is *row drag-reorder*, not header sort.
-   No `.is-sorted` asc/desc, no indicator, no demo, and `bootstrap-comparison.md` doesn't record it as skipped.
-   Sorting by amount/date is the #1 need of a transactions or debt table.
-2. **Row selection / bulk actions — missing.** `wb-tree__row.is-selected` exists; `wb-table` has no selected-row
-   state, no select-all, no action bar. Paired with `wb-filterbar`, this is the most common list-screen combo.
-3. **`@media print` — zero lines** in `web-builder.css` and `docs.css`. Receipts (hoá đơn) and debt tables are
-   exactly what people print.
-4. **Code block is docs-only chrome.** `.demo__code` lives in `docs.css` (never ships); the library has no
-   `wb-code`/`pre` primitive — mildly against the §2 dogfood stance, and an app needing a monospace block has
-   nothing to reach for.
-5. **Counter badge exists only as `wb-sidenav__badge`** ([`web-builder.css:2428`](web-builder/assets/web-builder.css:2428)).
-   No shared counter for navbar / tabs / buttons.
-6. **a11y §19 is half-done.** `:focus-visible` (14 sites) and `prefers-reduced-motion` (3) are good;
-   `forced-colors` and `prefers-contrast` are **0**. RTL is 0 too — that one should be **recorded as a non-goal**
-   rather than built.
-> Items 7 (version drift) and 8 (stale positioning in the shipped file) were **resolved in `03b8a4c`** and
-> deleted from this list per the rule above. Their durable homes: `CHANGELOG.md` v0.6, the `--wb-version`
-> token, and `validate-sync.sh` CHECK 15 (rendered on `#/tooling`) so the drift can't come back silently.
+> **Items 1–6 were all resolved 2026-08-27** and deleted from this list per the rule at top. What they became,
+> with their durable homes (all under `CHANGELOG.md` *Unreleased (v0.7-dev)*):
+> 1. **Column sort** → `wb-th-sort` + `aria-sort` (CSS + docs `app.js` driver; catalog *Sort by column*; `#/tables`).
+> 2. **Row selection + bulk actions** → `wb-table__check` + `wb-table-bulk` + `--wb-row-selected` (catalog *Row selection*).
+> 3. **`@media print`** → CSS section 54; design-principles **§26**.
+> 4. **Code block** → `.wb-code` (inline + `pre`), CSS section 55; new `#/code` page + catalog *Code*.
+> 5. **Counter badge** → shared `.wb-badge` (+ `--dot`/`--float`/`--danger`), CSS section 56; on the Capsules/Badges page.
+> 6. **a11y `forced-colors` + `prefers-contrast`** → CSS section 57; **RTL recorded as a deliberate non-goal** in design-principles **§19**.
+>
+> Items 7 (version drift) and 8 (stale positioning) were resolved earlier in `03b8a4c` (homes: `CHANGELOG.md`
+> v0.6, the `--wb-version` token, `validate-sync.sh` CHECK 15 on `#/tooling`).
 
 **Already recorded:** T3 (`.skill` packaging) is now **resolved** — a deterministic pipeline (see the landed
 note at the top). T4 (no inlined manual `/wb-change`) remains *deferred*; T5 (no §18/coherence gate) remains
@@ -231,8 +223,13 @@ stay skipped on purpose (`bootstrap-comparison.md`).
 
 ## 7. When you pick this up
 
-- Anything in §6 that touches a component or token → run **`/wb-change`**; it drives the 6-place sync and the
-  commit gate runs `validate-sync.sh` for you.
-- Of what's left in §6, items **1–2** (table column sort, row selection / bulk actions) carry the most weight
-  against the flagship use — a transactions or debt table can't be sorted or acted on in bulk today.
-- The kit question (§0–§5) is a **decision first, code second**. Land T6 before writing `.tsx`.
+Everything in §6 and the Backdrop tail is now **shipped** (v0.7-dev — see `CHANGELOG.md`). The **one item left
+open is the React kit question (§0–§5)** — a *decision first, code second*.
+
+- It was **deliberately kept open** (owner's call, 2026-08-27): don't record T9 or write any `.tsx` yet — the
+  §0–§5 analysis stays here as the live brief.
+- When it *is* decided, record it as **T9** in `README.md` + mirror on `#/decisions` (`validate-sync.sh`
+  CHECK 13 enforces the mirror), whichever way it goes — *including "never build one."* Per §1, the recorded
+  silence is the bug, not the absence of a kit. (§5/§7 earlier said "T6"; T6 is taken by the scrollbar
+  decision, so the kit is **T9** as §1 states.)
+- If you build one, §4 is a hard prerequisite: ship the kit↔CSS check in the *same* change.
